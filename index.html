@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>밸류스</title>
+<meta name="description" content="사무실의 반복 작업을 하나씩 없애는 작은 프로그램들. 밸류스.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --paper:#F0F1EC;
+  --paper-2:#FFFFFF;
+  --paper-3:#E6E8E1;
+  --rule:#D3D6CD;
+  --rule-soft:#E1E4DB;
+  --ink:#141A18;
+  --ink-2:#4A5450;
+  --ink-3:#79837E;
+  --navy:#16324F;
+  --navy-2:#27506F;
+  --seal:#B4342A;
+  --seal-soft:#F2E0DD;
+  --lift:0 1px 2px rgba(20,26,24,.05), 0 14px 40px -26px rgba(20,26,24,.45);
+  --grid:rgba(22,50,79,.055);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413;
+    --paper-2:#171D1C;
+    --paper-3:#1E2624;
+    --rule:#2B3532;
+    --rule-soft:#222B29;
+    --ink:#E9EDEA;
+    --ink-2:#B0BAB6;
+    --ink-3:#7C8783;
+    --navy:#8FB6D6;
+    --navy-2:#A9C8E0;
+    --seal:#E4736A;
+    --seal-soft:#311917;
+    --lift:0 1px 2px rgba(0,0,0,.5), 0 16px 44px -28px rgba(0,0,0,1);
+    --grid:rgba(143,182,214,.06);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413;
+  --paper-2:#171D1C;
+  --paper-3:#1E2624;
+  --rule:#2B3532;
+  --rule-soft:#222B29;
+  --ink:#E9EDEA;
+  --ink-2:#B0BAB6;
+  --ink-3:#7C8783;
+  --navy:#8FB6D6;
+  --navy-2:#A9C8E0;
+  --seal:#E4736A;
+  --seal-soft:#311917;
+  --lift:0 1px 2px rgba(0,0,0,.5), 0 16px 44px -28px rgba(0,0,0,1);
+  --grid:rgba(143,182,214,.06);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Gothic A1","Malgun Gothic",system-ui,sans-serif;
+  font-size:16px; font-weight:400; line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+}
+.shell{max-width:1080px; margin:0 auto; padding:0 24px}
+.serif{font-family:"Gowun Batang",serif}
+.mono{font-family:"IBM Plex Mono",monospace}
+
+/* ── nav ── */
+nav{
+  position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--rule-soft);
+}
+nav .shell{display:flex; align-items:center; justify-content:space-between; height:66px; gap:20px}
+.brand{display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink)}
+.seal{
+  width:30px; height:30px; border:2px solid var(--seal); border-radius:4px;
+  display:grid; place-items:center; color:var(--seal);
+  font-family:"Gowun Batang",serif; font-weight:700; font-size:16px; line-height:1;
+  transform:rotate(-3deg); flex:none;
+}
+.brand b{font-family:"Gowun Batang",serif; font-size:21px; letter-spacing:.02em; font-weight:700}
+.navlinks{display:flex; gap:26px; align-items:center}
+.navlinks a{
+  color:var(--ink-2); text-decoration:none; font-size:14.5px; font-weight:500;
+  padding:4px 0; border-bottom:1px solid transparent;
+}
+.navlinks a:hover,.navlinks a:focus-visible{color:var(--ink); border-bottom-color:var(--seal)}
+@media (max-width:640px){ .navlinks a:not(.navbuy){display:none} }
+.navbuy{
+  background:var(--navy); color:var(--paper-2) !important; padding:9px 18px !important;
+  border-radius:2px; border-bottom:none !important; font-weight:700;
+}
+:root[data-theme="dark"] .navbuy,
+:root:not([data-theme="light"]) .navbuy{color:#0E1214 !important}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .navbuy{color:#fff !important} }
+.navbuy:hover{background:var(--navy-2)}
+
+/* ── hero ── */
+header.hero{
+  position:relative; overflow:hidden;
+  padding:88px 0 76px;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:30px 30px;
+  border-bottom:1px solid var(--rule);
+}
+.hero .shell{display:grid; grid-template-columns:1fr; gap:52px; align-items:center}
+@media (min-width:900px){ .hero .shell{grid-template-columns:1.06fr .94fr; gap:64px} }
+.kicker{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--seal); margin:0 0 18px;
+}
+h1{
+  font-family:"Gowun Batang",serif; font-weight:700; margin:0;
+  font-size:clamp(38px,6.4vw,62px); line-height:1.16; letter-spacing:-.02em;
+  text-wrap:balance;
+}
+h1 em{font-style:normal; color:var(--navy); position:relative; white-space:nowrap}
+h1 em::after{
+  content:""; position:absolute; left:0; right:0; bottom:.06em; height:.30em;
+  background:var(--seal); opacity:.16; z-index:-1;
+}
+.hero p.pitch{font-size:18px; color:var(--ink-2); margin:24px 0 0; max-width:44ch; line-height:1.85}
+.cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:34px}
+.btn{
+  display:inline-block; text-decoration:none; font-weight:700; font-size:15.5px;
+  padding:14px 26px; border-radius:2px; border:1.5px solid transparent; transition:.15s;
+}
+.btn.primary{background:var(--navy); color:#fff; border-color:var(--navy)}
+:root[data-theme="dark"] .btn.primary,
+:root:not([data-theme="light"]) .btn.primary{color:#0E1214}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .btn.primary{color:#fff} }
+.btn.primary:hover{background:var(--navy-2); border-color:var(--navy-2)}
+.btn.ghost{border-color:var(--rule); color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink); background:var(--paper-2)}
+
+/* stack illustration */
+.stack{position:relative; height:330px}
+.doc{
+  position:absolute; background:var(--paper-2); border:1px solid var(--rule);
+  box-shadow:var(--lift); padding:13px 14px; border-radius:2px;
+}
+.doc .bar{height:5px; background:var(--rule-soft); border-radius:1px; margin-bottom:7px}
+.doc .bar.h{background:var(--navy); opacity:.45; width:52%}
+.doc.small{width:132px}
+.d1{left:2%;  top:6%;   transform:rotate(-7deg);  animation:float1 7s ease-in-out infinite}
+.d2{left:14%; top:44%;  transform:rotate(4deg);   animation:float2 8s ease-in-out infinite}
+.d3{left:0%;  top:76%;  transform:rotate(-2deg);  animation:float1 9s ease-in-out infinite reverse}
+.arrow{
+  position:absolute; left:41%; top:44%; width:44px; height:2px; background:var(--seal); opacity:.75;
+}
+.arrow::after{
+  content:""; position:absolute; right:-1px; top:-5px;
+  border:6px solid transparent; border-left-color:var(--seal);
+}
+.result{
+  position:absolute; right:0; top:8%; width:min(280px,58%);
+  background:var(--paper-2); border:1px solid var(--navy); box-shadow:var(--lift);
+  border-radius:2px; overflow:hidden;
+}
+.result .cap{
+  background:var(--navy); color:#fff; padding:7px 12px;
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em;
+}
+:root[data-theme="dark"] .result .cap,
+:root:not([data-theme="light"]) .result .cap{color:#0E1214}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .result .cap{color:#fff} }
+.result table{width:100%; border-collapse:collapse; font-size:11.5px}
+.result td{padding:6px 10px; border-bottom:1px solid var(--rule-soft); color:var(--ink-2); white-space:nowrap}
+.result tr:last-child td{border-bottom:none}
+@keyframes float1{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@keyframes float2{0%,100%{translate:0 0}50%{translate:0 8px}}
+@media (prefers-reduced-motion: reduce){ .d1,.d2,.d3{animation:none} }
+@media (max-width:899px){ .stack{height:280px} .doc.small{width:112px} }
+
+/* ── sections ── */
+section{padding:78px 0; border-bottom:1px solid var(--rule-soft)}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 14px;
+}
+h2{
+  font-family:"Gowun Batang",serif; font-weight:700; margin:0;
+  font-size:clamp(26px,3.6vw,36px); line-height:1.3; letter-spacing:-.01em; text-wrap:balance;
+}
+.lede{color:var(--ink-2); margin:16px 0 0; max-width:56ch; font-size:16.5px}
+
+.steps{display:grid; grid-template-columns:1fr; gap:1px; background:var(--rule); margin-top:42px; border:1px solid var(--rule)}
+@media (min-width:760px){ .steps{grid-template-columns:repeat(3,1fr)} }
+.step{background:var(--paper-2); padding:28px 26px}
+.step .no{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--seal);
+  letter-spacing:.14em; margin-bottom:12px;
+}
+.step h3{font-family:"Gowun Batang",serif; font-size:19px; margin:0 0 8px; font-weight:700}
+.step p{margin:0; color:var(--ink-2); font-size:15px; line-height:1.75}
+
+/* ── product ── */
+#products{background:var(--paper-3)}
+.product{
+  background:var(--paper-2); border:1px solid var(--rule); box-shadow:var(--lift);
+  margin-top:40px; display:grid; grid-template-columns:1fr;
+}
+@media (min-width:880px){ .product{grid-template-columns:1.25fr .75fr} }
+.p-main{padding:38px 34px}
+.p-side{
+  padding:38px 34px; background:var(--paper);
+  border-top:1px solid var(--rule);
+  display:flex; flex-direction:column; justify-content:center;
+}
+@media (min-width:880px){ .p-side{border-top:none; border-left:1px solid var(--rule)} }
+.tag{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.12em; background:var(--seal-soft); color:var(--seal);
+  padding:4px 10px; border-radius:2px; margin-bottom:16px;
+}
+.p-main h3{font-family:"Gowun Batang",serif; font-size:30px; margin:0 0 6px; font-weight:700}
+.p-main .oneline{color:var(--ink-2); margin:0 0 26px; font-size:16.5px}
+.feat{list-style:none; margin:0; padding:0; display:grid; gap:11px}
+.feat li{display:grid; grid-template-columns:20px 1fr; gap:11px; align-items:start; font-size:15.5px; line-height:1.7}
+.feat li::before{
+  content:"✓"; color:var(--seal); font-weight:700; font-size:14px; line-height:1.7;
+}
+.spec{margin-top:28px; border-top:1px solid var(--rule-soft); padding-top:20px;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:18px}
+.spec div span{display:block; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; color:var(--ink-3); text-transform:uppercase}
+.spec div b{display:block; font-size:14.5px; font-weight:500; margin-top:3px; color:var(--ink-2)}
+.price{font-family:"Gowun Batang",serif; font-size:42px; font-weight:700; line-height:1; letter-spacing:-.02em}
+.price small{font-family:"Gothic A1",sans-serif; font-size:15px; font-weight:400; color:var(--ink-3); letter-spacing:0}
+.pricenote{color:var(--ink-3); font-size:13.5px; margin:10px 0 24px; line-height:1.7}
+.buybox{display:grid; gap:10px}
+.buybox .btn{text-align:center}
+.buybox .plat{
+  display:flex; gap:10px;
+}
+.buybox .plat .btn{flex:1; font-size:14px; padding:11px 10px}
+
+/* ── trust ── */
+.trust{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); margin-top:40px}
+.trust div{background:var(--paper-2); padding:26px 24px}
+.trust b{display:block; font-family:"Gowun Batang",serif; font-size:18px; font-weight:700; margin-bottom:7px}
+.trust p{margin:0; font-size:14.5px; color:var(--ink-2); line-height:1.72}
+
+/* ── roadmap ── */
+.road{list-style:none; margin:40px 0 0; padding:0; display:grid; gap:1px; background:var(--rule); border:1px solid var(--rule)}
+.road li{
+  background:var(--paper-2); padding:20px 24px;
+  display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center;
+}
+.road .t{font-weight:700; font-size:16px}
+.road .t span{display:block; font-weight:400; font-size:14.5px; color:var(--ink-2); margin-top:3px}
+.state{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.08em;
+  padding:4px 10px; border:1px solid var(--rule); color:var(--ink-3); border-radius:2px; white-space:nowrap;
+}
+.state.now{border-color:var(--seal); color:var(--seal)}
+
+/* ── contact ── */
+#contact .box{
+  margin-top:38px; background:var(--paper-2); border:1px solid var(--rule);
+  box-shadow:var(--lift); padding:34px;
+}
+.rows{display:grid; gap:0}
+.row{display:grid; grid-template-columns:1fr; gap:2px; padding:15px 0; border-bottom:1px solid var(--rule-soft)}
+@media (min-width:620px){ .row{grid-template-columns:150px 1fr; gap:18px; align-items:baseline} }
+.row:last-child{border-bottom:none}
+.row dt{font-weight:700; font-size:14.5px}
+.row dd{margin:0; color:var(--ink-2); font-size:15px}
+.row dd a{color:var(--navy); text-decoration:none; border-bottom:1px solid currentColor}
+.row .mono{font-size:14px}
+
+footer{padding:44px 0 60px; color:var(--ink-3); font-size:13.5px}
+footer .shell{display:flex; flex-wrap:wrap; gap:10px 28px; justify-content:space-between; align-items:baseline}
+footer .biz{line-height:1.9}
+</style>
+</head>
+<body>
+
+
+<nav>
+  <div class="shell">
+    <a class="brand" href="#top"><span class="seal">밸</span><b>밸류스</b></a>
+    <div class="navlinks">
+      <a href="#why">왜 만들었나</a>
+      <a href="#products">프로그램</a>
+      <a href="#roadmap">다음 계획</a>
+      <a class="navbuy" href="#contact">구매·문의</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="shell">
+    <div>
+      <p class="kicker">VALUES · 사무실 자동화 도구</p>
+      <h1>흩어진 표를,<br><em>한 장으로.</em></h1>
+      <p class="pitch">엑셀 열두 개를 열어놓고 복사·붙여넣기를 반복하던 오후는
+        이제 클릭 두 번이면 끝납니다. 밸류스는 사무실의 반복 작업을
+        하나씩 없애는 작은 프로그램을 만듭니다.</p>
+      <div class="cta">
+        <a class="btn primary" href="#products">프로그램 보기</a>
+        <a class="btn ghost" href="#contact">구매·문의하기</a>
+      </div>
+    </div>
+
+    <div class="stack" aria-hidden="true">
+      <div class="doc small d1"><div class="bar h"></div><div class="bar"></div><div class="bar"></div></div>
+      <div class="doc small d2"><div class="bar h"></div><div class="bar"></div><div class="bar"></div></div>
+      <div class="doc small d3"><div class="bar h"></div><div class="bar"></div><div class="bar"></div></div>
+      <div class="arrow"></div>
+      <div class="result">
+        <div class="cap">통합결과.xlsx</div>
+        <table>
+          <tr><td>이름</td><td>부서</td><td>연락처</td></tr>
+          <tr><td>김○○</td><td>총무팀</td><td>010-····</td></tr>
+          <tr><td>이○○</td><td>학사팀</td><td>010-····</td></tr>
+          <tr><td>박○○</td><td>기획팀</td><td>010-····</td></tr>
+          <tr><td>최○○</td><td>회계팀</td><td>010-····</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="shell">
+    <p class="eyebrow">왜 만들었나</p>
+    <h2>사무실에서 가장 많이 쓰는 시간은<br>‘생각하는 시간’이 아니었습니다.</h2>
+    <p class="lede">부서마다 양식이 조금씩 다른 파일 수십 개를 열어, 열 이름을 눈으로 맞춰가며
+      한 칸씩 옮겨 붙이는 일. 실수 한 번이면 처음부터 다시. 밸류스의 프로그램은
+      전부 이런, 이미 겪어본 일에서 출발합니다.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="no">01</div>
+        <h3>겪은 일만 만듭니다</h3>
+        <p>상상해서 만든 기능이 아니라, 실제 업무에서 손이 아팠던 지점만 골라 프로그램으로 만듭니다.</p>
+      </div>
+      <div class="step">
+        <div class="no">02</div>
+        <h3>설치가 어려우면 실패입니다</h3>
+        <p>준비물 없이 두 번 클릭이면 끝나야 합니다. 파이썬·명령창 같은 말이 설명서에 나오면 다시 만듭니다.</p>
+      </div>
+      <div class="step">
+        <div class="no">03</div>
+        <h3>안 되는 건 안 된다고 씁니다</h3>
+        <p>못 읽은 파일은 이유를 알려주고, 애매하게 맞춘 항목은 색으로 표시합니다. 조용히 틀리지 않습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="shell">
+    <p class="eyebrow">지금 살 수 있는 프로그램</p>
+    <h2>스마트 자료취합기</h2>
+
+    <div class="product">
+      <div class="p-main">
+        <span class="tag">v1.0.0 · WINDOWS</span>
+        <h3>표만 골라 뽑아, 하나로 합칩니다</h3>
+        <p class="oneline">엑셀·워드·PDF·한글 파일이 섞여 있어도 상관없습니다.
+          폴더 하나만 고르면 그 안 모든 파일 속의 표를 찾아 하나로 정리해 드립니다.</p>
+
+        <ul class="feat">
+          <li>열 이름이 달라도 자동으로 맞춥니다 — 「이름 · 성명 · Name」을 한 열로</li>
+          <li>결과는 원하는 형식으로 — 엑셀 · 워드 · PDF · 한글(HWPX) · CSV</li>
+          <li>애매하게 맞춘 열은 노란색, 못 읽은 파일은 사유까지 표로 알려줍니다</li>
+          <li>파이썬·추가 설치 없음. 관리자 암호도 묻지 않습니다</li>
+          <li>인터넷 없이 내 컴퓨터 안에서만 동작 — 자료가 밖으로 나가지 않습니다</li>
+        </ul>
+
+        <div class="spec">
+          <div><span>지원 OS</span><b>Windows 10 / 11</b></div>
+          <div><span>설치 용량</span><b>약 138 MB</b></div>
+          <div><span>실행 속도</span><b>약 5초</b></div>
+          <div><span>출시 검증</span><b>14개 항목 전부 통과</b></div>
+        </div>
+      </div>
+
+      <div class="p-side">
+        <div class="price">39,000<small>원</small></div>
+        <p class="pricenote">컴퓨터 1대 · 기간 제한 없음<br>이후 v1.x 업데이트 무료</p>
+        <div class="buybox">
+          <a class="btn primary" href="#contact">구매하기</a>
+          <div class="plat">
+            <a class="btn ghost" href="#contact">크몽에서 보기</a>
+            <a class="btn ghost" href="#contact">스마트스토어</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust">
+      <div><b>내 컴퓨터 안에서만</b><p>파일을 서버로 올리지 않습니다. 인터넷을 꺼도 동일하게 동작합니다.</p></div>
+      <div><b>14회 실제 검증</b><p>설치 · 5개 형식 출력 · 제거 · 재설치까지 실제 PC에서 눌러 확인했습니다.</p></div>
+      <div><b>깔끔한 제거</b><p>윈도우 [설정 &gt; 앱]에서 제거하면 흔적 없이 지워집니다.</p></div>
+      <div><b>고쳐 드립니다</b><p>안 읽히는 서식이 있으면 파일을 보내주세요. 확인해서 반영합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="shell">
+    <p class="eyebrow">다음 계획</p>
+    <h2>하나씩, 계속 만듭니다</h2>
+    <p class="lede">밸류스는 큰 하나가 아니라 작은 여럿을 지향합니다.
+      아래는 지금 손대고 있거나 곧 시작할 것들입니다.</p>
+
+    <ul class="road">
+      <li><div class="t">스마트 자료취합기<span>여러 파일 속 표를 하나로 합치기</span></div><span class="state now">판매 중</span></li>
+      <li><div class="t">서식 자동 채우기<span>명단 한 장으로 증명서·통지서를 한 번에 발급</span></div><span class="state">준비 중</span></li>
+      <li><div class="t">명단 대조기<span>두 명단의 차이를 찾아 표로 정리</span></div><span class="state">구상 중</span></li>
+      <li><div class="t">웹 버전<span>설치 없이 브라우저에서 바로 쓰기</span></div><span class="state">구상 중</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="shell">
+    <p class="eyebrow">구매 · 문의</p>
+    <h2>필요한 걸 말씀해 주세요</h2>
+    <p class="lede">구매, 여러 대 설치, 기관 단위 도입, 「우리 서식도 되나요?」 —
+      무엇이든 편하게 보내주시면 하루 안에 답을 드립니다.</p>
+
+    <div class="box">
+      <dl class="rows">
+        <div class="row"><dt>이메일</dt><dd><a href="mailto:ranger7903@nate.com">ranger7903@nate.com</a></dd></div>
+        <div class="row"><dt>구매 방법</dt><dd>메일로 연락 주시면 결제 안내와 함께 설치파일·설명서를 보내드립니다.</dd></div>
+        <div class="row"><dt>다른 경로</dt><dd>크몽 · 네이버 스마트스토어에서도 구매하실 수 있습니다. <span class="mono">(입점 준비 중)</span></dd></div>
+        <div class="row"><dt>환불</dt><dd>설치 후 정상 동작하지 않으면 전액 환불해 드립니다.</dd></div>
+        <div class="row"><dt>맞춤 제작</dt><dd>쓰시는 서식에 맞춘 기능 추가도 상담해 드립니다.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="shell">
+    <div class="biz">
+      <b class="serif" style="font-size:16px">밸류스</b><br>
+      <span class="mono">VALUES · 사무실 자동화 도구</span>
+    </div>
+    <div class="biz" style="text-align:right">
+      문의 ranger7903@nate.com<br>
+      <span class="mono">© 2026 밸류스</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
