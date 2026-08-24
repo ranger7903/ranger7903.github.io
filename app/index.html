@@ -157,8 +157,9 @@ async function boot() {
     status('파이썬 엔진 내려받는 중…', 10);
     py = await loadPyodide();
     status('필요한 부품 설치 중 (엑셀·워드·PDF 읽기)…', 35);
-    await py.loadPackage(['micropip', 'openpyxl', 'lxml']);
+    await py.loadPackage(['micropip', 'lxml']);
     const micropip = py.pyimport('micropip');
+    await micropip.install(['openpyxl']);
     try { await micropip.install(['python-docx']); } catch (e) { log('워드 부품 설치 실패: ' + e); }
     status('PDF 읽기 부품 설치 중…', 60);
     try { await micropip.install(['pdfminer.six']); } catch (e) { log('PDF 부품 설치 실패(그래도 다른 형식은 됩니다): ' + e); }
