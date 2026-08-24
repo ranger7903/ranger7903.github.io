@@ -192,7 +192,7 @@ $('#run').onclick = async () => {
     py.globals.set('_fmt', fmt);
     const res = await py.runPythonAsync(`
 import web_bridge
-_files = [(n, bytes(d.to_py())) for n, d in zip(_names.to_py(), _datas.to_py())]
+_files = [(str(n), bytes(d.to_py() if hasattr(d, 'to_py') else d)) for n, d in zip(_names.to_py(), _datas.to_py())]
 _r = web_bridge.merge_uploaded(_files, _fmt, demo=True)
 _r
 `);
