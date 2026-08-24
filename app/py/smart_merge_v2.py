@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-스마트 자료취합기 v1.1 — 사무실에서 받는 거의 모든 형식의 "표"를 찾아 하나로 합친다.
+스마트 자료취합기 v1.2 — 사무실에서 받는 거의 모든 형식의 "표"를 찾아 하나로 합친다.
 --------------------------------------------------------------------------------
 입력: .xlsx .xlsm .xltx .xltm .xls(엑셀 97-2003) .csv .tsv .txt
       .docx .doc(워드 97-2003) .pdf(글자형) .hwpx .hwp(한글 5.0)
@@ -18,6 +18,15 @@ v1.0 → v1.1 달라진 점:
 - 워드·한글 표 안에 들어있는 표(중첩 표)도 찾는다.
 - 하위 폴더까지 읽는 옵션 추가 (include_subfolders).
 
+v1.1 → v1.2 달라진 점 (성능·정확도):
+- 파일을 여러 개 동시에 읽는다 (CPU 수만큼 병렬). 파일이 많을수록 빨라진다.
+- 두 줄짜리 머리글(예: 위 줄 "연락처" 아래 줄 "본인/보호자")을 "연락처 본인", "연락처 보호자"로 합쳐 읽는다.
+- 엑셀 병합 셀(세로로 합쳐진 학과명 등)을 아래 칸까지 채워서 빈칸으로 남지 않게 한다.
+- 머리글이 비어 있는데 데이터는 있는 열을 버리지 않고 "(이름 없는 열 N)"으로 살린다.
+- "합계/소계/총계" 줄을 자동으로 뺀다 (drop_totals). 똑같은 줄 제거 옵션(dedupe).
+- "1,234" 같은 글자 숫자를 진짜 숫자로 바꿔 엑셀에서 바로 계산할 수 있게 한다.
+- 결과 엑셀에 머리글 고정·자동 필터·요약 시트를 넣는다.
+
 ※ .hwpx로 출력하려면 smart_merge_v2.py와 같은 폴더에 hwpx_template.hwpx 파일이 필요하다.
 """
 
@@ -28,10 +37,16 @@ import difflib
 import io
 import re
 import zipfile
+import datetime as _dt
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
+
+ENGINE_VERSION = "1.2.0"
+# 화면판/테스트에서 병렬 읽기를 끌 때 바꾼다 ("auto" / True / False)
+DEFAULT_PARALLEL = "auto"
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Font, PatternFill
+from openpyxl.utils import get_column_letter
 
 # ---------------------------------------------------------------------------
 # 1. 동의어 사전 (v0.1과 동일 + 확장 여지)
@@ -39,13 +54,13 @@ from openpyxl.styles import Font, PatternFill
 SYNONYM_GROUPS = [
     ["이름", "성명", "성 명", "성함", "name", "Name", "한글이름", "한글성명", "학생명", "직원명", "사원명", "회원명", "신청자", "신청자명", "대상자", "대상자명", "참가자", "참가자명"],
     ["영문이름", "영문성명", "영문명", "english name", "영문 이름"],
-    ["번호", "순번", "연번", "no", "no.", "num", "순서", "일련번호", "seq"],
+    ["번호", "순번", "연번", "no", "no.", "num", "순서", "일련번호", "seq", "#"],
     ["학번", "학생번호", "student id", "student no"],
     ["사번", "직원번호", "사원번호", "employee id", "employee no", "직번"],
     ["회원번호", "회원id", "member id", "id", "아이디"],
     ["부서", "소속", "팀", "부서명", "소속부서", "소속명", "팀명", "department", "dept", "team", "소속기관", "기관명", "학과", "학과명", "전공", "소속학과"],
-    ["직급", "직위", "직책", "position", "title", "직급/직위"],
-    ["전화번호", "연락처", "휴대폰", "휴대전화", "핸드폰", "핸드폰번호", "휴대폰번호", "휴대전화번호", "전화", "phone", "mobile", "tel", "cell", "hp", "h.p", "연락처(휴대폰)"],
+    ["직급", "직위", "직책", "직명", "position", "title", "직급/직위", "직위(직급)"],
+    ["전화번호", "연락처", "휴대폰", "휴대전화", "핸드폰", "핸드폰번호", "휴대폰번호", "휴대전화번호", "전화", "phone", "mobile", "tel", "cell", "hp", "h.p", "연락처(휴대폰)", "휴대번호", "연락처_본인", "본인연락처", "휴대폰 번호", "전화 번호", "h.p.", "hp번호"],
     ["사무실전화", "내선", "내선번호", "직장전화", "office phone", "office tel", "유선전화"],
     ["이메일", "메일", "email", "e-mail", "이메일주소", "메일주소", "전자우편"],
     ["생년월일", "출생일자", "생일", "생년", "birth", "birthday", "date of birth", "dob"],
@@ -57,8 +72,8 @@ SYNONYM_GROUPS = [
     ["금액", "가격", "단가", "총액", "총금액", "합계금액", "price", "amount", "금액(원)"],
     ["수량", "개수", "qty", "quantity", "인원", "인원수"],
     ["비고", "메모", "특이사항", "remark", "remarks", "note", "notes", "기타", "참고"],
-    ["점수", "score", "총점", "합계점수"],
-    ["등급", "grade", "평점"],
+    ["점수", "score", "총점", "합계점수", "평점평균", "평균평점", "gpa"],
+    ["등급", "grade"],
     ["상태", "status", "처리상태", "진행상태", "결과", "result"],
     ["여권번호", "passport no", "passport", "passport number"],
     ["외국인등록번호", "등록번호", "외국인번호", "arc no", "arc"],
@@ -66,7 +81,10 @@ SYNONYM_GROUPS = [
     ["만료일", "만기일", "유효기간", "expiry", "expiration", "체류만료일"],
     ["날짜", "일자", "date", "일시"],
     ["학년", "grade level", "year"],
-    ["과목", "과목명", "course", "subject", "강좌명", "교과목"],
+    ["담당교수", "교수", "교수명", "교원", "담당교원", "지도교수", "강사", "강사명", "professor", "instructor"],
+    ["학적상태", "학적", "재학상태", "학적구분"],
+    ["입학일", "입학일자", "입학년월일", "입학연도", "입학년도"],
+    ["과목", "과목명", "course", "subject", "강좌명", "교과목", "교과목명", "강의명"],
     ["계좌번호", "계좌", "account no", "account number", "입금계좌"],
     ["은행", "은행명", "bank", "거래은행"],
     ["예금주", "예금주명", "account holder"],
@@ -92,6 +110,20 @@ def normalize(s):
 SYN_LOOKUP = build_synonym_lookup()
 
 
+def _note(*parts):
+    """안내 메시지 출력. 콘솔이 한글을 못 찍는 환경(cp1252 등)이나 화면 없는 exe 에서도 절대 죽지 않는다."""
+    msg = " ".join(str(p) for p in parts)
+    try:
+        if sys.stdout is not None:
+            sys.stdout.write(msg + "\n")
+            sys.stdout.flush()
+    except Exception:
+        try:
+            sys.stdout.buffer.write((msg + "\n").encode("utf-8", "replace"))
+        except Exception:
+            pass
+
+
 # ---------------------------------------------------------------------------
 # 2. 포맷별 "표 추출기" -- 전부 (헤더, 데이터행들) 리스트를 반환한다.
 #    한 파일에서 표가 여러 개 나올 수 있으므로 항상 리스트의 리스트로 반환.
@@ -115,6 +147,86 @@ def _cell_str(v):
     return str(v).strip()
 
 
+_NUMBERISH = re.compile(r"^[\s\-+]?[\d,]+(\.\d+)?\s*%?$")
+
+
+def _looks_like_data_cell(v):
+    """숫자·날짜처럼 '값'으로 보이는 칸이면 True (머리글 줄인지 판단할 때 쓴다)."""
+    if v is None:
+        return False
+    if isinstance(v, (int, float, _dt.date, _dt.datetime, _dt.time)):
+        return True
+    s = str(v).strip()
+    if not s:
+        return False
+    if _NUMBERISH.match(s):
+        return True
+    if re.match(r"^\d{2,4}[.\-/]\d{1,2}[.\-/]\d{1,2}", s):
+        return True
+    if re.match(r"^0\d{1,2}-\d{3,4}-\d{4}$", s):   # 전화번호
+        return True
+    return False
+
+
+def _looks_like_strong_data(v):
+    """머리글에는 거의 안 나오는 값: 날짜형, 전화번호, 5자리 이상 숫자(학번·사번), 소수. (연도 4자리는 제외)"""
+    if v is None:
+        return False
+    if isinstance(v, (_dt.date, _dt.datetime)):
+        return True
+    if isinstance(v, float) and not v.is_integer():
+        return True
+    if isinstance(v, (int, float)):
+        return abs(int(v)) >= 10000
+    s = str(v).strip()
+    if re.match(r"^\d{5,}$", s) or re.match(r"^0\d{1,2}-\d{3,4}-\d{4}$", s):
+        return True
+    if re.match(r"^\d{2,4}[.\-/]\d{1,2}[.\-/]\d{1,2}", s) or re.match(r"^\d{6}-\d", s):
+        return True
+    return False
+
+
+def _combine_two_row_header(top, sub):
+    """두 줄 머리글을 한 줄로 합친다. 위 줄이 병합돼 같은 이름이 반복되면 '위 아래' 꼴로 만든다."""
+    out = []
+    for t, s in zip(top, sub):
+        t, s = _cell_str(t), _cell_str(s)
+        if t and s and t != s:
+            out.append(f"{t} {s}")
+        else:
+            out.append(t or s)
+    return out
+
+
+def _is_sub_header_row(header, row, min_cols=2):
+    """머리글 바로 아래 줄이 '작은 머리글'(2줄 머리글의 아래 줄)인지 판단.
+    조건: 값으로 보이는 칸(숫자·날짜·전화번호)이 하나도 없고, 글자 칸이 2개 이상이며,
+          위 머리글에 같은 이름이 반복되거나(가로 병합) 빈 칸이 있을 것."""
+    if row is None:
+        return False
+    cells = [_cell_str(v) for v in row]
+    filled = [c for c in cells if c]
+    if len(filled) < min_cols:
+        return False
+    if any(_looks_like_data_cell(v) for v in row):
+        return False
+    hdr = [_cell_str(h) for h in header]
+    non_blank = [h for h in hdr if h]
+    has_dup = len(non_blank) != len(set(non_blank))
+    has_gap = any(not h for h in hdr)
+    if not (has_dup or has_gap):
+        return False
+    # 아래 줄이 위 머리글과 완전히 같으면 그냥 반복 머리글이다.
+    # (세로 병합으로 '학과/이름/비고'가 아래 줄에도 복사된 경우는 나머지 칸이 다르므로 통과)
+    same = sum(1 for h, c in zip(hdr, cells) if h and c and h == c)
+    if same >= len(filled):
+        return False
+    # 위 머리글이 중복/빈칸인 열 중 최소 하나는 아래 줄에 새 글자가 있어야 한다
+    dup_names = {h for h in non_blank if non_blank.count(h) > 1}
+    fresh = any((not h or h in dup_names) and c and c != h for h, c in zip(hdr, cells))
+    return fresh
+
+
 def split_grid_into_tables(grid, min_cols=2):
     tables = []
     block = []
@@ -129,13 +241,35 @@ def split_grid_into_tables(grid, min_cols=2):
                 break
         if header_idx is None:
             return
-        header_raw = block[header_idx]
-        # 헤더 오른쪽/왼쪽의 빈 열 정리: 헤더가 비어있는 열은 데이터가 있어도 위치로만 남긴다
-        last = max(i for i, v in enumerate(header_raw) if not _is_blank(v))
-        first = min(i for i, v in enumerate(header_raw) if not _is_blank(v))
+        header_raw = list(block[header_idx])
+        # 머리글 왼쪽/오른쪽의 완전히 빈 열은 잘라낸다. 단, 머리글은 비었지만 아래 데이터가
+        # 들어있는 열은 살린다 ("(이름 없는 열 N)" 으로 표시됨).
+        body = block[header_idx + 1:]
+        width = max([len(header_raw)] + [len(r) for r in body])
+        header_raw += [None] * (width - len(header_raw))
+        used = [not _is_blank(v) for v in header_raw]
+        for r in body:
+            for i, v in enumerate(r):
+                if not _is_blank(v):
+                    used[i] = True
+        if not any(used):
+            return
+        first = used.index(True)
+        last = len(used) - 1 - used[::-1].index(True)
         header = [_cell_str(v) for v in header_raw[first:last + 1]]
+        # 머리글 줄이 없는 표(첫 줄부터 바로 사람 데이터인 경우): 머리글 후보에 전화번호·날짜·
+        # 긴 번호(5자리 이상) 같은 '값'이 2개 이상이면 머리글이 아니라고 보고, 첫 줄도 데이터로 살린다.
+        strong = sum(1 for v in header_raw[first:last + 1] if _looks_like_strong_data(v))
+        if strong >= 2 and body:
+            body = [header_raw] + body
+            header = [""] * (last - first + 1)
+        # 두 줄 머리글이면 합친다
+        elif body and _is_sub_header_row(header, list(body[0])[first:last + 1] + [None] * 0, min_cols):
+            sub = list(body[0]) + [None] * width
+            header = _combine_two_row_header(header, sub[first:last + 1])
+            body = body[1:]
         data = []
-        for row in block[header_idx + 1:]:
+        for row in body:
             cells = list(row[first:last + 1]) + [None] * max(0, (last - first + 1) - len(row[first:last + 1]))
             if all(_is_blank(v) for v in cells):
                 continue
@@ -164,16 +298,63 @@ def _tidy_table(header, data):
     return found
 
 
+_MERGE_RE = re.compile(r'<mergeCell\s+ref="([A-Z]+)(\d+):([A-Z]+)(\d+)"')
+
+
+def _col_index(letters):
+    n = 0
+    for ch in letters:
+        n = n * 26 + (ord(ch) - 64)
+    return n - 1
+
+
+def _xlsx_merged_ranges(wb, ws):
+    """read_only 모드에는 병합 정보가 없어서 시트 XML에서 직접 읽는다. [(r1,c1,r2,c2) 0기준]"""
+    try:
+        xml = wb._archive.read(ws._worksheet_path).decode("utf-8", "ignore")
+    except Exception:
+        return []
+    out = []
+    for c1, r1, c2, r2 in _MERGE_RE.findall(xml):
+        out.append((int(r1) - 1, _col_index(c1), int(r2) - 1, _col_index(c2)))
+    return out
+
+
+def _fill_merged(rows, ranges):
+    """병합 범위의 왼쪽 위 값을 범위 전체 칸에 복사한다 (세로 병합된 학과명, 가로 병합된 머리글)."""
+    for r1, c1, r2, c2 in ranges:
+        if r1 >= len(rows):
+            continue
+        row0 = rows[r1]
+        if c1 >= len(row0):
+            continue
+        val = row0[c1]
+        if _is_blank(val):
+            continue
+        for r in range(r1, min(r2, len(rows) - 1) + 1):
+            row = rows[r]
+            if len(row) <= c2:
+                row.extend([None] * (c2 + 1 - len(row)))
+            for c in range(c1, c2 + 1):
+                if _is_blank(row[c]):
+                    row[c] = val
+    return rows
+
+
 def extract_tables_xlsx(path):
     wb = load_workbook(path, data_only=True, read_only=True)
     tables = []
-    for ws in wb.worksheets:
-        if ws.sheet_state != "visible":
-            continue
-        rows = [list(row) for row in ws.iter_rows(values_only=True)]
-        # 병합 셀은 read_only 모드에서 값이 왼쪽 위에만 있으므로 그대로 둔다 (헤더 감지가 처리)
-        tables.extend(split_grid_into_tables(rows))
-    wb.close()
+    try:
+        for ws in wb.worksheets:
+            if ws.sheet_state != "visible":
+                continue
+            rows = [list(row) for row in ws.iter_rows(min_row=1, values_only=True)]
+            ranges = _xlsx_merged_ranges(wb, ws)
+            if ranges:
+                rows = _fill_merged(rows, ranges)
+            tables.extend(split_grid_into_tables(rows))
+    finally:
+        wb.close()
     return tables
 
 
@@ -289,6 +470,51 @@ def _extract_table_by_position(page, x_gap=15, y_tol=3):
     return (header, data_rows)
 
 
+_NOTE_PREFIX = ("※", "*", "＊", "주)", "주:", "출처")
+
+
+def _join_wrapped(a, b):
+    """줄바꿈으로 끊긴 글자를 다시 붙인다. 한글끼리는 붙여 쓰고(글로벌호스피탈리+티산업), 그 외엔 띄어 쓴다."""
+    a, b = str(a).rstrip(), str(b).lstrip()
+    if not a:
+        return b
+    if not b:
+        return a
+    if re.match(r"[가-힣]", a[-1]) and re.match(r"[가-힣(]", b[0]) and not a.endswith((",", ".", ")")):
+        return a + b
+    return a + " " + b
+
+
+def merge_wrapped_rows(header, rows):
+    """PDF 처럼 '칸 안에서 줄바꿈된 글'이 다음 줄로 떨어져 나온 표를 원래 줄로 되돌린다.
+    조건: 첫 칸이 비어 있고, 글자가 있는 칸이 모두 '바로 윗줄에도 글자가 있던 칸'이며, 값(숫자·날짜 등)이 아닐 것.
+    '※ …' 처럼 표 아래 붙은 각주 줄은 뺀다."""
+    out = []
+    after_note = False
+    for row in rows:
+        cells = list(row)
+        first = next((c for c in cells if not _is_blank(c)), None)
+        if first is not None and str(first).strip().startswith(_NOTE_PREFIX):
+            after_note = True
+            continue
+        if after_note:
+            # 각주가 여러 줄로 이어진 경우: 값(숫자 등)도 없고 칸도 절반 이상 비어 있으면 각주의 연속으로 본다
+            filled_n = sum(1 for c in cells if not _is_blank(c))
+            if filled_n * 2 <= len(cells) and not any(_looks_like_strong_data(c) for c in cells):
+                continue
+            after_note = False
+        if out and _is_blank(cells[0]):
+            prev = out[-1]
+            filled = [i for i, c in enumerate(cells) if not _is_blank(c)]
+            if filled and all(i < len(prev) and not _is_blank(prev[i]) for i in filled) \
+                    and not any(_looks_like_strong_data(cells[i]) for i in filled):
+                for i in filled:
+                    prev[i] = _join_wrapped(prev[i], cells[i])
+                continue
+        out.append(cells)
+    return out
+
+
 def extract_tables_pdf(path):
     import pdfplumber
     tables = []
@@ -305,8 +531,8 @@ def extract_tables_pdf(path):
                 fallback = _extract_table_by_position(page)
                 if fallback:
                     page_tables.extend(_tidy_table(*fallback))
-            tables.extend(page_tables)
-    return tables
+            tables.extend((h, merge_wrapped_rows(h, r)) for h, r in page_tables)
+    return [(h, r) for h, r in tables if r]
 
 def _tag(el):
     """네임스페이스 접두어를 뗀 태그 이름 ('{ns}tbl' -> 'tbl')."""
@@ -505,53 +731,161 @@ def iter_input_files(input_dir, include_subfolders=False):
                 yield fname, path
 
 
-def merge_all(input_dir, include_subfolders=False, progress=None):
-    """progress(메시지) 콜백을 주면 파일마다 진행 상황을 알려준다."""
+_TOTAL_WORDS = {"합계", "총계", "소계", "계", "총합", "합", "총합계", "total", "sum", "subtotal"}
+
+
+def _is_total_row(row):
+    """첫 번째로 값이 들어있는 칸이 '합계/소계/총계/계' 이면 합계 줄로 본다."""
+    for v in row:
+        if _is_blank(v):
+            continue
+        s = str(v).strip().replace(" ", "").lower()
+        return s in _TOTAL_WORDS
+    return False
+
+
+_INT_RE = re.compile(r"^-?\d{1,15}$")
+_NUM_COMMA_RE = re.compile(r"^-?\d{1,3}(,\d{3})+(\.\d+)?$")
+_FLOAT_RE = re.compile(r"^-?\d+\.\d+$")
+
+
+def coerce_value(v):
+    """'1,234' → 1234, '3.5' → 3.5 처럼 글자로 된 숫자를 진짜 숫자로. '0123'(앞자리 0)·전화번호·날짜는 그대로 둔다."""
+    if not isinstance(v, str):
+        return v
+    s = v.strip()
+    if not s or len(s) > 20:
+        return v
+    if _INT_RE.match(s):
+        if len(s.lstrip("-")) > 1 and s.lstrip("-")[0] == "0":
+            return v    # 앞자리 0 은 번호(학번·코드)일 가능성이 높다
+        try:
+            return int(s)
+        except ValueError:
+            return v
+    if _NUM_COMMA_RE.match(s):
+        try:
+            n = float(s.replace(",", ""))
+            return int(n) if n.is_integer() and "." not in s else n
+        except ValueError:
+            return v
+    if _FLOAT_RE.match(s):
+        try:
+            return float(s)
+        except ValueError:
+            return v
+    return v
+
+
+def _extract_one(job):
+    """작업자 프로세스에서 파일 하나를 읽는다. 결과는 pickle 가능한 값만 돌려준다."""
+    fname, path, ext = job
+    try:
+        tables = EXTRACTORS[ext](path)
+        return fname, tables, None
+    except Exception as e:
+        from legacy_formats import LegacyFormatError
+        if isinstance(e, LegacyFormatError):
+            return fname, None, str(e)
+        return fname, None, f"읽기 실패: {type(e).__name__}: {e}"
+
+
+def _run_extractions(jobs, progress=None, parallel="auto"):
+    """파일들을 읽어 [(fname, tables, error)] 를 입력 순서대로 돌려준다.
+    parallel: "auto"(파일 4개 이상이고 CPU 2개 이상이면 병렬) / True / False"""
+    n = len(jobs)
+    use_parallel = False
+    if parallel is True or parallel == "auto":
+        try:
+            import multiprocessing
+            cpus = multiprocessing.cpu_count()
+        except Exception:
+            cpus = 1
+        if parallel is True or (n >= 4 and cpus >= 2):
+            use_parallel = sys.platform != "emscripten" and cpus >= 2
+    results = [None] * n
+    if use_parallel:
+        try:
+            from concurrent.futures import ProcessPoolExecutor, as_completed
+            workers = max(2, min(8, cpus - 1 if cpus > 2 else cpus))
+            done = 0
+            with ProcessPoolExecutor(max_workers=workers) as ex:
+                fut_map = {ex.submit(_extract_one, job): i for i, job in enumerate(jobs)}
+                for fut in as_completed(fut_map):
+                    i = fut_map[fut]
+                    results[i] = fut.result()   # 작업자 풀 자체가 깨지면 예외 → 아래에서 한 개씩 다시 읽는다
+                    done += 1
+                    if progress:
+                        progress(f"읽는 중… {done}/{n}  ({jobs[i][0]})")
+            return results
+        except Exception:
+            results = [None] * n   # 병렬이 안 되는 환경이면 조용히 한 개씩 읽는다
+            if progress:
+                progress("병렬 읽기가 안 되는 환경이라 한 개씩 읽어요…")
+    for i, job in enumerate(jobs):
+        if progress:
+            progress(f"읽는 중… {i + 1}/{n}  ({job[0]})")
+        results[i] = _extract_one(job)
+    return results
+
+
+def merge_all(input_dir, include_subfolders=False, progress=None,
+              drop_totals=True, dedupe=False, parallel=None, stats=None):
+    """progress(메시지) 콜백을 주면 파일마다 진행 상황을 알려준다.
+    drop_totals: '합계/소계/총계' 줄을 뺀다.   dedupe: 완전히 똑같은 줄은 한 번만 남긴다.
+    stats: dict 를 주면 파일 수·표 수·뺀 줄 수 등을 채워 준다."""
     canonical_columns = []
     file_mappings = []   # (표시이름, mapping dict)
     all_rows = []         # (row_dict, 표시이름)
     skipped = []
+    if parallel is None:
+        parallel = DEFAULT_PARALLEL
+    st = stats if stats is not None else {}
+    st.update({"files": 0, "tables": 0, "rows": 0, "totals_dropped": 0, "dupes_dropped": 0, "unnamed_cols": 0})
 
+    jobs = []
     for fname, path in iter_input_files(input_dir, include_subfolders):
         ext = os.path.splitext(fname)[1].lower()
-
         if ext in UNSUPPORTED_HINT:
             skipped.append((fname, UNSUPPORTED_HINT[ext]))
             continue
         if ext not in EXTRACTORS:
             continue
-        if progress:
-            progress(f"읽는 중: {fname}")
+        jobs.append((fname, path, ext))
+    st["files"] = len(jobs)
 
-        try:
-            tables = EXTRACTORS[ext](path)
-        except Exception as e:
-            from legacy_formats import LegacyFormatError
-            if isinstance(e, LegacyFormatError):
-                skipped.append((fname, str(e)))
-            else:
-                skipped.append((fname, f"읽기 실패: {type(e).__name__}: {e}"))
+    seen_rows = set()
+    for fname, tables, err in _run_extractions(jobs, progress, parallel):
+        if err is not None:
+            skipped.append((fname, err))
             continue
-
         if not tables:
             skipped.append((fname, "표를 찾지 못함"))
             continue
 
         for idx, (header, data) in enumerate(tables):
             label = fname if len(tables) == 1 else f"{fname} (표{idx+1})"
+            st["tables"] += 1
 
             # 같은 표 안에 이름이 똑같은 열이 여러 개 있으면(예: 평가등급 A/B/C/D/E가
             # 전부 "평가등급"으로만 적힌 병합표) 열 이름으로만 매칭할 경우 데이터가
             # 서로 덮어써서 사라진다. 위치(열 순서) 기준으로 구분해 각각 별도 열로 취급한다.
+            # 머리글이 비어 있는데 데이터가 있는 열은 "(이름 없는 열 N)" 으로 살린다.
             seen_count = {}
             clean_header = []
-            for col in header:
+            unnamed = []
+            for ci, col in enumerate(header):
                 col = "" if col is None else str(col).strip()
                 if col == "":
-                    clean_header.append("")
-                    continue
+                    if any(ci < len(r) and not _is_blank(r[ci]) for r in data):
+                        col = f"(이름 없는 열 {ci + 1})"
+                        unnamed.append(col)
+                    else:
+                        clean_header.append("")
+                        continue
                 seen_count[col] = seen_count.get(col, 0) + 1
                 clean_header.append(col if seen_count[col] == 1 else f"{col} ({seen_count[col]})")
+            st["unnamed_cols"] += len(unnamed)
 
             # 위치별로 표준 열을 매핑 (열 이름이 아니라 순서 기준이라 중복 이름도 안전).
             # 단, 같은 표 안에서 이름이 중복된 열(예: "평가등급 (2)")은 유사도 매칭을
@@ -563,8 +897,10 @@ def merge_all(input_dir, include_subfolders=False, progress=None):
                 if col == "":
                     position_mapping.append(None)
                     continue
-                is_dup = (col != (("" if original is None else str(original).strip())))
-                if is_dup:
+                orig_s = "" if original is None else str(original).strip()
+                if col in unnamed:
+                    canon, method, score = col, "신규열(수동확인필요)", 0.0
+                elif col != orig_s:
                     canon, method, score = col, "표내중복열(수동확인필요)", 0.0
                 else:
                     canon, method, score = map_column(col, canonical_columns)
@@ -575,14 +911,25 @@ def merge_all(input_dir, include_subfolders=False, progress=None):
             file_mappings.append((label, mapping_for_report))
 
             for row in data:
+                if drop_totals and _is_total_row(row):
+                    st["totals_dropped"] += 1
+                    continue
                 row_dict = {}
                 for i, val in enumerate(row):
                     if i >= len(position_mapping) or position_mapping[i] is None:
                         continue
-                    row_dict[position_mapping[i]] = val
-                if any(v not in (None, "") for v in row_dict.values()):
-                    all_rows.append((row_dict, label))
+                    row_dict[position_mapping[i]] = coerce_value(val)
+                if not any(v not in (None, "") for v in row_dict.values()):
+                    continue
+                if dedupe:
+                    key = tuple((k, str(v)) for k, v in sorted(row_dict.items()) if v not in (None, ""))
+                    if key in seen_rows:
+                        st["dupes_dropped"] += 1
+                        continue
+                    seen_rows.add(key)
+                all_rows.append((row_dict, label))
 
+    st["rows"] = len(all_rows)
     return canonical_columns, all_rows, file_mappings, skipped
 
 
@@ -615,6 +962,9 @@ def write_xlsx(output_path, canonical_columns, all_rows, file_mappings, skipped)
         cell.fill = PatternFill("solid", fgColor="DCE6F1")
     for row_dict, source in all_rows:
         ws1.append([row_dict.get(c, "") for c in canonical_columns] + [source])
+    ws1.freeze_panes = "A2"
+    if all_rows:
+        ws1.auto_filter.ref = ws1.dimensions
 
     ws2 = wb.create_sheet(MAPPING_SHEET)
     ws2.append(MAPPING_HEADER)
@@ -637,10 +987,39 @@ def write_xlsx(output_path, canonical_columns, all_rows, file_mappings, skipped)
         for fname, reason in skipped:
             ws3.append([fname, reason])
 
+    # 요약 시트: 어떤 파일에서 몇 줄이 왔는지 한눈에
+    ws4 = wb.create_sheet("요약")
+    ws4.append(["출처파일(표)", "줄 수"])
+    for cell in ws4[1]:
+        cell.font = Font(bold=True)
+        cell.fill = PatternFill("solid", fgColor="DCE6F1")
+    counts = OrderedDict()
+    for _, source in all_rows:
+        counts[source] = counts.get(source, 0) + 1
+    for source, n in counts.items():
+        ws4.append([source, n])
+    ws4.append(["합계", len(all_rows)])
+    ws4[ws4.max_row][0].font = Font(bold=True)
+    ws4[ws4.max_row][1].font = Font(bold=True)
+    ws4.append([])
+    ws4.append(["합쳐진 표 수", len(file_mappings)])
+    ws4.append(["열 수", len(canonical_columns)])
+    ws4.append(["읽지 못한 파일 수", len(skipped)])
+    ws4.append(["만든 프로그램", f"스마트 자료취합기 v{ENGINE_VERSION}"])
+
     for ws in wb.worksheets:
-        for col_cells in ws.columns:
-            max_len = max((len(str(c.value)) if c.value is not None else 0) for c in col_cells)
-            ws.column_dimensions[col_cells[0].column_letter].width = min(max(max_len + 2, 10), 40)
+        widths = {}
+        for r_idx, row in enumerate(ws.iter_rows(values_only=True)):
+            if r_idx > 500:   # 폭 계산은 앞 500줄만 (큰 결과도 빠르게 저장)
+                break
+            for c_idx, v in enumerate(row):
+                if v is None:
+                    continue
+                n = len(str(v))
+                if n > widths.get(c_idx, 0):
+                    widths[c_idx] = n
+        for c_idx, n in widths.items():
+            ws.column_dimensions[get_column_letter(c_idx + 1)].width = min(max(n + 2, 10), 40)
 
     wb.save(output_path)
 
@@ -653,8 +1032,8 @@ def write_csv(output_path, canonical_columns, all_rows, file_mappings, skipped):
             writer.writerow([row_dict.get(c, "") for c in canonical_columns] + [source])
     # CSV는 시트를 여러 개 가질 수 없어서 매핑리포트/처리못한파일은 별도 안내로 대체한다.
     if file_mappings or skipped:
-        print("참고: CSV는 표 1개만 담을 수 있어서 열이름맞춤표·처리못한파일 내역은 CSV에는")
-        print("      들어가지 않았습니다. 그 내역까지 확인하려면 .xlsx로 출력해주세요.")
+        _note("참고: CSV는 표 1개만 담을 수 있어서 열이름맞춤표·처리못한파일 내역은 CSV에는")
+        _note("      들어가지 않았습니다. 그 내역까지 확인하려면 .xlsx로 출력해주세요.")
 
 
 def write_docx(output_path, canonical_columns, all_rows, file_mappings, skipped):
@@ -784,8 +1163,8 @@ def write_pdf(output_path, canonical_columns, all_rows, file_mappings, skipped):
     if not embedded:
         FONT = "HYGothic-Medium"
         pdfmetrics.registerFont(UnicodeCIDFont(FONT))
-        print("참고: 윈도우 기본 한글 폰트(맑은 고딕)를 찾지 못해 대체 폰트로 PDF를 만들었습니다.")
-        print("      PDF를 열어서 한글이 정상적으로 보이는지 한 번 확인해주세요.")
+        _note("참고: 윈도우 기본 한글 폰트(맑은 고딕)를 찾지 못해 대체 폰트로 PDF를 만들었습니다.")
+        _note("      PDF를 열어서 한글이 정상적으로 보이는지 한 번 확인해주세요.")
     body_style = ParagraphStyle("body", fontName=FONT, fontSize=8, leading=10)
     head_style = ParagraphStyle("head", fontName=FONT, fontSize=9, leading=11, textColor=colors.white)
     title_style = ParagraphStyle("title", fontName=FONT, fontSize=16, leading=20, spaceAfter=10)
@@ -1057,8 +1436,8 @@ def _hwpx_table(headers, rows, table_id=1500000000):
 
 def write_hwpx(output_path, canonical_columns, all_rows, file_mappings, skipped):
     if not os.path.exists(_HWPX_TEMPLATE):
-        print(f"오류: hwpx_template.hwpx 파일을 찾을 수 없습니다. smart_merge_v2.py와 같은 폴더에 있어야 합니다.")
-        print(f"      (찾은 위치: {_HWPX_TEMPLATE})")
+        _note(f"오류: hwpx_template.hwpx 파일을 찾을 수 없습니다. smart_merge_v2.py와 같은 폴더에 있어야 합니다.")
+        _note(f"      (찾은 위치: {_HWPX_TEMPLATE})")
         sys.exit(1)
 
     with zipfile.ZipFile(_HWPX_TEMPLATE) as zin:
@@ -1128,27 +1507,31 @@ def smart_merge(input_dir, output_path):
     ext = os.path.splitext(output_path)[1].lower()
     if ext not in WRITERS:
         supported = ", ".join(WRITERS.keys())
-        print(f"지원하지 않는 출력 형식입니다: '{ext}'. 다음 중 하나로 저장해주세요: {supported}")
+        _note(f"지원하지 않는 출력 형식입니다: '{ext}'. 다음 중 하나로 저장해주세요: {supported}")
         sys.exit(1)
 
     canonical_columns, all_rows, file_mappings, skipped = merge_all(input_dir)
     WRITERS[ext](output_path, canonical_columns, all_rows, file_mappings, skipped)
 
-    print(f"완료: {len(file_mappings)}개 표 -> {len(all_rows)}행 -> {output_path}")
-    print(f"표준 열 {len(canonical_columns)}개: {canonical_columns}")
+    _note(f"완료: {len(file_mappings)}개 표 -> {len(all_rows)}행 -> {output_path}")
+    _note(f"표준 열 {len(canonical_columns)}개: {canonical_columns}")
     flagged = [(f, o) for f, m in file_mappings for o, (c, method, s) in m.items() if method == "신규열(수동확인필요)"]
     if flagged:
-        print(f"⚠ 수동 확인이 필요한 열 {len(flagged)}개")
+        _note(f"⚠ 수동 확인이 필요한 열 {len(flagged)}개")
     if skipped:
-        print(f"⚠ 처리하지 못한 파일 {len(skipped)}개")
+        _note(f"⚠ 처리하지 못한 파일 {len(skipped)}개")
         for fname, reason in skipped:
-            print(f"   - {fname}: {reason}")
+            _note(f"   - {fname}: {reason}")
 
 
 if __name__ == "__main__":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
     if len(sys.argv) != 3:
         supported = ", ".join(WRITERS.keys())
-        print(f"사용법: python smart_merge_v2.py <입력폴더> <출력파일.xlsx|.docx|.csv|.pdf|.hwpx>")
-        print(f"지원하는 출력 형식: {supported}")
+        _note(f"사용법: python smart_merge_v2.py <입력폴더> <출력파일.xlsx|.docx|.csv|.pdf|.hwpx>")
+        _note(f"지원하는 출력 형식: {supported}")
         sys.exit(1)
     smart_merge(sys.argv[1], sys.argv[2])

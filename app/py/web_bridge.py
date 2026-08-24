@@ -62,8 +62,8 @@ def extract_tables_pdf_web(path):
     for words in _pdf_words_pdfminer(path):
         fb = sm._extract_table_by_position(_FakePage(words), x_gap=12, y_tol=3)
         if fb:
-            tables.extend(sm._tidy_table(*fb))
-    return tables
+            tables.extend((h, sm.merge_wrapped_rows(h, r)) for h, r in sm._tidy_table(*fb))
+    return [(h, r) for h, r in tables if r]
 
 
 sm.EXTRACTORS[".pdf"] = extract_tables_pdf_web
@@ -79,7 +79,7 @@ def merge_uploaded(files, out_ext, demo=True):
             safe = re.sub(r"[\\/]", "_", name)
             with open(os.path.join(work, safe), "wb") as f:
                 f.write(bytes(data))
-        cols, rows, mappings, skipped = sm.merge_all(work)
+        cols, rows, mappings, skipped = sm.merge_all(work, parallel=False)   # 브라우저에는 작업자 프로세스가 없다
         truncated = 0
         if demo and len(rows) > DEMO_MAX_ROWS:
             truncated = len(rows) - DEMO_MAX_ROWS

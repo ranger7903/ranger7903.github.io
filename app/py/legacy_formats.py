@@ -341,16 +341,25 @@ def _hwp_collect_tables(node, tables):
             cells = []
             list_headers = [c for c in ch.children if c.tag == HWPTAG_LIST_HEADER]
             positions = _hwp_cell_positions(list_headers, row_cnt, col_cnt) or []
+            # 셀 안의 문단(PARA_HEADER)은 한글 버전에 따라 LIST_HEADER 의 자식으로 오기도 하고(level+1),
+            # 실제 한글 문서에서는 대부분 LIST_HEADER 와 같은 level 로 뒤따라 온다(형제).
+            # 두 경우 모두 읽는다: 각 LIST_HEADER 뒤에 오는 형제 문단은 다음 LIST_HEADER 전까지 그 셀의 것.
+            cell_paras = {id(lh): [p for p in lh.children if p.tag == HWPTAG_PARA_HEADER] for lh in list_headers}
+            current = None
+            for c in ch.children:
+                if c.tag == HWPTAG_LIST_HEADER:
+                    current = c
+                elif c.tag == HWPTAG_PARA_HEADER and current is not None:
+                    cell_paras[id(current)].append(c)
             for lh, pos in zip(list_headers, positions):
                 row, col, rowspan, colspan = pos
                 lines = []
-                for para in lh.children:
-                    if para.tag == HWPTAG_PARA_HEADER:
-                        t = _hwp_node_text(para).strip()
-                        if t:
-                            lines.append(t)
-                        # 셀 안의 표(중첩 표)도 별도 표로 수집
-                        _hwp_collect_tables(para, tables)
+                for para in cell_paras[id(lh)]:
+                    t = _hwp_node_text(para).strip()
+                    if t:
+                        lines.append(t)
+                    # 셀 안의 표(중첩 표)도 별도 표로 수집
+                    _hwp_collect_tables(para, tables)
                 cells.append((row, col, rowspan, colspan, "\n".join(lines)))
             grid = cells_to_grid(cells, row_cnt, col_cnt)
             if len(grid) >= 2:
