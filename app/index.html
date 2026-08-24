@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스마트 자료취합기 · 웹 체험판 | 밸류스</title>
+<meta name="description" content="설치 없이 브라우저에서 바로 써보는 스마트 자료취합기 체험판. 파일은 내 컴퓨터를 떠나지 않습니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--navy:#1d2a44;--red:#b8352f;--cream:#f6f2ea;--line:#e6dfd2;--gray:#5b6577;--green:#1a7f37;--yellow:#fff2cc}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Gothic A1",system-ui,sans-serif;background:var(--cream);color:var(--navy);line-height:1.55}
+a{color:var(--navy)}
+nav{background:#fff;border-bottom:1px solid var(--line)}
+nav .shell{max-width:980px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;font-size:18px}
+.seal{width:26px;height:26px;background:var(--red);color:#fff;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.tag{font-size:12px;background:var(--navy);color:#fff;padding:3px 8px;border-radius:4px;margin-left:8px;font-weight:600}
+main{max-width:980px;margin:0 auto;padding:28px 20px 60px}
+h1{font-family:"Gowun Batang",serif;font-size:34px;margin:0 0 6px}
+.lede{color:var(--gray);margin:0 0 22px;font-size:15px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+.step{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;margin-bottom:8px}
+.step b{background:var(--navy);color:#fff;border-radius:6px;padding:2px 9px;font-size:14px}
+.hint{color:var(--gray);font-size:13px;margin:0 0 10px}
+.drop{border:2px dashed #b9c0cf;border-radius:10px;padding:26px;text-align:center;background:#fbfbfd;cursor:pointer;transition:.15s}
+.drop.over{border-color:var(--navy);background:#eef2f8}
+.drop strong{display:block;font-size:16px;margin-bottom:4px}
+.drop small{color:var(--gray)}
+#fileInput{display:none}
+.files{margin:12px 0 0;padding:0;list-style:none;font-family:"IBM Plex Mono",monospace;font-size:13px}
+.files li{display:flex;justify-content:space-between;gap:10px;padding:6px 8px;border-bottom:1px solid #f0ece4}
+.files li.ok{color:var(--green)} .files li.skip{color:var(--red)}
+.files li button{border:0;background:none;color:var(--gray);cursor:pointer;font-size:12px}
+.fmt label{display:inline-flex;align-items:center;gap:6px;margin:4px 14px 4px 0;font-size:15px}
+.fmt small{color:var(--gray)}
+.btn{display:inline-block;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:14px 22px;font-size:17px;font-weight:800;cursor:pointer;width:100%;font-family:inherit}
+.btn:disabled{background:#9aa3b5;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy);width:auto;padding:10px 16px;font-size:14px;margin-right:8px}
+.bar{height:8px;background:#e9ecf2;border-radius:4px;overflow:hidden;margin:12px 0 6px}
+.bar i{display:block;height:100%;width:0;background:var(--navy);transition:width .3s}
+.status{font-size:13px;color:var(--gray);min-height:18px}
+.result{display:none}
+.result.show{display:block}
+.result .big{font-size:19px;font-weight:800;color:var(--green);margin-bottom:6px}
+.result .detail{color:var(--gray);font-size:14px;white-space:pre-line;margin-bottom:12px}
+.warn{background:var(--yellow);border-radius:8px;padding:10px 14px;font-size:13px;margin-top:10px}
+.demo{background:#fff8e6;border:1px solid #f1dfa6;border-radius:10px;padding:14px 18px;font-size:14px;margin-bottom:18px}
+.demo b{color:var(--red)}
+.log{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--gray);background:#fbfbfd;border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-height:120px;overflow:auto;white-space:pre-wrap;margin-top:8px;display:none}
+footer{text-align:center;color:var(--gray);font-size:12px;padding:20px}
+@media (max-width:600px){h1{font-size:26px}.files li{flex-direction:column;gap:2px}}
+</style>
+</head>
+<body>
+<nav><div class="shell">
+  <a class="brand" href="/"><span class="seal">밸</span>밸류스<span class="tag">웹 체험판</span></a>
+  <a href="/#products" style="font-size:14px">정식 프로그램 보기 →</a>
+</div></nav>
+
+<main>
+  <h1>스마트 자료취합기 <span style="font-size:18px;color:var(--gray);font-family:'Gothic A1'">설치 없이 브라우저에서</span></h1>
+  <p class="lede">엑셀·워드·PDF·한글 파일 속 표를 찾아 하나로 합칩니다. <b>파일은 서버로 올라가지 않고 이 브라우저 안에서만 처리됩니다.</b></p>
+
+  <div class="demo">체험판은 <b>한 번에 파일 5개, 결과 300줄</b>까지 합쳐 볼 수 있어요. 파일 수 제한 없이, 인터넷 없이, PDF·한글 저장까지 필요하면
+    <a href="/#products"><b>정식 프로그램(39,000원)</b></a>을 이용해 주세요.</div>
+
+  <div class="card">
+    <div class="step"><b>①</b> 합칠 파일 넣기</div>
+    <p class="hint">엑셀(xlsx·xls)·CSV·워드(docx·doc)·PDF·한글(hwpx·hwp) — 여러 개를 한꺼번에 넣으세요.</p>
+    <div class="drop" id="drop">
+      <strong>여기에 파일을 끌어다 놓거나, 눌러서 고르세요</strong>
+      <small>최대 5개 · 파일은 내 컴퓨터를 떠나지 않아요</small>
+    </div>
+    <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.xlsm,.csv,.txt,.docx,.doc,.pdf,.hwpx,.hwp">
+    <ul class="files" id="files"></ul>
+  </div>
+
+  <div class="card">
+    <div class="step"><b>②</b> 결과를 어떤 파일로 받을까요?</div>
+    <div class="fmt">
+      <label><input type="radio" name="fmt" value=".xlsx" checked> 엑셀 <small>(추천 — 열이름맞춤표 포함)</small></label>
+      <label><input type="radio" name="fmt" value=".csv"> CSV</label>
+      <label><input type="radio" name="fmt" value=".docx"> 워드</label>
+      <label><input type="radio" name="fmt" value=".hwpx"> 한글</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="step"><b>③</b> 합치기</div>
+    <button class="btn" id="run" disabled>엔진을 불러오는 중이에요… (처음 한 번, 10~20초)</button>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="status" id="status"></div>
+    <div class="log" id="log"></div>
+  </div>
+
+  <div class="card result" id="result">
+    <div class="big" id="rBig"></div>
+    <div class="detail" id="rDetail"></div>
+    <a class="btn ghost" id="dl" download>결과 파일 내려받기</a>
+    <button class="btn ghost" id="again">다른 파일로 다시</button>
+    <div class="warn" id="rWarn" style="display:none"></div>
+  </div>
+</main>
+<footer>© 2026 밸류스 · 문의 ranger7903@nate.com · 이 페이지의 처리는 전부 사용자의 브라우저 안에서 일어나며, 어떤 파일도 전송·저장되지 않습니다.</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const files = [];            // {name, data(Uint8Array), status, reason}
+const MAX = 5;
+let py = null, ready = false;
+const log = m => { const el = $('#log'); el.style.display = 'block'; el.textContent += m + "\n"; el.scrollTop = el.scrollHeight; };
+const status = (m, pct) => { $('#status').textContent = m; if (pct != null) $('#bar').style.width = pct + '%'; };
+
+function previewStatus(name) {
+  const ext = name.toLowerCase().slice(name.lastIndexOf('.'));
+  const ok = ['.xlsx','.xls','.xlsm','.xltx','.xltm','.csv','.tsv','.txt','.docx','.doc','.pdf','.hwpx','.hwp'];
+  if (ok.includes(ext)) return ['ok', ''];
+  if (['.pptx','.ppt'].includes(ext)) return ['skip', '파워포인트는 지원하지 않아요'];
+  if (['.jpg','.jpeg','.png','.gif'].includes(ext)) return ['skip', '그림 파일은 표를 읽을 수 없어요'];
+  return ['skip', '표가 있는 문서가 아니라서 건너뛰어요'];
+}
+function render() {
+  const ul = $('#files'); ul.innerHTML = '';
+  files.forEach((f, i) => {
+    const li = document.createElement('li'); li.className = f.status;
+    li.innerHTML = `<span>${f.status === 'ok' ? '✔' : '✖'} ${f.name}${f.reason ? ' — ' + f.reason : ''}</span><button data-i="${i}">빼기</button>`;
+    ul.appendChild(li);
+  });
+  ul.querySelectorAll('button').forEach(b => b.onclick = () => { files.splice(+b.dataset.i, 1); render(); });
+  const okCount = files.filter(f => f.status === 'ok').length;
+  $('#run').disabled = !(ready && okCount > 0);
+  if (ready) $('#run').textContent = okCount ? `▶  합치기 시작 (읽을 파일 ${okCount}개)` : '▶  합치기 시작 — 먼저 파일을 넣어주세요';
+}
+async function addFiles(list) {
+  for (const file of list) {
+    if (files.length >= MAX) { alert(`체험판은 한 번에 ${MAX}개까지만 넣을 수 있어요.`); break; }
+    if (files.some(f => f.name === file.name)) continue;
+    const [st, reason] = previewStatus(file.name);
+    files.push({ name: file.name, data: new Uint8Array(await file.arrayBuffer()), status: st, reason });
+  }
+  $('#result').classList.remove('show');
+  render();
+}
+const drop = $('#drop');
+drop.onclick = () => $('#fileInput').click();
+$('#fileInput').onchange = e => addFiles(e.target.files);
+['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+$('#again').onclick = () => { files.length = 0; render(); $('#result').classList.remove('show'); window.scrollTo({top:0, behavior:'smooth'}); };
+
+async function boot() {
+  try {
+    status('파이썬 엔진 내려받는 중…', 10);
+    py = await loadPyodide();
+    status('필요한 부품 설치 중 (엑셀·워드·PDF 읽기)…', 35);
+    await py.loadPackage(['micropip', 'openpyxl', 'lxml']);
+    const micropip = py.pyimport('micropip');
+    try { await micropip.install(['python-docx']); } catch (e) { log('워드 부품 설치 실패: ' + e); }
+    status('PDF 읽기 부품 설치 중…', 60);
+    try { await micropip.install(['pdfminer.six']); } catch (e) { log('PDF 부품 설치 실패(그래도 다른 형식은 됩니다): ' + e); }
+    status('엔진 파일 불러오는 중…', 80);
+    py.FS.mkdirTree('/app');
+    for (const f of ['smart_merge_v2.py', 'legacy_formats.py', 'web_bridge.py']) {
+      const t = await (await fetch('py/' + f, {cache: 'no-store'})).text();
+      py.FS.writeFile('/app/' + f, t);
+    }
+    const tpl = new Uint8Array(await (await fetch('py/hwpx_template.hwpx')).arrayBuffer());
+    py.FS.writeFile('/app/hwpx_template.hwpx', tpl);
+    await py.runPythonAsync("import sys; sys.path.insert(0, '/app'); import web_bridge");
+    ready = true;
+    status('준비 완료. 파일을 넣고 [합치기 시작]을 누르세요.', 100);
+    render();
+  } catch (e) {
+    status('엔진을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.', 0);
+    log(String(e));
+  }
+}
+$('#run').onclick = async () => {
+  const fmt = document.querySelector('input[name=fmt]:checked').value;
+  const use = files.filter(f => f.status === 'ok');
+  $('#run').disabled = true; status('합치는 중이에요…', 30);
+  $('#result').classList.remove('show');
+  try {
+    const names = use.map(f => f.name);
+    py.globals.set('_names', names);
+    py.globals.set('_datas', use.map(f => f.data));
+    py.globals.set('_fmt', fmt);
+    const res = await py.runPythonAsync(`
+import web_bridge
+_files = [(n, bytes(d.to_py())) for n, d in zip(_names.to_py(), _datas.to_py())]
+_r = web_bridge.merge_uploaded(_files, _fmt, demo=True)
+_r
+`);
+    const r = res.toJs({dict_converter: Object.fromEntries});
+    if (!r.ok) { status('문제가 생겼어요.', 0); log(r.error + "\n" + r.trace); $('#run').disabled = false; return; }
+    const blob = new Blob([r.data], {type: 'application/octet-stream'});
+    const url = URL.createObjectURL(blob);
+    $('#dl').href = url; $('#dl').download = r.filename;
+    $('#rBig').textContent = `✔ 완료!  표 ${r.tables}개를 찾아 ${r.rows}줄, 열 ${r.cols}개로 합쳤어요.`;
+    let d = [];
+    if (r.flagged) d.push(`⚠ 열 이름을 자동으로 맞추기 애매했던 열 ${r.flagged}개 — 엑셀 '열이름맞춤표' 시트에서 확인하세요.`);
+    if (r.skipped && r.skipped.length) d.push('⚠ 읽지 못한 파일: ' + r.skipped.map(s => `${s[0]} (${s[1]})`).join(', '));
+    $('#rDetail').textContent = d.join('\n');
+    const w = $('#rWarn');
+    if (r.truncated) { w.style.display = 'block'; w.innerHTML = `체험판이라 결과를 300줄까지만 담았어요 (${r.truncated}줄 더 있음). 전부 받으려면 <a href="/#products"><b>정식 프로그램</b></a>을 이용해 주세요.`; }
+    else w.style.display = 'none';
+    $('#result').classList.add('show');
+    status('완료', 100);
+    $('#result').scrollIntoView({behavior: 'smooth'});
+  } catch (e) {
+    status('문제가 생겼어요.', 0); log(String(e));
+  }
+  $('#run').disabled = false;
+};
+boot();
+</script>
+</body>
+</html>
