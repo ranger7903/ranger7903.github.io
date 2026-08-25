@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>결제 완료 — 밸류스</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap">
+<style>
+:root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;--terra:#C0684A;--sage:#7E9B77;
+ --shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Gowun Dodum","Malgun Gothic",sans-serif;font-size:16px;line-height:1.85}
+.shell{max-width:620px;margin:0 auto;padding:60px 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:36px 32px;text-align:center;position:relative}
+.tape{position:absolute;top:-11px;left:50%;transform:translateX(-50%) rotate(-2deg);width:110px;height:24px;background:#BFD8B8;opacity:.8;border-radius:2px}
+.big{font-size:44px;margin:0 0 6px}
+h1{font-family:"Gowun Batang",serif;font-size:24px;margin:0 0 12px}
+p{color:var(--ink2);font-size:14.5px;margin:8px 0}
+.box{background:#F4F0E6;border-radius:10px;padding:12px 16px;font-size:13px;color:var(--ink2);text-align:left;margin:18px 0;word-break:break-all}
+.warn{background:#FFF2CC;border:1px dashed #D9A441;color:#7a5c00;border-radius:10px;padding:12px 16px;font-size:13.5px;margin:18px 0}
+a.btn{display:inline-block;background:var(--terra);color:#FFF8F2;text-decoration:none;border-radius:999px;padding:11px 26px;font-weight:700;margin-top:10px}
+.hand{font-family:"Gaegu",cursive;font-size:18px;color:var(--sage)}
+</style>
+</head>
+<body>
+<div class="shell"><div class="card"><span class="tape"></span>
+<div class="big">🧡</div>
+<h1 id="title">결제가 접수됐어요</h1>
+<p id="msg">확인 중이에요, 잠시만요…</p>
+<div class="box" id="detail"></div>
+<div class="warn" id="testwarn" style="display:none">🔧 지금은 <b>시험 운영 중</b>이라 실제로 결제되지 않았어요.
+ 정식 오픈 후에는 이 화면에서 결제가 바로 확정됩니다.</div>
+<p class="hand">설치파일과 그림 설명서는 적어주신 메일로 보내드려요 — 보통 하루 안에 도착해요!</p>
+<p>궁금한 점은 <a href="mailto:ranger7903@nate.com" style="color:var(--terra)">ranger7903@nate.com</a> 으로 편하게 물어봐 주세요.</p>
+<a class="btn" href="./">가게로 돌아가기</a>
+</div></div>
+<script>
+const CONFIRM_URL = "";  // buy.html 과 동일하게 설정 (실전 전환 가이드 참고)
+const q = new URLSearchParams(location.search);
+const paymentKey = q.get('paymentKey'), orderId = q.get('orderId'), amount = q.get('amount');
+document.getElementById('detail').textContent =
+  `주문번호 ${orderId || '-'} · 금액 ${amount ? Number(amount).toLocaleString('ko-KR') + '원' : '-'}`;
+(async () => {
+  const msg = document.getElementById('msg');
+  if (!paymentKey) { msg.textContent = '결제 정보를 찾지 못했어요. 메일로 문의해 주세요.'; return; }
+  if (!CONFIRM_URL) {
+    document.getElementById('testwarn').style.display = 'block';
+    msg.textContent = '카드 인증까지 잘 마쳤어요.';
+    return;
+  }
+  try {
+    const r = await fetch(CONFIRM_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paymentKey, orderId, amount: Number(amount) }),
+    });
+    const data = await r.json();
+    if (r.ok && (data.status === 'DONE' || data.status === 'WAITING_FOR_DEPOSIT')) {
+      document.getElementById('title').textContent = '결제가 완료됐어요!';
+      msg.textContent = '고마워요 — 소중히 만들겠습니다.';
+    } else {
+      document.getElementById('title').textContent = '확인이 필요해요';
+      msg.textContent = (data.message || '승인에 실패했어요.') + ' 메일로 문의 주시면 바로 도와드릴게요.';
+    }
+  } catch (e) {
+    msg.textContent = '승인 서버에 연결하지 못했어요. 메일로 문의해 주세요.';
+  }
+})();
+</script>
+</body>
+</html>

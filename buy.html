@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데려가기 — 밸류스</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap">
+<script src="https://js.tosspayments.com/v2/standard"></script>
+<style>
+:root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
+ --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77;
+ --shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Gowun Dodum","Malgun Gothic",sans-serif;font-size:16px;line-height:1.8}
+.shell{max-width:760px;margin:0 auto;padding:0 20px 60px}
+nav{border-bottom:1px dashed var(--line)}
+nav .shell{display:flex;align-items:center;height:60px;padding-bottom:0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.stamp{width:32px;height:32px;border:2px solid var(--terra);border-radius:50%;display:grid;place-items:center;color:var(--terra);font-family:"Gowun Batang",serif;font-weight:700;font-size:14px;transform:rotate(-6deg)}
+.brand b{font-family:"Gowun Batang",serif;font-size:20px}
+h1{font-family:"Gowun Batang",serif;font-size:26px;margin:34px 0 6px;text-align:center}
+.sub{text-align:center;color:var(--ink2);font-size:14.5px;margin:0 0 26px}
+.testband{background:#FFF2CC;border:1px dashed #D9A441;color:#7a5c00;border-radius:10px;padding:10px 16px;font-size:13.5px;text-align:center;margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;position:relative}
+.tape{position:absolute;top:-10px;left:38px;width:86px;height:22px;background:#E8C8C8;opacity:.75;border-radius:2px;transform:rotate(-2deg)}
+.step{font-family:"Gaegu",cursive;font-size:19px;color:var(--terra);font-weight:700;margin:0 0 10px}
+.items{display:grid;gap:8px}
+.item{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:9px 14px;cursor:pointer;background:#fff;font-size:14.5px}
+.item.on{border-color:var(--terra);background:var(--terra-soft)}
+.item .em{font-size:18px}
+.item .nm{font-weight:700}
+.item .pr{margin-left:auto;color:var(--terra);font-weight:700}
+.frow{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.frow label{font-size:13px;color:var(--ink2);display:block;margin-bottom:3px}
+.frow input{border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;font-size:14.5px;font-family:inherit;background:#fff;color:var(--ink);width:100%}
+.frow>div{flex:1;min-width:200px}
+.hint{font-size:12.5px;color:var(--ink3);margin-top:8px}
+#payment-method{margin:6px -8px}
+#agreement{margin:0 -8px 6px}
+.paybtn{display:block;width:100%;border:none;background:var(--terra);color:#FFF8F2;font-family:inherit;font-size:17px;font-weight:700;border-radius:12px;padding:15px;cursor:pointer}
+.paybtn:disabled{opacity:.45;cursor:default}
+.or{ text-align:center;color:var(--ink3);font-size:13px;margin:22px 0 14px;font-family:"Gaegu",cursive;font-size:17px}
+.mail{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:16px 20px;font-size:14px;color:var(--ink2)}
+.mail b{color:var(--ink)}
+.mail a{color:var(--terra)}
+.back{display:block;text-align:center;margin-top:26px;color:var(--ink3);font-size:13.5px;text-decoration:none}
+.promise{text-align:center;font-size:12.5px;color:var(--ink3);margin-top:10px}
+@media (prefers-color-scheme: dark){body{background:#FAF5EC}}
+</style>
+</head>
+<body>
+<nav><div class="shell"><a class="brand" href="./"><span class="stamp">値</span><b>밸류스</b></a></div></nav>
+<div class="shell">
+<h1>도구 데려가기</h1>
+<p class="sub">한 번 결제 · 평생 사용 · 구독 없음 — 결제가 확인되면 설치파일과 그림 설명서를 메일로 보내드려요.</p>
+<div class="testband" id="testband" style="display:none">🔧 지금은 <b>시험 운영 중</b>이에요 — 카드 결제창은 열리지만 실제로 돈이 나가지 않아요.
+ 정식 오픈 전까지는 아래 <b>메일 주문</b>을 이용해 주세요.</div>
+
+<div class="card"><span class="tape"></span>
+ <p class="step">하나, 데려갈 도구 고르기</p>
+ <div class="items" id="items"></div>
+</div>
+
+<div class="card"><span class="tape" style="background:#BFD8B8"></span>
+ <p class="step">둘, 받으실 곳 적기</p>
+ <div class="frow">
+  <div><label>성함</label><input id="buyer-name" placeholder="홍길동"></div>
+  <div><label>설치파일 받을 메일 주소</label><input id="buyer-email" type="email" placeholder="you@example.com"></div>
+ </div>
+ <p class="hint">결제 확인 후 영업일 기준 하루 안에 이 주소로 설치파일이 도착해요.</p>
+</div>
+
+<div class="card"><span class="tape" style="background:#BFD8E8"></span>
+ <p class="step">셋, 카드로 결제하기</p>
+ <div id="payment-method"></div>
+ <div id="agreement"></div>
+ <button class="paybtn" id="paybtn" disabled>결제 준비 중…</button>
+ <p class="promise">카드 정보는 토스페이먼츠에만 전달되고, 저희 서버에는 저장되지 않아요.</p>
+</div>
+
+<p class="or">✂️ — 카드가 어려우시면 —</p>
+<div class="mail">📮 <b>메일 주문(계좌이체)</b> — 갖고 싶은 도구 이름을 적어
+ <a href="mailto:ranger7903@nate.com">ranger7903@nate.com</a> 으로 보내주세요.
+ 회신으로 계좌를 알려드리고, 입금 확인 즉시 설치파일을 보내드려요.</div>
+
+<a class="back" href="./">← 가게로 돌아가기</a>
+</div>
+
+<script>
+// ── 설정 (실전 전환 시 이 두 줄만 바꾸면 됩니다 — 전환 가이드 참고) ──
+const CLIENT_KEY = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";  // 토스 문서용 공개 테스트 키
+const CONFIRM_URL = "";  // 결제 승인 서버 주소 (예: https://pay.valuestools.workers.dev/confirm)
+
+const PRODUCTS = {
+ merge:   {name:"스마트 자료취합기", emoji:"🗂️", price:19900},
+ formfill:{name:"스마트 서식채우기", emoji:"✉️", price:19900},
+ compare: {name:"스마트 명단대조기", emoji:"🔍", price:14900},
+ quick:   {name:"빠른입력기",       emoji:"🖋️", price:19900},
+ keeper:  {name:"폴더지킴이",       emoji:"🧺", price:14900},
+ garden:  {name:"책상 위 정원",     emoji:"🌻", price:9900},
+ handwrite:{name:"마음 서랍",       emoji:"✒️", price:9900},
+ pdfkit:  {name:"PDF 반짇고리",     emoji:"🧵", price:14900},
+ crayon:  {name:"캡처 색연필",      emoji:"🖍", price:14900},
+};
+
+const fmt = n => n.toLocaleString('ko-KR') + '원';
+let selected = new URLSearchParams(location.search).get('item');
+if (!PRODUCTS[selected]) selected = 'merge';
+
+const itemsEl = document.getElementById('items');
+for (const [k, p] of Object.entries(PRODUCTS)) {
+  const d = document.createElement('div');
+  d.className = 'item' + (k === selected ? ' on' : '');
+  d.dataset.key = k;
+  d.innerHTML = `<span class="em">${p.emoji}</span><span class="nm">${p.name}</span><span class="pr">${fmt(p.price)}</span>`;
+  d.onclick = () => select(k);
+  itemsEl.appendChild(d);
+}
+
+if (CLIENT_KEY.startsWith('test_')) document.getElementById('testband').style.display = 'block';
+
+const tossPayments = TossPayments(CLIENT_KEY);
+const widgets = tossPayments.widgets({ customerKey: TossPayments.ANONYMOUS });
+const paybtn = document.getElementById('paybtn');
+
+async function boot() {
+  await widgets.setAmount({ currency: "KRW", value: PRODUCTS[selected].price });
+  await Promise.all([
+    widgets.renderPaymentMethods({ selector: "#payment-method", variantKey: "DEFAULT" }),
+    widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
+  ]);
+  paybtn.disabled = false;
+  refreshBtn();
+}
+
+function refreshBtn(){ paybtn.textContent = `${PRODUCTS[selected].name} · ${fmt(PRODUCTS[selected].price)} 결제하기`; }
+
+async function select(k) {
+  selected = k;
+  document.querySelectorAll('.item').forEach(el => el.classList.toggle('on', el.dataset.key === k));
+  await widgets.setAmount({ currency: "KRW", value: PRODUCTS[k].price });
+  refreshBtn();
+}
+
+paybtn.onclick = async () => {
+  const name = document.getElementById('buyer-name').value.trim();
+  const email = document.getElementById('buyer-email').value.trim();
+  if (!email) { alert('설치파일을 받으실 메일 주소를 적어 주세요!'); return; }
+  const p = PRODUCTS[selected];
+  const orderId = `VALUES-${selected}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+  try {
+    await widgets.requestPayment({
+      orderId,
+      orderName: `밸류스 ${p.name}`,
+      successUrl: location.origin + "/success.html?item=" + selected,
+      failUrl: location.origin + "/fail.html?item=" + selected,
+      customerEmail: email || undefined,
+      customerName: name || undefined,
+    });
+  } catch (e) {
+    if (e && e.code !== 'USER_CANCEL') alert('결제창을 여는 중 문제가 생겼어요: ' + (e.message || e));
+  }
+};
+
+boot();
+</script>
+</body>
+</html>
