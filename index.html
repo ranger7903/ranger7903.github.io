@@ -47,6 +47,9 @@ body{margin:0;background:var(--cream);color:var(--ink);
 /* 상단 안내띠 */
 .ribbon{background:var(--terra);color:#FFF8F2;text-align:center;font-size:13.5px;padding:8px 16px}
 .ribbon b{font-weight:700}
+.mbtn{font-size:12.5px;color:var(--ink-3);text-decoration:none;border:1px dashed var(--line);
+  border-radius:999px;padding:6px 12px}
+.mbtn:hover{color:var(--terra);border-color:var(--terra)}
 
 nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--cream) 90%,transparent);
   backdrop-filter:blur(10px);border-bottom:1px dashed var(--line)}
@@ -231,6 +234,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">19,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=merge">데려가기</a>
+        <a class="mbtn" href="manual_merge.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -254,6 +258,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">19,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=formfill">데려가기</a>
+        <a class="mbtn" href="manual_formfill.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -277,6 +282,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">14,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=compare">데려가기</a>
+        <a class="mbtn" href="manual_compare.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -299,6 +305,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">19,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=quick">데려가기</a>
+        <a class="mbtn" href="manual_quick.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -321,6 +328,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">14,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=keeper">데려가기</a>
+        <a class="mbtn" href="manual_keeper.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -343,6 +351,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">9,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=garden">데려가기</a>
+        <a class="mbtn" href="manual_garden.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -365,6 +374,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">9,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=handwrite">데려가기</a>
+        <a class="mbtn" href="manual_handwrite.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -387,6 +397,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">14,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=pdfkit">데려가기</a>
+        <a class="mbtn" href="manual_pdfkit.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -409,6 +420,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price">14,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
         <a class="btn fill" href="buy.html?item=crayon">데려가기</a>
+        <a class="mbtn" href="manual_crayon.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
@@ -425,7 +437,9 @@ footer .hand{font-size:16px;color:var(--terra)}
   <p class="eyebrow">나눔 선반 · 그냥 드려요</p>
   <h2>첫 만남은 선물이 좋겠어요</h2>
   <p class="lede">밸류스가 어떤 가게인지 먼저 겪어보시라고, 도구 하나는 무료로 나눠요.
-    회원가입도, 메일도 필요 없어요 — 그냥 받아 가세요.</p>
+    회원가입도, 메일도 필요 없어요 — 그냥 받아 가세요.<br>
+    모든 도구의 <b>그림 설명서(PDF)</b>도 각 카드의 📖 단추에서 무료로 받을 수 있어요.
+    (<a href="manual_button.pdf" download style="color:var(--sage)">밸류스 단추 설명서</a>)</p>
   <article class="goods" id="p-nametag">
     <div class="g-photo">
       <span class="tape" style="background:#CFE3C8"></span>
@@ -447,6 +461,7 @@ footer .hand{font-size:16px;color:var(--terra)}
         <span class="g-price" style="color:var(--sage)">0<small>원</small></span>
         <span class="g-note">회원가입 없음 · 조건 없음</span>
         <a class="btn fill" style="background:var(--sage)" href="nametag_free.exe" download="밸류스 이름표 붙이기.exe">🎁 바로 받기</a>
+        <a class="mbtn" href="manual_nametag.pdf" download>📖 설명서</a>
       </div>
     </div>
   </article>
