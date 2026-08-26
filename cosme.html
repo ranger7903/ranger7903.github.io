@@ -63,7 +63,8 @@ dialog .btn{font-size:14px;padding:11px}
 </style>
 </head>
 <body>
-<header>🪞 <b>화장대 수첩</b><span id="owner"></span>
+<header>🪞 <b id="appname">화장대 수첩</b><span id="owner"></span>
+ <button id="langbtn" onclick="toggleLang()" style="margin-left:8px;border:none;background:#A9563B;color:#fff;border-radius:8px;padding:4px 10px;font-family:inherit;font-size:11px;font-weight:700">EN</button>
  <span class="stat" id="stat"></span></header>
 <div class="wrap">
  <div class="licbar" id="licbar" style="display:none">
@@ -72,18 +73,18 @@ dialog .btn{font-size:14px;padding:11px}
  </div>
 
  <div class="card">
-  <p class="hint" style="margin-top:0">✏️ 새로 개봉했어요</p>
+  <p class="hint" style="margin-top:0" id="h-new">✏️ 새로 개봉했어요</p>
   <input id="nm" placeholder="예: 초록 뚜껑 수분크림">
   <div class="row2" style="margin-top:8px">
-   <div><p class="hint" style="margin-top:0">종류</p>
+   <div><p class="hint" style="margin-top:0" id="h-cat">종류</p>
     <select id="cat">
      <option value="🧴">🧴 스킨케어</option><option value="💄">💄 메이크업</option>
      <option value="🧼">🧼 헤어·바디</option><option value="🌸">🌸 향수</option>
      <option value="☀️">☀️ 선케어</option><option value="🎀">🎀 그 밖에</option>
     </select></div>
-   <div><p class="hint" style="margin-top:0">개봉한 날</p><input id="opened" type="date"></div>
+   <div><p class="hint" style="margin-top:0" id="h-open">개봉한 날</p><input id="opened" type="date"></div>
   </div>
-  <p class="hint">개봉 후 얼마나 쓸 수 있나요? <span style="color:var(--ink3)">(용기의 6M·12M 표시)</span></p>
+  <p class="hint" id="h-months">개봉 후 얼마나 쓸 수 있나요? <span style="color:var(--ink3)">(용기의 6M·12M 표시)</span></p>
   <select id="months">
    <option value="3">3개월 (마스카라·아이라이너)</option>
    <option value="6">6개월 (선크림·쿠션·립)</option>
@@ -92,7 +93,7 @@ dialog .btn{font-size:14px;padding:11px}
    <option value="24">24개월 (향수 등)</option>
    <option value="36">36개월</option>
   </select>
-  <button class="btn" onclick="addItem()">🪞 수첩에 적기</button>
+  <button class="btn" id="b-add" onclick="addItem()">🪞 수첩에 적기</button>
   <p class="msg" id="msg"></p>
   <div class="locked" id="locked" style="display:none">
    여섯 개째부터는 정품 수첩이에요. 밸류스 도구를 데려가셨다면 <b>그 정품 키 그대로</b> 열려요 —
@@ -102,13 +103,13 @@ dialog .btn{font-size:14px;padding:11px}
  </div>
 
  <div class="card">
-  <p class="hint" style="margin-top:0">🗓 내 화장대 <span style="color:var(--ink3)">(끝나는 날이 가까운 순서예요)</span></p>
+  <p class="hint" style="margin-top:0" id="h-list">🗓 내 화장대 <span style="color:var(--ink3)">(끝나는 날이 가까운 순서예요)</span></p>
   <div class="tabs" id="tabs"></div>
   <div id="list"></div>
-  <button class="btn line" onclick="exportTxt()">내 수첩 내보내기 (.txt)</button>
+  <button class="btn line" id="b-export" onclick="exportTxt()">내 수첩 내보내기 (.txt)</button>
  </div>
 
- <p class="foot">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
+ <p class="foot" id="foot1">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
   <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a></p>
 </div>
 
@@ -122,6 +123,72 @@ dialog .btn{font-size:14px;padding:11px}
 </dialog>
 
 <script>
+const LX = {
+ ko: { app:'화장대 수첩', hnew:'✏️ 새로 개봉했어요', hcat:'종류', hopen:'개봉한 날',
+   hmonths:'개봉 후 얼마나 쓸 수 있나요? <span style="color:var(--ink3)">(용기의 6M·12M 표시)</span>',
+   badd:'🪞 수첩에 적기',
+   hlist:'🗓 내 화장대 <span style="color:var(--ink3)">(끝나는 날이 가까운 순서예요)</span>',
+   bexp:'내 수첩 내보내기 (.txt)', nm_ph:'예: 초록 뚜껑 수분크림',
+   foot:'전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>\n  <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a>',
+   cats:['🧴 스킨케어','💄 메이크업','🧼 헤어·바디','🌸 향수','☀️ 선케어','🎀 그 밖에'],
+   months:['3개월 (마스카라·아이라이너)','6개월 (선크림·쿠션·립)','12개월 (크림·로션·파운데이션)','18개월','24개월 (향수 등)','36개월'],
+   stat:(n,over,soon)=>'화장대 위 '+n+'개'+(over?'<br>지난 것 '+over+'개':(soon?'<br>임박 '+soon+'개':'')),
+   owner:n=>' · '+n+'님의 것', all:'전부',
+   dday:(l)=> l<0 ? (-l)+'일 지남' : (l===0?'오늘까지':'D-'+l),
+   meta:(o,m,e)=>o+' 개봉 · '+m+'개월 · '+e+'까지',
+   need_name:'이름을 먼저 적어주세요', need_date:'개봉한 날을 골라주세요',
+   added:'수첩에 적어두었어요. 끝날 때쯤 색으로 알려드릴게요 🧡',
+   delq:n=>'「'+n+'」 을 수첩에서 지울까요? (다 썼거나 비웠을 때)',
+   empty:'아직 비어 있어요. 첫 개봉을 적어볼까요?',
+   trial:'🎁 체험 중이에요 — 다섯 개까지 적을 수 있어요', licbtn:'정품 이름표' },
+ en: { app:'Vanity Notebook', hnew:'✏️ Just opened', hcat:'Type', hopen:'Opened on',
+   hmonths:'How long after opening? <span style="color:var(--ink3)">(the 6M / 12M mark on the jar)</span>',
+   badd:'🪞 Write it down',
+   hlist:'🗓 My vanity <span style="color:var(--ink3)">(soonest-to-expire first)</span>',
+   bexp:'Export my notebook (.txt)', nm_ph:'e.g. green-cap moisture cream',
+   foot:'Everything stays on this phone · works offline<br>\n  <a href="https://valuestools.kr/en.html">VALUES — a little tool shop</a>',
+   cats:['🧴 Skincare','💄 Makeup','🧼 Hair & body','🌸 Perfume','☀️ Sunscreen','🎀 Others'],
+   months:['3 months (mascara · eyeliner)','6 months (sunscreen · cushion · lip)','12 months (cream · lotion · foundation)','18 months','24 months (perfume etc.)','36 months'],
+   stat:(n,over,soon)=>n+' on my vanity'+(over?'<br>'+over+' expired':(soon?'<br>'+soon+' expiring soon':'')),
+   owner:n=>' · '+n+"'s notebook", all:'All',
+   dday:(l)=> l<0 ? (-l)+'d past' : (l===0?'ends today':'D-'+l),
+   meta:(o,m,e)=>'opened '+o+' · '+m+' mo · until '+e,
+   need_name:'Please write the name first', need_date:'Please pick the opening date',
+   added:"Noted! I'll show it in color as it nears the end 🧡",
+   delq:n=>'Remove “'+n+'” from the notebook? (used up or tossed)',
+   empty:'Empty so far. Shall we note the first one?',
+   trial:'🎁 Trial — up to five items', licbtn:'License key' },
+};
+let lang = null;
+try{ lang = localStorage.getItem('values_lang'); }catch(e){}
+if(!lang) lang = (navigator.language||'').toLowerCase().startsWith('ko') ? 'ko' : 'en';
+function TT(){ return LX[lang]; }
+function toggleLang(){ lang = lang==='ko' ? 'en' : 'ko';
+  try{ localStorage.setItem('values_lang', lang); }catch(e){}
+  retextStatic(); refresh(); }
+function retextStatic(){
+  const T = TT();
+  document.getElementById('appname').textContent = T.app;
+  document.getElementById('langbtn').textContent = lang==='ko' ? 'EN' : '한국어';
+  document.getElementById('h-new').textContent = T.hnew;
+  document.getElementById('h-cat').textContent = T.hcat;
+  document.getElementById('h-open').textContent = T.hopen;
+  document.getElementById('h-months').innerHTML = T.hmonths;
+  document.getElementById('b-add').textContent = T.badd;
+  document.getElementById('h-list').innerHTML = T.hlist;
+  document.getElementById('b-export').textContent = T.bexp;
+  document.getElementById('nm').placeholder = T.nm_ph;
+  document.getElementById('foot1').innerHTML = T.foot;
+  const co = document.getElementById('cat').options;
+  for(let i=0;i<co.length && i<T.cats.length;i++) co[i].textContent = T.cats[i];
+  const mo = document.getElementById('months').options;
+  for(let i=0;i<mo.length && i<T.months.length;i++) mo[i].textContent = T.months[i];
+  const lb = document.getElementById('licbar');
+  if(lb){ lb.childNodes[0].textContent = ' ' + T.trial + ' ';
+          lb.querySelector('button').textContent = T.licbtn; }
+  document.title = T.app;
+}
+
 const PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
 const FREE_ITEMS = 5;
 const CATS = ["전부","🧴","💄","🧼","🌸","☀️","🎀"];
@@ -171,11 +238,10 @@ function fmt(d){ return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0
 
 function refresh(){
   document.getElementById('licbar').style.display = licensed() ? 'none' : 'flex';
-  document.getElementById('owner').textContent = licensed() ? ' · '+lic.n+'님의 것' : '';
+  document.getElementById('owner').textContent = licensed() ? TT().owner(lic.n) : '';
   const soon = items.filter(i=>daysLeft(i)<=30 && daysLeft(i)>=0).length;
   const over = items.filter(i=>daysLeft(i)<0).length;
-  document.getElementById('stat').innerHTML = '화장대 위 '+items.length+'개' +
-    (over? '<br>지난 것 '+over+'개' : (soon? '<br>임박 '+soon+'개' : ''));
+  document.getElementById('stat').innerHTML = TT().stat(items.length, over, soon);
   const full = !licensed() && items.length >= FREE_ITEMS;
   document.getElementById('locked').style.display = full ? 'block' : 'none';
 
@@ -183,7 +249,7 @@ function refresh(){
   tabs.innerHTML='';
   for(const c of CATS){
     const b=document.createElement('button');
-    b.textContent = c; if(c===curCat) b.className='on';
+    b.textContent = (c==='전부' ? TT().all : c); if(c===curCat) b.className='on';
     b.onclick = ()=>{ curCat=c; refresh(); };
     tabs.appendChild(b);
   }
@@ -195,34 +261,33 @@ function refresh(){
   for(const it of shown){
     const left = daysLeft(it);
     const cls = left<0 ? 'over' : (left<=30 ? 'soon' : 'ok');
-    const txt = left<0 ? (-left)+'일 지남' : (left===0 ? '오늘까지' : 'D-'+left);
+    const txt = TT().dday(left);
     const d=document.createElement('div'); d.className='item';
     d.innerHTML = '<span class="emoji">'+it.cat+'</span>'
-      + '<span><div class="nm"></div><div class="meta">'+it.opened.replace(/-/g,'.')+' 개봉 · '
-      + it.months+'개월 · '+fmt(endDate(it))+'까지</div></span>'
+      + '<span><div class="nm"></div><div class="meta">'+TT().meta(it.opened.replace(/-/g,'.'), it.months, fmt(endDate(it)))+'</div></span>'
       + '<span class="dday '+cls+'">'+txt+'</span>';
     d.querySelector('.nm').textContent = it.nm;
     const del=document.createElement('button');
     del.textContent='✕'; del.title='다 썼어요';
-    del.onclick=()=>{ if(confirm('「'+it.nm+'」 을 수첩에서 지울까요? (다 썼거나 비웠을 때)')){
+    del.onclick=()=>{ if(confirm(TT().delq(it.nm))){
       items = items.filter(x=>x!==it); store('cosme_items', items); refresh(); } };
     d.appendChild(del);
     list.appendChild(d);
   }
-  if(!shown.length) list.innerHTML = '<p class="empty">아직 비어 있어요. 첫 개봉을 적어볼까요?</p>';
+  if(!shown.length) list.innerHTML = '<p class="empty">'+TT().empty+'</p>';
 }
 
 function addItem(){
   if(!licensed() && items.length >= FREE_ITEMS){ dlgKey.showModal(); return; }
   const nm = document.getElementById('nm').value.trim();
   const opened = document.getElementById('opened').value;
-  if(!nm){ document.getElementById('msg').textContent='이름을 먼저 적어주세요'; return; }
-  if(!opened){ document.getElementById('msg').textContent='개봉한 날을 골라주세요'; return; }
+  if(!nm){ document.getElementById('msg').textContent=TT().need_name; return; }
+  if(!opened){ document.getElementById('msg').textContent=TT().need_date; return; }
   items.push({ nm, cat: document.getElementById('cat').value,
     opened, months: parseInt(document.getElementById('months').value,10) });
   store('cosme_items', items);
   document.getElementById('nm').value='';
-  document.getElementById('msg').textContent='수첩에 적어두었어요. 끝날 때쯤 색으로 알려드릴게요 🧡';
+  document.getElementById('msg').textContent=TT().added;
   refresh();
 }
 
@@ -254,6 +319,7 @@ function exportTxt(){
 }
 
 document.getElementById('opened').value = todayStr();
+retextStatic();
 refresh();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('cosme_sw.js');
 </script>

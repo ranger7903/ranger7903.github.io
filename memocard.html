@@ -66,7 +66,8 @@ dialog .btn{font-size:14px;padding:11px}
 </style>
 </head>
 <body>
-<header>🃏 <b>암기 수첩</b><span id="owner"></span>
+<header>🃏 <b id="appname">암기 수첩</b><span id="owner"></span>
+ <button id="langbtn" onclick="toggleLang()" style="margin-left:8px;border:none;background:#A9563B;color:#fff;border-radius:8px;padding:4px 10px;font-family:inherit;font-size:11px;font-weight:700">EN</button>
  <span class="stat" id="stat"></span></header>
 <div class="wrap">
  <div class="licbar" id="licbar" style="display:none">
@@ -96,7 +97,7 @@ dialog .btn{font-size:14px;padding:11px}
    <p class="msg" id="s-left"></p>
   </div>
   <div class="card done" id="study-done" style="display:none">
-   오늘 몫은 다 외웠어요! 내일 또 준비해 둘게요 🧡<br>
+   <span id="done-line">오늘 몫은 다 외웠어요! 내일 또 준비해 둘게요 🧡</span><br>
    <span style="font-size:13px;color:var(--ink3)" id="done-detail"></span>
   </div>
  </div>
@@ -104,9 +105,9 @@ dialog .btn{font-size:14px;padding:11px}
  <!-- 내 묶음 -->
  <div id="v-decks" style="display:none">
   <div class="card">
-   <p class="hint" style="margin-top:0">✏️ 새 묶음 만들기</p>
+   <p class="hint" style="margin-top:0" id="h-newdeck">✏️ 새 묶음 만들기</p>
    <input id="deck-name" placeholder="예: 전산회계 2급 용어">
-   <button class="btn" onclick="addDeck()">🗂 묶음 만들기</button>
+   <button class="btn" id="b-adddeck" onclick="addDeck()">🗂 묶음 만들기</button>
    <p class="msg" id="deck-msg"></p>
    <div class="locked" id="locked" style="display:none">
     체험판은 묶음 1개·카드 20장까지예요. 밸류스 도구를 데려가셨다면 <b>그 정품 키 그대로</b> 열려요 —
@@ -115,20 +116,20 @@ dialog .btn{font-size:14px;padding:11px}
    </div>
   </div>
   <div class="card">
-   <p class="hint" style="margin-top:0">📥 카드 넣기 <span style="color:var(--ink3)">(한 줄에 한 장 — "앞 : 뒤" / 엑셀에서 복사한 두 칸도 돼요)</span></p>
+   <p class="hint" style="margin-top:0" id="h-bulk">📥 카드 넣기 <span style="color:var(--ink3)">(한 줄에 한 장 — "앞 : 뒤" / 엑셀에서 복사한 두 칸도 돼요)</span></p>
    <select id="add-deck"></select>
    <textarea id="bulk" placeholder="감가상각 : 자산의 가치 감소를 비용으로 나누어 적는 것&#10;대손충당금 : 못 받을 것 같은 외상값을 미리 빼두는 돈"></textarea>
-   <button class="btn" onclick="addCards()">📥 카드 넣기</button>
+   <button class="btn" id="b-addcards" onclick="addCards()">📥 카드 넣기</button>
    <p class="msg" id="bulk-msg"></p>
   </div>
   <div class="card">
-   <p class="hint" style="margin-top:0">🗂 내 묶음들</p>
+   <p class="hint" style="margin-top:0" id="h-decks">🗂 내 묶음들</p>
    <div id="deck-list"></div>
-   <button class="btn line" onclick="exportTxt()">내 카드 내보내기 (.txt)</button>
+   <button class="btn line" id="b-export" onclick="exportTxt()">내 카드 내보내기 (.txt)</button>
   </div>
  </div>
 
- <p class="foot">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
+ <p class="foot" id="foot1">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
   <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a></p>
 </div>
 
@@ -142,6 +143,77 @@ dialog .btn{font-size:14px;padding:11px}
 </dialog>
 
 <script>
+const LX = {
+ ko: { app:'암기 수첩', tstudy:'📖 오늘 복습', tdecks:'🗂 내 묶음',
+   hnewdeck:'✏️ 새 묶음 만들기', badddeck:'🗂 묶음 만들기', baddcards:'📥 카드 넣기',
+   hbulk:'📥 카드 넣기 <span style="color:var(--ink3)">(한 줄에 한 장 — "앞 : 뒤" / 엑셀에서 복사한 두 칸도 돼요)</span>',
+   hdecks:'🗂 내 묶음들', bexp:'내 카드 내보내기 (.txt)', bshow:'🃏 답 보기',
+   deck_ph:'예: 전산회계 2급 용어',
+   bulk_ph:'감가상각 : 자산의 가치 감소를 비용으로 나누어 적는 것\n대손충당금 : 못 받을 것 같은 외상값을 미리 빼두는 돈',
+   foot:'전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>\n  <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a>',
+   g_no:'몰라요', g_no_s:'곧 다시 나와요', g_ok:'알아요', g_ez:'쉬워요', days:d=>d+'일 뒤에',
+   done1:'오늘 몫은 다 외웠어요! 내일 또 준비해 둘게요 🧡',
+   done_first:'먼저 [내 묶음]에서 카드를 넣어주세요', done_rest:n=>'새 카드 '+n+'장은 내일 몫으로 아껴두었어요',
+   left:n=>'오늘 남은 카드 '+n+'장', stat:(s,n)=>'연속 '+s+'일<br>익힌 카드 '+n+'장',
+   owner:n=>' · '+n+'님의 것', empty:'아직 비어 있어요. 첫 묶음을 만들어볼까요?',
+   cards:n=>n+'장', due:n=>n? '오늘 '+n+'장' : '오늘은 끝',
+   delq:n=>'「'+n+'」 묶음을 지울까요? 카드도 함께 사라져요.',
+   need_deck_name:'묶음 이름을 적어주세요', deck_made:'묶음을 만들었어요. 이제 카드를 넣어볼까요?',
+   need_deck:'먼저 묶음을 만들어주세요', need_bulk:'카드 내용을 적어주세요',
+   added:(a,s)=>a+'장 넣었어요'+(s?' ("앞 : 뒤" 모양이 아닌 '+s+'줄은 건너뛰었어요)':'')+'. 오늘 복습에서 만나요!',
+   trial:'🎁 체험 중이에요 — 묶음 1개·카드 20장까지', licbtn:'정품 이름표' },
+ en: { app:'Memo Cards', tstudy:'📖 Today', tdecks:'🗂 My decks',
+   hnewdeck:'✏️ New deck', badddeck:'🗂 Create deck', baddcards:'📥 Add cards',
+   hbulk:'📥 Add cards <span style="color:var(--ink3)">(one per line — "front : back" / pasted spreadsheet columns work too)</span>',
+   hdecks:'🗂 My decks', bexp:'Export my cards (.txt)', bshow:'🃏 Show answer',
+   deck_ph:'e.g. Accounting exam terms',
+   bulk_ph:'photosynthesis : how plants turn light into energy\nbonjour : hello (French)',
+   foot:'Everything stays on this phone · works offline<br>\n  <a href="https://valuestools.kr/en.html">VALUES — a little tool shop</a>',
+   g_no:"Don't know", g_no_s:'comes back soon', g_ok:'Know it', g_ez:'Easy', days:d=>'in '+d+' days',
+   done1:"All done for today! Tomorrow's cards will be ready 🧡",
+   done_first:'First add cards in [My decks]', done_rest:n=>n+' new cards saved for tomorrow',
+   left:n=>n+' cards left today', stat:(s,n)=>s+'-day streak<br>'+n+' cards learned',
+   owner:n=>' · '+n+"'s cards", empty:'Empty so far. Create your first deck?',
+   cards:n=>n+' cards', due:n=>n? n+' due today' : 'done for today',
+   delq:n=>'Delete deck “'+n+'”? Its cards will be removed too.',
+   need_deck_name:'Please name the deck', deck_made:'Deck created. Now add some cards!',
+   need_deck:'Please create a deck first', need_bulk:'Please write some cards',
+   added:(a,s)=>'Added '+a+' cards'+(s?' (skipped '+s+' lines not in "front : back" form)':'')+". See you in Today's review!",
+   trial:'🎁 Trial — 1 deck · up to 20 cards', licbtn:'License key' },
+};
+let lang = null;
+try{ lang = localStorage.getItem('values_lang'); }catch(e){}
+if(!lang) lang = (navigator.language||'').toLowerCase().startsWith('ko') ? 'ko' : 'en';
+function TT(){ return LX[lang]; }
+function toggleLang(){ lang = lang==='ko' ? 'en' : 'ko';
+  try{ localStorage.setItem('values_lang', lang); }catch(e){}
+  retextStatic(); refresh(); nextCard(); }
+function retextStatic(){
+  const T = TT();
+  document.getElementById('appname').textContent = T.app;
+  document.getElementById('langbtn').textContent = lang==='ko' ? 'EN' : '한국어';
+  document.getElementById('tab-study').textContent = T.tstudy;
+  document.getElementById('tab-decks').textContent = T.tdecks;
+  document.getElementById('h-newdeck').textContent = T.hnewdeck;
+  document.getElementById('b-adddeck').textContent = T.badddeck;
+  document.getElementById('b-addcards').textContent = T.baddcards;
+  document.getElementById('h-bulk').innerHTML = T.hbulk;
+  document.getElementById('h-decks').textContent = T.hdecks;
+  document.getElementById('b-export').textContent = T.bexp;
+  document.getElementById('s-show').textContent = T.bshow;
+  document.getElementById('deck-name').placeholder = T.deck_ph;
+  document.getElementById('bulk').placeholder = T.bulk_ph;
+  document.getElementById('foot1').innerHTML = T.foot;
+  document.querySelector('.g-no').childNodes[0].textContent = T.g_no;
+  document.querySelector('.g-no small').textContent = T.g_no_s;
+  document.querySelector('.g-ok').childNodes[0].textContent = T.g_ok;
+  document.querySelector('.g-ez').childNodes[0].textContent = T.g_ez;
+  const lb = document.getElementById('licbar');
+  if(lb){ lb.childNodes[0].textContent = ' ' + T.trial + ' ';
+          lb.querySelector('button').textContent = T.licbtn; }
+  document.title = T.app;
+}
+
 const PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
 const FREE_DECKS = 1, FREE_CARDS = 20, NEW_PER_DAY = 20;
 const STEPS = [1, 3, 7, 14, 30, 60, 120];   // '알아요' 간격(일) — 안키의 간격 반복을 속에 숨김
@@ -207,9 +279,9 @@ function streak(){
 
 function refresh(){
   document.getElementById('licbar').style.display = licensed() ? 'none' : 'flex';
-  document.getElementById('owner').textContent = licensed() ? ' · '+lic.n+'님의 것' : '';
+  document.getElementById('owner').textContent = licensed() ? TT().owner(lic.n) : '';
   const learned = allCards().filter(x=>x.c.step>=3).length;
-  document.getElementById('stat').innerHTML = '연속 '+streak()+'일<br>익힌 카드 '+learned+'장';
+  document.getElementById('stat').innerHTML = TT().stat(streak(), learned);
   const full = !licensed() && (D.decks.length >= FREE_DECKS || cardCount() >= FREE_CARDS);
   document.getElementById('locked').style.display = full ? 'block' : 'none';
 
@@ -218,17 +290,17 @@ function refresh(){
   for(const dk of D.decks){ const o=document.createElement('option'); o.value=dk.id; o.textContent=dk.name; sel.appendChild(o); }
 
   const list = document.getElementById('deck-list');
-  list.innerHTML = D.decks.length ? '' : '<p style="font-size:13px;color:var(--ink3)">아직 비어 있어요. 첫 묶음을 만들어볼까요?</p>';
+  list.innerHTML = D.decks.length ? '' : '<p style="font-size:13px;color:var(--ink3)">'+TT().empty+'</p>';
   const t = todayStr();
   for(const dk of D.decks){
     const due = dk.cards.filter(c=>!c.due || c.due<=t).length;
     const d = document.createElement('div'); d.className='deck';
     d.innerHTML = '<span>🗂</span><span><div class="nm"></div>'
-      + '<div class="meta">'+dk.cards.length+'장</div></span>'
-      + '<span class="due">'+(due? '오늘 '+due+'장' : '오늘은 끝')+'</span>';
+      + '<div class="meta">'+TT().cards(dk.cards.length)+'</div></span>'
+      + '<span class="due">'+TT().due(due)+'</span>';
     d.querySelector('.nm').textContent = dk.name;
     const del = document.createElement('button'); del.textContent='✕';
-    del.onclick = ()=>{ if(confirm('「'+dk.name+'」 묶음을 지울까요? 카드도 함께 사라져요.')){
+    del.onclick = ()=>{ if(confirm(TT().delq(dk.name))){
       D.decks = D.decks.filter(x=>x!==dk); save(); refresh(); nextCard(); } };
     d.appendChild(del);
     list.appendChild(d);
@@ -250,11 +322,11 @@ function nextCard(){
   const sc = document.getElementById('study-card'), sd = document.getElementById('study-done');
   if(!queue.length){
     sc.style.display='none'; sd.style.display='block';
+    document.getElementById('done-line').textContent = TT().done1;
     const t = todayStr();
     const rest = allCards().filter(x=>!x.c.due).length;
     document.getElementById('done-detail').textContent =
-      cardCount()===0 ? '먼저 [내 묶음]에서 카드를 넣어주세요'
-      : (rest>0 ? '새 카드 '+rest+'장은 내일 몫으로 아껴두었어요' : '');
+      cardCount()===0 ? TT().done_first : (rest>0 ? TT().done_rest(rest) : '');
     return;
   }
   sd.style.display='none'; sc.style.display='block';
@@ -264,10 +336,10 @@ function nextCard(){
   document.getElementById('s-back').textContent = cur.c.b;
   document.getElementById('s-backwrap').style.display='none';
   document.getElementById('s-show').style.display='block';
-  document.getElementById('s-left').textContent = '오늘 남은 카드 '+queue.length+'장';
+  document.getElementById('s-left').textContent = TT().left(queue.length);
   const step = cur.c.step||0;
-  document.getElementById('g-ok-days').textContent = STEPS[Math.min(step, STEPS.length-1)]+'일 뒤에';
-  document.getElementById('g-ez-days').textContent = STEPS[Math.min(step+1, STEPS.length-1)]+'일 뒤에';
+  document.getElementById('g-ok-days').textContent = TT().days(STEPS[Math.min(step, STEPS.length-1)]);
+  document.getElementById('g-ez-days').textContent = TT().days(STEPS[Math.min(step+1, STEPS.length-1)]);
 }
 
 function reveal(){
@@ -299,26 +371,26 @@ function nextShuffled(){
   document.getElementById('s-back').textContent = cur.c.b;
   document.getElementById('s-backwrap').style.display='none';
   document.getElementById('s-show').style.display='block';
-  document.getElementById('s-left').textContent = '오늘 남은 카드 '+queue.length+'장';
+  document.getElementById('s-left').textContent = TT().left(queue.length);
 }
 
 function addDeck(){
   if(!licensed() && D.decks.length >= FREE_DECKS){ dlgKey.showModal(); return; }
   const nm = document.getElementById('deck-name').value.trim();
-  if(!nm){ document.getElementById('deck-msg').textContent='묶음 이름을 적어주세요'; return; }
+  if(!nm){ document.getElementById('deck-msg').textContent=TT().need_deck_name; return; }
   D.decks.push({id: Date.now()+''+Math.floor(Math.random()*1000), name: nm, cards: []});
   save();
   document.getElementById('deck-name').value='';
-  document.getElementById('deck-msg').textContent='묶음을 만들었어요. 이제 카드를 넣어볼까요?';
+  document.getElementById('deck-msg').textContent=TT().deck_made;
   refresh();
 }
 
 function addCards(){
   const id = document.getElementById('add-deck').value;
   const dk = D.decks.find(d=>d.id===id);
-  if(!dk){ document.getElementById('bulk-msg').textContent='먼저 묶음을 만들어주세요'; return; }
+  if(!dk){ document.getElementById('bulk-msg').textContent=TT().need_deck; return; }
   const raw = document.getElementById('bulk').value.trim();
-  if(!raw){ document.getElementById('bulk-msg').textContent='카드 내용을 적어주세요'; return; }
+  if(!raw){ document.getElementById('bulk-msg').textContent=TT().need_bulk; return; }
   let added=0, skipped=0;
   for(const line of raw.split('\n')){
     const s = line.trim(); if(!s) continue;
@@ -335,8 +407,7 @@ function addCards(){
   }
   save();
   document.getElementById('bulk').value='';
-  document.getElementById('bulk-msg').textContent =
-    added+'장 넣었어요'+(skipped? ' ("앞 : 뒤" 모양이 아닌 '+skipped+'줄은 건너뛰었어요)' : '')+'. 오늘 복습에서 만나요!';
+  document.getElementById('bulk-msg').textContent = TT().added(added, skipped);
   refresh();
 }
 
@@ -367,7 +438,7 @@ function exportTxt(){
   a.click();
 }
 
-refresh(); buildQueue(); nextCard();
+retextStatic(); refresh(); buildQueue(); nextCard();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('memocard_sw.js');
 </script>
 </body>

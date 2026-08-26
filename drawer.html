@@ -9,7 +9,7 @@
 <link rel="icon" href="drawer_icon192.png">
 <link rel="apple-touch-icon" href="drawer_icon192.png">
 <meta name="theme-color" content="#C0684A">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tweetnacl/1.0.3/nacl.min.js"></script>
+<script src="nacl.min.js"></script>
 <style>
 :root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
  --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77}
@@ -56,7 +56,8 @@ dialog .btn{font-size:14px;padding:11px}
 </style>
 </head>
 <body>
-<header>✒️ <b>마음 서랍</b><span id="owner"></span>
+<header>✒️ <b id="appname">마음 서랍</b><span id="owner"></span>
+ <button id="langbtn" onclick="toggleLang()" style="margin-left:8px;border:none;background:#A9563B;color:#fff;border-radius:8px;padding:4px 10px;font-family:inherit;font-size:11px;font-weight:700">EN</button>
  <span class="stat" id="stat"></span></header>
 <div class="wrap">
  <div class="licbar" id="licbar" style="display:none">
@@ -68,12 +69,12 @@ dialog .btn{font-size:14px;padding:11px}
   <p class="day" id="day"></p>
   <p class="quote" id="quote"></p>
   <p class="from" id="from"></p>
-  <p class="hint">아래에 천천히, 따라 써 보세요</p>
+  <p class="hint" id="h-copy">아래에 천천히, 따라 써 보세요</p>
   <textarea id="typing" oninput="onType()" placeholder="여기에 따라 써 보세요"></textarea>
   <p class="acc" id="acc">0%</p>
-  <p class="hint">오늘의 내 한 줄 <span style="color:var(--ink3)">(이 문장을 읽고 떠오른 생각)</span></p>
+  <p class="hint" id="h-myline">오늘의 내 한 줄 <span style="color:var(--ink3)">(이 문장을 읽고 떠오른 생각)</span></p>
   <textarea id="myline" placeholder="한 줄이면 충분해요"></textarea>
-  <button class="btn" onclick="saveEntry()">🖋 서랍에 넣기</button>
+  <button class="btn" id="b-save" onclick="saveEntry()">🖋 서랍에 넣기</button>
   <p class="msg" id="msg"></p>
   <div class="locked" id="locked" style="display:none">
    여덟 번째 문장부터는 정품 서랍이에요. PC판을 데려가셨다면 <b>그 정품 키 그대로</b> 열려요 —
@@ -83,12 +84,12 @@ dialog .btn{font-size:14px;padding:11px}
  </div>
 
  <div class="card">
-  <p class="hint" style="margin-top:0">📖 지난 필사</p>
+  <p class="hint" style="margin-top:0" id="h-arch">📖 지난 필사</p>
   <div id="archive"></div>
-  <button class="btn line" onclick="exportTxt()">내 기록 내보내기 (.txt)</button>
+  <button class="btn line" id="b-export" onclick="exportTxt()">내 기록 내보내기 (.txt)</button>
  </div>
 
- <p class="foot">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
+ <p class="foot" id="foot1">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
   <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a></p>
 </div>
 
@@ -103,6 +104,57 @@ dialog .btn{font-size:14px;padding:11px}
 
 <script>
 const PASSAGES = [{"day": 1, "from": "프롤로그", "text": "언제나 결과는 똑같았다. 하지만 오늘의 그는, '왜?'라고 묻기로 했다."}, {"day": 2, "from": "제1장", "text": "뭐라도 해야 했다. 그 마음이, 모든 변화의 첫 문장이 된다."}, {"day": 3, "from": "제2장", "text": "여자를 얻는 비법 같은 게 아닙니다. 저는 그냥, 저 자신을 바꾸고 싶습니다."}, {"day": 4, "from": "제2장", "text": "그 가짜 기술들은 잊어버리게. 그건 맛없는 인스턴트 에피타이저 같은 거니까."}, {"day": 5, "from": "제2장", "text": "그의 침묵은 어떤 위로보다 더 깊게 마음을 울렸다. 들어주는 것만으로 시작되는 위로가 있다."}, {"day": 6, "from": "제3장", "text": "모든 문제의 시작은 항상 '나'에게서 찾아야 하네. 상대를 탓하는 건 쉽지만, 나를 돌아보는 건 용기다."}, {"day": 7, "from": "제3장", "text": "절망의 끝에서, 아주 작은 불씨 하나가 피어나는 기분이었다."}, {"day": 8, "from": "제5장", "text": "작은 성공은, 더 큰 도전을 위한 용기가 되어주었다."}, {"day": 9, "from": "제5장", "text": "수많은 관계 속에서도 외로웠던 건, 내 진짜 모습이 아닌 연기가 사랑받고 있었기 때문이다."}, {"day": 10, "from": "제6장", "text": "정상에서 더 높은 곳을 바라볼 줄 알게 된 것. 스스로에게 질문을 던지기 시작한 것. 그게 두 번째 산을 오를 자격이다."}, {"day": 11, "from": "제6장", "text": "지금부터가 끝이 아니라 진짜 시작이야."}, {"day": 12, "from": "제7장", "text": "힘들 때는 없으세요? 항상 밝아 보이는 사람에게 먼저 물어봐 주는 것. 관심은 거기서 시작된다."}, {"day": 13, "from": "제9장", "text": "예전에 실패했던 자리에서 다시 시도해 보는 것. 그것이 성장을 확인하는 가장 정직한 방법이다."}, {"day": 14, "from": "제10장", "text": "질투를 드러내는 대신, 상대의 혼란을 먼저 공감해 주는 사람. 그런 사람은 흔치 않다."}, {"day": 15, "from": "제11장", "text": "이기려 들지 말 것. 명확하고 진심이 담긴 행동만이 마음을 얻는다."}, {"day": 16, "from": "제12장", "text": "멋있어 보이려는 어색함 없이, 생각과 감정을 솔직하게 이야기하는 것. 진솔함은 가장 오래가는 매력이다."}, {"day": 17, "from": "제13장", "text": "제 인생에 버그가 많다고 했었죠. 당신을 만나면서 그 버그들이 하나씩 사라져가는 기분이에요."}, {"day": 18, "from": "제15장", "text": "사소한 취향 차이를 문제로 여기지 않고, 함께 해결책을 찾는 즐거운 과정으로 여길 것."}, {"day": 19, "from": "제15장", "text": "관계에 안주해서 자신의 성장을 멈춰선 안 돼. 각자가 계속 자랄 때, 서로에게 질리지 않는 최고의 파트너가 된다."}, {"day": 20, "from": "제17장", "text": "자동차가 도로를 이탈했다고 여행이 끝난 것은 아니다. 함께 고치는 법을 배우면 된다."}, {"day": 21, "from": "제18장", "text": "변명 없이 온전히 잘못을 인정할 때, 분노는 힘을 잃고 대화가 시작된다."}, {"day": 22, "from": "제18장", "text": "세상에서 가장 어려운 사과는, 자신의 가장 부끄러운 부분을 꺼내 보이는 일이다."}, {"day": 23, "from": "제19장", "text": "관계에도 사계절이 있다. 겨울이 왔다는 건 끝이 아니라, 봄을 준비하라는 신호다."}, {"day": 24, "from": "제20장", "text": "평화를 지키고 싶다는 간절함이, 오히려 솔직한 감정을 주저하게 만들 때가 있다."}, {"day": 25, "from": "제21장", "text": "기술의 문제가 아니었다. 마음의 문제였다."}, {"day": 26, "from": "제23장", "text": "성장을 증명하는 방법은 화려한 말이 아니라, 직접 찍고 인화한 사진 같은 시간이다."}, {"day": 27, "from": "제25장", "text": "다시 문을 여는 가게처럼, 관계에도 두 번째 개업이 필요하다."}, {"day": 28, "from": "에필로그", "text": "K는 비법을 알려주지 않았다. 사람과 관계의 본질을 꿰뚫어 보는 하나의 렌즈를 선물해 주었을 뿐이다."}, {"day": 29, "from": "에필로그", "text": "사랑은 저절로 타오르는 불꽃이 아니라, 서로의 노력으로 온기를 지켜가는 단골 맛집과 같다."}, {"day": 30, "from": "에필로그", "text": "당신도, 당신만의 멋진 지도를 그려나가시길 진심으로 응원합니다."}];
+const LX = {
+ ko: { app:'마음 서랍', copy:'아래에 천천히, 따라 써 보세요',
+   myline:'오늘의 내 한 줄 <span style="color:var(--ink3)">(이 문장을 읽고 떠오른 생각)</span>',
+   save:'🖋 서랍에 넣기', arch:'📖 지난 필사', exp:'내 기록 내보내기 (.txt)',
+   typing_ph:'여기에 따라 써 보세요', myline_ph:'한 줄이면 충분해요',
+   foot:'전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>\n  <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a>',
+   day:(d,r)=> d+'일째 문장'+(r>1?' · '+r+'회차':''), from:f=>'— 『사랑수업』 '+f,
+   stat:(s,n)=>'연속 '+s+'일<br>서랍 속 '+n+'장',
+   done:'오늘 몫은 이미 서랍에 있어요. 더 써도 좋아요 :)',
+   saved:'서랍에 잘 넣어두었어요. 내일 또 만나요 🌙',
+   confirm:'아직 문장이 다 채워지지 않았어요.\n그래도 서랍에 넣을까요?',
+   empty:'아직 비어 있어요. 첫 장을 넣어볼까요?', owner:n=>' · '+n+'님의 것',
+   trial:'🎁 체험 중이에요 — 일곱 문장까지 열려 있어요', licbtn:'정품 이름표' },
+ en: { app:'Mind Drawer', copy:'Copy the sentence below, slowly',
+   myline:'My one line today <span style="color:var(--ink3)">(what this sentence made you think)</span>',
+   save:'🖋 Put into the drawer', arch:'📖 Past pages', exp:'Export my records (.txt)',
+   typing_ph:'Type the sentence here', myline_ph:'One line is enough',
+   foot:'Everything stays on this phone · works offline<br>\n  <a href="https://valuestools.kr/en.html">VALUES — a little tool shop</a>',
+   day:(d,r)=>'Sentence #'+d+(r>1?' · round '+r:''), from:f=>'— “Love Lessons” '+f+' (Korean passages)',
+   stat:(s,n)=>s+'-day streak<br>'+n+' pages kept',
+   done:"Today's page is already in the drawer. Feel free to write more :)",
+   saved:'Safely tucked into the drawer. See you tomorrow 🌙',
+   confirm:'The sentence is not fully copied yet.\nPut it in the drawer anyway?',
+   empty:'Empty so far. Shall we add the first page?', owner:n=>' · '+n+"'s drawer",
+   trial:'🎁 Trial — the first seven sentences are open', licbtn:'License key' },
+};
+let lang = null;
+try{ lang = localStorage.getItem('values_lang'); }catch(e){}
+if(!lang) lang = (navigator.language||'').toLowerCase().startsWith('ko') ? 'ko' : 'en';
+function TT(){ return LX[lang]; }
+function toggleLang(){ lang = lang==='ko' ? 'en' : 'ko';
+  try{ localStorage.setItem('values_lang', lang); }catch(e){}
+  retextStatic(); refresh(); }
+function retextStatic(){
+  const T = TT();
+  document.getElementById('appname').textContent = T.app;
+  document.getElementById('langbtn').textContent = lang==='ko' ? 'EN' : '한국어';
+  document.getElementById('h-copy').textContent = T.copy;
+  document.getElementById('h-myline').innerHTML = T.myline;
+  document.getElementById('b-save').textContent = T.save;
+  document.getElementById('h-arch').textContent = T.arch;
+  document.getElementById('b-export').textContent = T.exp;
+  document.getElementById('typing').placeholder = T.typing_ph;
+  document.getElementById('myline').placeholder = T.myline_ph;
+  document.getElementById('foot1').innerHTML = T.foot;
+  const lb = document.getElementById('licbar');
+  if(lb){ lb.childNodes[0].textContent = ' ' + T.trial + ' ';
+          lb.querySelector('button').textContent = T.licbtn; }
+  document.title = T.app;
+}
+
 const PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
 const FREE_DAYS = 7;
 
@@ -123,8 +175,8 @@ function verifyKey(raw){
     const p = raw.split('.');
     if(p.length !== 3) return null;
     const payload = b64d(p[1]), sig = b64d(p[2]);
-    if(typeof nacl !== 'undefined' &&
-       !nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return null;
+    if(typeof nacl === 'undefined') return 'nonacl';
+    if(!nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return null;
     const info = JSON.parse(new TextDecoder().decode(payload));
     const prods = info.p || [];
     if(!(prods.includes('*') || prods.includes('handwrite'))) return 'noprod';
@@ -164,16 +216,16 @@ function streak(){
 
 function refresh(){
   const {p, round, locked} = current();
-  document.getElementById('day').textContent = p.day + '일째 문장' + (round>1 ? ' · '+round+'회차' : '');
+  document.getElementById('day').textContent = TT().day(p.day, round);
   document.getElementById('quote').textContent = locked ? '🔒' : '“'+p.text+'”';
-  document.getElementById('from').textContent = locked ? '' : '— 『사랑수업』 '+p.from;
+  document.getElementById('from').textContent = locked ? '' : TT().from(p.from);
   document.getElementById('locked').style.display = locked ? 'block' : 'none';
   document.getElementById('typing').disabled = locked;
   document.getElementById('licbar').style.display = licensed() ? 'none' : 'flex';
-  document.getElementById('owner').textContent = licensed() ? ' · '+lic.n+'님의 것' : '';
-  document.getElementById('stat').innerHTML = '연속 '+streak()+'일<br>서랍 속 '+log.length+'장';
+  document.getElementById('owner').textContent = licensed() ? TT().owner(lic.n) : '';
+  document.getElementById('stat').innerHTML = TT().stat(streak(), log.length);
   const done = log.some(e=>e.date===todayStr());
-  if(done) document.getElementById('msg').textContent = '오늘 몫은 이미 서랍에 있어요. 더 써도 좋아요 :)';
+  if(done) document.getElementById('msg').textContent = TT().done;
   const arch = document.getElementById('archive');
   arch.innerHTML = '';
   for(const e of [...log].reverse().slice(0,30)){
@@ -183,7 +235,7 @@ function refresh(){
       + (e.my ? '<div class="my">↳ '+e.my+'</div>' : '');
     arch.appendChild(d);
   }
-  if(!log.length) arch.innerHTML = '<p style="font-size:13px;color:var(--ink3)">아직 비어 있어요. 첫 장을 넣어볼까요?</p>';
+  if(!log.length) arch.innerHTML = '<p style="font-size:13px;color:var(--ink3)">'+TT().empty+'</p>';
 }
 
 function onType(){
@@ -199,13 +251,13 @@ function saveEntry(){
   if(locked){ dlgKey.showModal(); return; }
   const typed = document.getElementById('typing').value.trim();
   if(accuracy(p.text, typed) < 60){
-    if(!confirm('아직 문장이 다 채워지지 않았어요.\n그래도 서랍에 넣을까요?')) return;
+    if(!confirm(TT().confirm)) return;
   }
   log.push({ date: todayStr(), day: p.day, from: p.from, text: p.text,
              my: document.getElementById('myline').value.trim() });
   store('drawer_log', log);
   document.getElementById('typing').value=''; document.getElementById('myline').value='';
-  document.getElementById('msg').textContent = '서랍에 잘 넣어두었어요. 내일 또 만나요 🌙';
+  document.getElementById('msg').textContent = TT().saved;
   refresh();
 }
 
@@ -213,6 +265,7 @@ function applyKey(){
   const r = verifyKey(document.getElementById('keyin').value);
   const m = document.getElementById('keymsg');
   if(r === 'noprod'){ m.textContent = '이 키에는 마음 서랍이 들어있지 않아요. 데려간 뒤 다시 붙여주세요.'; return; }
+  if(r === 'nonacl'){ m.textContent = '검증 도구를 아직 못 불러왔어요. 인터넷에 한 번 연결한 뒤 다시 시도해 주세요.'; return; }
   if(!r){ m.textContent = '이름표를 알아보지 못했어요. 키 전체를 다시 붙여넣어 주세요.'; return; }
   lic = r; store('drawer_lic', document.getElementById('keyin').value ? r : null);
   m.textContent = '';
@@ -231,6 +284,7 @@ function exportTxt(){
   a.click();
 }
 
+retextStatic();
 refresh();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('drawer_sw.js');
 </script>

@@ -47,7 +47,8 @@ input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;
 </style>
 </head>
 <body>
-<header>🧶 <b>오늘의 속담</b>
+<header>🧶 <b id="appname">오늘의 속담</b>
+ <button id="langbtn" onclick="toggleLang()" style="margin-left:8px;border:none;background:#5d7a58;color:#fff;border-radius:8px;padding:4px 10px;font-family:inherit;font-size:11px;font-weight:700">EN</button>
  <span class="stat" id="stat"></span></header>
 <div class="wrap">
  <div class="card">
@@ -63,106 +64,153 @@ input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;
  </div>
 
  <div class="card">
-  <p style="margin:0 0 6px;font-size:13px;color:var(--ink2)">📖 지난 속담들</p>
-  <div id="archive"><p style="font-size:13px;color:var(--ink3)">내일부터 여기에 하나씩 쌓여요.</p></div>
+  <p style="margin:0 0 6px;font-size:13px;color:var(--ink2)" id="h-arch">📖 지난 속담들</p>
+  <div id="archive"><p style="font-size:13px;color:var(--ink3)" id="arch-empty">내일부터 여기에 하나씩 쌓여요.</p></div>
  </div>
 
- <p class="foot">광고 없이, 하루 한 알 — 전부 이 폰 안에서만 동작해요<br>
+ <p class="foot" id="foot1">광고 없이, 하루 한 알 — 전부 이 폰 안에서만 동작해요<br>
   <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a>이 드리는 선물이에요</p>
 </div>
 
 <script>
 const BANK = [
-{t:"가는 말이 고와야 오는 말이 곱다",w:"말",m:"내가 남에게 잘해야 남도 나에게 잘한다"},
-{t:"낮말은 새가 듣고 밤말은 쥐가 듣는다",w:"쥐",m:"아무도 없는 것 같아도 말은 새어 나가니 늘 조심하라"},
-{t:"등잔 밑이 어둡다",w:"등잔",m:"가까운 곳의 일을 오히려 잘 모른다"},
-{t:"우물 안 개구리",w:"개구리",m:"넓은 세상을 모르고 자기 세계가 전부인 줄 안다"},
-{t:"티끌 모아 태산",w:"태산",m:"작은 것도 꾸준히 모으면 큰 것이 된다"},
-{t:"소 잃고 외양간 고친다",w:"외양간",m:"일이 벌어진 뒤에야 뒤늦게 손을 쓴다"},
-{t:"돌다리도 두들겨 보고 건너라",w:"돌다리",m:"확실해 보여도 한 번 더 확인하라"},
-{t:"백지장도 맞들면 낫다",w:"백지장",m:"쉬운 일도 함께 하면 더 낫다"},
-{t:"원숭이도 나무에서 떨어진다",w:"원숭이",m:"아무리 잘하는 사람도 실수할 때가 있다"},
-{t:"금강산도 식후경",w:"식후경",m:"아무리 좋은 일도 배가 불러야 즐겁다"},
-{t:"가랑비에 옷 젖는 줄 모른다",w:"가랑비",m:"작은 일이 쌓여 큰 변화가 되는 걸 알아채지 못한다"},
-{t:"고래 싸움에 새우 등 터진다",w:"새우",m:"힘센 이들의 다툼에 애꿎은 약한 이가 피해를 본다"},
-{t:"굼벵이도 구르는 재주가 있다",w:"재주",m:"누구에게나 한 가지 재주는 있다"},
-{t:"급하다고 바늘허리에 실 매어 쓸까",w:"바늘허리",m:"아무리 급해도 순서와 격식은 지켜야 한다"},
-{t:"꿩 대신 닭",w:"닭",m:"꼭 맞는 것이 없으면 비슷한 것으로 대신한다"},
-{t:"누워서 떡 먹기",w:"떡",m:"아주 하기 쉬운 일"},
-{t:"다 된 밥에 재 뿌리기",w:"재",m:"거의 다 된 일을 마지막에 망쳐 놓는다"},
-{t:"달면 삼키고 쓰면 뱉는다",w:"삼키고",m:"자기 이익에 따라 태도를 바꾼다"},
-{t:"닭 쫓던 개 지붕 쳐다본다",w:"지붕",m:"애쓰던 일이 허사가 되어 어쩔 줄 모른다"},
-{t:"도둑이 제 발 저리다",w:"발",m:"잘못을 저지르면 마음이 조마조마해진다"},
-{t:"돌 굴러가는 데 낙엽 걱정한다",w:"낙엽",m:"큰일은 두고 작은 걱정만 한다"},
-{t:"되로 주고 말로 받는다",w:"말",m:"조금 주고 그 대가로 훨씬 많이 받는다"},
-{t:"뛰는 놈 위에 나는 놈 있다",w:"나는",m:"잘하는 사람 위에는 더 잘하는 사람이 있다"},
-{t:"말 한마디에 천 냥 빚도 갚는다",w:"천 냥",m:"말만 잘하면 어려운 일도 풀 수 있다"},
-{t:"목마른 사람이 우물 판다",w:"우물",m:"아쉬운 사람이 먼저 나서서 일을 한다"},
-{t:"무소식이 희소식",w:"희소식",m:"소식이 없다는 건 잘 지내고 있다는 뜻이다"},
-{t:"믿는 도끼에 발등 찍힌다",w:"도끼",m:"믿던 사람에게 오히려 배신을 당한다"},
-{t:"바늘 도둑이 소 도둑 된다",w:"바늘",m:"작은 잘못을 두면 큰 잘못으로 자란다"},
-{t:"배보다 배꼽이 더 크다",w:"배꼽",m:"주된 것보다 딸린 것이 더 크다"},
-{t:"벼는 익을수록 고개를 숙인다",w:"고개",m:"훌륭한 사람일수록 겸손하다"},
-{t:"병 주고 약 준다",w:"약",m:"해를 끼치고 나서 도와주는 척한다"},
-{t:"보기 좋은 떡이 먹기도 좋다",w:"떡",m:"겉모양이 좋으면 내용도 좋기 마련이다"},
-{t:"빈 수레가 요란하다",w:"수레",m:"실속 없는 사람이 더 떠들어댄다"},
-{t:"사공이 많으면 배가 산으로 간다",w:"사공",m:"이끄는 사람이 많으면 일이 엉뚱하게 흘러간다"},
-{t:"서당 개 삼 년이면 풍월을 읊는다",w:"풍월",m:"어깨너머로도 오래 보면 배우게 된다"},
-{t:"세 살 버릇 여든까지 간다",w:"버릇",m:"어릴 때 버릇은 늙어서도 고치기 어렵다"},
-{t:"소문난 잔치에 먹을 것 없다",w:"잔치",m:"떠들썩한 소문에 비해 실속이 없다"},
-{t:"쇠뿔도 단김에 빼라",w:"단김",m:"하려고 마음먹었으면 망설이지 말고 바로 하라"},
-{t:"수박 겉 핥기",w:"수박",m:"속은 모른 채 겉만 대충 훑는다"},
-{t:"싼 것이 비지떡",w:"비지떡",m:"값이 싼 것은 그만큼 질이 떨어진다"},
-{t:"아니 땐 굴뚝에 연기 날까",w:"굴뚝",m:"원인이 없으면 결과도 없다"},
-{t:"열 번 찍어 안 넘어가는 나무 없다",w:"나무",m:"꾸준히 애쓰면 이루지 못할 일이 없다"},
-{t:"우물에서 숭늉 찾는다",w:"숭늉",m:"성미가 급해 일의 순서를 기다리지 못한다"},
-{t:"울며 겨자 먹기",w:"겨자",m:"싫은 일을 억지로 한다"},
-{t:"원님 덕에 나팔 분다",w:"나팔",m:"남의 덕으로 분에 넘치는 대접을 받는다"},
-{t:"입에 쓴 약이 병에는 좋다",w:"약",m:"듣기 싫은 충고가 나에게는 이롭다"},
-{t:"자라 보고 놀란 가슴 솥뚜껑 보고 놀란다",w:"솥뚜껑",m:"한 번 혼난 일이 있으면 비슷한 것만 봐도 겁낸다"},
-{t:"작은 고추가 더 맵다",w:"고추",m:"몸집이 작아도 야무지고 단단하다"},
-{t:"종로에서 뺨 맞고 한강에서 눈 흘긴다",w:"한강",m:"화를 엉뚱한 데 가서 푼다"},
-{t:"쥐구멍에도 볕 들 날 있다",w:"볕",m:"아무리 어려워도 좋은 날이 오기 마련이다"},
-{t:"지렁이도 밟으면 꿈틀한다",w:"지렁이",m:"아무리 순한 사람도 함부로 대하면 성을 낸다"},
-{t:"천 리 길도 한 걸음부터",w:"한 걸음",m:"큰일도 작은 시작에서 비롯된다"},
-{t:"콩 심은 데 콩 나고 팥 심은 데 팥 난다",w:"팥",m:"모든 일은 원인에 따라 결과가 나온다"},
-{t:"하늘이 무너져도 솟아날 구멍이 있다",w:"구멍",m:"아무리 큰 어려움에도 헤쳐 나갈 길은 있다"},
-{t:"하룻강아지 범 무서운 줄 모른다",w:"범",m:"철없이 겁 없는 행동을 한다"},
-{t:"호랑이도 제 말 하면 온다",w:"호랑이",m:"이야기하던 사람이 마침 그 자리에 나타난다"},
-{t:"호랑이 굴에 가야 호랑이 새끼를 잡는다",w:"굴",m:"원하는 것을 얻으려면 위험을 무릅써야 한다"},
-{t:"가재는 게 편",w:"가재",m:"처지가 비슷한 사람끼리 서로 편을 든다"},
-{t:"간에 붙었다 쓸개에 붙었다 한다",w:"쓸개",m:"자기 이익을 좇아 이리저리 붙는다"},
-{t:"개구리 올챙이 적 생각 못 한다",w:"올챙이",m:"형편이 나아지면 어렵던 시절을 잊는다"},
-{t:"개똥도 약에 쓰려면 없다",w:"개똥",m:"흔하던 것도 정작 필요할 때는 없다"},
-{t:"고생 끝에 낙이 온다",w:"낙",m:"어려움을 견디면 즐거운 날이 온다"},
-{t:"공든 탑이 무너지랴",w:"탑",m:"정성을 다한 일은 헛되지 않는다"},
-{t:"구슬이 서 말이라도 꿰어야 보배",w:"보배",m:"좋은 것도 다듬어 완성해야 값어치가 있다"},
-{t:"그림의 떡",w:"떡",m:"보기만 할 뿐 가질 수 없는 것"},
-{t:"길고 짧은 것은 대어 보아야 안다",w:"대어",m:"실력은 겨뤄 보아야 알 수 있다"},
-{t:"까마귀 날자 배 떨어진다",w:"배",m:"우연히 겹친 일로 억울한 의심을 받는다"},
-{t:"꼬리가 길면 밟힌다",w:"꼬리",m:"나쁜 일을 계속하면 결국 들키고 만다"},
-{t:"낫 놓고 기역 자도 모른다",w:"기역",m:"아주 무식하다"},
-{t:"내 코가 석 자",w:"석 자",m:"내 사정이 급해 남을 돌볼 겨를이 없다"},
-{t:"누이 좋고 매부 좋다",w:"매부",m:"양쪽 모두에게 이롭다"},
-{t:"달걀로 바위 치기",w:"바위",m:"도저히 이길 수 없는 상대에게 맞선다"},
-{t:"떡 줄 사람은 꿈도 안 꾸는데 김칫국부터 마신다",w:"김칫국",m:"해 줄 사람은 생각도 없는데 미리 기대한다"},
-{t:"마른하늘에 날벼락",w:"날벼락",m:"뜻밖의 재난을 당한다"},
-{t:"물에 빠진 놈 건져 놓으니 보따리 내놓으라 한다",w:"보따리",m:"은혜를 갚기는커녕 생트집을 잡는다"},
-{t:"밑 빠진 독에 물 붓기",w:"독",m:"아무리 애써도 보람 없는 일"},
-{t:"발 없는 말이 천 리 간다",w:"천 리",m:"말은 순식간에 멀리 퍼지니 조심해야 한다"},
-{t:"백문이 불여일견",w:"불여일견",m:"백 번 듣는 것보다 한 번 보는 것이 낫다"},
-{t:"산 넘어 산",w:"산",m:"갈수록 더 어려운 일이 닥친다"},
-{t:"십 년이면 강산도 변한다",w:"강산",m:"세월이 흐르면 모든 것이 변한다"},
-{t:"엎드려 절 받기",w:"절",m:"상대가 마지못해 하도록 만들어 대접을 받는다"},
-{t:"엎질러진 물",w:"물",m:"한번 저지른 일은 되돌릴 수 없다"},
-{t:"윗물이 맑아야 아랫물이 맑다",w:"아랫물",m:"윗사람이 바르게 해야 아랫사람도 바르게 한다"},
-{t:"제 눈에 안경",w:"안경",m:"보잘것없어도 제 마음에 들면 좋아 보인다"},
-{t:"참새가 방앗간을 그저 지나랴",w:"방앗간",m:"좋아하는 것을 보고 그냥 지나치지 못한다"},
-{t:"핑계 없는 무덤 없다",w:"무덤",m:"어떤 잘못에도 둘러댈 핑계는 있기 마련이다"},
-{t:"모로 가도 서울만 가면 된다",w:"서울",m:"수단이 어떻든 목적만 이루면 된다"},
-{t:"비 온 뒤에 땅이 굳어진다",w:"땅",m:"어려움을 겪고 나면 더 단단해진다"},
-{t:"첫술에 배부르랴",w:"첫술",m:"무슨 일이든 단번에 만족할 수는 없다"}
+{t:"가는 말이 고와야 오는 말이 곱다",w:"말",m:"내가 남에게 잘해야 남도 나에게 잘한다",me:"What goes around comes around — speak kindly to be spoken to kindly"},
+{t:"낮말은 새가 듣고 밤말은 쥐가 듣는다",w:"쥐",m:"아무도 없는 것 같아도 말은 새어 나가니 늘 조심하라",me:"Walls have ears — words travel, so always be careful"},
+{t:"등잔 밑이 어둡다",w:"등잔",m:"가까운 곳의 일을 오히려 잘 모른다",me:"The darkest place is under the candlestick — we miss what is closest"},
+{t:"우물 안 개구리",w:"개구리",m:"넓은 세상을 모르고 자기 세계가 전부인 줄 안다",me:"A frog in a well — knowing nothing of the wide world"},
+{t:"티끌 모아 태산",w:"태산",m:"작은 것도 꾸준히 모으면 큰 것이 된다",me:"Dust gathered makes a mountain — small savings grow great"},
+{t:"소 잃고 외양간 고친다",w:"외양간",m:"일이 벌어진 뒤에야 뒤늦게 손을 쓴다",me:"Mending the barn after losing the ox — acting too late"},
+{t:"돌다리도 두들겨 보고 건너라",w:"돌다리",m:"확실해 보여도 한 번 더 확인하라",me:"Tap even a stone bridge before crossing — double-check the sure thing"},
+{t:"백지장도 맞들면 낫다",w:"백지장",m:"쉬운 일도 함께 하면 더 낫다",me:"Even a sheet of paper is lighter lifted together — cooperation helps"},
+{t:"원숭이도 나무에서 떨어진다",w:"원숭이",m:"아무리 잘하는 사람도 실수할 때가 있다",me:"Even monkeys fall from trees — even experts make mistakes"},
+{t:"금강산도 식후경",w:"식후경",m:"아무리 좋은 일도 배가 불러야 즐겁다",me:"Even Diamond Mountain should be seen after eating — food comes first"},
+{t:"가랑비에 옷 젖는 줄 모른다",w:"가랑비",m:"작은 일이 쌓여 큰 변화가 되는 걸 알아채지 못한다",me:"Clothes get soaked in drizzle unnoticed — small things add up unseen"},
+{t:"고래 싸움에 새우 등 터진다",w:"새우",m:"힘센 이들의 다툼에 애꿎은 약한 이가 피해를 본다",me:"Shrimp's back breaks in a whale fight — the weak get hurt in big quarrels"},
+{t:"굼벵이도 구르는 재주가 있다",w:"재주",m:"누구에게나 한 가지 재주는 있다",me:"Even a grub can roll — everyone has at least one talent"},
+{t:"급하다고 바늘허리에 실 매어 쓸까",w:"바늘허리",m:"아무리 급해도 순서와 격식은 지켜야 한다",me:"However urgent, you cannot thread a needle at its waist — order matters"},
+{t:"꿩 대신 닭",w:"닭",m:"꼭 맞는 것이 없으면 비슷한 것으로 대신한다",me:"A chicken instead of a pheasant — settle for the next best thing"},
+{t:"누워서 떡 먹기",w:"떡",m:"아주 하기 쉬운 일",me:"Eating rice cake lying down — an extremely easy task"},
+{t:"다 된 밥에 재 뿌리기",w:"재",m:"거의 다 된 일을 마지막에 망쳐 놓는다",me:"Throwing ash on cooked rice — ruining nearly finished work"},
+{t:"달면 삼키고 쓰면 뱉는다",w:"삼키고",m:"자기 이익에 따라 태도를 바꾼다",me:"Swallow if sweet, spit if bitter — acting only on self-interest"},
+{t:"닭 쫓던 개 지붕 쳐다본다",w:"지붕",m:"애쓰던 일이 허사가 되어 어쩔 줄 모른다",me:"The dog that chased the hen stares at the roof — effort come to nothing"},
+{t:"도둑이 제 발 저리다",w:"발",m:"잘못을 저지르면 마음이 조마조마해진다",me:"The thief's own feet tingle — a guilty conscience betrays itself"},
+{t:"돌 굴러가는 데 낙엽 걱정한다",w:"낙엽",m:"큰일은 두고 작은 걱정만 한다",me:"Worrying about leaves while a boulder rolls — missing the big issue"},
+{t:"되로 주고 말로 받는다",w:"말",m:"조금 주고 그 대가로 훨씬 많이 받는다",me:"Give a cup, receive a barrel — a small deed repaid many times over"},
+{t:"뛰는 놈 위에 나는 놈 있다",w:"나는",m:"잘하는 사람 위에는 더 잘하는 사람이 있다",me:"Above a running man is a flying man — there is always someone better"},
+{t:"말 한마디에 천 냥 빚도 갚는다",w:"천 냥",m:"말만 잘하면 어려운 일도 풀 수 있다",me:"One kind word repays a thousand-coin debt — good words work wonders"},
+{t:"목마른 사람이 우물 판다",w:"우물",m:"아쉬운 사람이 먼저 나서서 일을 한다",me:"The thirsty one digs the well — the needy act first"},
+{t:"무소식이 희소식",w:"희소식",m:"소식이 없다는 건 잘 지내고 있다는 뜻이다",me:"No news is good news"},
+{t:"믿는 도끼에 발등 찍힌다",w:"도끼",m:"믿던 사람에게 오히려 배신을 당한다",me:"The trusted axe cuts your foot — betrayed by the one you trusted"},
+{t:"바늘 도둑이 소 도둑 된다",w:"바늘",m:"작은 잘못을 두면 큰 잘못으로 자란다",me:"A needle thief becomes an ox thief — small wrongs grow into big ones"},
+{t:"배보다 배꼽이 더 크다",w:"배꼽",m:"주된 것보다 딸린 것이 더 크다",me:"The belly button is bigger than the belly — extras outweigh the main thing"},
+{t:"벼는 익을수록 고개를 숙인다",w:"고개",m:"훌륭한 사람일수록 겸손하다",me:"Ripe rice bows its head — the greater the person, the humbler"},
+{t:"병 주고 약 준다",w:"약",m:"해를 끼치고 나서 도와주는 척한다",me:"Giving medicine after causing the illness — harm first, help later"},
+{t:"보기 좋은 떡이 먹기도 좋다",w:"떡",m:"겉모양이 좋으면 내용도 좋기 마련이다",me:"Good-looking rice cake tastes good too — looks do matter"},
+{t:"빈 수레가 요란하다",w:"수레",m:"실속 없는 사람이 더 떠들어댄다",me:"An empty cart rattles loudest — the shallow talk the most"},
+{t:"사공이 많으면 배가 산으로 간다",w:"사공",m:"이끄는 사람이 많으면 일이 엉뚱하게 흘러간다",me:"Too many boatmen steer the boat up a mountain — too many leaders"},
+{t:"서당 개 삼 년이면 풍월을 읊는다",w:"풍월",m:"어깨너머로도 오래 보면 배우게 된다",me:"A dog at school recites poetry after three years — learning by exposure"},
+{t:"세 살 버릇 여든까지 간다",w:"버릇",m:"어릴 때 버릇은 늙어서도 고치기 어렵다",me:"A habit at three lasts till eighty — childhood habits are lifelong"},
+{t:"소문난 잔치에 먹을 것 없다",w:"잔치",m:"떠들썩한 소문에 비해 실속이 없다",me:"A famous feast has little to eat — hype beats substance"},
+{t:"쇠뿔도 단김에 빼라",w:"단김",m:"하려고 마음먹었으면 망설이지 말고 바로 하라",me:"Strike while the iron is hot"},
+{t:"수박 겉 핥기",w:"수박",m:"속은 모른 채 겉만 대충 훑는다",me:"Licking the outside of a watermelon — only a shallow understanding"},
+{t:"싼 것이 비지떡",w:"비지떡",m:"값이 싼 것은 그만큼 질이 떨어진다",me:"Cheap things are cheap for a reason"},
+{t:"아니 땐 굴뚝에 연기 날까",w:"굴뚝",m:"원인이 없으면 결과도 없다",me:"No smoke without fire"},
+{t:"열 번 찍어 안 넘어가는 나무 없다",w:"나무",m:"꾸준히 애쓰면 이루지 못할 일이 없다",me:"No tree stands after ten swings of the axe — persistence prevails"},
+{t:"우물에서 숭늉 찾는다",w:"숭늉",m:"성미가 급해 일의 순서를 기다리지 못한다",me:"Asking for rice water from the well — impatience skips the process"},
+{t:"울며 겨자 먹기",w:"겨자",m:"싫은 일을 억지로 한다",me:"Eating mustard in tears — doing something unpleasant unwillingly"},
+{t:"원님 덕에 나팔 분다",w:"나팔",m:"남의 덕으로 분에 넘치는 대접을 받는다",me:"Blowing a trumpet thanks to the magistrate — borrowed privilege"},
+{t:"입에 쓴 약이 병에는 좋다",w:"약",m:"듣기 싫은 충고가 나에게는 이롭다",me:"Bitter medicine is good for the illness — honest advice helps"},
+{t:"자라 보고 놀란 가슴 솥뚜껑 보고 놀란다",w:"솥뚜껑",m:"한 번 혼난 일이 있으면 비슷한 것만 봐도 겁낸다",me:"Startled by a pot lid after a turtle scare — once bitten, twice shy"},
+{t:"작은 고추가 더 맵다",w:"고추",m:"몸집이 작아도 야무지고 단단하다",me:"Small peppers are hotter — small but mighty"},
+{t:"종로에서 뺨 맞고 한강에서 눈 흘긴다",w:"한강",m:"화를 엉뚱한 데 가서 푼다",me:"Slapped in Jongno, glaring at the Han River — anger at the wrong target"},
+{t:"쥐구멍에도 볕 들 날 있다",w:"볕",m:"아무리 어려워도 좋은 날이 오기 마련이다",me:"Sunlight reaches even a mouse hole — good days come to anyone"},
+{t:"지렁이도 밟으면 꿈틀한다",w:"지렁이",m:"아무리 순한 사람도 함부로 대하면 성을 낸다",me:"Even a worm wriggles when stepped on — even the meek have limits"},
+{t:"천 리 길도 한 걸음부터",w:"한 걸음",m:"큰일도 작은 시작에서 비롯된다",me:"A thousand-mile road starts with one step"},
+{t:"콩 심은 데 콩 나고 팥 심은 데 팥 난다",w:"팥",m:"모든 일은 원인에 따라 결과가 나온다",me:"Beans grow from bean seeds, red beans from red-bean seeds — cause and effect"},
+{t:"하늘이 무너져도 솟아날 구멍이 있다",w:"구멍",m:"아무리 큰 어려움에도 헤쳐 나갈 길은 있다",me:"Even if the sky falls there is a hole to climb out — there is always a way"},
+{t:"하룻강아지 범 무서운 줄 모른다",w:"범",m:"철없이 겁 없는 행동을 한다",me:"A day-old puppy fears no tiger — ignorance is bold"},
+{t:"호랑이도 제 말 하면 온다",w:"호랑이",m:"이야기하던 사람이 마침 그 자리에 나타난다",me:"Speak of the tiger and it appears"},
+{t:"호랑이 굴에 가야 호랑이 새끼를 잡는다",w:"굴",m:"원하는 것을 얻으려면 위험을 무릅써야 한다",me:"To catch a tiger cub you must enter the tiger's den — no risk, no gain"},
+{t:"가재는 게 편",w:"가재",m:"처지가 비슷한 사람끼리 서로 편을 든다",me:"Crayfish sides with the crab — like sides with like"},
+{t:"간에 붙었다 쓸개에 붙었다 한다",w:"쓸개",m:"자기 이익을 좇아 이리저리 붙는다",me:"Clinging to liver then gallbladder — switching sides for gain"},
+{t:"개구리 올챙이 적 생각 못 한다",w:"올챙이",m:"형편이 나아지면 어렵던 시절을 잊는다",me:"The frog forgets its tadpole days — forgetting humble beginnings"},
+{t:"개똥도 약에 쓰려면 없다",w:"개똥",m:"흔하던 것도 정작 필요할 때는 없다",me:"Even dog dung is missing when needed as medicine"},
+{t:"고생 끝에 낙이 온다",w:"낙",m:"어려움을 견디면 즐거운 날이 온다",me:"After hardship comes happiness"},
+{t:"공든 탑이 무너지랴",w:"탑",m:"정성을 다한 일은 헛되지 않는다",me:"A tower built with care never crumbles — sincere effort endures"},
+{t:"구슬이 서 말이라도 꿰어야 보배",w:"보배",m:"좋은 것도 다듬어 완성해야 값어치가 있다",me:"Even three bushels of beads must be strung to be treasure — finish the work"},
+{t:"그림의 떡",w:"떡",m:"보기만 할 뿐 가질 수 없는 것",me:"Rice cake in a picture — visible but unattainable"},
+{t:"길고 짧은 것은 대어 보아야 안다",w:"대어",m:"실력은 겨뤄 보아야 알 수 있다",me:"Long or short, measure it — test to know who is better"},
+{t:"까마귀 날자 배 떨어진다",w:"배",m:"우연히 겹친 일로 억울한 의심을 받는다",me:"The pear drops just as the crow flies off — unlucky coincidence invites suspicion"},
+{t:"꼬리가 길면 밟힌다",w:"꼬리",m:"나쁜 일을 계속하면 결국 들키고 만다",me:"A long tail gets stepped on — repeated wrongs get caught"},
+{t:"낫 놓고 기역 자도 모른다",w:"기역",m:"아주 무식하다",me:"Cannot read even giyeok with a sickle lying there — utter ignorance"},
+{t:"내 코가 석 자",w:"석 자",m:"내 사정이 급해 남을 돌볼 겨를이 없다",me:"My nose is already three feet long — too busy to help others"},
+{t:"누이 좋고 매부 좋다",w:"매부",m:"양쪽 모두에게 이롭다",me:"Good for the sister and the brother-in-law — good for both sides"},
+{t:"달걀로 바위 치기",w:"바위",m:"도저히 이길 수 없는 상대에게 맞선다",me:"Striking a rock with an egg — a hopeless fight"},
+{t:"떡 줄 사람은 꿈도 안 꾸는데 김칫국부터 마신다",w:"김칫국",m:"해 줄 사람은 생각도 없는데 미리 기대한다",me:"Drinking kimchi soup before being offered rice cake — counting chickens early"},
+{t:"마른하늘에 날벼락",w:"날벼락",m:"뜻밖의 재난을 당한다",me:"A thunderbolt from a clear sky — disaster out of nowhere"},
+{t:"물에 빠진 놈 건져 놓으니 보따리 내놓으라 한다",w:"보따리",m:"은혜를 갚기는커녕 생트집을 잡는다",me:"Saved from drowning, he demands his bundle — ingratitude with a grudge"},
+{t:"밑 빠진 독에 물 붓기",w:"독",m:"아무리 애써도 보람 없는 일",me:"Pouring water into a bottomless jar — endless futile effort"},
+{t:"발 없는 말이 천 리 간다",w:"천 리",m:"말은 순식간에 멀리 퍼지니 조심해야 한다",me:"Words without feet travel a thousand miles — rumors spread fast"},
+{t:"백문이 불여일견",w:"불여일견",m:"백 번 듣는 것보다 한 번 보는 것이 낫다",me:"Seeing once beats hearing a hundred times"},
+{t:"산 넘어 산",w:"산",m:"갈수록 더 어려운 일이 닥친다",me:"Beyond the mountain, another mountain — one hardship after another"},
+{t:"십 년이면 강산도 변한다",w:"강산",m:"세월이 흐르면 모든 것이 변한다",me:"In ten years even rivers and mountains change"},
+{t:"엎드려 절 받기",w:"절",m:"상대가 마지못해 하도록 만들어 대접을 받는다",me:"Bowing after forcing a bow — a favor extracted, not given"},
+{t:"엎질러진 물",w:"물",m:"한번 저지른 일은 되돌릴 수 없다",me:"Spilt water — what is done cannot be undone"},
+{t:"윗물이 맑아야 아랫물이 맑다",w:"아랫물",m:"윗사람이 바르게 해야 아랫사람도 바르게 한다",me:"When the upper stream is clear, so is the lower — leaders set the example"},
+{t:"제 눈에 안경",w:"안경",m:"보잘것없어도 제 마음에 들면 좋아 보인다",me:"Glasses fit their owner's eyes — beauty is in the beholder's eye"},
+{t:"참새가 방앗간을 그저 지나랴",w:"방앗간",m:"좋아하는 것을 보고 그냥 지나치지 못한다",me:"Can a sparrow pass a mill without stopping? — impossible to resist a favorite"},
+{t:"핑계 없는 무덤 없다",w:"무덤",m:"어떤 잘못에도 둘러댈 핑계는 있기 마련이다",me:"No grave without an excuse — everyone has excuses"},
+{t:"모로 가도 서울만 가면 된다",w:"서울",m:"수단이 어떻든 목적만 이루면 된다",me:"Any road is fine if it reaches Seoul — the end justifies the means"},
+{t:"비 온 뒤에 땅이 굳어진다",w:"땅",m:"어려움을 겪고 나면 더 단단해진다",me:"The ground hardens after rain — hardship makes you stronger"},
+{t:"첫술에 배부르랴",w:"첫술",m:"무슨 일이든 단번에 만족할 수는 없다",me:"No one is filled by the first spoonful — patience with progress"}
 ];
+const LX = {
+ ko: { app:'오늘의 속담', day:n=>n+'번째 속담', hint0:'빈칸(○)에 들어갈 말은 무엇일까요?',
+   guess_ph:'여기에 답을 적어보세요', check:'🧶 맞혀보기', share:'📋 오늘 결과 복사하기',
+   arch:'📖 지난 속담들', arch_empty:'내일부터 여기에 하나씩 쌓여요.',
+   foot:'광고 없이, 하루 한 알 — 전부 이 폰 안에서만 동작해요<br>\n  <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a>이 드리는 선물이에요',
+   stat:(s,n)=>'연속 '+s+'일<br>맞힌 속담 '+n+'개',
+   mean:m=>'<b>뜻</b> — '+m, win:'정답이에요! 내일 또 한 알 준비해 둘게요 🧡',
+   lose:w=>'오늘 답은 「'+w+'」였어요. 내일 다시 만나요 :)',
+   hint1:a=>'첫 글자는 「'+a+'」 이에요', hint2:m=>'뜻 힌트 — '+m,
+   wrong:'음… 조금 달라요. 다시 한번!', got:(w,t)=>w?'맞힘 ('+t+'번 만에)':'아쉬움',
+   share_win:t=>t+'번 만에 맞혔어요! ', share_lose:'오늘은 아쉬웠어요 ',
+   copied:'복사했어요! 친구에게 붙여넣어 보내보세요' },
+ en: { app:'Korean Proverb a Day', day:n=>'Proverb #'+n, hint0:'What word fills the blank (○)? (answer in Korean)',
+   guess_ph:'Type your answer in Korean', check:'🧶 Guess', share:'📋 Copy my result',
+   arch:'📖 Past proverbs', arch_empty:'They will pile up here from tomorrow.',
+   foot:'No ads, one proverb a day — everything runs on this phone<br>\n  a gift from <a href="https://valuestools.kr/en.html">VALUES — a little tool shop</a>',
+   stat:(s,n)=>s+'-day streak<br>'+n+' solved',
+   mean:(m,me)=>'<b>Meaning</b> — '+(me||m)+'<br><span style="color:var(--ink3);font-size:12px">'+m+'</span>',
+   win:'Correct! A new one will be ready tomorrow 🧡',
+   lose:w=>'Today\'s answer was “'+w+'”. See you tomorrow :)',
+   hint1:a=>'The first letter is “'+a+'”', hint2:(m,me)=>'Meaning hint — '+(me||m),
+   wrong:'Hmm… not quite. Try again!', got:(w,t)=>w?'solved (in '+t+')':'missed',
+   share_win:t=>'Solved in '+t+'! ', share_lose:'Missed today ',
+   copied:'Copied! Paste it to a friend' },
+};
+let lang = null;
+try{ lang = localStorage.getItem('values_lang'); }catch(e){}
+if(!lang) lang = (navigator.language||'').toLowerCase().startsWith('ko') ? 'ko' : 'en';
+function TT(){ return LX[lang]; }
+function toggleLang(){ lang = lang==='ko' ? 'en' : 'ko';
+  try{ localStorage.setItem('values_lang', lang); }catch(e){}
+  retextStatic(); refresh(); }
+function retextStatic(){
+  const T = TT();
+  document.getElementById('appname').textContent = T.app;
+  document.getElementById('langbtn').textContent = lang==='ko' ? 'EN' : '한국어';
+  if(!state.done) document.getElementById('hintline').textContent = T.hint0;
+  document.getElementById('guess').placeholder = T.guess_ph;
+  document.getElementById('checkbtn').textContent = T.check;
+  document.getElementById('sharebtn').textContent = T.share;
+  document.getElementById('h-arch').textContent = T.arch;
+  const ae = document.getElementById('arch-empty');
+  if(ae) ae.textContent = T.arch_empty;
+  document.getElementById('foot1').innerHTML = T.foot;
+  document.title = T.app;
+}
+
 const EPOCH = new Date('2026-01-01T00:00:00');
 
 function store(k, v){ try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||'null');
@@ -194,21 +242,19 @@ function streak(){
 }
 
 function refresh(){
-  document.getElementById('day').textContent = (dayNo()%BANK.length+1) + '번째 속담';
+  document.getElementById('day').textContent = TT().day(dayNo()%BANK.length+1);
   document.getElementById('quote').innerHTML = state.done ? '“'+Q.t+'”' : '“'+masked()+'”';
   document.getElementById('tries').textContent = '🧶'.repeat(Math.max(0,3-state.tries)) + '〰'.repeat(state.tries);
-  document.getElementById('stat').innerHTML = '연속 '+streak()+'일<br>맞힌 속담 '+hist.filter(h=>h.win).length+'개';
+  document.getElementById('stat').innerHTML = TT().stat(streak(), hist.filter(h=>h.win).length);
   if(state.done){
     document.getElementById('guess').style.display='none';
     document.getElementById('checkbtn').style.display='none';
     document.getElementById('hintline').textContent = '';
     const mean = document.getElementById('mean');
     mean.style.display='block';
-    mean.innerHTML = '<b>뜻</b> — ' + Q.m;
+    mean.innerHTML = lang==='ko' ? TT().mean(Q.m) : TT().mean(Q.m, Q.me);
     document.getElementById('msg').className = 'msg' + (state.win?' win':'');
-    document.getElementById('msg').textContent = state.win
-      ? '정답이에요! 내일 또 한 알 준비해 둘게요 🧡'
-      : '오늘 답은 「'+Q.w+'」였어요. 내일 다시 만나요 :)';
+    document.getElementById('msg').textContent = state.win ? TT().win : TT().lose(Q.w);
     document.getElementById('sharebtn').style.display='block';
   }
   const arch = document.getElementById('archive');
@@ -217,7 +263,7 @@ function refresh(){
     arch.innerHTML='';
     for(const h of past){
       const d=document.createElement('div'); d.className='entry';
-      d.innerHTML = '<div class="m">'+h.date+' · '+(h.win?'맞힘 ('+h.tries+'번 만에)':'아쉬움')+'</div>“'+h.t+'”';
+      d.innerHTML = '<div class="m">'+h.date+' · '+TT().got(h.win, h.tries)+'</div>“'+h.t+'”';
       arch.appendChild(d);
     }
   }
@@ -243,26 +289,25 @@ function check(){
   store('sokdam_'+todayStr(), state);
   if(state.tries >= 3){ finish(false); return; }
   document.getElementById('guess').value='';
-  const hint = state.tries === 1
-    ? '첫 글자는 「'+ans[0]+'」 이에요'
-    : '뜻 힌트 — ' + Q.m;
+  const hint = state.tries === 1 ? TT().hint1(ans[0]) : (lang==='ko' ? TT().hint2(Q.m) : TT().hint2(Q.m, Q.me));
   refresh();
   document.getElementById('hintline').textContent = hint;
-  document.getElementById('msg').textContent = '음… 조금 달라요. 다시 한번!';
+  document.getElementById('msg').textContent = TT().wrong;
 }
 
 function share(){
-  const txt = '오늘의 속담 '+(dayNo()%BANK.length+1)+'번째 — '
-    + (state.win ? state.tries+'번 만에 맞혔어요! ' : '오늘은 아쉬웠어요 ')
+  const txt = TT().app+' '+TT().day(dayNo()%BANK.length+1)+' — '
+    + (state.win ? TT().share_win(state.tries) : TT().share_lose)
     + '🧶'.repeat(Math.max(0,3-state.tries)) + '〰'.repeat(state.tries)
     + '\n“'+ (state.win? Q.t : masked().replace(/<[^>]+>/g,'')) +'”'
     + '\nhttps://valuestools.kr/sokdam.html';
   if(navigator.share){ navigator.share({text: txt}).catch(()=>{}); }
   else { navigator.clipboard.writeText(txt).then(()=>{
-    document.getElementById('msg').textContent='복사했어요! 친구에게 붙여넣어 보내보세요'; }); }
+    document.getElementById('msg').textContent=TT().copied; }); }
 }
 
 document.getElementById('guess').addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
+retextStatic();
 refresh();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sokdam_sw.js');
 </script>
