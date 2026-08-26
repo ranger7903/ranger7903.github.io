@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>암기 수첩</title>
+<meta name="description" content="복잡한 설정 없이, 오늘 외울 것만 보여주는 암기 카드 — 밸류스">
+<link rel="manifest" href="memocard_manifest.json">
+<link rel="icon" href="memocard_icon192.png">
+<link rel="apple-touch-icon" href="memocard_icon192.png">
+<meta name="theme-color" content="#C0684A">
+<script src="nacl.min.js"></script>
+<style>
+:root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
+ --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77;--gold:#D9A441}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--cream);color:var(--ink);
+ font-family:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ font-size:16px;line-height:1.7;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+header{background:var(--terra);color:#FFF8F2;padding:calc(14px + env(safe-area-inset-top)) 18px 12px;
+ display:flex;align-items:center;gap:8px}
+header b{font-size:18px}
+header .stat{margin-left:auto;font-size:11.5px;color:#FBE3D8;text-align:right;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding:16px}
+.licbar{background:#FFF2CC;color:#7a5c00;font-size:12px;padding:8px 14px;border-radius:12px;
+ margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.licbar button{margin-left:auto;border:none;background:var(--gold);color:#fff;border-radius:8px;
+ padding:6px 10px;font-family:inherit;font-size:12px;font-weight:700}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;border:1.5px solid var(--line);background:var(--card);color:var(--ink2);
+ border-radius:12px;padding:10px;font-family:inherit;font-size:14px}
+.tabs button.on{background:var(--terra);border-color:var(--terra);color:#FFF8F2;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;
+ margin-bottom:14px;box-shadow:0 10px 30px -24px rgba(80,60,30,.6)}
+.deckname{color:var(--sage);font-weight:700;font-size:13px;text-align:center}
+.face{font-family:"Gowun Batang",serif;font-size:22px;text-align:center;margin:20px 6px;
+ word-break:keep-all;min-height:60px}
+.back{border-top:1.5px dashed var(--line);padding-top:14px;color:var(--terra)}
+.btn{display:block;width:100%;border:none;background:var(--terra);color:#FFF8F2;
+ font-family:inherit;font-size:16px;font-weight:700;border-radius:12px;padding:14px;margin-top:12px}
+.btn.line{background:none;border:1.5px solid var(--line);color:var(--ink2);font-weight:400;font-size:14px}
+.grade{display:flex;gap:8px;margin-top:12px}
+.grade button{flex:1;border:none;border-radius:12px;padding:13px 4px;font-family:inherit;
+ font-size:14.5px;font-weight:700;color:#fff}
+.g-no{background:#C0684A}.g-ok{background:#7E9B77}.g-ez{background:#D9A441}
+.grade small{display:block;font-weight:400;font-size:10.5px;opacity:.85}
+.done{text-align:center;padding:26px 8px;color:var(--sage);font-size:16px}
+.hint{font-size:13px;color:var(--ink2);margin:10px 0 4px}
+input,textarea,select{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;
+ font-family:inherit;font-size:15px;background:#fff;color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+.deck{display:flex;align-items:center;gap:10px;border-bottom:1px dashed var(--line);padding:11px 2px}
+.deck:last-child{border-bottom:none}
+.deck .nm{font-weight:700;font-size:15px}
+.deck .meta{font-size:11.5px;color:var(--ink3)}
+.deck .due{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--terra);white-space:nowrap}
+.deck button{border:none;background:none;color:var(--ink3);font-size:15px;padding:4px}
+.msg{text-align:center;color:var(--sage);font-size:13px;min-height:18px;margin-top:8px}
+.locked{background:var(--terra-soft);border-radius:12px;padding:13px;font-size:13.5px;color:#8a4a33;margin-top:10px}
+.locked a{color:var(--terra);font-weight:700}
+.foot{text-align:center;font-size:11.5px;color:var(--ink3);margin:18px 0}
+.foot a{color:var(--terra);text-decoration:none}
+dialog{border:none;border-radius:16px;padding:20px;max-width:340px;width:88%}
+dialog textarea{font-size:12px;font-family:monospace;min-height:90px}
+dialog .btn{font-size:14px;padding:11px}
+</style>
+</head>
+<body>
+<header>🃏 <b>암기 수첩</b><span id="owner"></span>
+ <span class="stat" id="stat"></span></header>
+<div class="wrap">
+ <div class="licbar" id="licbar" style="display:none">
+  🎁 체험 중이에요 — 묶음 1개·카드 20장까지
+  <button onclick="dlgKey.showModal()">정품 이름표</button>
+ </div>
+
+ <div class="tabs">
+  <button id="tab-study" class="on" onclick="show('study')">📖 오늘 복습</button>
+  <button id="tab-decks" onclick="show('decks')">🗂 내 묶음</button>
+ </div>
+
+ <!-- 오늘 복습 -->
+ <div id="v-study">
+  <div class="card" id="study-card" style="display:none">
+   <p class="deckname" id="s-deck"></p>
+   <p class="face" id="s-front"></p>
+   <div id="s-backwrap" style="display:none">
+    <p class="face back" id="s-back"></p>
+    <div class="grade">
+     <button class="g-no" onclick="grade(0)">몰라요<small>곧 다시 나와요</small></button>
+     <button class="g-ok" onclick="grade(1)">알아요<small id="g-ok-days"></small></button>
+     <button class="g-ez" onclick="grade(2)">쉬워요<small id="g-ez-days"></small></button>
+    </div>
+   </div>
+   <button class="btn" id="s-show" onclick="reveal()">🃏 답 보기</button>
+   <p class="msg" id="s-left"></p>
+  </div>
+  <div class="card done" id="study-done" style="display:none">
+   오늘 몫은 다 외웠어요! 내일 또 준비해 둘게요 🧡<br>
+   <span style="font-size:13px;color:var(--ink3)" id="done-detail"></span>
+  </div>
+ </div>
+
+ <!-- 내 묶음 -->
+ <div id="v-decks" style="display:none">
+  <div class="card">
+   <p class="hint" style="margin-top:0">✏️ 새 묶음 만들기</p>
+   <input id="deck-name" placeholder="예: 전산회계 2급 용어">
+   <button class="btn" onclick="addDeck()">🗂 묶음 만들기</button>
+   <p class="msg" id="deck-msg"></p>
+   <div class="locked" id="locked" style="display:none">
+    체험판은 묶음 1개·카드 20장까지예요. 밸류스 도구를 데려가셨다면 <b>그 정품 키 그대로</b> 열려요 —
+    위의 [정품 이름표] 단추에 붙여넣어 주세요. 아직 없다면
+    <a href="https://valuestools.kr/#mobile">밸류스 가게 구경하기</a>.
+   </div>
+  </div>
+  <div class="card">
+   <p class="hint" style="margin-top:0">📥 카드 넣기 <span style="color:var(--ink3)">(한 줄에 한 장 — "앞 : 뒤" / 엑셀에서 복사한 두 칸도 돼요)</span></p>
+   <select id="add-deck"></select>
+   <textarea id="bulk" placeholder="감가상각 : 자산의 가치 감소를 비용으로 나누어 적는 것&#10;대손충당금 : 못 받을 것 같은 외상값을 미리 빼두는 돈"></textarea>
+   <button class="btn" onclick="addCards()">📥 카드 넣기</button>
+   <p class="msg" id="bulk-msg"></p>
+  </div>
+  <div class="card">
+   <p class="hint" style="margin-top:0">🗂 내 묶음들</p>
+   <div id="deck-list"></div>
+   <button class="btn line" onclick="exportTxt()">내 카드 내보내기 (.txt)</button>
+  </div>
+ </div>
+
+ <p class="foot">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
+  <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a></p>
+</div>
+
+<dialog id="dlgKey">
+ <p style="margin-top:0;font-weight:700">정품 이름표 붙이기</p>
+ <p style="font-size:13px;color:#6E6355">메일로 받은 키(VALUES.으로 시작)를 통째로 붙여넣어 주세요</p>
+ <textarea id="keyin"></textarea>
+ <button class="btn" onclick="applyKey()">붙이기</button>
+ <button class="btn line" onclick="dlgKey.close()">닫기</button>
+ <p class="msg" id="keymsg"></p>
+</dialog>
+
+<script>
+const PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
+const FREE_DECKS = 1, FREE_CARDS = 20, NEW_PER_DAY = 20;
+const STEPS = [1, 3, 7, 14, 30, 60, 120];   // '알아요' 간격(일) — 안키의 간격 반복을 속에 숨김
+
+function store(k, v){ try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||'null');
+  localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
+
+let D = store('memo_data') || { decks: [], hist: [] };
+// deck: {id, name, cards:[{f,b,step,due,learned}]}
+let lic = store('memo_lic') || null;
+let queue = [], cur = null, newToday = 0;
+
+function b64d(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='=';
+  const bin=atob(s); const u=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return u; }
+
+function verifyKey(raw){
+  try{
+    raw = (raw||'').trim();
+    if(!raw.startsWith('VALUES.')) return null;
+    const p = raw.split('.');
+    if(p.length !== 3) return null;
+    const payload = b64d(p[1]), sig = b64d(p[2]);
+    if(typeof nacl === 'undefined') return 'nonacl';
+    if(!nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return null;
+    const info = JSON.parse(new TextDecoder().decode(payload));
+    const prods = info.p || [];
+    if(!(prods.includes('*') || prods.includes('memocard'))) return 'noprod';
+    return info;
+  }catch(e){ return null; }
+}
+function licensed(){ return lic && lic.n !== undefined; }
+
+function todayStr(){ const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function addDays(s, n){ const d=new Date(s+'T00:00:00'); d.setDate(d.getDate()+n);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function allCards(){ return D.decks.flatMap(dk=>dk.cards.map(c=>({c, dk}))); }
+function cardCount(){ return D.decks.reduce((a,dk)=>a+dk.cards.length,0); }
+
+function buildQueue(){
+  const t = todayStr();
+  newToday = (store('memo_new_'+t) || 0);
+  queue = [];
+  let newCnt = 0;
+  for(const {c, dk} of allCards()){
+    if(c.due && c.due <= t) queue.push({c, dk});          // 복습 시기 도래
+    else if(!c.due && (newToday + newCnt) < NEW_PER_DAY){ queue.push({c, dk}); newCnt++; }
+  }
+  queue.sort((a,b)=> (a.c.due||'9999') < (b.c.due||'9999') ? -1 : 1);
+}
+
+function streak(){
+  const days=[...new Set(D.hist)].sort().reverse();
+  let s=0; let d=new Date(todayStr()+'T00:00:00');
+  for(const day of days){
+    const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(day===ds){ s++; d.setDate(d.getDate()-1); } else break;
+  }
+  return s;
+}
+
+function refresh(){
+  document.getElementById('licbar').style.display = licensed() ? 'none' : 'flex';
+  document.getElementById('owner').textContent = licensed() ? ' · '+lic.n+'님의 것' : '';
+  const learned = allCards().filter(x=>x.c.step>=3).length;
+  document.getElementById('stat').innerHTML = '연속 '+streak()+'일<br>익힌 카드 '+learned+'장';
+  const full = !licensed() && (D.decks.length >= FREE_DECKS || cardCount() >= FREE_CARDS);
+  document.getElementById('locked').style.display = full ? 'block' : 'none';
+
+  const sel = document.getElementById('add-deck');
+  sel.innerHTML = '';
+  for(const dk of D.decks){ const o=document.createElement('option'); o.value=dk.id; o.textContent=dk.name; sel.appendChild(o); }
+
+  const list = document.getElementById('deck-list');
+  list.innerHTML = D.decks.length ? '' : '<p style="font-size:13px;color:var(--ink3)">아직 비어 있어요. 첫 묶음을 만들어볼까요?</p>';
+  const t = todayStr();
+  for(const dk of D.decks){
+    const due = dk.cards.filter(c=>!c.due || c.due<=t).length;
+    const d = document.createElement('div'); d.className='deck';
+    d.innerHTML = '<span>🗂</span><span><div class="nm"></div>'
+      + '<div class="meta">'+dk.cards.length+'장</div></span>'
+      + '<span class="due">'+(due? '오늘 '+due+'장' : '오늘은 끝')+'</span>';
+    d.querySelector('.nm').textContent = dk.name;
+    const del = document.createElement('button'); del.textContent='✕';
+    del.onclick = ()=>{ if(confirm('「'+dk.name+'」 묶음을 지울까요? 카드도 함께 사라져요.')){
+      D.decks = D.decks.filter(x=>x!==dk); save(); refresh(); nextCard(); } };
+    d.appendChild(del);
+    list.appendChild(d);
+  }
+}
+
+function save(){ store('memo_data', D); }
+
+function show(v){
+  document.getElementById('v-study').style.display = v==='study' ? 'block' : 'none';
+  document.getElementById('v-decks').style.display = v==='decks' ? 'block' : 'none';
+  document.getElementById('tab-study').className = v==='study' ? 'on' : '';
+  document.getElementById('tab-decks').className = v==='decks' ? 'on' : '';
+  if(v==='study'){ buildQueue(); nextCard(); }
+}
+
+function nextCard(){
+  buildQueue();
+  const sc = document.getElementById('study-card'), sd = document.getElementById('study-done');
+  if(!queue.length){
+    sc.style.display='none'; sd.style.display='block';
+    const t = todayStr();
+    const rest = allCards().filter(x=>!x.c.due).length;
+    document.getElementById('done-detail').textContent =
+      cardCount()===0 ? '먼저 [내 묶음]에서 카드를 넣어주세요'
+      : (rest>0 ? '새 카드 '+rest+'장은 내일 몫으로 아껴두었어요' : '');
+    return;
+  }
+  sd.style.display='none'; sc.style.display='block';
+  cur = queue[0];
+  document.getElementById('s-deck').textContent = cur.dk.name;
+  document.getElementById('s-front').textContent = cur.c.f;
+  document.getElementById('s-back').textContent = cur.c.b;
+  document.getElementById('s-backwrap').style.display='none';
+  document.getElementById('s-show').style.display='block';
+  document.getElementById('s-left').textContent = '오늘 남은 카드 '+queue.length+'장';
+  const step = cur.c.step||0;
+  document.getElementById('g-ok-days').textContent = STEPS[Math.min(step, STEPS.length-1)]+'일 뒤에';
+  document.getElementById('g-ez-days').textContent = STEPS[Math.min(step+1, STEPS.length-1)]+'일 뒤에';
+}
+
+function reveal(){
+  document.getElementById('s-backwrap').style.display='block';
+  document.getElementById('s-show').style.display='none';
+}
+
+function grade(g){
+  const c = cur.c, t = todayStr();
+  const wasNew = !c.due;
+  if(g===0){ c.step = 0; c.due = t; queue.push(queue.shift()); }   // 오늘 안에 다시
+  else{
+    const step = (c.step||0) + (g===2?2:1);
+    c.step = step;
+    c.due = addDays(t, STEPS[Math.min(step-1, STEPS.length-1)]);
+  }
+  if(wasNew){ const k='memo_new_'+t; store(k, (store(k)||0)+1); }
+  if(!D.hist.includes(t)) D.hist.push(t);
+  save(); refresh();
+  if(g!==0) nextCard(); else nextShuffled();
+}
+function nextShuffled(){
+  buildQueue(); if(!queue.length){ nextCard(); return; }
+  // 방금 틀린 카드가 하나뿐이면 그대로, 여러 장이면 다른 카드 먼저
+  if(queue.length>1 && queue[0].c===cur.c) queue.push(queue.shift());
+  cur=queue[0];
+  document.getElementById('s-deck').textContent = cur.dk.name;
+  document.getElementById('s-front').textContent = cur.c.f;
+  document.getElementById('s-back').textContent = cur.c.b;
+  document.getElementById('s-backwrap').style.display='none';
+  document.getElementById('s-show').style.display='block';
+  document.getElementById('s-left').textContent = '오늘 남은 카드 '+queue.length+'장';
+}
+
+function addDeck(){
+  if(!licensed() && D.decks.length >= FREE_DECKS){ dlgKey.showModal(); return; }
+  const nm = document.getElementById('deck-name').value.trim();
+  if(!nm){ document.getElementById('deck-msg').textContent='묶음 이름을 적어주세요'; return; }
+  D.decks.push({id: Date.now()+''+Math.floor(Math.random()*1000), name: nm, cards: []});
+  save();
+  document.getElementById('deck-name').value='';
+  document.getElementById('deck-msg').textContent='묶음을 만들었어요. 이제 카드를 넣어볼까요?';
+  refresh();
+}
+
+function addCards(){
+  const id = document.getElementById('add-deck').value;
+  const dk = D.decks.find(d=>d.id===id);
+  if(!dk){ document.getElementById('bulk-msg').textContent='먼저 묶음을 만들어주세요'; return; }
+  const raw = document.getElementById('bulk').value.trim();
+  if(!raw){ document.getElementById('bulk-msg').textContent='카드 내용을 적어주세요'; return; }
+  let added=0, skipped=0;
+  for(const line of raw.split('\n')){
+    const s = line.trim(); if(!s) continue;
+    let f, b;
+    if(s.includes('\t')){ [f, ...b] = s.split('\t'); b = b.join(' '); }
+    else if(s.includes(':')){ const i=s.indexOf(':'); f=s.slice(0,i); b=s.slice(i+1); }
+    else if(s.includes(' - ')){ const i=s.indexOf(' - '); f=s.slice(0,i); b=s.slice(i+3); }
+    else { skipped++; continue; }
+    f=(f||'').trim(); b=(b||'').trim();
+    if(!f || !b){ skipped++; continue; }
+    if(!licensed() && cardCount() >= FREE_CARDS){ dlgKey.showModal(); break; }
+    dk.cards.push({f, b, step: 0, due: null});
+    added++;
+  }
+  save();
+  document.getElementById('bulk').value='';
+  document.getElementById('bulk-msg').textContent =
+    added+'장 넣었어요'+(skipped? ' ("앞 : 뒤" 모양이 아닌 '+skipped+'줄은 건너뛰었어요)' : '')+'. 오늘 복습에서 만나요!';
+  refresh();
+}
+
+function applyKey(){
+  const r = verifyKey(document.getElementById('keyin').value);
+  const m = document.getElementById('keymsg');
+  if(r === 'noprod'){ m.textContent = '이 키에는 암기 수첩이 들어있지 않아요.'; return; }
+  if(r === 'nonacl'){ m.textContent = '검증 도구를 아직 못 불러왔어요. 인터넷에 한 번 연결한 뒤 다시 시도해 주세요.'; return; }
+  if(!r){ m.textContent = '이름표를 알아보지 못했어요. 키 전체를 다시 붙여넣어 주세요.'; return; }
+  lic = r; store('memo_lic', r);
+  m.textContent = '';
+  dlgKey.close();
+  alert('고마워요, '+r.n+'님! 이제 이 수첩은 '+r.n+'님의 것이에요 🧡');
+  refresh();
+}
+
+function exportTxt(){
+  let out = '암기 수첩 — 내 카드\n\n';
+  for(const dk of D.decks){
+    out += '['+dk.name+']\n';
+    for(const c of dk.cards) out += c.f+' : '+c.b+'\n';
+    out += '\n';
+  }
+  const blob = new Blob([out], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '암기수첩.txt';
+  a.click();
+}
+
+refresh(); buildQueue(); nextCard();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('memocard_sw.js');
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "암기 수첩",
+  "short_name": "암기 수첩",
+  "description": "오늘 외울 것만 보여주는 암기 카드",
+  "start_url": "/memocard.html",
+  "display": "standalone",
+  "background_color": "#FAF5EC",
+  "theme_color": "#C0684A",
+  "icons": [
+    {"src": "memocard_icon192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "memocard_icon512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
