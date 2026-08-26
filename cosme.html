@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>화장대 수첩</title>
+<meta name="description" content="화장품 개봉일과 사용기한을 폰 안에서만 조용히 챙겨주는 수첩 — 밸류스">
+<link rel="manifest" href="cosme_manifest.json">
+<link rel="icon" href="cosme_icon192.png">
+<link rel="apple-touch-icon" href="cosme_icon192.png">
+<meta name="theme-color" content="#C0684A">
+<script src="nacl.min.js"></script>
+<style>
+:root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
+ --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--cream);color:var(--ink);
+ font-family:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ font-size:16px;line-height:1.7;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+header{background:var(--terra);color:#FFF8F2;padding:calc(14px + env(safe-area-inset-top)) 18px 12px;
+ display:flex;align-items:center;gap:8px}
+header b{font-size:18px}
+header .stat{margin-left:auto;font-size:11.5px;color:#FBE3D8;text-align:right;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding:16px}
+.licbar{background:#FFF2CC;color:#7a5c00;font-size:12px;padding:8px 14px;border-radius:12px;
+ margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.licbar button{margin-left:auto;border:none;background:#D9A441;color:#fff;border-radius:8px;
+ padding:6px 10px;font-family:inherit;font-size:12px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;
+ margin-bottom:14px;box-shadow:0 10px 30px -24px rgba(80,60,30,.6)}
+.hint{font-size:13px;color:var(--ink2);margin:10px 0 4px}
+input,select{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;
+ font-family:inherit;font-size:15px;background:#fff;color:var(--ink)}
+.row2{display:flex;gap:8px}
+.row2>div{flex:1}
+.btn{display:block;width:100%;border:none;background:var(--terra);color:#FFF8F2;
+ font-family:inherit;font-size:16px;font-weight:700;border-radius:12px;padding:13px;margin-top:12px}
+.btn.line{background:none;border:1.5px solid var(--line);color:var(--ink2);font-weight:400;font-size:14px}
+.msg{text-align:center;color:var(--sage);font-size:13px;min-height:18px;margin-top:6px}
+.item{display:flex;align-items:center;gap:10px;border-bottom:1px dashed var(--line);padding:11px 2px}
+.item:last-child{border-bottom:none}
+.item .emoji{font-size:22px}
+.item .nm{font-size:15px;font-weight:700}
+.item .meta{font-size:11.5px;color:var(--ink3)}
+.item .dday{margin-left:auto;font-size:12.5px;font-weight:700;border-radius:9px;padding:4px 9px;white-space:nowrap}
+.ok{background:#EAF2E6;color:var(--sage)}
+.soon{background:#FFF2CC;color:#8a6d00}
+.over{background:#F9E3E0;color:#a03c25}
+.item button{border:none;background:none;color:var(--ink3);font-size:15px;padding:4px}
+.locked{background:var(--terra-soft);border-radius:12px;padding:13px;font-size:13.5px;color:#8a4a33;margin-top:10px}
+.locked a{color:var(--terra);font-weight:700}
+.foot{text-align:center;font-size:11.5px;color:var(--ink3);margin:18px 0}
+.foot a{color:var(--terra);text-decoration:none}
+.empty{font-size:13px;color:var(--ink3)}
+dialog{border:none;border-radius:16px;padding:20px;max-width:340px;width:88%}
+dialog textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px;
+ font-size:12px;font-family:monospace;min-height:90px}
+dialog .btn{font-size:14px;padding:11px}
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tabs button{border:1.5px solid var(--line);background:#fff;color:var(--ink2);border-radius:20px;
+ padding:5px 12px;font-family:inherit;font-size:12.5px}
+.tabs button.on{background:var(--sage);border-color:var(--sage);color:#fff;font-weight:700}
+</style>
+</head>
+<body>
+<header>🪞 <b>화장대 수첩</b><span id="owner"></span>
+ <span class="stat" id="stat"></span></header>
+<div class="wrap">
+ <div class="licbar" id="licbar" style="display:none">
+  🎁 체험 중이에요 — 다섯 개까지 적을 수 있어요
+  <button onclick="dlgKey.showModal()">정품 이름표</button>
+ </div>
+
+ <div class="card">
+  <p class="hint" style="margin-top:0">✏️ 새로 개봉했어요</p>
+  <input id="nm" placeholder="예: 초록 뚜껑 수분크림">
+  <div class="row2" style="margin-top:8px">
+   <div><p class="hint" style="margin-top:0">종류</p>
+    <select id="cat">
+     <option value="🧴">🧴 스킨케어</option><option value="💄">💄 메이크업</option>
+     <option value="🧼">🧼 헤어·바디</option><option value="🌸">🌸 향수</option>
+     <option value="☀️">☀️ 선케어</option><option value="🎀">🎀 그 밖에</option>
+    </select></div>
+   <div><p class="hint" style="margin-top:0">개봉한 날</p><input id="opened" type="date"></div>
+  </div>
+  <p class="hint">개봉 후 얼마나 쓸 수 있나요? <span style="color:var(--ink3)">(용기의 6M·12M 표시)</span></p>
+  <select id="months">
+   <option value="3">3개월 (마스카라·아이라이너)</option>
+   <option value="6">6개월 (선크림·쿠션·립)</option>
+   <option value="12" selected>12개월 (크림·로션·파운데이션)</option>
+   <option value="18">18개월</option>
+   <option value="24">24개월 (향수 등)</option>
+   <option value="36">36개월</option>
+  </select>
+  <button class="btn" onclick="addItem()">🪞 수첩에 적기</button>
+  <p class="msg" id="msg"></p>
+  <div class="locked" id="locked" style="display:none">
+   여섯 개째부터는 정품 수첩이에요. 밸류스 도구를 데려가셨다면 <b>그 정품 키 그대로</b> 열려요 —
+   위의 [정품 이름표] 단추에 붙여넣어 주세요. 아직 없다면
+   <a href="https://valuestools.kr/#tools">밸류스 가게 구경하기</a>.
+  </div>
+ </div>
+
+ <div class="card">
+  <p class="hint" style="margin-top:0">🗓 내 화장대 <span style="color:var(--ink3)">(끝나는 날이 가까운 순서예요)</span></p>
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+  <button class="btn line" onclick="exportTxt()">내 수첩 내보내기 (.txt)</button>
+ </div>
+
+ <p class="foot">전부 이 폰 안에만 저장돼요 · 인터넷 없이 동작해요<br>
+  <a href="https://valuestools.kr">밸류스 — 작은 도구 상점</a></p>
+</div>
+
+<dialog id="dlgKey">
+ <p style="margin-top:0;font-weight:700">정품 이름표 붙이기</p>
+ <p style="font-size:13px;color:#6E6355">메일로 받은 키(VALUES.으로 시작)를 통째로 붙여넣어 주세요</p>
+ <textarea id="keyin"></textarea>
+ <button class="btn" onclick="applyKey()">붙이기</button>
+ <button class="btn line" onclick="dlgKey.close()">닫기</button>
+ <p class="msg" id="keymsg"></p>
+</dialog>
+
+<script>
+const PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
+const FREE_ITEMS = 5;
+const CATS = ["전부","🧴","💄","🧼","🌸","☀️","🎀"];
+let curCat = "전부";
+
+function store(k, v){ try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||'null');
+  localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
+
+let items = store('cosme_items') || [];
+let lic = store('cosme_lic') || null;
+
+function b64d(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='=';
+  const bin=atob(s); const u=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return u; }
+
+function verifyKey(raw){
+  try{
+    raw = (raw||'').trim();
+    if(!raw.startsWith('VALUES.')) return null;
+    const p = raw.split('.');
+    if(p.length !== 3) return null;
+    const payload = b64d(p[1]), sig = b64d(p[2]);
+    if(typeof nacl === 'undefined') return 'nonacl';
+    if(!nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return null;
+    const info = JSON.parse(new TextDecoder().decode(payload));
+    const prods = info.p || [];
+    if(!(prods.includes('*') || prods.includes('cosme'))) return 'noprod';
+    return info;
+  }catch(e){ return null; }
+}
+
+function licensed(){ return lic && lic.n !== undefined; }
+
+function todayStr(){ const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function endDate(it){
+  const d = new Date(it.opened+'T00:00:00');
+  d.setMonth(d.getMonth() + it.months);
+  return d;
+}
+function daysLeft(it){
+  const now = new Date(todayStr()+'T00:00:00');
+  return Math.round((endDate(it) - now) / 86400000);
+}
+function fmt(d){ return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0'); }
+
+function refresh(){
+  document.getElementById('licbar').style.display = licensed() ? 'none' : 'flex';
+  document.getElementById('owner').textContent = licensed() ? ' · '+lic.n+'님의 것' : '';
+  const soon = items.filter(i=>daysLeft(i)<=30 && daysLeft(i)>=0).length;
+  const over = items.filter(i=>daysLeft(i)<0).length;
+  document.getElementById('stat').innerHTML = '화장대 위 '+items.length+'개' +
+    (over? '<br>지난 것 '+over+'개' : (soon? '<br>임박 '+soon+'개' : ''));
+  const full = !licensed() && items.length >= FREE_ITEMS;
+  document.getElementById('locked').style.display = full ? 'block' : 'none';
+
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML='';
+  for(const c of CATS){
+    const b=document.createElement('button');
+    b.textContent = c; if(c===curCat) b.className='on';
+    b.onclick = ()=>{ curCat=c; refresh(); };
+    tabs.appendChild(b);
+  }
+
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  const shown = items.filter(i=>curCat==='전부'||i.cat===curCat)
+    .slice().sort((a,b)=>daysLeft(a)-daysLeft(b));
+  for(const it of shown){
+    const left = daysLeft(it);
+    const cls = left<0 ? 'over' : (left<=30 ? 'soon' : 'ok');
+    const txt = left<0 ? (-left)+'일 지남' : (left===0 ? '오늘까지' : 'D-'+left);
+    const d=document.createElement('div'); d.className='item';
+    d.innerHTML = '<span class="emoji">'+it.cat+'</span>'
+      + '<span><div class="nm"></div><div class="meta">'+it.opened.replace(/-/g,'.')+' 개봉 · '
+      + it.months+'개월 · '+fmt(endDate(it))+'까지</div></span>'
+      + '<span class="dday '+cls+'">'+txt+'</span>';
+    d.querySelector('.nm').textContent = it.nm;
+    const del=document.createElement('button');
+    del.textContent='✕'; del.title='다 썼어요';
+    del.onclick=()=>{ if(confirm('「'+it.nm+'」 을 수첩에서 지울까요? (다 썼거나 비웠을 때)')){
+      items = items.filter(x=>x!==it); store('cosme_items', items); refresh(); } };
+    d.appendChild(del);
+    list.appendChild(d);
+  }
+  if(!shown.length) list.innerHTML = '<p class="empty">아직 비어 있어요. 첫 개봉을 적어볼까요?</p>';
+}
+
+function addItem(){
+  if(!licensed() && items.length >= FREE_ITEMS){ dlgKey.showModal(); return; }
+  const nm = document.getElementById('nm').value.trim();
+  const opened = document.getElementById('opened').value;
+  if(!nm){ document.getElementById('msg').textContent='이름을 먼저 적어주세요'; return; }
+  if(!opened){ document.getElementById('msg').textContent='개봉한 날을 골라주세요'; return; }
+  items.push({ nm, cat: document.getElementById('cat').value,
+    opened, months: parseInt(document.getElementById('months').value,10) });
+  store('cosme_items', items);
+  document.getElementById('nm').value='';
+  document.getElementById('msg').textContent='수첩에 적어두었어요. 끝날 때쯤 색으로 알려드릴게요 🧡';
+  refresh();
+}
+
+function applyKey(){
+  const r = verifyKey(document.getElementById('keyin').value);
+  const m = document.getElementById('keymsg');
+  if(r === 'noprod'){ m.textContent = '이 키에는 화장대 수첩이 들어있지 않아요.'; return; }
+  if(r === 'nonacl'){ m.textContent = '검증 도구를 아직 못 불러왔어요. 인터넷에 한 번 연결한 뒤 다시 시도해 주세요.'; return; }
+  if(!r){ m.textContent = '이름표를 알아보지 못했어요. 키 전체를 다시 붙여넣어 주세요.'; return; }
+  lic = r; store('cosme_lic', r);
+  m.textContent = '';
+  dlgKey.close();
+  alert('고마워요, '+r.n+'님! 이제 이 수첩은 '+r.n+'님의 것이에요 🧡');
+  refresh();
+}
+
+function exportTxt(){
+  let out = '화장대 수첩 — 내 화장품 기록\n\n';
+  for(const it of items.slice().sort((a,b)=>daysLeft(a)-daysLeft(b))){
+    const left = daysLeft(it);
+    out += it.cat+' '+it.nm+' — '+it.opened+' 개봉, '+it.months+'개월, '
+      + fmt(endDate(it))+'까지 ('+(left<0?(-left)+'일 지남':'D-'+left)+')\n';
+  }
+  const blob = new Blob([out], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '화장대수첩.txt';
+  a.click();
+}
+
+document.getElementById('opened').value = todayStr();
+refresh();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('cosme_sw.js');
+</script>
+</body>
+</html>

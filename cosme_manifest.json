@@ -1,0 +1,13 @@
+{
+  "name": "화장대 수첩",
+  "short_name": "화장대 수첩",
+  "description": "화장품 개봉일과 사용기한을 챙겨주는 수첩",
+  "start_url": "/cosme.html",
+  "display": "standalone",
+  "background_color": "#FAF5EC",
+  "theme_color": "#C0684A",
+  "icons": [
+    {"src": "cosme_icon192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "cosme_icon512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
