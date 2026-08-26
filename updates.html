@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>업데이트 받는 곳 — 밸류스</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tweetnacl/1.0.3/nacl.min.js"></script>
+<script src="nacl.min.js"></script>
 <style>
 :root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
  --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77;
@@ -95,10 +95,11 @@ document.getElementById('check').onclick = () => {
   let info;
   try{
     const payload = b64d(parts[1]), sig = b64d(parts[2]), pub = b64d(PUB_B64);
-    if(typeof nacl !== 'undefined'){
-      if(!nacl.sign.detached.verify(payload, sig, pub)){
-        showErr('이 키는 밸류스가 만든 키가 아니에요. 메일의 키를 다시 확인해 주세요.'); return;
-      }
+    if(typeof nacl === 'undefined'){
+      showErr('검증 도구를 아직 못 불러왔어요. 새로고침 후 다시 시도해 주세요.'); return;
+    }
+    if(!nacl.sign.detached.verify(payload, sig, pub)){
+      showErr('이 키는 밸류스가 만든 키가 아니에요. 메일의 키를 다시 확인해 주세요.'); return;
     }
     info = JSON.parse(new TextDecoder().decode(payload));
   }catch(e){ showErr('키를 읽지 못했어요. 메일의 키 전체를 다시 복사해 주세요.'); return; }
