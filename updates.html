@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>업데이트 받는 곳 — 밸류스</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tweetnacl/1.0.3/nacl.min.js"></script>
+<style>
+:root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
+ --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77;
+ --shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Gowun Dodum","Malgun Gothic",sans-serif;font-size:16px;line-height:1.8}
+.shell{max-width:720px;margin:0 auto;padding:0 20px 60px}
+nav{border-bottom:1px dashed var(--line)}
+nav .shell{display:flex;align-items:center;height:60px;padding-bottom:0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.stamp{width:32px;height:32px;border:2px solid var(--terra);border-radius:50%;display:grid;place-items:center;color:var(--terra);font-family:"Gowun Batang",serif;font-weight:700;font-size:14px;transform:rotate(-6deg)}
+.brand b{font-family:"Gowun Batang",serif;font-size:20px}
+h1{font-family:"Gowun Batang",serif;font-size:26px;margin:34px 0 6px;text-align:center}
+.sub{text-align:center;color:var(--ink2);font-size:14.5px;margin:0 0 26px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;position:relative}
+.tape{position:absolute;top:-10px;left:38px;width:86px;height:22px;background:#BFD8B8;opacity:.75;border-radius:2px;transform:rotate(-2deg)}
+.step{font-family:"Gaegu",cursive;font-size:19px;color:var(--terra);font-weight:700;margin:0 0 10px}
+textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-family:Consolas,monospace;font-size:12px;min-height:86px;background:#fff;color:var(--ink)}
+.btn{display:inline-block;border:none;background:var(--terra);color:#FFF8F2;font-family:inherit;font-size:15px;font-weight:700;border-radius:10px;padding:11px 22px;cursor:pointer;text-decoration:none;margin-top:10px}
+.btn.sage{background:var(--sage)}
+.hint{font-size:12.5px;color:var(--ink3);margin-top:8px}
+.result{display:none}
+.hello{font-family:"Gaegu",cursive;font-size:21px;color:var(--sage);margin:0 0 8px}
+.prod{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;margin:6px 0;background:#fff;font-size:14.5px}
+.prod .v{margin-left:auto;color:var(--sage);font-weight:700;font-size:13px}
+.err{display:none;background:#F9E3E0;border:1px dashed #C0684A;color:#8a3d2b;border-radius:10px;padding:11px 15px;font-size:13.5px;margin-top:10px}
+.free{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:14px 20px;font-size:14px;color:var(--ink2)}
+.free a{color:var(--sage);font-weight:700}
+.back{display:block;text-align:center;margin-top:26px;color:var(--ink3);font-size:13.5px;text-decoration:none}
+</style>
+</head>
+<body>
+<nav><div class="shell"><a class="brand" href="./"><span class="stamp">値</span><b>밸류스</b></a></div></nav>
+<div class="shell">
+<h1>업데이트 받는 곳</h1>
+<p class="sub">한 번 데려간 도구는 v1.x 업데이트가 평생 무료예요.<br>정품 이름표(구매 시 메일로 드린 키)만 있으면 됩니다.</p>
+
+<div class="card"><span class="tape"></span>
+ <p class="step">하나, 정품 이름표 붙여넣기</p>
+ <textarea id="key" placeholder="VALUES. 로 시작하는 키를 통째로 붙여넣어 주세요"></textarea>
+ <button class="btn" id="check">🔑 확인하기</button>
+ <div class="err" id="err"></div>
+ <p class="hint">키를 잃어버리셨나요? 구매하실 때 쓴 메일 주소로
+   <a href="mailto:ranger7903@nate.com?subject=정품 이름표 재발송 요청" style="color:var(--terra)">재발송 요청</a>을 보내주세요.</p>
+</div>
+
+<div class="card result" id="result"><span class="tape" style="background:#F2C879"></span>
+ <p class="hello" id="hello"></p>
+ <p class="step">둘, 갖고 계신 도구와 최신 판</p>
+ <div id="prods"></div>
+ <p class="step" style="margin-top:16px">셋, 최신 설치파일 받기</p>
+ <p style="font-size:14px;color:var(--ink2)">아래 단추를 누르면 요청 메일이 열려요 — 보내주시면
+  <b>하루 안에 최신 설치파일</b>을 메일로 보내드립니다.
+  (준비 중: 곧 이 자리에서 바로 내려받을 수 있게 돼요)</p>
+ <a class="btn" id="mailbtn" href="#">📮 업데이트 요청 메일 보내기</a>
+</div>
+
+<div class="free">🎁 <b>무료 도구는 그냥 받아 가세요</b> —
+ <a href="nametag_free.exe" download="밸류스 이름표 붙이기.exe">이름표 붙이기 바로 받기</a>
+ (키 필요 없음)</div>
+
+<a class="back" href="./">← 가게로 돌아가기</a>
+</div>
+
+<script>
+const PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
+const NAMES = {merge:"🗂️ 스마트 자료취합기", formfill:"✉️ 스마트 서식채우기", compare:"🔍 스마트 명단대조기",
+ quick:"🖋️ 빠른입력기", keeper:"🧺 폴더지킴이", garden:"🌻 책상 위 정원",
+ handwrite:"✒️ 마음 서랍", pdfkit:"🧵 PDF 반짇고리", crayon:"🖍 캡처 색연필"};
+const VERSIONS = {merge:"v1.3", formfill:"v1.3", compare:"v1.3", quick:"v1.2",
+ keeper:"v1.2", garden:"v1.2", handwrite:"v1.2", pdfkit:"v1.2", crayon:"v1.2"};
+
+function b64d(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='=';
+  const bin=atob(s); const u=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return u; }
+
+function showErr(msg){ const e=document.getElementById('err');
+  e.textContent=msg; e.style.display='block';
+  document.getElementById('result').style.display='none'; }
+
+document.getElementById('check').onclick = () => {
+  const raw = document.getElementById('key').value.trim();
+  document.getElementById('err').style.display='none';
+  if(!raw.startsWith('VALUES.')){ showErr('키는 VALUES. 로 시작해요. 메일의 키 전체를 복사해 주세요.'); return; }
+  const parts = raw.split('.');
+  if(parts.length !== 3){ showErr('키 모양이 달라요. 중간에 잘리지 않게 통째로 붙여넣어 주세요.'); return; }
+  let info;
+  try{
+    const payload = b64d(parts[1]), sig = b64d(parts[2]), pub = b64d(PUB_B64);
+    if(typeof nacl !== 'undefined'){
+      if(!nacl.sign.detached.verify(payload, sig, pub)){
+        showErr('이 키는 밸류스가 만든 키가 아니에요. 메일의 키를 다시 확인해 주세요.'); return;
+      }
+    }
+    info = JSON.parse(new TextDecoder().decode(payload));
+  }catch(e){ showErr('키를 읽지 못했어요. 메일의 키 전체를 다시 복사해 주세요.'); return; }
+  const prods = (info.p && info.p.includes('*')) ? Object.keys(NAMES) : (info.p||[]);
+  const box = document.getElementById('prods');
+  box.innerHTML = '';
+  for(const k of prods){
+    if(!NAMES[k]) continue;
+    const d = document.createElement('div');
+    d.className='prod';
+    d.innerHTML = `<span>${NAMES[k]}</span><span class="v">최신 ${VERSIONS[k]||''}</span>`;
+    box.appendChild(d);
+  }
+  document.getElementById('hello').textContent =
+    `${info.n||'고객'}님, 반가워요! 🧡` + ((info.p||[]).includes('*') ? ' (책상 세트)' : '');
+  const names = prods.map(k=>(NAMES[k]||k).replace(/^[^ ]+ /,'')).join(', ');
+  const body = encodeURIComponent(`안녕하세요, 업데이트 설치파일을 받고 싶어요.\n\n이름: ${info.n||''}\n제품: ${names}\n정품 키: ${raw.slice(0,40)}…\n\n(이 메일은 valuestools.kr 업데이트 페이지에서 자동으로 만들어졌어요)`);
+  document.getElementById('mailbtn').href =
+    `mailto:ranger7903@nate.com?subject=${encodeURIComponent('[밸류스] 업데이트 요청 — '+(info.n||''))}&body=${body}`;
+  document.getElementById('result').style.display='block';
+};
+</script>
+</body>
+</html>
