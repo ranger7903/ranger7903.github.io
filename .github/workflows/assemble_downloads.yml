@@ -29,7 +29,7 @@ jobs:
         run: |
           cd download
           cat > 확인.txt <<'EOF'
-          c4ca4b6cee65a43af412afd28bc22f5eccc94eb7848e02fb6b7dfb92882e53af  valuestools_ai_office_setup.exe
+          8c3a48199c74df787e35fd06992eed62a0df5ae4c253c63f738e4336bf102727  valuestools_ai_office_setup.exe
           62da4e29ba73fa391c7fd1c7d7859a5e85898bce3788188efb29460b2428efa8  valuestools_ai_office.exe
           EOF
           sha256sum -c 확인.txt
