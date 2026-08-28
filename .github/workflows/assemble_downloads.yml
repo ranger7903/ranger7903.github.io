@@ -29,8 +29,8 @@ jobs:
         run: |
           cd download
           cat > 확인.txt <<'EOF'
-          9faa4252a73c16ce193e0e4e5402eed49ad7097674049d9e1e8ec703d8bb41cc  valuestools_ai_office_setup.exe
-          d3de13cbadc39efa27aec57906845db07c21a60e90799994550b6713aec873da  valuestools_ai_office.exe
+          c4ca4b6cee65a43af412afd28bc22f5eccc94eb7848e02fb6b7dfb92882e53af  valuestools_ai_office_setup.exe
+          62da4e29ba73fa391c7fd1c7d7859a5e85898bce3788188efb29460b2428efa8  valuestools_ai_office.exe
           EOF
           sha256sum -c 확인.txt
           rm 확인.txt
@@ -41,7 +41,7 @@ jobs:
           git config user.email "actions@github.com"
           git rm -r --quiet download/parts
           git add download/valuestools_ai_office_setup.exe download/valuestools_ai_office.exe
-          git commit -m "내려받기: 설치파일 2개 조립 완료 (조각 정리)"
+          git commit -m "내려받기: v3.0 설치파일 2개 조립 완료 (조각 정리)"
           git push
 
       - name: 결과
