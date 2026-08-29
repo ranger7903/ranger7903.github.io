@@ -92,36 +92,39 @@ table.steps tr:last-child td{border-bottom:none}
   <p class="who" id="who"></p>
 
   <div class="card"><span class="tape" style="background:#BFD8B8"></span>
-    <p class="step">밸류스 AI 사무직원 v3.0 — 업무 현황판</p>
+    <p class="step">밸류스 AI 사무직원 v3.1 — 업무 현황판 · 다국어 안내문</p>
     <p style="margin:0 0 10px;font-size:13.5px;color:var(--ink2)">
       켜자마자 "어제 뭘 했고, 뭘 봐 주셔야 하는지"가 보입니다.
-      파일은 창에 끌어다 놓으면 되고, 모르는 일은 오류가 아니라 질문으로 나옵니다.</p>
+      파일은 창에 끌어다 놓으면 되고, 모르는 일은 오류가 아니라 질문으로 나옵니다.
+      v3.1부터는 문서에서 필요한 항목만 뽑아 여러 나라 말 안내문까지 만들어 줍니다.</p>
 
     <div class="dl main">
       <span class="em">📦</span>
       <span>
-        <span class="nm">설치 프로그램</span> <span class="sz">약 20 MB</span><br>
+        <span class="nm">설치 프로그램</span> <span class="sz">약 236 MB</span><br>
         <span class="de">보통은 이걸 받으세요. 시작메뉴와 바탕화면에 아이콘이 생깁니다.</span>
       </span>
-      <span class="go"><a class="btn" id="dl1" href="download/valuestools_ai_office_setup.exe"
-         download="밸류스_AI사무직원_설치.exe">받기</a></span>
+      <span class="go"><a class="btn" id="dl1" href="#">받기</a></span>
     </div>
+    <p class="hint" id="prog1"></p>
 
     <div class="dl">
       <span class="em">🗂️</span>
       <span>
-        <span class="nm">설치 없이 쓰는 판</span> <span class="sz">약 19 MB</span><br>
+        <span class="nm">설치 없이 쓰는 판</span> <span class="sz">약 239 MB</span><br>
         <span class="de">회사 보안 정책으로 설치가 막힌 PC용. USB에 넣어 다녀도 됩니다.</span>
       </span>
-      <span class="go"><a class="btn ghost" id="dl2" href="download/valuestools_ai_office.exe"
-         download="밸류스_AI사무직원.exe">받기</a></span>
+      <span class="go"><a class="btn ghost" id="dl2" href="#">받기</a></span>
     </div>
+    <p class="hint" id="prog2"></p>
 
     <div class="msg bad" id="prep" style="display:none">
       설치파일을 올리는 중입니다. 잠시 뒤에 다시 들러 주시거나
       <a href="mailto:ranger7903@nate.com" style="color:inherit;font-weight:700">ranger7903@nate.com</a>
       으로 알려 주시면 바로 메일로 보내드릴게요.
     </div>
+    <p class="hint">이번 판부터 5개 언어 번역 엔진이 함께 들어가면서 파일이 커졌습니다(예전 20MB대 → 지금 230MB대).
+      받기를 누르면 여러 조각으로 나눠 받은 뒤 자동으로 하나로 합치고, 합친 파일이 원본과 같은지 스스로 확인한 다음에만 내려받기가 시작됩니다. 시간이 조금 걸릴 수 있어요.</p>
     <p class="hint">설치 안내 화면은 5개 언어로 나옵니다. 프로그램 화면은 지금 한국어입니다.</p>
     <div class="langs"><span>한국어</span><span>English</span><span>中文</span><span>O'zbekcha</span><span>Tiếng Việt</span></div>
   </div>
@@ -225,20 +228,100 @@ function openVault(info){
   checkFiles();
 }
 
-/* 설치파일이 아직 안 올라왔을 때 깨진 단추를 보여주지 않는다.
+/* v3.1부터 설치파일이 깃허브의 100MB 한도보다 커져서, 여러 조각으로 나눠 올려두고
+   여기서 받아서 다시 하나로 합칩니다. 합친 뒤 sha256(지문)이 원본과 같은지 확인하고,
+   같을 때만 실제로 컴퓨터에 저장합니다. */
+var DOWNLOADS = {
+  dl1: { manifest: "download/office_setup.manifest.json", partsDir: "download/parts/", saveAs: "밸류스_AI사무직원_설치.exe", prog: "prog1" },
+  dl2: { manifest: "download/office.manifest.json",        partsDir: "download/parts/", saveAs: "밸류스_AI사무직원.exe",     prog: "prog2" }
+};
+
+function hex(buf){
+  return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,"0"); }).join("");
+}
+function setProg(id, text){ var el = document.getElementById(id); if (el) el.textContent = text; }
+
+function assembleDownload(btnId){
+  var cfg = DOWNLOADS[btnId];
+  var btn = $(btnId);
+  if (!cfg || !btn || btn.dataset.busy === "1") return;
+  btn.dataset.busy = "1";
+  var origText = btn.textContent;
+  btn.style.pointerEvents = "none";
+  btn.textContent = "확인하는 중…";
+  setProg(cfg.prog, "");
+
+  fetch(cfg.manifest).then(function(r){
+    if (!r.ok) throw new Error("no-manifest");
+    return r.json();
+  }).then(function(manifest){
+    var parts = manifest.parts;
+    var buffers = new Array(parts.length);
+    var loaded = 0;
+
+    function loadPart(i){
+      if (i >= parts.length) return Promise.resolve();
+      return fetch(cfg.partsDir + parts[i].name).then(function(r){
+        if (!r.ok) throw new Error("no-part");
+        return r.arrayBuffer();
+      }).then(function(buf){
+        buffers[i] = buf;
+        loaded += buf.byteLength;
+        btn.textContent = "받는 중 " + Math.round(loaded / manifest.totalSize * 100) + "%";
+        return loadPart(i + 1);
+      });
+    }
+
+    return loadPart(0).then(function(){
+      btn.textContent = "확인하는 중…";
+      var merged = new Uint8Array(manifest.totalSize);
+      var off = 0;
+      for (var i = 0; i < buffers.length; i++){
+        merged.set(new Uint8Array(buffers[i]), off);
+        off += buffers[i].byteLength;
+      }
+      return crypto.subtle.digest("SHA-256", merged).then(function(digest){
+        if (hex(digest) !== manifest.sha256) throw new Error("sha-mismatch");
+        var blob = new Blob([merged], { type: "application/octet-stream" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url; a.download = cfg.saveAs;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
+        setProg(cfg.prog, "✓ 확인 끝, 내려받기를 시작했어요.");
+      });
+    });
+  }).catch(function(err){
+    if (err && err.message === "sha-mismatch"){
+      setProg(cfg.prog, "⚠ 받은 파일이 원본과 달라요. 다시 눌러 주세요. 계속 그러면 메일로 알려주세요.");
+    } else {
+      setProg(cfg.prog, "⚠ 아직 준비되지 않았어요. 잠시 뒤 다시 시도해 주시거나 메일로 알려주세요.");
+    }
+  }).finally(function(){
+    btn.dataset.busy = "0";
+    btn.style.pointerEvents = "";
+    btn.textContent = origText;
+  });
+}
+
+Object.keys(DOWNLOADS).forEach(function(id){
+  var a = $(id);
+  if (!a) return;
+  a.addEventListener("click", function(e){ e.preventDefault(); assembleDownload(id); });
+});
+
+/* 설치파일 조각이 아직 안 올라왔을 때 깨진 단추를 보여주지 않는다.
    파일이 올라오면 이 페이지는 고칠 필요 없이 저절로 정상이 된다. */
 function checkFiles(){
-  [["dl1","설치 프로그램"],["dl2","설치 없이 쓰는 판"]].forEach(function(pair){
-    var a = $(pair[0]);
+  Object.keys(DOWNLOADS).forEach(function(id){
+    var a = $(id);
     if (!a) return;
-    fetch(a.getAttribute("href"), { method: "HEAD" })
+    fetch(DOWNLOADS[id].manifest, { method: "HEAD" })
       .then(function(r){ if (!r.ok) throw 0; })
       .catch(function(){
-        a.removeAttribute("href");
-        a.removeAttribute("download");
         a.textContent = "준비 중";
         a.style.opacity = ".45";
-        a.style.cursor = "default";
+        a.style.pointerEvents = "none";
         var note = document.getElementById("prep");
         if (note) note.style.display = "block";
       });
