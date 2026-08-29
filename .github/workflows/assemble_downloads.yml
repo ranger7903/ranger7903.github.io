@@ -20,17 +20,17 @@ jobs:
         run: |
           set -e
           cd download
-          for name in valuestools_ai_office_setup.exe valuestools_ai_office.exe; do
-            cat parts/$name.part* > "$name"
-            echo "$name  →  $(stat -c%s "$name") 바이트"
-          done
+          cat parts/office_setup.exe.part* > valuestools_ai_office_setup.exe
+          echo "valuestools_ai_office_setup.exe → $(stat -c%s valuestools_ai_office_setup.exe) 바이트"
+          cat parts/office.exe.part* > valuestools_ai_office.exe
+          echo "valuestools_ai_office.exe → $(stat -c%s valuestools_ai_office.exe) 바이트"
 
       - name: 원본과 같은지 확인 (다르면 여기서 멈춘다)
         run: |
           cd download
           cat > 확인.txt <<'EOF'
-          234543c119258014a150a3af9cfe575233e9f7b7efd36c43ccb588a4a4d8da21  valuestools_ai_office_setup.exe
-          a95d98827715adaaf7c07af0cd353d6ef0f8796531ebc6cc005704de9bfcb2f7  valuestools_ai_office.exe
+          784baa9c3523b37acee251d24b3dd2c5a9a9a58275eaee1c5b6b6df6aa23ec68  valuestools_ai_office_setup.exe
+          04067473e365b93afd52a6864f7f1860740c354dfaca4c3d6a764caa4804d626  valuestools_ai_office.exe
           EOF
           sha256sum -c 확인.txt
           rm 확인.txt
@@ -41,7 +41,7 @@ jobs:
           git config user.email "actions@github.com"
           git rm -r --quiet download/parts
           git add download/valuestools_ai_office_setup.exe download/valuestools_ai_office.exe
-          git commit -m "내려받기: v3.0 설치파일 2개 조립 완료 (조각 정리)"
+          git commit -m "내려받기: v3.1 설치파일 2개 조립 완료 (조각 정리)"
           git push
 
       - name: 결과
