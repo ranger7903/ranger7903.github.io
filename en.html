@@ -10,17 +10,17 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">
 <style>
 :root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
- --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77;
- --shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
+--terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77;
+--shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:"Gowun Dodum","Malgun Gothic",sans-serif;
- font-size:16px;line-height:1.75}
+font-size:16px;line-height:1.75}
 .shell{max-width:960px;margin:0 auto;padding:0 22px}
 nav{border-bottom:1px dashed var(--line)}
 nav .shell{display:flex;align-items:center;height:60px;gap:14px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
 .stamp{width:32px;height:32px;border:2px solid var(--terra);border-radius:50%;display:grid;place-items:center;
- color:var(--terra);font-family:"Gowun Batang",serif;font-weight:700;font-size:14px;transform:rotate(-6deg)}
+color:var(--terra);font-family:"Gowun Batang",serif;font-weight:700;font-size:14px;transform:rotate(-6deg)}
 .brand b{font-family:"Gowun Batang",serif;font-size:20px}
 nav a.kr{margin-left:auto;color:var(--ink2);text-decoration:none;font-size:14px}
 .hero{text-align:center;padding:56px 0 30px}
@@ -33,7 +33,7 @@ h2{font-family:"Gowun Batang",serif;font-size:24px;margin:44px 0 6px}
 .lede{color:var(--ink2);font-size:14.5px;margin:0 0 18px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .tool{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
- padding:20px 22px;display:flex;flex-direction:column;gap:6px}
+padding:20px 22px;display:flex;flex-direction:column;gap:6px}
 .tool .em{font-size:30px}
 .tool h3{margin:0;font-family:"Gowun Batang",serif;font-size:18px}
 .tool .ko{font-size:11.5px;color:var(--ink3)}
@@ -41,116 +41,147 @@ h2{font-family:"Gowun Batang",serif;font-size:24px;margin:44px 0 6px}
 .tool .price{font-weight:700;color:var(--terra);font-size:15px}
 .tool .price small{color:var(--ink3);font-weight:400;font-size:11.5px}
 .tool a.go{display:inline-block;background:var(--terra);color:#FFF8F2;text-decoration:none;font-weight:700;
- font-size:13.5px;border-radius:10px;padding:9px 16px;text-align:center;margin-top:6px}
+font-size:13.5px;border-radius:10px;padding:9px 16px;text-align:center;margin-top:6px;border:none;cursor:pointer;font-family:inherit}
 .tool a.go.sage{background:var(--sage)}
 .tool a.go.line{background:none;border:1.5px solid var(--line);color:var(--ink2);font-weight:400}
 .howbuy{background:var(--card);border:1px dashed var(--line);border-radius:16px;padding:20px 24px;margin:34px 0;font-size:14.5px;color:var(--ink2)}
 .howbuy b{color:var(--ink)}
 .howbuy a{color:var(--terra)}
+.howbuy a.go{display:inline-block;background:var(--terra);color:#FFF8F2;text-decoration:none;font-weight:700;
+font-size:13.5px;border-radius:10px;padding:9px 16px;margin-top:10px;border:none;cursor:pointer;font-family:inherit}
 footer{text-align:center;color:var(--ink3);font-size:12.5px;padding:40px 0 50px}
 footer a{color:var(--terra);text-decoration:none}
 </style>
 </head>
 <body>
 <nav><div class="shell">
- <a class="brand" href="en.html"><span class="stamp">値</span><b>VALUES</b></a>
- <a class="kr" href="./">🇰🇷 한국어 페이지</a>
+<a class="brand" href="en.html"><span class="stamp">値</span><b>VALUES</b></a>
+<a class="kr" href="./">🇰🇷 한국어 페이지</a>
 </div></nav>
 
 <header class="hero"><div class="shell">
- <h1>Small tools that make work <span class="warm">lighter</span>.</h1>
- <p>VALUES is a one-person tool shop from Gyeongju, Korea.
-  Every tool is a one-time purchase — no ads, no subscription, no server.
-  Your files never leave your computer. Every app runs in <b>English and Korean</b>.</p>
- <div class="promise">
-  <span>🔁 Pay once, keep forever</span><span>🏠 Works fully offline</span>
-  <span>🚫 Zero ads</span><span>🌏 English / 한국어 built in</span>
- </div>
+<h1>Small tools that make work <span class="warm">lighter</span>.</h1>
+<p>VALUES is a one-person tool shop from Gyeongju, Korea.
+Every tool is a one-time purchase — no ads, no subscription, no server.
+Your files never leave your computer. Every app runs in <b>English and Korean</b>.</p>
+<div class="promise">
+<span>🔁 Pay once, keep forever</span><span>🏠 Works fully offline</span>
+<span>🚫 Zero ads</span><span>🌏 English / 한국어 built in</span>
+</div>
 </div></header>
 
 <div class="shell">
- <h2>📱 Phone apps — install-free web apps</h2>
- <p class="lede">Open the link on your phone and tap “Add to Home Screen”. They work offline and keep everything on your phone. Free to try, right now.</p>
- <div class="grid">
-  <div class="tool"><span class="em">🃏</span><h3>Memo Cards</h3><span class="ko">암기 수첩</span>
-   <p>Flash cards without the setup maze. Paste “front : back” lines, and it shows you only what's due today — spaced repetition hidden inside three friendly buttons.</p>
-   <span class="price">Free trial (20 cards) <small>· unlock with a license key</small></span>
-   <a class="go" href="memocard.html">Open Memo Cards</a></div>
-  <div class="tool"><span class="em">🧶</span><h3>Korean Proverb a Day</h3><span class="ko">오늘의 속담</span>
-   <p>One Korean proverb every day — fill in the blank, get gentle hints, and read the meaning in English. A tiny daily Korean lesson, completely free.</p>
-   <span class="price">100% free <small>· no ads, ever</small></span>
-   <a class="go sage" href="sokdam.html">Play today's proverb</a></div>
-  <div class="tool"><span class="em">✒️</span><h3>Mind Drawer</h3><span class="ko">마음 서랍</span>
-   <p>Copy one good sentence a day, slowly, by hand. Keeps your streak and your own one-line thoughts. (Passages are in Korean — lovely for Korean learners.)</p>
-   <span class="price">Free trial (7 sentences)</span>
-   <a class="go" href="drawer.html">Open Mind Drawer</a></div>
-  <div class="tool"><span class="em">🪞</span><h3>Vanity Notebook</h3><span class="ko">화장대 수첩</span>
-   <p>Write down when you open a cosmetic; it warns you in color as the use-by period runs out. Sorted by soonest-to-expire, stored only on your phone.</p>
-   <span class="price">Free trial (5 items)</span>
-   <a class="go" href="cosme.html">Open Vanity Notebook</a></div>
- </div>
+<h2>📱 Phone apps — install-free web apps</h2>
+<p class="lede">Open the link on your phone and tap “Add to Home Screen”. They work offline and keep everything on your phone. Free to try, right now.</p>
+<div class="grid">
+<div class="tool"><span class="em">🃏</span><h3>Memo Cards</h3><span class="ko">암기 수첩</span>
+<p>Flash cards without the setup maze. Paste “front : back” lines, and it shows you only what's due today — spaced repetition hidden inside three friendly buttons.</p>
+<span class="price">Free trial (20 cards) <small>· unlock with a license key</small></span>
+<a class="go" href="memocard.html">Open Memo Cards</a></div>
+<div class="tool"><span class="em">🧶</span><h3>Korean Proverb a Day</h3><span class="ko">오늘의 속담</span>
+<p>One Korean proverb every day — fill in the blank, get gentle hints, and read the meaning in English. A tiny daily Korean lesson, completely free.</p>
+<span class="price">100% free <small>· no ads, ever</small></span>
+<a class="go sage" href="sokdam.html">Play today's proverb</a></div>
+<div class="tool"><span class="em">✒️</span><h3>Mind Drawer</h3><span class="ko">마음 서랍</span>
+<p>Copy one good sentence a day, slowly, by hand. Keeps your streak and your own one-line thoughts. (Passages are in Korean — lovely for Korean learners.)</p>
+<span class="price">Free trial (7 sentences)</span>
+<a class="go" href="drawer.html">Open Mind Drawer</a></div>
+<div class="tool"><span class="em">🪞</span><h3>Vanity Notebook</h3><span class="ko">화장대 수첩</span>
+<p>Write down when you open a cosmetic; it warns you in color as the use-by period runs out. Sorted by soonest-to-expire, stored only on your phone.</p>
+<span class="price">Free trial (5 items)</span>
+<a class="go" href="cosme.html">Open Vanity Notebook</a></div>
+</div>
 
- <h2>🧰 Windows tools</h2>
- <p class="lede">Installable Windows programs. English/Korean switch in every window, and results flow into one shared “Workbox” folder so the tools work together.</p>
- <div class="grid">
-  <div class="tool"><span class="em">🧮</span><h3>VALUES Counter</h3><span class="ko">밸류스 계산대</span>
-   <p>Quotes, statements and receipts as tidy PDFs in three steps, with an automatic ledger and a daily sales book (card/cash/transfer). Made for one-person businesses.</p>
-   <span class="price">₩12,900 <small>≈ $9.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Counter">Order by email</a></div>
-  <div class="tool"><span class="em">🖍</span><h3>Capture Crayons</h3><span class="ko">캡처 색연필</span>
-   <p>Snap the screen, mosaic private bits in 3 seconds, add arrows, boxes, step numbers ①②③ — and record short GIFs. Explanations become one picture.</p>
-   <span class="price">₩7,900 <small>≈ $5.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Capture Crayons">Order by email</a></div>
-  <div class="tool"><span class="em">🧵</span><h3>PDF Mending Kit</h3><span class="ko">PDF 반짇고리</span>
-   <p>Merge, split, rotate, stamp, page numbers, images→PDF. The six little fixes your PDFs actually need — offline, originals never touched.</p>
-   <span class="price">₩7,900 <small>≈ $5.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — PDF Mending Kit">Order by email</a></div>
-  <div class="tool"><span class="em">🖋️</span><h3>Quick Typer</h3><span class="ko">빠른입력기</span>
-   <p>Type a short abbreviation, get your whole sentence — greetings, addresses, sign-offs. Works in any app, with date and cursor variables.</p>
-   <span class="price">₩7,900 <small>≈ $5.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Quick Typer">Order by email</a></div>
-  <div class="tool"><span class="em">🧺</span><h3>Folder Keeper</h3><span class="ko">폴더지킴이</span>
-   <p>Tidies your messy Downloads folder by your rules — documents here, photos by month. Never overwrites, never deletes, one-click undo.</p>
-   <span class="price">₩7,900 <small>≈ $5.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Folder Keeper">Order by email</a></div>
-  <div class="tool"><span class="em">🌻</span><h3>Desk Garden</h3><span class="ko">책상 위 정원</span>
-   <p>A focus timer that never punishes. Work with the timer on and your garden grows — one flower per 25 minutes, plus an automatic work diary.</p>
-   <span class="price">₩4,900 <small>≈ $3.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Desk Garden">Order by email</a></div>
-  <div class="tool"><span class="em">✒️</span><h3>Heart Drawer (PC)</h3><span class="ko">마음 서랍 PC판</span>
-   <p>The desktop twin of Mind Drawer — one sentence a day, typed slowly, kept forever. One license opens both PC and phone.</p>
-   <span class="price">₩4,900 <small>≈ $3.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Heart Drawer">Order by email</a></div>
-  <div class="tool"><span class="em">🗂️</span><h3>Smart Data Merger</h3><span class="ko">스마트 자료취합기</span>
-   <p>Point it at a folder and every table inside — Excel, CSV, Word, PDF, Hangul — is merged into one tidy spreadsheet. Column names are matched automatically.</p>
-   <span class="price">₩12,900 <small>≈ $9.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Smart Data Merger">Order by email</a></div>
-  <div class="tool"><span class="em">📄</span><h3>Smart Form Filler</h3><span class="ko">스마트 서식채우기</span>
-   <p>One list + one template = a filled document for every person. 120 certificates in one click, with {{name}}-style blanks in Word, Excel or Hangul.</p>
-   <span class="price">₩12,900 <small>≈ $9.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Smart Form Filler">Order by email</a></div>
-  <div class="tool"><span class="em">🔍</span><h3>Smart List Compare</h3><span class="ko">스마트 명단대조기</span>
-   <p>Feed it two lists and it reports who's missing, who's new, and whose details changed — as one clear Excel file. Ignores spacing, case and format noise.</p>
-   <span class="price">₩7,900 <small>≈ $5.9</small></span>
-   <a class="go line" href="mailto:ranger7903@nate.com?subject=[VALUES] International order — Smart List Compare">Order by email</a></div>
-  <div class="tool"><span class="em">🎁</span><h3>Name Tagger — free</h3><span class="ko">이름표 붙이기 · 무료</span>
-   <p>Batch-rename files in three steps. Our free gift so you can see how VALUES tools feel.</p>
-   <span class="price">Free</span>
-   <a class="go sage" href="nametag_free.exe" download>Download free</a></div>
- </div>
+<h2>🧰 Windows tools</h2>
+<p class="lede">Installable Windows programs. English/Korean switch in every window, and results flow into one shared “Workbox” folder so the tools work together. Card checkout below works with international cards, powered by Paddle.</p>
+<div class="grid">
+<div class="tool"><span class="em">🧮</span><h3>VALUES Counter</h3><span class="ko">밸류스 계산대</span>
+<p>Quotes, statements and receipts as tidy PDFs in three steps, with an automatic ledger and a daily sales book (card/cash/transfer). Made for one-person businesses.</p>
+<span class="price">₩12,900 <small>≈ $9.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('counter')">Buy now</a></div>
+<div class="tool"><span class="em">🖍</span><h3>Capture Crayons</h3><span class="ko">캡처 색연필</span>
+<p>Snap the screen, mosaic private bits in 3 seconds, add arrows, boxes, step numbers ①②③ — and record short GIFs. Explanations become one picture.</p>
+<span class="price">₩7,900 <small>≈ $5.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('crayon')">Buy now</a></div>
+<div class="tool"><span class="em">🧵</span><h3>PDF Mending Kit</h3><span class="ko">PDF 반짇고리</span>
+<p>Merge, split, rotate, stamp, page numbers, images→PDF. The six little fixes your PDFs actually need — offline, originals never touched.</p>
+<span class="price">₩7,900 <small>≈ $5.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('pdfkit')">Buy now</a></div>
+<div class="tool"><span class="em">🖋️</span><h3>Quick Typer</h3><span class="ko">빠른입력기</span>
+<p>Type a short abbreviation, get your whole sentence — greetings, addresses, sign-offs. Works in any app, with date and cursor variables.</p>
+<span class="price">₩7,900 <small>≈ $5.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('quick')">Buy now</a></div>
+<div class="tool"><span class="em">🧺</span><h3>Folder Keeper</h3><span class="ko">폴더지킴이</span>
+<p>Tidies your messy Downloads folder by your rules — documents here, photos by month. Never overwrites, never deletes, one-click undo.</p>
+<span class="price">₩7,900 <small>≈ $5.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('keeper')">Buy now</a></div>
+<div class="tool"><span class="em">🌻</span><h3>Desk Garden</h3><span class="ko">책상 위 정원</span>
+<p>A focus timer that never punishes. Work with the timer on and your garden grows — one flower per 25 minutes, plus an automatic work diary.</p>
+<span class="price">₩4,900 <small>≈ $3.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('garden')">Buy now</a></div>
+<div class="tool"><span class="em">✒️</span><h3>Heart Drawer (PC)</h3><span class="ko">마음 서랍 PC판</span>
+<p>The desktop twin of Mind Drawer — one sentence a day, typed slowly, kept forever. One license opens both PC and phone.</p>
+<span class="price">₩4,900 <small>≈ $3.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('handwrite')">Buy now</a></div>
+<div class="tool"><span class="em">🗂️</span><h3>Smart Data Merger</h3><span class="ko">스마트 자료취합기</span>
+<p>Point it at a folder and every table inside — Excel, CSV, Word, PDF, Hangul — is merged into one tidy spreadsheet. Column names are matched automatically.</p>
+<span class="price">₩12,900 <small>≈ $9.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('merger')">Buy now</a></div>
+<div class="tool"><span class="em">📄</span><h3>Smart Form Filler</h3><span class="ko">스마트 서식채우기</span>
+<p>One list + one template = a filled document for every person. 120 certificates in one click, with {{name}}-style blanks in Word, Excel or Hangul.</p>
+<span class="price">₩12,900 <small>≈ $9.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('formfiller')">Buy now</a></div>
+<div class="tool"><span class="em">🔍</span><h3>Smart List Compare</h3><span class="ko">스마트 명단대조기</span>
+<p>Feed it two lists and it reports who's missing, who's new, and whose details changed — as one clear Excel file. Ignores spacing, case and format noise.</p>
+<span class="price">₩7,900 <small>≈ $5.9</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('listcompare')">Buy now</a></div>
+<div class="tool"><span class="em">🎁</span><h3>Name Tagger — free</h3><span class="ko">이름표 붙이기 · 무료</span>
+<p>Batch-rename files in three steps. Our free gift so you can see how VALUES tools feel.</p>
+<span class="price">Free</span>
+<a class="go sage" href="nametag_free.exe" download>Download free</a></div>
+</div>
 
- <div class="howbuy">
-  <b>🧡 Desk Set:</b> every paid tool in one bundle — <b>₩29,900 (≈ $22.9)</b>, one license key for everything, forever.<br><br>
-  <b>How international orders work (for now):</b> our card checkout currently supports Korean cards only.
-  If you're ordering from abroad, send us an email with the tool name — we'll reply within a day with a
-  simple payment link and your personal license key. One key, yours forever, works in English or Korean.
-  <br><br>
-  <b>Questions?</b> <a href="mailto:ranger7903@nate.com">ranger7903@nate.com</a> — a real person (the maker) answers.
- </div>
+<div class="howbuy">
+<b>🧡 Desk Set:</b> every paid tool in one bundle — <b>₩29,900 (≈ $22.9)</b>, one license key for everything, forever.<br>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('bundle')">Buy the Desk Set</a>
+<br><br>
+<b>How international orders work:</b> card checkout above is powered by Paddle and works with international cards.
+After payment, Paddle emails you a receipt and we follow up by email with your personal license key —
+usually within a day. One key, yours forever, works in English or Korean.
+Having trouble at checkout? Just email us the tool name and we'll sort it out by hand.
+<br><br>
+<b>Questions?</b> <a href="mailto:ranger7903@nate.com">ranger7903@nate.com</a> — a real person (the maker) answers.
+</div>
 </div>
 
 <footer>
- VALUES — a little tool shop · Gyeongju, Korea · <a href="./">한국어</a> · <a href="mailto:ranger7903@nate.com">Contact</a>
+VALUES — a little tool shop · Gyeongju, Korea · <a href="./">한국어</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="refund.html">Refund</a> · <a href="mailto:ranger7903@nate.com">Contact</a>
 </footer>
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+const PADDLE_CLIENT_TOKEN = "live_945afb1a1e3998081592ff13ef5";
+const PADDLE_PRICES = {
+  counter:   "pri_01m0z31dpz4gvc05jvpd45c8qq",
+  crayon:    "pri_01m0z3336s0depa5t2sga4gffa",
+  pdfkit:    "pri_01m0z33zys2kxd4mt2xnkm3b22",
+  quick:     "pri_01m0z34ty2ry1w0r0jmq2tqdax",
+  keeper:    "pri_01m0z35n3rs3k9jnyr3406tfet",
+  garden:    "pri_01m0z36ex7w1ppywyevsftc4jq",
+  handwrite: "pri_01m0z37mvsesyrn87r2f83d4dn",
+  bundle:    "pri_01m0z38eb44de9sn6j4761nhwd",
+  merger:      "pri_01m18rg9v38ev3st8mwvab0518",
+  formfiller:  "pri_01m18rpcj8f4bym71vb7p9kag3",
+  listcompare: "pri_01m18s12xn0t1p4tqr1dnnab21"
+};
+
+Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
+
+function payWithPaddle(key) {
+  const priceId = PADDLE_PRICES[key];
+  if (!priceId) { alert("This item isn't ready for card checkout yet — please email us."); return; }
+  Paddle.Checkout.open({ items: [{ priceId: priceId, quantity: 1 }] });
+}
+</script>
 </body>
 </html>
