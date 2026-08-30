@@ -169,6 +169,28 @@ footer{padding:44px 0 60px;border-top:1px dashed var(--line)}
 footer .shell{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--ink-3);line-height:1.9}
 footer .hand{font-size:16px;color:var(--terra)}
 </style>
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+const PADDLE_CLIENT_TOKEN = "live_945afb1a1e3998081592ff13ef5";
+const PADDLE_PRICES = {
+  merger:      "pri_01m18rg9v38ev3st8mwvab0518",
+  formfiller:  "pri_01m18rpcj8f4bym71vb7p9kag3",
+  listcompare: "pri_01m18s12xn0t1p4tqr1dnnab21",
+  quick:     "pri_01m0z34ty2ry1w0r0jmq2tqdax",
+  keeper:    "pri_01m0z35n3rs3k9jnyr3406tfet",
+  garden:    "pri_01m0z36ex7w1ppywyevsftc4jq",
+  handwrite: "pri_01m0z37mvsesyrn87r2f83d4dn",
+  pdfkit:    "pri_01m0z33zys2kxd4mt2xnkm3b22",
+  crayon:    "pri_01m0z3336s0depa5t2sga4gffa",
+  counter:   "pri_01m0z31dpz4gvc05jvpd45c8qq"
+};
+Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
+function payWithPaddle(key) {
+  const priceId = PADDLE_PRICES[key];
+  if (!priceId) { alert("이 상품은 아직 카드 결제 준비 중입니다 — 이메일로 문의해주세요."); return; }
+  Paddle.Checkout.open({ items: [{ priceId: priceId, quantity: 1 }] });
+}
+</script>
 </head>
 <body>
 
@@ -235,7 +257,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">12,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('merger')">결제하기</a>
         <a class="mbtn" href="manual_merge.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -259,7 +281,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">12,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('formfiller')">결제하기</a>
         <a class="mbtn" href="manual_formfill.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -283,7 +305,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">7,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('listcompare')">결제하기</a>
         <a class="mbtn" href="manual_compare.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -306,7 +328,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">7,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('quick')">결제하기</a>
         <a class="mbtn" href="manual_quick.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -329,7 +351,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">7,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('keeper')">결제하기</a>
         <a class="mbtn" href="manual_keeper.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -352,7 +374,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">4,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('garden')">결제하기</a>
         <a class="mbtn" href="manual_garden.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -375,7 +397,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">4,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('handwrite')">결제하기</a>
         <a class="mbtn" href="manual_handwrite.pdf" download>📖 설명서</a>
         <a class="mbtn" href="drawer.html">📱 모바일판(무료 체험)</a>
       </div>
@@ -399,7 +421,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">7,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('pdfkit')">결제하기</a>
         <a class="mbtn" href="manual_pdfkit.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -423,7 +445,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">7,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('crayon')">결제하기</a>
         <a class="mbtn" href="manual_crayon.pdf" download>📖 설명서</a>
       </div>
     </div>
@@ -448,7 +470,7 @@ footer .hand{font-size:16px;color:var(--terra)}
       <div class="g-buy">
         <span class="g-price">12,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%5B%EB%B0%B8%EB%A5%98%EC%8A%A4%5D%20%EC%A3%BC%EB%AC%B8%20%EB%AC%B8%EC%9D%98&body=%EA%B5%AC%EB%A7%A4%ED%95%98%EB%A0%A4%EB%8A%94%20%EC%83%81%ED%92%88%20%EC%9D%B4%EB%A6%84%EC%9D%84%20%EC%97%AC%EA%B8%B0%EC%97%90%20%EC%A0%81%EC%96%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%ED%99%95%EC%9D%B8%20%ED%9B%84%20%EA%B2%B0%EC%A0%9C%20%EB%B0%A9%EB%B2%95%EA%B3%BC%20%EC%A0%95%ED%92%88%20%ED%82%A4%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EB%93%9C%EB%A6%B4%EA%B2%8C%EC%9A%94.">이메일로 주문하기</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('counter')">결제하기</a>
         <a class="mbtn" href="manual_register.pdf" download>📖 설명서</a>
       </div>
     </div>
