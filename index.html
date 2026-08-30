@@ -10,29 +10,29 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Gothic+A1:wght@300;400;500;700;800&display=swap">
 <style>
 :root{
-  --cream:#FAF5EC; --cream-2:#FFFDF8; --cream-3:#F1E9DB;
-  --line:#E4D9C6; --line-soft:#EDE4D4;
-  --ink:#41382E; --ink-2:#6E6355; --ink-3:#9A8F7F;
-  --terra:#C0684A; --terra-soft:#F6E3DA;
-  --mustard:#D9A441; --sage:#7E9B77;
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --line-soft:#F0E2CC;
+  --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3;
+  --mustard:#E8A93D; --sage:#8CAA7E;
   --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --cream:#191511; --cream-2:#211C16; --cream-3:#2A231B;
-    --line:#3A3126; --line-soft:#2E271E;
-    --ink:#EFE7DA; --ink-2:#BCB0A0; --ink-3:#877B6B;
-    --terra:#E08D6B; --terra-soft:#33231C;
-    --mustard:#E0B25E; --sage:#93B28B;
+    --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+    --line:#40342A; --line-soft:#332A20;
+    --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+    --terra:#E89574; --terra-soft:#3A2721;
+    --mustard:#E8BA66; --sage:#9CBB8F;
     --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
   }
 }
 :root[data-theme="dark"]{
-  --cream:#191511; --cream-2:#211C16; --cream-3:#2A231B;
-  --line:#3A3126; --line-soft:#2E271E;
-  --ink:#EFE7DA; --ink-2:#BCB0A0; --ink-3:#877B6B;
-  --terra:#E08D6B; --terra-soft:#33231C;
-  --mustard:#E0B25E; --sage:#93B28B;
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --line-soft:#332A20;
+  --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721;
+  --mustard:#E8BA66; --sage:#9CBB8F;
   --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
 }
 *{box-sizing:border-box}
@@ -99,11 +99,11 @@ h2{font-family:"Gowun Batang",serif;font-size:clamp(25px,3.4vw,33px);line-height
 
 /* 상품 카드 */
 .goods{display:grid;grid-template-columns:1fr;gap:30px;align-items:center;
-  background:var(--cream-2);border:1px solid var(--line-soft);border-radius:22px;
+  background:var(--cream-2);border:1px solid var(--line-soft);border-radius:28px;
   padding:34px;margin-top:36px;box-shadow:var(--shadow)}
 @media (min-width:880px){ .goods{grid-template-columns:1fr 1fr;padding:40px} .goods.flip .g-photo{order:2} }
 .g-photo{position:relative;text-align:center}
-.g-photo img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line-soft);
+.g-photo img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid var(--line-soft);
   box-shadow:0 12px 30px -16px rgba(80,60,30,.45);transform:rotate(-.8deg)}
 .goods.flip .g-photo img{transform:rotate(.8deg)}
 .tape{position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-2deg);
@@ -129,7 +129,7 @@ h2{font-family:"Gowun Batang",serif;font-size:clamp(25px,3.4vw,33px);line-height
 /* 약속 */
 .promise{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:36px}
 @media (min-width:820px){ .promise{grid-template-columns:repeat(4,1fr)} }
-.promise div{background:var(--cream-2);border:1px solid var(--line-soft);border-radius:16px;padding:22px;text-align:center}
+.promise div{background:var(--cream-2);border:1px solid var(--line-soft);border-radius:20px;padding:22px;text-align:center}
 .promise .ico{font-size:26px}
 .promise b{display:block;font-size:15px;margin:8px 0 4px}
 .promise p{margin:0;font-size:13px;color:var(--ink-3);line-height:1.7}
@@ -137,17 +137,17 @@ h2{font-family:"Gowun Batang",serif;font-size:clamp(25px,3.4vw,33px);line-height
 /* 구매 */
 .steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:32px}
 @media (min-width:820px){ .steps{grid-template-columns:repeat(3,1fr)} }
-.step{background:var(--cream-2);border:1px solid var(--line-soft);border-radius:16px;padding:26px;text-align:center}
+.step{background:var(--cream-2);border:1px solid var(--line-soft);border-radius:20px;padding:26px;text-align:center}
 .step .n{font-family:"Gaegu",cursive;font-size:24px;color:var(--terra)}
 .step b{display:block;font-size:16.5px;margin:6px 0 6px}
 .step p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.75}
 .step a{color:var(--terra);font-weight:700;text-decoration:none}
-.refund{margin:26px auto 0;max-width:640px;background:var(--terra-soft);border-radius:16px;
+.refund{margin:26px auto 0;max-width:640px;background:var(--terra-soft);border-radius:20px;
   padding:18px 24px;font-size:14.5px;color:var(--ink-2);text-align:center}
 .refund b{color:var(--terra)}
 
 /* FAQ */
-details{background:var(--cream-2);border:1px solid var(--line-soft);border-radius:14px;margin-top:12px;overflow:hidden}
+details{background:var(--cream-2);border:1px solid var(--line-soft);border-radius:18px;margin-top:12px;overflow:hidden}
 summary{cursor:pointer;padding:17px 22px;font-weight:700;font-size:15.5px;list-style:none;position:relative;padding-right:44px}
 summary::-webkit-details-marker{display:none}
 summary::after{content:"✚";position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--terra)}
@@ -218,6 +218,7 @@ function payWithPaddle(key) {
   <p class="pitch">밸류스는 사무실에서 손이 아팠던 순간들을 모아,
     그 자리를 대신해 줄 작은 도구를 하나씩 만드는 상점입니다.
     오늘도 책상 위 반복 작업 하나를 덜어드릴게요.</p>
+  <p class="hand-line" style="margin-top:14px;font-size:15px">— 도구 하나하나, 제가 먼저 써보고 만듭니다. <b style="color:var(--terra)">성빈 드림</b> 🧡</p>
   <div class="cta">
     <a class="btn fill" href="#products">도구 구경하기</a>
     <a class="btn line" href="#buy">데려가는 법</a>
@@ -494,7 +495,7 @@ function payWithPaddle(key) {
   .mob p{font-size:14px;color:var(--ink-2);margin:0;flex:1}
   .mob .tagline{font-size:12px;color:var(--sage);font-weight:700}
   .mob a.go{display:inline-block;background:var(--terra);color:#FFF8F2;text-decoration:none;
-   font-weight:700;font-size:14.5px;border-radius:10px;padding:10px 18px;text-align:center;margin-top:8px}
+   font-weight:700;font-size:14.5px;border-radius:14px;padding:10px 18px;text-align:center;margin-top:8px}
   .mob a.go.sage{background:var(--sage)}
   .mobhow{font-size:13px;color:var(--ink-3);margin-top:18px;text-align:center}
   </style>
@@ -547,7 +548,7 @@ function payWithPaddle(key) {
     </div>
     <div class="g-info">
       <div class="g-head"><span class="g-emoji">🏷</span>
-        <h3>이름표 붙이기</h3><span class="newtag" style="background:#7E9B77">무료 나눔</span></div>
+        <h3>이름표 붙이기</h3><span class="newtag" style="background:#8CAA7E">무료 나눔</span></div>
       <p class="g-tag">파일 이름을 한꺼번에, 예쁘게</p>
       <p class="g-story">여행 사진 200장이 IMG_2026… 로 쌓여 있을 때, 「제주여행_001」부터 차례로.
         무료 도구들이 너무 복잡해서, 세 걸음이면 끝나는 것을 만들어 선물로 드려요.</p>
