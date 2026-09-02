@@ -8,7 +8,7 @@
 <script src="nacl.min.js"></script>
 <style>
 :root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
- --terra:#C0684A;--terra-soft:#F6E3DA;--sage:#7E9B77;
+ --terra:#D97757;--terra-soft:#F6E3DA;--sage:#7E9B77;
  --shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:"Gowun Dodum","Malgun Gothic",sans-serif;font-size:16px;line-height:1.8}
@@ -25,13 +25,18 @@ h1{font-family:"Gowun Batang",serif;font-size:26px;margin:34px 0 6px;text-align:
 .step{font-family:"Gaegu",cursive;font-size:19px;color:var(--terra);font-weight:700;margin:0 0 10px}
 textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-family:Consolas,monospace;font-size:12px;min-height:86px;background:#fff;color:var(--ink)}
 .btn{display:inline-block;border:none;background:var(--terra);color:#FFF8F2;font-family:inherit;font-size:15px;font-weight:700;border-radius:10px;padding:11px 22px;cursor:pointer;text-decoration:none;margin-top:10px}
-.btn.sage{background:var(--sage)}
+.btn:disabled{opacity:.55;cursor:default}
 .hint{font-size:12.5px;color:var(--ink3);margin-top:8px}
 .result{display:none}
 .hello{font-family:"Gaegu",cursive;font-size:21px;color:var(--sage);margin:0 0 8px}
-.prod{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;margin:6px 0;background:#fff;font-size:14.5px}
-.prod .v{margin-left:auto;color:var(--sage);font-weight:700;font-size:13px}
-.err{display:none;background:#F9E3E0;border:1px dashed #C0684A;color:#8a3d2b;border-radius:10px;padding:11px 15px;font-size:13.5px;margin-top:10px}
+.prod{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;background:#fff;font-size:14.5px}
+.prod .nm{flex:1 1 190px}
+.prod .get{border:none;background:var(--sage);color:#fff;font-family:inherit;font-size:13.5px;font-weight:700;border-radius:9px;padding:8px 16px;cursor:pointer;min-width:118px}
+.prod .get:disabled{opacity:.6;cursor:default}
+.bar{flex:1 1 100%;height:7px;background:#EFE7D8;border-radius:4px;overflow:hidden;display:none}
+.bar i{display:block;height:100%;width:0;background:var(--sage);transition:width .2s}
+.err{display:none;background:#F9E3E0;border:1px dashed var(--terra);color:#8a3d2b;border-radius:10px;padding:11px 15px;font-size:13.5px;margin-top:10px}
+.note{background:#F4F1E6;border:1px dashed var(--line);border-radius:10px;padding:11px 15px;font-size:13px;color:var(--ink2);margin-top:12px}
 .free{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:14px 20px;font-size:14px;color:var(--ink2)}
 .free a{color:var(--sage);font-weight:700}
 .back{display:block;text-align:center;margin-top:26px;color:var(--ink3);font-size:13.5px;text-decoration:none}
@@ -41,7 +46,7 @@ textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12
 <nav><div class="shell"><a class="brand" href="./"><span class="stamp">値</span><b>밸류스</b></a></div></nav>
 <div class="shell">
 <h1>업데이트 받는 곳</h1>
-<p class="sub">한 번 데려간 도구는 v1.x 업데이트가 평생 무료예요.<br>정품 이름표(구매 시 메일로 드린 키)만 있으면 됩니다.</p>
+<p class="sub">한 번 데려간 도구는 v1.x 업데이트가 평생 무료예요.<br>정품 이름표(구매 시 메일로 드린 키)만 있으면 이 자리에서 바로 내려받으실 수 있습니다.</p>
 
 <div class="card"><span class="tape"></span>
  <p class="step">하나, 정품 이름표 붙여넣기</p>
@@ -54,49 +59,93 @@ textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12
 
 <div class="card result" id="result"><span class="tape" style="background:#F2C879"></span>
  <p class="hello" id="hello"></p>
- <p class="step">둘, 갖고 계신 도구와 최신 판</p>
+ <p class="step">둘, 최신 설치파일 바로 받기</p>
  <div id="prods"></div>
- <p class="step" style="margin-top:16px">셋, 최신 설치파일 받기</p>
- <p style="font-size:14px;color:var(--ink2)">아래 단추를 누르면 요청 메일이 열려요 — 보내주시면
-  <b>하루 안에 최신 설치파일</b>을 메일로 보내드립니다.
-  (준비 중: 곧 이 자리에서 바로 내려받을 수 있게 돼요)</p>
- <a class="btn" id="mailbtn" href="#">📮 업데이트 요청 메일 보내기</a>
+ <div class="note">받은 파일을 두 번 누르면 설치가 시작돼요.
+  윈도우가 “PC를 보호했습니다”라고 물으면 <b>추가 정보 → 실행</b>을 눌러 주세요.
+  (코드 서명 인증서를 아직 안 산 탓에 나오는 안내이고, 파일은 안전합니다.
+  내려받는 동안 이 화면이 파일 지문을 원본과 하나하나 대조합니다.)</div>
+ <p class="hint">잘 안 받아지면 <a href="mailto:ranger7903@nate.com?subject=[밸류스] 설치파일 요청" style="color:var(--terra)">메일로 요청</a>해 주세요. 하루 안에 보내드립니다.</p>
 </div>
 
 <div class="free">🎁 <b>무료 도구는 그냥 받아 가세요</b> —
  <a href="nametag_free.exe" download="밸류스 이름표 붙이기.exe">이름표 붙이기 바로 받기</a>
- (키 필요 없음)</div>
+ (키 필요 없음) &nbsp;·&nbsp;
+ <a href="download.html">AI 사무직원 받기</a></div>
 
 <a class="back" href="./">← 가게로 돌아가기</a>
 </div>
 
 <script>
-const PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
-const NAMES = {merge:"🗂️ 스마트 자료취합기", formfill:"✉️ 스마트 서식채우기", compare:"🔍 스마트 명단대조기",
+var PUB_B64 = "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=";
+var NAMES = {merge:"🗂️ 스마트 자료취합기", formfill:"✉️ 스마트 서식채우기", compare:"🔍 스마트 명단대조기",
  quick:"🖋️ 빠른입력기", keeper:"🧺 폴더지킴이", garden:"🌻 책상 위 정원",
  handwrite:"✒️ 마음 서랍", pdfkit:"🧵 PDF 반짇고리", crayon:"🖍 캡처 색연필",
  register:"🧮 밸류스 계산대", memocard:"🃏 암기 수첩(모바일)"};
-const VERSIONS = {merge:"v1.4", formfill:"v1.4", compare:"v1.4", quick:"v1.2",
- keeper:"v1.2", garden:"v1.2", handwrite:"v1.2", pdfkit:"v1.2", crayon:"v1.3",
- register:"v1.1", memocard:"웹앱(항상 최신)"};
+var WEBAPP = {memocard:"memocard.html"};
+var MANIFEST = null;
 
 function b64d(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='=';
-  const bin=atob(s); const u=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return u; }
+  var bin=atob(s), u=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return u; }
 
-function showErr(msg){ const e=document.getElementById('err');
-  e.textContent=msg; e.style.display='block';
-  document.getElementById('result').style.display='none'; }
+function showErr(msg){ var e=document.getElementById('err');
+  e.textContent=msg; e.style.display='block'; }
 
-document.getElementById('check').onclick = () => {
-  const raw = document.getElementById('key').value.trim();
+function hex(buf){ return Array.prototype.map.call(new Uint8Array(buf),
+  function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
+
+function human(n){ return (n/1048576).toFixed(1)+'MB'; }
+
+function grab(slug, btn, bar){
+  var info = MANIFEST.files[slug];
+  if(!info){ return; }
+  btn.disabled = true; bar.style.display='block';
+  var fill = bar.firstChild, bufs = [], loaded = 0, i = 0;
+  function next(){
+    if(i >= info.parts.length) return Promise.resolve();
+    var p = info.parts[i];
+    return fetch(MANIFEST.base + p.name, {cache:'no-store'}).then(function(r){
+      if(!r.ok) throw new Error('part');
+      return r.arrayBuffer();
+    }).then(function(ab){
+      if(ab.byteLength !== p.size) throw new Error('size');
+      bufs[i] = new Uint8Array(ab); loaded += ab.byteLength; i++;
+      var pct = Math.round(loaded / info.totalSize * 100);
+      fill.style.width = pct + '%';
+      btn.textContent = '받는 중 ' + pct + '%';
+      return next();
+    });
+  }
+  next().then(function(){
+    var all = new Uint8Array(info.totalSize), off = 0;
+    for(var k=0;k<bufs.length;k++){ all.set(bufs[k], off); off += bufs[k].length; }
+    btn.textContent = '확인하는 중…';
+    return crypto.subtle.digest('SHA-256', all).then(function(d){
+      if(hex(d) !== info.sha256) throw new Error('sha');
+      var url = URL.createObjectURL(new Blob([all], {type:'application/octet-stream'}));
+      var a = document.createElement('a');
+      a.href = url; a.download = info.saveAs;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+      btn.textContent = '✔ 받았어요'; fill.style.width='100%';
+    });
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = '다시 받기';
+    showErr('내려받다가 끊겼어요. 인터넷을 확인하고 [다시 받기]를 눌러 주세요. 계속 안 되면 메일로 요청해 주시면 보내드립니다.');
+  });
+}
+
+document.getElementById('check').onclick = function(){
+  var raw = document.getElementById('key').value.trim();
   document.getElementById('err').style.display='none';
-  if(!raw.startsWith('VALUES.')){ showErr('키는 VALUES. 로 시작해요. 메일의 키 전체를 복사해 주세요.'); return; }
-  const parts = raw.split('.');
+  document.getElementById('result').style.display='none';
+  if(raw.indexOf('VALUES.') !== 0){ showErr('키는 VALUES. 로 시작해요. 메일의 키 전체를 복사해 주세요.'); return; }
+  var parts = raw.split('.');
   if(parts.length !== 3){ showErr('키 모양이 달라요. 중간에 잘리지 않게 통째로 붙여넣어 주세요.'); return; }
-  let info;
+  var info;
   try{
-    const payload = b64d(parts[1]), sig = b64d(parts[2]), pub = b64d(PUB_B64);
+    var payload = b64d(parts[1]), sig = b64d(parts[2]), pub = b64d(PUB_B64);
     if(typeof nacl === 'undefined'){
       showErr('검증 도구를 아직 못 불러왔어요. 새로고침 후 다시 시도해 주세요.'); return;
     }
@@ -105,23 +154,43 @@ document.getElementById('check').onclick = () => {
     }
     info = JSON.parse(new TextDecoder().decode(payload));
   }catch(e){ showErr('키를 읽지 못했어요. 메일의 키 전체를 다시 복사해 주세요.'); return; }
-  const prods = (info.p && info.p.includes('*')) ? Object.keys(NAMES) : (info.p||[]);
-  const box = document.getElementById('prods');
-  box.innerHTML = '';
-  for(const k of prods){
-    if(!NAMES[k]) continue;
-    const d = document.createElement('div');
-    d.className='prod';
-    d.innerHTML = `<span>${NAMES[k]}</span><span class="v">최신 ${VERSIONS[k]||''}</span>`;
-    box.appendChild(d);
-  }
+
+  var all = (info.p && info.p.indexOf('*') >= 0);
+  var mine = all ? Object.keys(NAMES) : (info.p || []);
   document.getElementById('hello').textContent =
-    `${info.n||'고객'}님, 반가워요! 🧡` + ((info.p||[]).includes('*') ? ' (책상 세트)' : '');
-  const names = prods.map(k=>(NAMES[k]||k).replace(/^[^ ]+ /,'')).join(', ');
-  const body = encodeURIComponent(`안녕하세요, 업데이트 설치파일을 받고 싶어요.\n\n이름: ${info.n||''}\n제품: ${names}\n정품 키: ${raw.slice(0,40)}…\n\n(이 메일은 valuestools.kr 업데이트 페이지에서 자동으로 만들어졌어요)`);
-  document.getElementById('mailbtn').href =
-    `mailto:ranger7903@nate.com?subject=${encodeURIComponent('[밸류스] 업데이트 요청 — '+(info.n||''))}&body=${body}`;
-  document.getElementById('result').style.display='block';
+    (info.n || '고객') + '님, 반가워요! 🧡' + (all ? ' (책상 세트)' : '');
+
+  fetch('tools.manifest.json', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(m){
+    MANIFEST = m;
+    var box = document.getElementById('prods');
+    box.innerHTML = '';
+    for(var j=0;j<mine.length;j++){
+      var k = mine[j];
+      if(!NAMES[k]) continue;
+      var f = m.files[k];
+      var row = document.createElement('div'); row.className = 'prod';
+      var nm = document.createElement('span'); nm.className='nm';
+      nm.textContent = NAMES[k] + (f ? '  (' + f.version + ' · ' + human(f.totalSize) + ')' : '');
+      row.appendChild(nm);
+      if(WEBAPP[k]){
+        var a = document.createElement('a'); a.className='get'; a.href = WEBAPP[k];
+        a.style.textAlign='center'; a.style.textDecoration='none'; a.style.lineHeight='1.9';
+        a.textContent = '열기'; row.appendChild(a);
+      }else{
+        var bar = document.createElement('span'); bar.className='bar';
+        bar.appendChild(document.createElement('i'));
+        var btn = document.createElement('button'); btn.className='get';
+        btn.textContent = f ? '⬇ 받기' : '준비 중';
+        if(!f) btn.disabled = true;
+        (function(slug, b, bb){ b.onclick = function(){ grab(slug, b, bb); }; })(k, btn, bar);
+        row.appendChild(btn); row.appendChild(bar);
+      }
+      box.appendChild(row);
+    }
+    document.getElementById('result').style.display='block';
+  }).catch(function(){
+    showErr('설치파일 목록을 못 불러왔어요. 잠시 뒤 새로고침해 주세요.');
+  });
 };
 </script>
 </body>
