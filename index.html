@@ -182,7 +182,8 @@ const PADDLE_PRICES = {
   handwrite: "pri_01m0z37mvsesyrn87r2f83d4dn",
   pdfkit:    "pri_01m0z33zys2kxd4mt2xnkm3b22",
   crayon:    "pri_01m0z3336s0depa5t2sga4gffa",
-  counter:   "pri_01m0z31dpz4gvc05jvpd45c8qq"
+  counter:   "pri_01m0z31dpz4gvc05jvpd45c8qq",
+  bundle:    "pri_01m0z38eb44de9sn6j4761nhwd"
 };
 Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
 function payWithPaddle(key) {
@@ -482,6 +483,23 @@ function payWithPaddle(key) {
     <div><span class="ico">🧹</span><b>깔끔한 제거</b><p>윈도우 [설정 &gt; 앱]에서 지우면 흔적 없이 사라져요.</p></div>
     <div><span class="ico">💌</span><b>고쳐 드려요</b><p>안 읽히는 서식은 보내주세요. 확인해서 반영해요.</p></div>
   </div>
+
+  <article class="goods" id="p-bundle" style="display:block;background:linear-gradient(135deg,#FFF3EA,#FDF8EE);border:2px dashed var(--terra);border-radius:22px;padding:26px 28px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:22px">
+      <div style="flex:1 1 320px">
+        <div class="g-head"><span class="g-emoji">🧡</span><h3>책상 세트 — 열 가지 전부</h3></div>
+        <p class="g-tag">낱개로 다 모으면 88,000원, 세트로는 29,900원</p>
+        <p class="g-story">위의 유료 도구 열 가지를 한 번에 데려가는 묶음이에요.
+          정품 키 하나로 열 가지가 전부 열리고, 업데이트도 평생 무료로 따라옵니다.</p>
+      </div>
+      <div style="flex:0 0 auto;text-align:center;min-width:210px">
+        <div style="font-size:14px;color:var(--ink3);text-decoration:line-through">88,000원</div>
+        <span class="g-price" style="font-size:34px">29,900<small>원</small></span>
+        <div class="g-note" style="margin:4px 0 12px">한 번 결제 · 평생 사용 · 구독 없음</div>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('bundle')">결제하기</a>
+      </div>
+    </div>
+  </article>
 </div></section>
 
 
