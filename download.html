@@ -232,12 +232,23 @@ checkFiles();
 여기서 받아서 다시 하나로 합칩니다. 합친 뒤 sha256(지문)이 원본과 같은지 확인하고,
 같을 때만 실제로 컴퓨터에 저장합니다. */
 var DOWNLOADS = {
-dl1: { manifest: "download/office_setup.manifest.json", partsDir: "download/parts/", saveAs: "밸류스_AI사무직원_설치.exe", prog: "prog1" },
-dl2: { manifest: "download/office.manifest.json", partsDir: "download/parts/", saveAs: "밸류스_AI사무직원.exe", prog: "prog2" }
+dl1: { manifest: "https://raw.githubusercontent.com/ranger7903/ranger7903.github.io/dist/download/office_setup.manifest.json", partsDir: "https://raw.githubusercontent.com/ranger7903/ranger7903.github.io/dist/download/parts/", saveAs: "밸류스_AI사무직원_설치.exe", prog: "prog1" },
+dl2: { manifest: "https://raw.githubusercontent.com/ranger7903/ranger7903.github.io/dist/download/office.manifest.json", partsDir: "https://raw.githubusercontent.com/ranger7903/ranger7903.github.io/dist/download/parts/", saveAs: "밸류스_AI사무직원.exe", prog: "prog2" }
 };
 
 function hex(buf){
 return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,"0"); }).join("");
+}
+function fetchPart(url, tries){
+return fetch(url).then(function(r){
+if (!r.ok) throw new Error("no-part");
+return r.arrayBuffer();
+}).catch(function(err){
+if (tries > 1){
+return new Promise(function(res){ setTimeout(res, 1500); }).then(function(){ return fetchPart(url, tries - 1); });
+}
+throw err;
+});
 }
 function setProg(id, text){ var el = document.getElementById(id); if (el) el.textContent = text; }
 
@@ -261,10 +272,7 @@ var loaded = 0;
 
 function loadPart(i){
 if (i >= parts.length) return Promise.resolve();
-return fetch(cfg.partsDir + parts[i].name).then(function(r){
-if (!r.ok) throw new Error("no-part");
-return r.arrayBuffer();
-}).then(function(buf){
+return fetchPart(cfg.partsDir + parts[i].name, 3).then(function(buf){
 buffers[i] = buf;
 loaded += buf.byteLength;
 btn.textContent = "받는 중 " + Math.round(loaded / manifest.totalSize * 100) + "%";
