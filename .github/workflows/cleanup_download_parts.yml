@@ -1,0 +1,48 @@
+name: cleanup-download-parts
+
+# 설치파일 조각(약 650MB)은 dist 가지로 옮겼다.
+# 홈페이지가 발행되는 main 가지에는 더 이상 둘 필요가 없으므로 여기서 정리한다.
+# (내려받기 페이지는 이미 dist 쪽 주소를 보고 있다)
+
+on: { workflow_dispatch: {} }
+permissions: { contents: write }
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: 지우기 전에 dist 쪽에 조각이 다 있는지 먼저 확인한다
+        run: |
+          set -e
+          base=https://raw.githubusercontent.com/${{ github.repository }}/dist/download
+          for n in office_setup office; do
+            curl -fsSL "$base/$n.manifest.json" -o "$n.json"
+            python3 - "$n.json" "$base/parts" <<'PY'
+          import json,sys,urllib.request,hashlib
+          m=json.load(open(sys.argv[1])); base=sys.argv[2]
+          for p in m["parts"]:
+              r=urllib.request.urlopen(base+"/"+p["name"], timeout=120)
+              d=r.read()
+              assert len(d)==p["size"] and hashlib.sha256(d).hexdigest()==p["sha256"], p["name"]
+          print(m["file"], "조각", len(m["parts"]), "개 모두 dist 에 정상 보관됨")
+          PY
+          done
+
+      - name: main 가지에서 조각 치우기
+        run: |
+          set -e
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git rm -r --quiet download/parts || true
+          git rm --quiet download/office.manifest.json download/office_setup.manifest.json || true
+          git commit -m "내려받기 조각을 dist 가지로 옮겨 main 정리"
+          git push
+
+      - name: 결과
+        run: |
+          ls -la download || true
+          du -sh . || true
