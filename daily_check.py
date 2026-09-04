@@ -79,8 +79,15 @@ if 집:
     토큰 = 표["결제"]["paddle_공개토큰"]
     알림(토큰 in 집, "결제 열쇠(공개 토큰)가 홈페이지에 있습니다",
         "" if 토큰 in 집 else "토큰이 사라졌습니다 — 결제 단추가 전부 죽습니다")
-    빠진 = [k for k, v in 상품.items() if v["paddle"] not in 집]
+    # 아직 Paddle 에 상품을 안 만든 것(가격ID가 빈 것)은 '빠진 것'이 아니라 '준비 중'이다.
+    # 그걸 매일 아침 오류로 올리면 진짜 사고가 묻힌다.
+    준비중 = [v["이름"] for v in 상품.values() if not v["paddle"]]
+    빠진 = [k for k, v in 상품.items() if v["paddle"] and v["paddle"] not in 집]
     알림(not 빠진, "상품 가격ID가 전부 있습니다", ("빠진 상품: " + ", ".join(빠진)) if 빠진 else "")
+    if 준비중:
+        주의("아직 카드 결제를 못 여는 상품이 있습니다",
+            ", ".join(준비중) + " — Paddle 에서 상품을 만들고 가격ID를 "
+            "prices.json 과 index.html 에 넣으면 열립니다")
 
     # ------------------------------------------ 3) 홈페이지 표시가격 대조
     보이는 = re.findall(r'<span class="g-price"[^>]*>([\d,]+)<small>원</small></span>', 집)
@@ -175,7 +182,8 @@ if 쓸수있음:
       return out;
     }
     """
-    ids = {k: v["paddle"] for k, v in 상품.items()}
+    # 가격ID가 아직 없는 상품은 손님 화면 가격 대조에서 뺀다 (결제창을 못 여니 값도 없다)
+    ids = {k: v["paddle"] for k, v in 상품.items() if v["paddle"]}
     한개 = 상품["quick"]["paddle"]
     try:
         with sync_playwright() as pw:
