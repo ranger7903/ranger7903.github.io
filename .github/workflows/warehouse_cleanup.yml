@@ -1,0 +1,133 @@
+name: 창고 정리 (한 번만 실행)
+
+# 하는 일
+#  1) 옆자리(dist)에 손님에게 나갈 조각이 다 있는지 먼저 확인한다
+#  2) 옆자리를 "지금 필요한 조각 111개"만 담은 새 상자로 갈아 끼운다 (옛 판 사라짐)
+#  3) 홈페이지 자리(main)에서 아무도 안 쓰는 파일을 지운다
+#  4) 홈페이지 자리의 창고 구석에 쌓인 옛 설치파일을 걷어낸다
+#     지우기 전후로 '지금 화면에 쓰이는 파일 묶음'이 한 글자도 안 바뀌었는지 대조하고,
+#     다르면 그 자리에서 멈추고 아무것도 올리지 않는다.
+
+on: { workflow_dispatch: {} }
+permissions: { contents: write }
+
+jobs:
+
+  dist_cleanup:
+    name: 옆자리(보관함) 정리
+    runs-on: ubuntu-latest
+    steps:
+      - name: 옆자리 받아오기
+        run: |
+          set -e
+          git clone --quiet --single-branch --branch dist \
+            https://github.com/${{ github.repository }}.git dist
+          cd dist
+          echo "지금 옆자리 파일 수: $(git ls-tree -r --name-only HEAD | wc -l)"
+
+      - name: 지금 필요한 조각이 다 있는지 확인 (없으면 여기서 멈춤)
+        run: |
+          set -e
+          cd dist
+          root_n=$(git ls-tree -r --name-only HEAD | grep -cE '^[^/]+\.part[0-9]{3}$')
+          deep_n=$(git ls-tree -r --name-only HEAD | grep -cE '^download/parts/.*\.part[0-9]{3}$')
+          echo "뿌리 조각 ${root_n}개 / download/parts 조각 ${deep_n}개"
+          [ "$root_n" -eq 37 ]
+          [ "$deep_n" -eq 72 ]
+          git cat-file -e HEAD:download/office.manifest.json
+          git cat-file -e HEAD:download/office_setup.manifest.json
+
+      - name: 필요한 것만 담은 새 상자 만들기
+        run: |
+          set -e
+          cd dist
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git ls-tree -r --name-only HEAD \
+            | grep -E '^[^/]+\.part[0-9]{3}$|^download/parts/.*\.part[0-9]{3}$|^download/office(_setup)?\.manifest\.json$' \
+            > keep.txt
+          keep_n=$(wc -l < keep.txt)
+          echo "남길 파일 수: ${keep_n}"
+          [ "$keep_n" -eq 111 ]
+          git checkout --orphan newbox
+          git rm -r --cached --quiet .
+          xargs -a keep.txt -d '\n' git add --
+          git commit -q -m "내려받기 조각 보관함 (2026-09-04판, 111개)"
+
+      - name: 새 상자가 예전 것과 한 바이트도 다르지 않은지 대조
+        run: |
+          set -e
+          cd dist
+          git ls-tree -r newbox | sort > new.txt
+          git ls-tree -r origin/dist \
+            | grep -E '\.part[0-9]{3}$|download/office(_setup)?\.manifest\.json$' | sort > old.txt
+          diff new.txt old.txt
+          echo "대조 통과: 파일 이름도 내용도 완전히 같음 ($(wc -l < new.txt)개)"
+
+      - name: 옆자리 갈아 끼우기
+        run: |
+          set -e
+          cd dist
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" newbox:dist
+          echo "옆자리 정리 완료"
+
+  main_cleanup:
+    name: 홈페이지 자리 정리
+    needs: dist_cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: 홈페이지 자리 받아오기 (지난 기록까지 통째로)
+        run: |
+          set -e
+          git clone --quiet --single-branch --branch main \
+            https://github.com/${{ github.repository }}.git main
+          cd main
+          echo "지난 기록 수: $(git rev-list --count HEAD)"
+
+      - name: 아무도 안 쓰는 파일 지우기
+        run: |
+          set -e
+          cd main
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git rm -r --quiet manuals || true
+          git rm --quiet en_paddle_test.html || true
+          git rm --quiet .github/workflows/assemble_downloads.yml || true
+          git rm --quiet .github/workflows/cleanup_download_parts.yml || true
+          git rm --quiet .github/workflows/tidy_files.yml || true
+          git rm --quiet .github/workflows/warehouse_cleanup.yml || true
+          if git diff --cached --quiet; then
+            echo "더 치울 것이 없습니다 (이미 치워졌음)"
+          else
+            git commit -q -m "창고 정리: 남은 파일 치우기"
+          fi
+          echo "남은 파일 수: $(git ls-tree -r --name-only HEAD | wc -l)"
+
+      - name: 창고 구석에 쌓인 옛 설치파일 걷어내기
+        run: |
+          set -e
+          cd main
+          pip install --quiet git-filter-repo
+          before=$(git rev-parse 'HEAD^{tree}')
+          echo "걷어내기 전 파일묶음 지문: ${before}"
+          git filter-repo --force --invert-paths --path download/parts --path manuals
+          after=$(git rev-parse 'HEAD^{tree}')
+          echo "걷어낸 뒤 파일묶음 지문: ${after}"
+          if [ "$before" != "$after" ]; then
+            echo "!! 화면에 쓰이는 파일이 달라졌습니다. 아무것도 올리지 않고 멈춥니다."
+            exit 1
+          fi
+          echo "대조 통과: 홈페이지 화면에 쓰이는 파일은 하나도 안 바뀜"
+          echo "남은 지난 기록 수: $(git rev-list --count HEAD)"
+
+      - name: 홈페이지 자리 갈아 끼우기
+        run: |
+          set -e
+          cd main
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:main
+          echo "홈페이지 자리 정리 완료"
+
+      - name: 마무리 - 남은 파일 보여주기
+        run: |
+          cd main
+          git ls-tree -r --name-only HEAD
