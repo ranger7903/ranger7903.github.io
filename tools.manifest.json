@@ -41,218 +41,236 @@
   },
   "formfill": {
    "saveAs": "밸류스 스마트 서식채우기 설치.exe",
-   "version": "v1.4",
-   "totalSize": 56117526,
-   "sha256": "c60f54b27369434cfd8c91896f89c1199ca7eeba463ad110833156357689cdff",
+   "version": "2026-09-04",
+   "totalSize": 56403640,
+   "sha256": "c4ba7e8e0561f83e593af02ca10e296ac8967058bf702a7b1beee1ed201d4383",
    "parts": [
     {
-     "name": "e6e98b51f028/formfill.part000",
+     "name": "dist/formfill.part000",
      "size": 9437184,
-     "sha256": "5488a2725871feedb9d08cab0139b06296cec0966f1a4c97cdc3f5c9c0442d1b"
+     "sha256": "f8a548824fea1f39a5ee438a5374821bb445c4e5e5759a5963de3b0fc766041c"
     },
     {
-     "name": "e6e98b51f028/formfill.part001",
+     "name": "dist/formfill.part001",
      "size": 9437184,
-     "sha256": "25e974d575967e2895a9af52cf2d37280ff2c978d064dcc2dc30d9b8574dd618"
+     "sha256": "8fa249e1e323d059649a94110e795334b302173669328adf174e65e77bfe17ac"
     },
     {
-     "name": "e6e98b51f028/formfill.part002",
+     "name": "dist/formfill.part002",
      "size": 9437184,
-     "sha256": "b5315984ab179170fdb3e728459c38155a2300a47eb965dd096eca08b6235750"
+     "sha256": "9e21cc95ef5511a58a6742b8aac52285e6b81c03958221d60371ca0c0f1dcfd0"
     },
     {
-     "name": "e6e98b51f028/formfill.part003",
+     "name": "dist/formfill.part003",
      "size": 9437184,
-     "sha256": "448473d133e1ef0c55d815d5b42d56d64f2c7c0732bccca4afddd90b5a35f9c7"
+     "sha256": "738805a5dd4b3784ae2274bde7eb3351d35e73ab3b32b9b7c4b5e7069da58836"
     },
     {
-     "name": "e6e98b51f028/formfill.part004",
+     "name": "dist/formfill.part004",
      "size": 9437184,
-     "sha256": "775e9b0d82f52a0de55b407d7c93f5b4cfe34e5c2d8c0f447482c70c710e313d"
+     "sha256": "dec087bf5a0e454c50e731a50ec8b18e45cf1fa3b468cb0814a914c92b928399"
     },
     {
-     "name": "e6e98b51f028/formfill.part005",
-     "size": 8931606,
-     "sha256": "792564854007c79578431a4988f6eeccd4d12fbbabda0f847acd54d559fef7d1"
+     "name": "dist/formfill.part005",
+     "size": 9217720,
+     "sha256": "ff33aa5c46c416429d992c241a0c58fdb8462891c1563ea0f7a5a57da0ea53a2"
     }
    ]
   },
   "compare": {
    "saveAs": "밸류스 스마트 명단대조기 설치.exe",
-   "version": "v1.4",
-   "totalSize": 56101235,
-   "sha256": "841378fc2282bac22869ac6a7427e7d2acf8477b0baad3d5607ee59143cd0117",
+   "version": "2026-09-04",
+   "totalSize": 56386776,
+   "sha256": "8c4f5ca7d1e34f6295e58ec11bce06e5cd9dea2d6737002e839034de90f3fffb",
    "parts": [
     {
-     "name": "e6e98b51f028/compare.part000",
+     "name": "dist/compare.part000",
      "size": 9437184,
-     "sha256": "d6859adcbdd74b6289968e6973f27db863e384ad2cb7c3aa48fe555a93a39a3f"
+     "sha256": "235fa805bc5064ecc64a21b38ea79546f66017b4cfc8e09e5b13fa8f903e00dd"
     },
     {
-     "name": "e6e98b51f028/compare.part001",
+     "name": "dist/compare.part001",
      "size": 9437184,
-     "sha256": "76b5d513edd5efa240a3bcf5301712a1e8f8f8b6324c4e1037194111d5522048"
+     "sha256": "0fcc9f3118041cc771961d590cac791912a2d561f725b916451ec1acfcc7149b"
     },
     {
-     "name": "e6e98b51f028/compare.part002",
+     "name": "dist/compare.part002",
      "size": 9437184,
-     "sha256": "829f904e0ce60cc0e2b553a4f412f221fd17d5dd713fd7344c0f43fdf2ce050b"
+     "sha256": "f89d6403a92d61c623bedf4e3062f513c385e50f70623cc9078d58af33aae171"
     },
     {
-     "name": "e6e98b51f028/compare.part003",
+     "name": "dist/compare.part003",
      "size": 9437184,
-     "sha256": "4873ba74673327e89dc3b489d54080b273b98be6bef28ed0b1fca623d4f53c89"
+     "sha256": "9fc8a093cc84baeb239a69789e3474268a052f7681b1727e57248ede623d4bbc"
     },
     {
-     "name": "e6e98b51f028/compare.part004",
+     "name": "dist/compare.part004",
      "size": 9437184,
-     "sha256": "638d163c106eddaf9ff92b5ed4121436df95fb6b9a84ea27730633e2b3ee3c6a"
+     "sha256": "a4ebf512cdd89aae68efb034dcecd6cd13381d3c896edd8ae1a8f3cd8299c7b3"
     },
     {
-     "name": "e6e98b51f028/compare.part005",
-     "size": 8915315,
-     "sha256": "cb055cbd4ff4a190c31eed722cc0475550a4cf1daa4b55125b09b31ded8cd0d2"
+     "name": "dist/compare.part005",
+     "size": 9200856,
+     "sha256": "464a11072cac74532978391ff693436fafbab78e97aaefdb2211d0a5e311de1c"
     }
    ]
   },
   "quick": {
    "saveAs": "밸류스 빠른입력기.exe",
-   "version": "v1.2",
-   "totalSize": 15462459,
-   "sha256": "474381a8cc75af520338c2c917d085d559603cb45f9634eeb03422a5698d1a56",
+   "version": "2026-09-04",
+   "totalSize": 15749612,
+   "sha256": "18d476399a377f1544ac80044f600b0d3c7a53052552f7efe4ce2590f9781c82",
    "parts": [
     {
-     "name": "e6e98b51f028/quick.part000",
+     "name": "dist/quick.part000",
      "size": 9437184,
-     "sha256": "65147600292d1f696914a0cbb04d0cb331c70bbe82596e6d77c6bd51986b5403"
+     "sha256": "2eceaeeaf951a2479ff168a28374ae96dd7a2993c42ae3bba1368dc6aa615f30"
     },
     {
-     "name": "e6e98b51f028/quick.part001",
-     "size": 6025275,
-     "sha256": "7db36e7a416c176f65c33c52bd8934f6331d1b783412248cd6f4779d9b419577"
+     "name": "dist/quick.part001",
+     "size": 6312428,
+     "sha256": "64e11d29d767c10c52b29638255629abdf08289f6fa3b82642197ac3ed6aaa4e"
     }
    ]
   },
   "keeper": {
    "saveAs": "밸류스 폴더지킴이.exe",
-   "version": "v1.2",
-   "totalSize": 15160099,
-   "sha256": "c2a94e56d1fb2723bc6e5ee611f46cb875cb64b03c2cf85c782ff275201d9490",
+   "version": "2026-09-04",
+   "totalSize": 15443966,
+   "sha256": "9189b9f1ad41566dc6e8f5b5e993f1194547d2d4eaad2f21e249a8b968dd385e",
    "parts": [
     {
-     "name": "e6e98b51f028/keeper.part000",
+     "name": "dist/keeper.part000",
      "size": 9437184,
-     "sha256": "f593f344a1dad80899c9b1729ad968f4129da29d4f49e13b7e86d77b280e0c0d"
+     "sha256": "be7a37266de40a220f1569c0f02398c632e20b7b3c1e09b0b9cee4661360f1ab"
     },
     {
-     "name": "e6e98b51f028/keeper.part001",
-     "size": 5722915,
-     "sha256": "a88961af592844ee04a299ab53e7303e83be9e0f8baf15b4b1df43c90a489c06"
+     "name": "dist/keeper.part001",
+     "size": 6006782,
+     "sha256": "988d444cfd1fabaf9fe0f17b7f85497e6a06d99f481f5a3b64daca32074e8ff4"
     }
    ]
   },
   "garden": {
    "saveAs": "밸류스 책상 위 정원.exe",
-   "version": "v1.2",
-   "totalSize": 15139954,
-   "sha256": "74d86ea761196b6fa6417b9d08657965bad6aedf08b99a6decf3a38c2f902e09",
+   "version": "2026-09-04",
+   "totalSize": 15417778,
+   "sha256": "621d7cc740702ed0fc541946d2d8a8c6bc574f7081920863536e2d3efc91c789",
    "parts": [
     {
-     "name": "e6e98b51f028/garden.part000",
+     "name": "dist/garden.part000",
      "size": 9437184,
-     "sha256": "3bf3f30cde50a0619b3a3efa833b580eeef8a93d534ff2844dde877e0d3394cc"
+     "sha256": "2fc95e892be64952c55eed33ebf09319b9b054c5edebef9ee6eb3934916e6dff"
     },
     {
-     "name": "e6e98b51f028/garden.part001",
-     "size": 5702770,
-     "sha256": "468007ad1e3f38bc0921f7fbd89167cf0f10b186951c0a37b14d4200828d97b1"
+     "name": "dist/garden.part001",
+     "size": 5980594,
+     "sha256": "49e3d872fef0416e7f9b781d05c75d87e5074e00d332c84fed023b8a4c0c9fd6"
     }
    ]
   },
   "handwrite": {
    "saveAs": "밸류스 마음 서랍.exe",
-   "version": "v1.2",
-   "totalSize": 15111324,
-   "sha256": "ff0535493dd6a1849cb311267c421c8eecc6db7dda0cfeccde9a893f09df2bba",
+   "version": "2026-09-04",
+   "totalSize": 15388315,
+   "sha256": "f77cfc06425889e0953900040c7619710bc6846f29b5b29b6fe640fb84628849",
    "parts": [
     {
-     "name": "e6e98b51f028/handwrite.part000",
+     "name": "dist/handwrite.part000",
      "size": 9437184,
-     "sha256": "6b49ade9cceb6c7a3ad0b069e9bb4bd1bed4db7f99c4242e2a16b5ac30985492"
+     "sha256": "010a9bd86e60cc2634a674b4fbcd2f5fe5a2637086f5652b596779304a9bb6d4"
     },
     {
-     "name": "e6e98b51f028/handwrite.part001",
-     "size": 5674140,
-     "sha256": "05e54fd89d8d7d2ab1910f901e98fc74826c115bc1d3e699da50f8a5cd408802"
+     "name": "dist/handwrite.part001",
+     "size": 5951131,
+     "sha256": "5d60715e6a0c6f8e8cc83c532c11698ddf80aab8139b5d97a0dcdb6aa13d6382"
     }
    ]
   },
   "pdfkit": {
    "saveAs": "밸류스 PDF 반짇고리.exe",
-   "version": "v1.2",
-   "totalSize": 25617984,
-   "sha256": "4e71aca14698f4b9fc8dd500a5868b43d55b091539f25aeccb7ebefba51066ac",
+   "version": "2026-09-04",
+   "totalSize": 25895425,
+   "sha256": "f6c4e2512c91444da56d363649d0d2a8120ba9012318f300fa78e57c6a5428b5",
    "parts": [
     {
-     "name": "e6e98b51f028/pdfkit.part000",
+     "name": "dist/pdfkit.part000",
      "size": 9437184,
-     "sha256": "c7b0dac85d4f10dae9ccaa7685b3bb62fd0fc36a897b714855be7c07cf0b8afd"
+     "sha256": "24d5e444d3c78e7db68f44d75a35fc527040fb001122015c0d4f8966fba253cd"
     },
     {
-     "name": "e6e98b51f028/pdfkit.part001",
+     "name": "dist/pdfkit.part001",
      "size": 9437184,
-     "sha256": "778373c6309fbff6e28d6511569e36e9a8a729153452dc47503dec1e291f597b"
+     "sha256": "8602f807bfd6680a72570c21f79ba05aa113a992437f320388ef0debf05d263e"
     },
     {
-     "name": "e6e98b51f028/pdfkit.part002",
-     "size": 6743616,
-     "sha256": "b1bb27c891bbc7abb3fb35573633b0b7b6918e8ecd506a4e88881d44dd47d4b7"
+     "name": "dist/pdfkit.part002",
+     "size": 7021057,
+     "sha256": "2d55e86f9cd42d3b46b673f9664e4e8653c310b4880c50bb5bcffa56e53903c6"
     }
    ]
   },
   "crayon": {
    "saveAs": "밸류스 캡처 색연필.exe",
-   "version": "v1.3",
-   "totalSize": 23261148,
-   "sha256": "569fb845932292cdff0813c7ecaad77fd93ca6dfe09e2d3b3f942a63156834e7",
+   "version": "2026-09-04",
+   "totalSize": 23568855,
+   "sha256": "3f154c2c416dfe39dc8f89ccc7f61622868892e3cc7a1f163cd3d5454e4b3239",
    "parts": [
     {
-     "name": "e6e98b51f028/crayon.part000",
+     "name": "dist/crayon.part000",
      "size": 9437184,
-     "sha256": "d0e40c537c9cb696af0ea02c12fe73846ab5debf1b37e9429c5ab4e826ab7220"
+     "sha256": "c4a2303240bc40dbeecb383d8be3e37ff5c0e28ec56181e441669a5431a47eaa"
     },
     {
-     "name": "e6e98b51f028/crayon.part001",
+     "name": "dist/crayon.part001",
      "size": 9437184,
-     "sha256": "dfb8f953084faa36407e59e07861995fad51aa80b064bdd856d46d02f870e3a6"
+     "sha256": "e062b58dde0f23dc9ee65a63e60dca2748bae697f568b9c8a35df103f6929ef6"
     },
     {
-     "name": "e6e98b51f028/crayon.part002",
-     "size": 4386780,
-     "sha256": "cb3c205d34a57470a22aae0af85cb236a3a6ab36248524ab25ca0d65c54c2723"
+     "name": "dist/crayon.part002",
+     "size": 4694487,
+     "sha256": "c41acbc5c2003f99fed6f27c6baa904f5a0c937ef12d1d993e7a44c1981dbb7d"
     }
    ]
   },
   "register": {
    "saveAs": "밸류스 계산대.exe",
-   "version": "v1.1",
-   "totalSize": 24851554,
-   "sha256": "fb6c81ea719e5243282c4e41b005bf7aa1bda7f4579a098202025dc35bce724d",
+   "version": "2026-09-04",
+   "totalSize": 25130742,
+   "sha256": "871fac0a3c0dfa5fffc1cd9f431aab12b3ef153cb4f19daa87bb329df4f778c7",
    "parts": [
     {
-     "name": "e6e98b51f028/register.part000",
+     "name": "dist/register.part000",
      "size": 9437184,
-     "sha256": "f2bdc9877886027277e3c3414f99377398b06ab1c18288766d06df72f02f1080"
+     "sha256": "62ed5e39d5d0305e68a04757161c3cff5f79c3a58615f719520d604e2406949b"
     },
     {
-     "name": "e6e98b51f028/register.part001",
+     "name": "dist/register.part001",
      "size": 9437184,
-     "sha256": "a3e382aa8ca4e1521e9fa2510ba7a1d082caa710b393c49c5235cb96718f31bb"
+     "sha256": "c04c3c3a6918de975b57e50025ba7d82094e9c080386138cd10e6b53a0daf840"
     },
     {
-     "name": "e6e98b51f028/register.part002",
-     "size": 5977186,
-     "sha256": "8c0dc1a9f3dc15a86ab1dd33b67bc7ec08da0800ee92fa9a83a5aad9042e9e54"
+     "name": "dist/register.part002",
+     "size": 6256374,
+     "sha256": "d5f2ddc04620ef71444ba18af4716cfeb6fe937d6b4b8986a899a7469b34efe3"
+    }
+   ]
+  },
+  "reservation": {
+   "saveAs": "밸류스 예약수첩.exe",
+   "version": "2026-09-04",
+   "totalSize": 15425608,
+   "sha256": "a55a3d4cebe2717134423500a7f1b98e1a0edb08a6927e33d6fc3081ab47563c",
+   "parts": [
+    {
+     "name": "dist/reservation.part000",
+     "size": 9437184,
+     "sha256": "34acc3fcb9bdf5696034d3d554290229a6f2ad7c325560d6737a886ca6812d10"
+    },
+    {
+     "name": "dist/reservation.part001",
+     "size": 5988424,
+     "sha256": "33441d5baf14064c1fc3a252303107f8674a2e6ee7aa4d5a8bbfa354f8823bc4"
     }
    ]
   }
