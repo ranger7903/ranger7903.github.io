@@ -259,18 +259,18 @@
   "reservation": {
    "saveAs": "밸류스 예약수첩.exe",
    "version": "2026-09-04",
-   "totalSize": 15425608,
-   "sha256": "a55a3d4cebe2717134423500a7f1b98e1a0edb08a6927e33d6fc3081ab47563c",
+   "totalSize": 15449717,
+   "sha256": "156a1d372f2bee6eedb5cf11c9a3acd1c05ea735b168d148863a0ccad39c5642",
    "parts": [
     {
      "name": "dist/reservation.part000",
      "size": 9437184,
-     "sha256": "34acc3fcb9bdf5696034d3d554290229a6f2ad7c325560d6737a886ca6812d10"
+     "sha256": "49a8bc90e635bfaa52e9ee2119b107c34627bfe85146d1fe410c84ebe36952c1"
     },
     {
      "name": "dist/reservation.part001",
-     "size": 5988424,
-     "sha256": "33441d5baf14064c1fc3a252303107f8674a2e6ee7aa4d5a8bbfa354f8823bc4"
+     "size": 6012533,
+     "sha256": "4b553a13029f4c03450ceddb73093b2e579bd208e5e42afb72f675e4097766bd"
     }
    ]
   }
