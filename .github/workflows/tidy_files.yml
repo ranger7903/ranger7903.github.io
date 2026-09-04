@@ -1,0 +1,42 @@
+name: 안 쓰는 파일 치우기
+
+# 홈페이지에서 아무 데서도 부르지 않는 파일만 지웁니다.
+#  · manuals/ 폴더 12개 — 뿌리에 있는 manual_*.pdf 와 똑같은 사본입니다.
+#    홈페이지가 실제로 거는 것은 뿌리 쪽이라, 이 폴더는 아무도 열지 못합니다.
+#  · en_paddle_test.html — 예전 결제 시험용 페이지, 들어가는 문이 없습니다.
+#  · assemble_downloads.yml / cleanup_download_parts.yml — 다 쓴 작업표입니다.
+
+on: { workflow_dispatch: {} }
+permissions: { contents: write }
+
+jobs:
+  tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+
+      - name: 지우기 전에, 정말 아무도 안 부르는지 다시 확인
+        run: |
+          set -e
+          for f in manuals en_paddle_test.html; do
+            hits=$(grep -rl --include=*.html --include=*.js --include=*.json "$f" . | grep -v "^./$f" || true)
+            echo "$f 를 부르는 곳: ${hits:-없음}"
+            [ -z "$hits" ]
+          done
+          echo "뿌리 쪽 안내서가 제자리에 있는지 확인"
+          ls manual_merge.pdf manual_button.pdf > /dev/null
+
+      - name: 치우기
+        run: |
+          set -e
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git rm -r --quiet manuals || true
+          git rm --quiet en_paddle_test.html || true
+          git rm --quiet .github/workflows/assemble_downloads.yml || true
+          git rm --quiet .github/workflows/cleanup_download_parts.yml || true
+          git rm --quiet .github/workflows/tidy_files.yml || true
+          git commit -q -m "창고 정리: 아무도 안 쓰는 파일 치우기"
+          git push
+          echo "남은 파일 수: $(git ls-tree -r --name-only HEAD | wc -l)"
