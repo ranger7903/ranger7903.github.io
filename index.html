@@ -187,6 +187,8 @@ const PADDLE_PRICES = {
   // 바로 결제가 열립니다. 비어 있는 동안에는 "아직 준비 중"이라고 한국어로 안내합니다.
   booking:   "pri_01m1qy8245q9z3yk0fmge5pw4w",
   office:    "pri_01m1rar8c6qmq2krwattq2cmqp",
+  translator_basic: "pri_01m1rkvg5gbcf9dxwebnhcb0nn",
+  translator_all:   "pri_01m1rky0rg3n16qnt2vhrh6c91",
   bundle:    "pri_01m0z38eb44de9sn6j4761nhwd"
 };
 Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
@@ -607,8 +609,9 @@ article.goods.hide{display:none !important}
         <div style="font-size:13px;color:var(--ink-2);margin:10px 0 2px">여덟 가지 말 전부</div>
         <span class="g-price" style="font-size:32px">99,000<small>원</small></span>
         <div class="g-note" style="margin:8px 0 12px">한 번 결제 · 평생 사용<br>말은 나중에 더 넣을 수 있어요</div>
-        <span class="btn line" style="cursor:default;opacity:.75">카드 결제 준비 중</span>
-        <a class="mbtn" href="#contact" style="margin-top:10px;display:inline-block">✉️ 열리면 알려주세요</a>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('translator_basic')">기본판 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('translator_all')" style="margin-top:8px;display:inline-block">여덟 말 전부 결제하기</a>
+        <div class="g-note" style="margin-top:10px;line-height:1.6">받는 파일이 커서(약 300MB) 지금은 <b>결제 뒤 하루 안에 메일로</b> 보내드립니다.<br>이번 달 안에 다른 도구들처럼 그 자리에서 바로 받게 바꿉니다.</div>
       </div>
     </div>
   </article>
