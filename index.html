@@ -186,6 +186,7 @@ const PADDLE_PRICES = {
   // 밸류스 예약수첩 — Paddle 에 상품을 만든 뒤 그 가격 열쇠(pri_...)를 여기에 붙여넣으면
   // 바로 결제가 열립니다. 비어 있는 동안에는 "아직 준비 중"이라고 한국어로 안내합니다.
   booking:   "pri_01m1qy8245q9z3yk0fmge5pw4w",
+  office:    "pri_01m1rar8c6qmq2krwattq2cmqp",
   bundle:    "pri_01m0z38eb44de9sn6j4761nhwd"
 };
 Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
@@ -238,7 +239,7 @@ function payWithPaddle(key) {
 
 <section id="products"><div class="shell">
   <p class="eyebrow">우리 가게 선반</p>
-  <h2>지금 데려갈 수 있는 도구, 열</h2>
+  <h2>지금 데려갈 수 있는 도구들</h2>
   <p class="lede">전부 설치형 윈도우 프로그램이에요. 인터넷 없이 조용히 일하고,
     당신의 자료는 당신 컴퓨터 밖으로 한 발짝도 나가지 않아요.<br>
     그리고 이제 결과물이 <b>「문서 &gt; 밸류스 작업함」</b> 한 폴더로 모여요 —
@@ -527,6 +528,30 @@ function payWithPaddle(key) {
         <span class="g-price" style="font-size:34px">29,900<small>원</small></span>
         <div class="g-note" style="margin:4px 0 12px">한 번 결제 · 평생 사용 · 구독 없음</div>
         <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('bundle')">결제하기</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="goods" id="p-office" style="display:block;background:var(--cream-2);border:2px solid var(--sage);border-radius:22px;padding:26px 28px;margin-top:26px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:26px">
+      <div style="flex:1 1 340px">
+        <div class="g-head"><span class="g-emoji">🤖</span><h3>밸류스 AI 사무직원</h3><span class="newtag">매달 쓰는 직원</span></div>
+        <p class="g-tag">시키면 스스로 판단해서 끝내고, 어디를 봐 주셔야 하는지까지 알려줘요</p>
+        <p class="g-story">위의 도구들은 사장님이 눌러야 움직여요. AI 사무직원은 파일을 창에 끌어다 놓기만 하면
+          무슨 일인지 스스로 알아보고, 할 줄 아는 열여섯 가지 중에서 골라 끝낸 다음
+          「이 부분은 제가 확실하지 않습니다」까지 표시해서 돌려줍니다.</p>
+        <ul class="g-feats"><li>명단·표를 맞춰 보고 다른 곳을 찾아 고쳐요</li>
+<li>영수증·서류 사진을 읽어 날짜·금액·상호를 회계용 표로 정리해요</li>
+<li>거래명세서 만들기 · 기한 지킴이 · 출결 정리 · 회의록 정리</li>
+<li>서식에 이름만 채워 증명서까지, 여러 나라 말 안내문도 한 번에</li>
+<li>모르는 것은 틀린 답 대신 <b>질문</b>으로 남겨요 — 이게 이 제품의 핵심이에요</li>
+<li>전부 내 컴퓨터 안에서 — 회사 자료가 밖으로 한 발짝도 안 나가요</li></ul>
+      </div>
+      <div style="flex:0 0 auto;text-align:center;min-width:230px">
+        <span class="g-price" style="font-size:34px">500,000<small>원</small></span><small style="font-size:17px;color:var(--ink-2)"> / 달</small>
+        <div class="g-note" style="margin:6px 0 14px">매달 결제 · 언제든 그만두기 · 부가세 포함</div>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('office')">결제하기</a>
+        <a class="mbtn" href="download.html" style="margin-top:10px;display:inline-block">🔎 어떤 일을 하는지 보기</a>
       </div>
     </div>
   </article>
