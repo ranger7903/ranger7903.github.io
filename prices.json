@@ -19,7 +19,7 @@
     "pdfkit": { "이름": "PDF 반짇고리", "원": 7900, "달러": 5.9, "paddle": "pri_01m0z33zys2kxd4mt2xnkm3b22", "설치파일": "pdfkit" },
     "crayon": { "이름": "캡처 색연필", "원": 7900, "달러": 5.9, "paddle": "pri_01m0z3336s0depa5t2sga4gffa", "설치파일": "crayon" },
     "counter": { "이름": "밸류스 계산대", "원": 12900, "달러": 9.9, "paddle": "pri_01m0z31dpz4gvc05jvpd45c8qq", "설치파일": "register" },
-    "booking": { "이름": "밸류스 예약수첩", "원": 12900, "달러": 9.9, "paddle": "", "설치파일": "reservation" },
+    "booking": { "이름": "밸류스 예약수첩", "원": 12900, "달러": 9.9, "paddle": "pri_01m1qy8245q9z3yk0fmge5pw4w", "설치파일": "reservation" },
     "bundle": { "이름": "책상 세트 (열 가지 전부)", "원": 29900, "달러": 22.9, "paddle": "pri_01m0z38eb44de9sn6j4761nhwd", "설치파일": "*" }
   },
   "결제": {
