@@ -1,187 +1,187 @@
 {
   "file": "valuestools_ai_office.exe",
-  "totalSize": 336802790,
-  "sha256": "49d16742cba9ec9511ca98e258a98059e6c365b63ff27c449282f230c5fd39c6",
+  "totalSize": 336817363,
+  "sha256": "723b4f6fd724a62b23ba09cd31a517b068dddf19074337a82959291cad4a96b4",
   "parts": [
     {
       "name": "office.exe.part000",
       "size": 9437184,
-      "sha256": "30f4c567512a15f590db518513870095352a11cc891bf7e2d3e3605b3a17d021"
+      "sha256": "ce9c54a4b26ba34b99f911bdf1b10aea013b7781cd1de4a9dec88d3d52e13759"
     },
     {
       "name": "office.exe.part001",
       "size": 9437184,
-      "sha256": "9134218e5c49d4998d897686db1271534858e0963fdcd60ad4aa9d60a463452c"
+      "sha256": "4283fba26283fb3e42458e02ffac938fad504581b685d848be5531192fc91bd0"
     },
     {
       "name": "office.exe.part002",
       "size": 9437184,
-      "sha256": "8e1c4f2a33e97ee60ccc098571bd128320ea06ebf0dce60e963bb623d150ab98"
+      "sha256": "43760725d16c98a95aa1ff11405b368ca0421f65bceb0d985e9109a232c8ed42"
     },
     {
       "name": "office.exe.part003",
       "size": 9437184,
-      "sha256": "42becfacc05fcc8ff5ea8858acc9beb618dfd58a19748303779c7ab257359e24"
+      "sha256": "843a13e41df365478c3154e49109b9328f540152cd0940bae91e1a0df8e76272"
     },
     {
       "name": "office.exe.part004",
       "size": 9437184,
-      "sha256": "b6cedb686b6e0a64362ce312dd2c63183714338b4b6a5e9eb7dd0eabc45c1edc"
+      "sha256": "5a1fd38068fa1dbbe6fefda36e02c2347234892352557ce9aaa2c59c8c1ad542"
     },
     {
       "name": "office.exe.part005",
       "size": 9437184,
-      "sha256": "952c1d7fe8dab5910a470e446ef8c2a36daf31429ff9582eef2f502fbb869200"
+      "sha256": "42dae60abf919445b1532db3d5721148d88469993ab464f83b98f4b2c9f0ec75"
     },
     {
       "name": "office.exe.part006",
       "size": 9437184,
-      "sha256": "ff0e98493685733f5cb265f4a397c980a5ff6867300d95ee7a2d0a6a36cf74ab"
+      "sha256": "2bf8c47d4b825689f04bc72281c22ab43ee53201ed277dfcd52dfe573ceaf44c"
     },
     {
       "name": "office.exe.part007",
       "size": 9437184,
-      "sha256": "0119b2da11f85e92ef2e16aa4af315dec9d428396f57e66e08aeda3d6fba410c"
+      "sha256": "b7f96f40e4c0432c5db2774b8003b87134cd2df53b0df32cc82f4688f80b62de"
     },
     {
       "name": "office.exe.part008",
       "size": 9437184,
-      "sha256": "8318c7f0ab2c831864eff0628871f949f25d0ea388f4449ec5cc42118753d489"
+      "sha256": "e6f6891c582e737569056c51320dc90fff4383cbbbb0ade6ce6903d79e52e0fd"
     },
     {
       "name": "office.exe.part009",
       "size": 9437184,
-      "sha256": "2109728b91c999d5e25b1eb50bdd8683a8f5bc990ef38276d48e627a767fbb85"
+      "sha256": "c53cd03b27dbdf1c62b01c2fcc004b0ba17fa6522444861e5d5adaaf044569fb"
     },
     {
       "name": "office.exe.part010",
       "size": 9437184,
-      "sha256": "6bb30f4187df42d58f5a4454a15387ef2f37de8bb256a636c15d0d27f2d676b2"
+      "sha256": "43dc55b87feb3161915548eaa36fd94d40f585c6e2c2615b2ad58a6dbe55981f"
     },
     {
       "name": "office.exe.part011",
       "size": 9437184,
-      "sha256": "47b594b919064ecec8dab8e7f158e068b0cdacddb3d58100c83e4c61dfa6114c"
+      "sha256": "a7ecf1a61d5bd8364a443c68a7be6a888fbb067732a67e3514fb6009af0a08e5"
     },
     {
       "name": "office.exe.part012",
       "size": 9437184,
-      "sha256": "e690fdef6da8700696a6d86d5e21d1e598748e92456ddc4c738c168e16bdbe0e"
+      "sha256": "c123c4362d2eadfcdfb9f364e0dfe4b485b1e57f75f478827280b5617982d742"
     },
     {
       "name": "office.exe.part013",
       "size": 9437184,
-      "sha256": "d34fb6ffd1926c7f22d7dc9ade9fd0c6ba1fce32bc9e5be4585d4c811468620f"
+      "sha256": "e7249e222486508ae9de2201a6d4ac9bb9d0c174d1fede091f3d2655602a6ffd"
     },
     {
       "name": "office.exe.part014",
       "size": 9437184,
-      "sha256": "a4209a6c03c8bbce4cc141604e045c80a4cd806a73d1d2db1bba42030ab837e9"
+      "sha256": "6650efca35b808a983aa0baddcd25e315601541e23366831f3788903a5297ebc"
     },
     {
       "name": "office.exe.part015",
       "size": 9437184,
-      "sha256": "d329f085d374f1422c53aa2c90458bc058ff3b88c05a79f57c746973608c3228"
+      "sha256": "90f3ff534eab3ba37524c1f4b32b762e67fe1616c1252f4394e965cd95b6122b"
     },
     {
       "name": "office.exe.part016",
       "size": 9437184,
-      "sha256": "479557b5892019305d17df9fba2293b695f82b8ef0b75b5c34053e93970f879d"
+      "sha256": "a2086ec13fa6a00ee06fe5f8d7efdd4a6d5b5092eee937989b86eed1bd6abecb"
     },
     {
       "name": "office.exe.part017",
       "size": 9437184,
-      "sha256": "3e1541fa79159986e3b6b80d971a73bf199ac8a3ca9a3b71744586f87394b1ad"
+      "sha256": "229ae582cef65da56ae03e951790234cc9cc40f4dce866efdbfdea4bb710d0df"
     },
     {
       "name": "office.exe.part018",
       "size": 9437184,
-      "sha256": "2abd7cb0668816ae7e95205feb26911f151d4a7c53d6277774bd444aa3ac7993"
+      "sha256": "faacc1e1a96e585348e60739f167ace45345631c88db3de363354278ecd14015"
     },
     {
       "name": "office.exe.part019",
       "size": 9437184,
-      "sha256": "cb5558ac11b614f286a34de00322fc077e85053a1cfa3bddf9e577f888fb98d0"
+      "sha256": "2b5bedf4f9dc16ebf81ba0a59df6e6e1debf6455372d09f82891621d1392a8fa"
     },
     {
       "name": "office.exe.part020",
       "size": 9437184,
-      "sha256": "2094747ffabf039e11c68d90cd55c25343177c957ba170d6d2a258de7937ccb7"
+      "sha256": "f89e5f7d8ed6b13580d47948381ecfff97b7a694e776ea44a64e42b21bd90ea3"
     },
     {
       "name": "office.exe.part021",
       "size": 9437184,
-      "sha256": "352028e3381787711b064c7ed16c254433418b3908e6229f5855971a06525522"
+      "sha256": "d59b11258ab56f7309d6b055f4c2c428dc2c3ee6805fa00fa18a43ed1b81e3f4"
     },
     {
       "name": "office.exe.part022",
       "size": 9437184,
-      "sha256": "754fab6659442c6e4ad8fa14dbd848bfa24175cb38742c311bbbc9e64fc1504f"
+      "sha256": "db83a183f5118a88cc886f5685607d41ff835cbe83e32c002df51ccee888a720"
     },
     {
       "name": "office.exe.part023",
       "size": 9437184,
-      "sha256": "a8f106b9dd3406d9bb27a9cafe03ce5621b69659fa6b20d08e6ff7c808c447d2"
+      "sha256": "d57f5a1b3aa63bc2703fb0f3113a40b644ca2f07f9c59ab58a5bb8236168ad36"
     },
     {
       "name": "office.exe.part024",
       "size": 9437184,
-      "sha256": "d278d0c39555afb0efb0ba1308790891ede2b234e5cea8c258541dd77fa4cd28"
+      "sha256": "48c99d3181db8bb2c7725bdc6e8e278ef546f726fead8935be6534e829da7480"
     },
     {
       "name": "office.exe.part025",
       "size": 9437184,
-      "sha256": "a5f09afb66e54b9ffa29374570f44a09a82bd0399c9f9f3eedb29defbdee8840"
+      "sha256": "e869e71317500919dc2523061693b9dcefb4c54d27da91ef5229d77a3c081dd5"
     },
     {
       "name": "office.exe.part026",
       "size": 9437184,
-      "sha256": "a3917c4be4e87f7fb06803f5f393fe9e832f6b4f645c6bf9a0f1f5ad895a6904"
+      "sha256": "5e12e54ce53a41cfaea6ac7e941496b71a450dc4e0a63b930f9e5507c5ca1d77"
     },
     {
       "name": "office.exe.part027",
       "size": 9437184,
-      "sha256": "3035aa77229feae6e06f96ee048abda446585a72a2480e959d337fe907b7bf66"
+      "sha256": "bc11c25652e6254e0f9944e9551ea91c8262dc6ab09f25f4cf6ed9f09a2e36d6"
     },
     {
       "name": "office.exe.part028",
       "size": 9437184,
-      "sha256": "b80f3be747b9d43caff58947985a3a61e023f7fbceaa821d3020921e745338be"
+      "sha256": "0bc4856cee46043b8df3f84baa10197f86a4677b8a1b5177a342d40408cff816"
     },
     {
       "name": "office.exe.part029",
       "size": 9437184,
-      "sha256": "a8227afd8aa0ae9db904f7d791ff1b52853b003c343a1ac221b6e2796a4cb2d8"
+      "sha256": "0fcdebd7a9c952f267996f9906f42fa791f7b087a83fcd18f43425bc9e060a96"
     },
     {
       "name": "office.exe.part030",
       "size": 9437184,
-      "sha256": "45c36a365a55a4fc06bb2ee0b00566956cd5dc26f41b324b5de427ada9725210"
+      "sha256": "8a2042d49ec0dd1afbba6a6aa7b8d39162ebd26630c6ea81c486c97be55f5a00"
     },
     {
       "name": "office.exe.part031",
       "size": 9437184,
-      "sha256": "b2e10baaf098ea39e8c6024e8f4ea7611e4a7caa89717ceb731350644c7641e6"
+      "sha256": "7a19dcb5146474b2c2abe3b85836f6e6c4a5a3fcc39982103290fffdd7a4884c"
     },
     {
       "name": "office.exe.part032",
       "size": 9437184,
-      "sha256": "f93a4e2460914bebdc3c1ae253370e48967f2f7e5fc049de788c66be67c030a1"
+      "sha256": "732b28bb5ea2a3fccbd0181314b3eea74e51c216125ddee84c92895f497247da"
     },
     {
       "name": "office.exe.part033",
       "size": 9437184,
-      "sha256": "9b1688b65d65dac1ea3f254b2cbda047d21ae8c0f4f816e275edd014be5e5aec"
+      "sha256": "be332b30dc039a7c64d5e8e9c64b0f84c12a1afe8fc012ade1aaa97e3af75e92"
     },
     {
       "name": "office.exe.part034",
       "size": 9437184,
-      "sha256": "33e267687ca9f517a12629e8c34ff28841492e25f16ab9403cc0978c757e96cc"
+      "sha256": "7ee17d3bc9e48ba6fba86d6c22ea17c558d0e44d12efb0501392d8cbd1773104"
     },
     {
       "name": "office.exe.part035",
-      "size": 6501350,
-      "sha256": "519e2cb520e74504c7e8c9f8a175e919ad6124d2caba8fff97a930d8d95a2ae6"
+      "size": 6515923,
+      "sha256": "83e8c987268645f0b2c12d0ac02f52b53676db872ca70326b0253b382bb46a6e"
     }
   ]
 }
