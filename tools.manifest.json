@@ -273,6 +273,13 @@
      "sha256": "67cb44601cd23570f026ca9c72bdfa984e7e1641400e49a6d346c3569ac12a6b"
     }
    ]
+  },
+  "translator": {
+   "saveAs": "밸류스 통역책상.exe",
+   "version": "",
+   "totalSize": 0,
+   "sha256": "",
+   "parts": []
   }
  }
 }
