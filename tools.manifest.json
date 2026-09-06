@@ -279,6 +279,13 @@
     }
    ]
   },
+  "button": {
+   "saveAs": "밸류스 단추.exe",
+   "version": "",
+   "totalSize": 0,
+   "sha256": "",
+   "parts": []
+  },
   "translator": {
    "saveAs": "밸류스 통역책상.exe",
    "version": "2026-09-05",
