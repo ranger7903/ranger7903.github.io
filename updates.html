@@ -83,6 +83,7 @@ var NAMES = {
  quick:"🖋️ 빠른입력기", keeper:"🧺 폴더지킴이", garden:"🌻 책상 위 정원",
  handwrite:"✒️ 마음 서랍", pdfkit:"🧵 PDF 반짇고리", crayon:"🖍 캡처 색연필",
  register:"🧮 밸류스 계산대", reservation:"📅 밸류스 예약수첩",
+ button:"🔘 밸류스 단추 (도구 여는 곳)",
  memocard:"🃏 암기 수첩(모바일)"};
 var WEBAPP = {memocard:"memocard.html"};
 var MANIFEST = null;
@@ -159,6 +160,8 @@ document.getElementById('check').onclick = function(){
 
   var all = (info.p && info.p.indexOf('*') >= 0);
   var mine = all ? Object.keys(NAMES) : (info.p || []);
+  // 「밸류스 단추」는 다른 도구를 한 자리에서 여는 열쇠고리라, 어떤 키를 가진 분께든 드린다
+  if(mine.indexOf('button') < 0) mine = mine.concat(['button']);
   document.getElementById('hello').textContent =
     (info.n || '고객') + '님, 반가워요! 🧡' + (all ? ' (책상 세트)' : '');
 
@@ -182,8 +185,9 @@ document.getElementById('check').onclick = function(){
         var bar = document.createElement('span'); bar.className='bar';
         bar.appendChild(document.createElement('i'));
         var btn = document.createElement('button'); btn.className='get';
-        btn.textContent = f ? '⬇ 받기' : '준비 중';
-        if(!f) btn.disabled = true;
+        var ready = !!(f && f.parts && f.parts.length);
+        btn.textContent = ready ? '⬇ 받기' : '준비 중';
+        if(!ready) btn.disabled = true;
         (function(slug, b, bb){ b.onclick = function(){ grab(slug, b, bb); }; })(k, btn, bar);
         row.appendChild(btn); row.appendChild(bar);
       }
