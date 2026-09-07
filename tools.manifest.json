@@ -462,10 +462,61 @@
   },
   "garisend": {
    "saveAs": "밸류스 가려서 보내기.apk",
-   "version": "",
-   "totalSize": 0,
-   "sha256": "",
-   "parts": []
+   "version": "2026-09-07",
+   "totalSize": 85285149,
+   "sha256": "441f018133de124e619ef31f00e4ef6844ef8fe037032da71252c5d4ae8a96b2",
+   "parts": [
+    {
+     "name": "dist/garisend.part000",
+     "size": 9437184,
+     "sha256": "a77aa4dda73b91302d75fc3e9087193c6558c8c9d6d6b5fd6dea45968ad5168d"
+    },
+    {
+     "name": "dist/garisend.part001",
+     "size": 9437184,
+     "sha256": "ef18c2f5f1255d04de21f1c9a582fa1554085ce5f409c9e0675d27537ef12591"
+    },
+    {
+     "name": "dist/garisend.part002",
+     "size": 9437184,
+     "sha256": "b1454623d7687d3b69f4e481bf1fcdcb94d40ca3e8a9319b70005ac7ed85fccb"
+    },
+    {
+     "name": "dist/garisend.part003",
+     "size": 9437184,
+     "sha256": "ccca3f8fc34ad8375cb517c49f1688f1d685afab12b786d7cfddbdc6efcf5e4b"
+    },
+    {
+     "name": "dist/garisend.part004",
+     "size": 9437184,
+     "sha256": "b502bb670644766d93daf61a7811973f39b729c49abcec8c2a858bf2f1dfdc79"
+    },
+    {
+     "name": "dist/garisend.part005",
+     "size": 9437184,
+     "sha256": "fe2608d939e624d741d00085a75db3d949a942978a31b6ad6bb22d5fcd7275d5"
+    },
+    {
+     "name": "dist/garisend.part006",
+     "size": 9437184,
+     "sha256": "afd1c444850b70969739888940470fd9b86c9436b47149f29ef4abb9878a8b50"
+    },
+    {
+     "name": "dist/garisend.part007",
+     "size": 9437184,
+     "sha256": "0adc7eb625b92d35086a681a333fcd92fb48023468c3df1f01edf6f074c40dbc"
+    },
+    {
+     "name": "dist/garisend.part008",
+     "size": 9437184,
+     "sha256": "17a8dc795b8a3570aa54d18a855a40798a4561126716c7b762fb7f033b827bb4"
+    },
+    {
+     "name": "dist/garisend.part009",
+     "size": 350493,
+     "sha256": "b7455174031b40772d6ce09bbf67942b0ff439bdb406aa37a5e620d2541d670b"
+    }
+   ]
   }
  }
 }
