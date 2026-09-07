@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>밸류스 — 프로그램 전부 받기</title>
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259; --ink3:#948A7E;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.7}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:26px;margin:0 0 8px;letter-spacing:-.01em}
+  .lede{color:var(--ink2);margin:0 0 20px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:10px;padding:18px 20px;margin:0 0 16px}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:10px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .big.again{background:var(--accent)}
+  .note{font-size:14px;color:var(--ink2);margin:10px 0 0}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin-top:6px}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:var(--sunk);font-size:13px;color:var(--ink2);font-weight:600}
+  td.sz{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  td.st{white-space:nowrap;width:1%}
+  .pill{font-size:12.5px;padding:2px 9px;border-radius:999px;background:var(--sunk);color:var(--ink2)}
+  .pill.go{background:#E5EDF5;color:var(--deep)}
+  .pill.ok{background:var(--okbg);color:var(--ok)}
+  .pill.bad{background:#FBECE9;color:var(--warn)}
+  .bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-top:12px}
+  .bar > i{display:block;height:100%;width:0;background:var(--deep);transition:width .2s}
+  #say{margin-top:10px;font-size:15px;min-height:1.7em}
+  ol{padding-left:1.2em}
+  li{margin:6px 0}
+  code{background:var(--sunk);padding:1px 5px;border-radius:3px;font-size:.92em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>밸류스 프로그램 전부 받기</h1>
+  <p class="lede">단추 한 번이면 아래 프로그램이 <b>다운로드 폴더</b>에 차례로 저장됩니다.
+    설치가 필요 없는 것은 그대로 두 번 누르면 켜집니다.</p>
+
+  <div class="card">
+    <button class="big" id="go">전부 받기</button>
+    <div class="bar"><i id="bar"></i></div>
+    <div id="say">받을 목록을 불러오는 중…</div>
+    <p class="note">처음에 브라우저가 <b>“여러 파일을 다운로드하시겠습니까?”</b> 라고 물으면
+      <b>허용</b>을 눌러 주세요. 한 번만 물어봅니다.</p>
+  </div>
+
+  <div class="card">
+    <table id="tbl">
+      <thead><tr><th>프로그램</th><th class="sz">크기</th><th>판</th><th class="st">상태</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <b>받은 뒤에는</b>
+    <ol>
+      <li>다운로드 폴더를 엽니다. (<code>Ctrl</code> + <code>J</code>)</li>
+      <li>쓰고 싶은 프로그램을 <b>두 번 누릅니다.</b></li>
+      <li>“Windows의 PC 보호” 파란 창이 뜨면 → <b>추가 정보</b> → <b>실행</b>.
+        (처음 한 번만 뜹니다)</li>
+    </ol>
+    <p class="note">받다가 멈추면 그 줄만 다시 받습니다 — 단추를 한 번 더 누르면
+      이미 받은 것은 건너뜁니다.</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var 목록 = [], 끝난것 = {};
+  var 바 = document.getElementById('bar');
+  var 말 = document.getElementById('say');
+  var 단추 = document.getElementById('go');
+  var 몸 = document.querySelector('#tbl tbody');
+
+  // 조각이 놓여 있는 곳 (두 군데 중 되는 쪽을 쓴다)
+  var 창고 = [
+    'https://cdn.jsdelivr.net/gh/ranger7903/ranger7903.github.io@dist/',
+    'https://raw.githubusercontent.com/ranger7903/ranger7903.github.io/dist/'
+  ];
+
+  function 크기(n) {
+    if (!n) return '-';
+    return (n / 1048576).toFixed(0) + ' MB';
+  }
+  function 알림(s) { 말.textContent = s; }
+
+  function 그리기() {
+    몸.innerHTML = '';
+    목록.forEach(function (p) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + p.name + '</td>' +
+        '<td class="sz">' + 크기(p.f.totalSize) + '</td>' +
+        '<td>' + (p.f.version || '') + '</td>' +
+        '<td class="st"><span class="pill" id="s_' + p.key + '">기다리는 중</span></td>';
+      몸.appendChild(tr);
+    });
+  }
+  function 상태(key, 글, 종류) {
+    var e = document.getElementById('s_' + key);
+    if (e) { e.textContent = 글; e.className = 'pill' + (종류 ? ' ' + 종류 : ''); }
+  }
+
+  function 지문(buf) {
+    return crypto.subtle.digest('SHA-256', buf).then(function (h) {
+      return Array.prototype.map.call(new Uint8Array(h), function (x) {
+        return x.toString(16).padStart(2, '0');
+      }).join('');
+    });
+  }
+
+  function 조각받기(이름) {
+    var i = 0;
+    function 해보기() {
+      return fetch(창고[i] + 이름, { cache: 'no-store' }).then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.arrayBuffer();
+      }).catch(function (e) {
+        i += 1;
+        if (i < 창고.length) return 해보기();
+        throw e;
+      });
+    }
+    return 해보기();
+  }
+
+  function 한개받기(p, 진행) {
+    var f = p.f, 조각들 = f.parts || [], 모음 = [], 받은양 = 0;
+    상태(p.key, '받는 중 0%', 'go');
+    var 차례 = Promise.resolve();
+    조각들.forEach(function (조각, n) {
+      차례 = 차례.then(function () {
+        var 이름 = 조각.name.replace(/^dist\//, '');
+        return 조각받기(이름).then(function (buf) {
+          if (buf.byteLength !== 조각.size) throw new Error('조각 크기가 다릅니다');
+          return 지문(buf).then(function (h) {
+            if (조각.sha256 && h !== 조각.sha256) throw new Error('조각이 깨졌습니다');
+            모음.push(new Uint8Array(buf));
+            받은양 += buf.byteLength;
+            상태(p.key, '받는 중 ' +
+              Math.round((n + 1) / 조각들.length * 100) + '%', 'go');
+            진행(buf.byteLength);
+          });
+        });
+      });
+    });
+    return 차례.then(function () {
+      var 총 = 모음.reduce(function (a, b) { return a + b.length; }, 0);
+      var 통 = new Uint8Array(총), o = 0;
+      모음.forEach(function (b) { 통.set(b, o); o += b.length; });
+      return 지문(통.buffer).then(function (h) {
+        if (f.sha256 && h !== f.sha256) throw new Error('붙여 보니 원본과 다릅니다');
+        if (통[0] !== 0x4D || 통[1] !== 0x5A) throw new Error('실행파일이 아닙니다');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([통],
+          { type: 'application/octet-stream' }));
+        a.download = f.saveAs || (p.key + '.exe');
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          URL.revokeObjectURL(a.href); a.remove();
+        }, 60000);
+        상태(p.key, '받았습니다', 'ok');
+        끝난것[p.key] = true;
+      });
+    });
+  }
+
+  function 전부받기() {
+    단추.disabled = true;
+    var 할것 = 목록.filter(function (p) { return !끝난것[p.key]; });
+    var 총량 = 할것.reduce(function (a, p) { return a + (p.f.totalSize || 0); }, 0);
+    var 지금 = 0;
+    function 진행(n) {
+      지금 += n;
+      바.style.width = Math.min(100, 지금 / 총량 * 100) + '%';
+    }
+    var 차례 = Promise.resolve(), 실패 = 0;
+    할것.forEach(function (p) {
+      차례 = 차례.then(function () {
+        알림(p.name + ' 받는 중… (' + (할것.indexOf(p) + 1) + '/' + 할것.length + ')');
+        return 한개받기(p, 진행).catch(function (e) {
+          실패 += 1;
+          상태(p.key, '못 받음', 'bad');
+          console.error(p.key, e);
+        });
+      });
+    });
+    return 차례.then(function () {
+      단추.disabled = false;
+      바.style.width = '100%';
+      if (실패 === 0) {
+        알림('끝났습니다. 다운로드 폴더를 열어 보세요. (Ctrl + J)');
+        단추.textContent = '다시 받기';
+      } else {
+        알림(실패 + '개를 못 받았습니다. 단추를 한 번 더 누르면 그것만 다시 받습니다.');
+        단추.textContent = '못 받은 것 다시 받기';
+        단추.className = 'big again';
+      }
+    });
+  }
+
+  var 이름표 = {
+    merge: '스마트 자료취합기', formfill: '서식채우기',
+    compare: '스마트 명단대조기', quick: '빠른입력기',
+    keeper: '폴더지킴이', garden: '책상 위 정원',
+    handwrite: '마음 서랍', pdfkit: 'PDF 반짇고리',
+    crayon: '캡처 색연필', register: '계산대',
+    reservation: '예약수첩', button: '밸류스 단추',
+    translator: '통역책상', office: 'AI 사무직원',
+    office_setup: 'AI 사무직원 (설치본)', shorts: '쇼츠공장'
+  };
+
+  fetch('tools.manifest.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      var f = j.files || j;
+      Object.keys(f).forEach(function (k) {
+        if (!f[k] || !f[k].parts || !f[k].parts.length) return;   // 준비 안 된 것은 뺀다
+        목록.push({ key: k, f: f[k], name: 이름표[k] || k });
+      });
+      그리기();
+      var 총 = 목록.reduce(function (a, p) { return a + (p.f.totalSize || 0); }, 0);
+      알림('프로그램 ' + 목록.length + '개 · 모두 합쳐 ' + 크기(총) + ' 입니다.');
+      단추.onclick = 전부받기;
+    })
+    .catch(function (e) {
+      알림('목록을 못 불러왔습니다. 잠시 뒤 새로 고쳐 주세요.');
+      console.error(e);
+    });
+})();
+</script>
+</body>
+</html>
