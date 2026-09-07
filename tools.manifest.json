@@ -459,6 +459,13 @@
      "sha256": "9533eb0940e9c051b732658403794d239946e0be5750013aefb4adc0e9e61ea9"
     }
    ]
+  },
+  "garisend": {
+   "saveAs": "밸류스 가려서 보내기.apk",
+   "version": "",
+   "totalSize": 0,
+   "sha256": "",
+   "parts": []
   }
  }
 }
