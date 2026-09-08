@@ -299,164 +299,164 @@
   },
   "translator": {
    "saveAs": "밸류스 통역책상.exe",
-   "version": "2026-09-07",
-   "totalSize": 291451543,
-   "sha256": "63ac3c300e7f419c38cc9b6a699a1b74bdcc79a4cbe491af3e12a17034883286",
+   "version": "2026-09-08",
+   "totalSize": 291451487,
+   "sha256": "cc8673e6551c3792bd57633a1d16dc11d1ccee83960a26a2c894b78ef782a268",
    "parts": [
     {
      "name": "dist/translator.part000",
      "size": 9437184,
-     "sha256": "2f0660cea34c2db77719993f730ba9809d1a84706ad7e913f43e9b11bc1dd931"
+     "sha256": "a2ecf12312bb87a73afa8cadc2fd64dbb3c9ec1f92856d171471ccc212dd71dd"
     },
     {
      "name": "dist/translator.part001",
      "size": 9437184,
-     "sha256": "c1a4e9ce6471cfd9bc25d6db219c68f186a73808523c2d02541a3c036a2a734c"
+     "sha256": "fb65280622e10c8b54da2bb71668f83c5c780f114e1cd477591c8fa9021630e4"
     },
     {
      "name": "dist/translator.part002",
      "size": 9437184,
-     "sha256": "05bd1ed4fb9f1f2a2999e19d838f8eaa93e6f873f417f2f35e668d88111904c4"
+     "sha256": "a7860df79063b8ad3b48b2b515b50b9efd2de848dff79bfc33b34cd51a7980ed"
     },
     {
      "name": "dist/translator.part003",
      "size": 9437184,
-     "sha256": "488de9c02dddf76174ff8e9ef5c156b7bd862ac6c372dffd4e5a41b5d4290bd4"
+     "sha256": "cf44217932efafc669f548f67d02d0efa7abadf62d87f5b563b54bb3432230a7"
     },
     {
      "name": "dist/translator.part004",
      "size": 9437184,
-     "sha256": "f658ea810e6a6bd57ab146045276597899ccfb4685f1d66ba74c24750f532236"
+     "sha256": "29b4141636190e5641f1ce1f92037c7c381fc0441ec0961aa530cf57c120dd43"
     },
     {
      "name": "dist/translator.part005",
      "size": 9437184,
-     "sha256": "53321ab7963046b671c02ea0ddb2bb9f615576330a4512cf5828a66c8c305dd2"
+     "sha256": "f01536c228fb2fdeb8d9f04566c4371dac1c87c12a016bf1b11bce047b6320fc"
     },
     {
      "name": "dist/translator.part006",
      "size": 9437184,
-     "sha256": "db41003a0c185c10e70a0a0ef56c19f0d49e7cb91051c5b6869962f3911898fe"
+     "sha256": "1fe7701ce446ac7c92e217e60a4153e2e2721a64f39e9754fab43fd8a16538a7"
     },
     {
      "name": "dist/translator.part007",
      "size": 9437184,
-     "sha256": "293579c524ffc66ff72621d812117fc07a5dc29165d73585e18e3935fe1595dd"
+     "sha256": "332a131dea4a1027860997c95cbe138505530976fe87193eb81a00800b01c333"
     },
     {
      "name": "dist/translator.part008",
      "size": 9437184,
-     "sha256": "946bac7e0b3f8f9e17cc267e8e4609b433b23ff6401b06c617a9392e6e4e5c2a"
+     "sha256": "0eafa96142f15501d584f353004e091eb2b2ca97cf2b6b502ed9d1d3aa9f3163"
     },
     {
      "name": "dist/translator.part009",
      "size": 9437184,
-     "sha256": "e344a13ab877f8dbd5c51d52f74c1ec722d3f04f9b4abc4e8d3f81ce74553d79"
+     "sha256": "2200f252fe6c8cf04c0b87377cbe3bd2e47922f577ce4f73dc93ae65b579f777"
     },
     {
      "name": "dist/translator.part010",
      "size": 9437184,
-     "sha256": "66c392e262fa6e6958efc071db4761eb65fb96ecd0c488cbc92fb77f6156fe68"
+     "sha256": "b98a878addd8a0779e8ebb80bf0038a6135644dbcf21ad1f3554eab29ad4ff6c"
     },
     {
      "name": "dist/translator.part011",
      "size": 9437184,
-     "sha256": "af9c3d5ae50e5db1b20f7aaaae0a70128fd076c1ec91b04e641d34488f3e11f9"
+     "sha256": "52370bd187d5933916e2bbedf0d1910885f435958caf70665509613bf7b265f7"
     },
     {
      "name": "dist/translator.part012",
      "size": 9437184,
-     "sha256": "419c0ef0debff9cb064eedeaee3215c5f7991fc017f9777b61a2e9cd5ea3ca5d"
+     "sha256": "66a45f463c76258c51c8596cc87b40fe990e22eee7afbe8a09523a3cb5c31640"
     },
     {
      "name": "dist/translator.part013",
      "size": 9437184,
-     "sha256": "2736302e1182fa4377803256758f967bd64f9f6c876d3dda191484afa8037e19"
+     "sha256": "372e19d5ea2132924ffb05322a63da417e3d989c783d81a1c806759c79edd3d7"
     },
     {
      "name": "dist/translator.part014",
      "size": 9437184,
-     "sha256": "1afab0f9aba8777e19da867c40784596bae5f04107a3d72fe543be82ac78ab07"
+     "sha256": "7c6c68c3801054a569808345b7154bda78ac9e5a5b3ec9d8c119a85c02379f0c"
     },
     {
      "name": "dist/translator.part015",
      "size": 9437184,
-     "sha256": "3ec2102276d5f40bf6631a46442d011ca1c3d76bf924a30b81f870f0d9cffde9"
+     "sha256": "74da21260e2a5ed60a041a1cf38c532101d049a9c36494bc0822475bdbf60dca"
     },
     {
      "name": "dist/translator.part016",
      "size": 9437184,
-     "sha256": "dd580d477e8e23be0973776570777f595ae9fdc1764191d0aea9fd3e67f4dc9d"
+     "sha256": "b130cf922e738f1738a0fb04c2a1f316a0f7ed89bdf93bbedc3489f057755665"
     },
     {
      "name": "dist/translator.part017",
      "size": 9437184,
-     "sha256": "fd7a60ecce415405741a7fb12dee64342deb70f570bda23403bba9135f3cfbe6"
+     "sha256": "56c9f109f80af50ee721a47db62281bca03dbcdcd3bd1fcb76912c67bde0683b"
     },
     {
      "name": "dist/translator.part018",
      "size": 9437184,
-     "sha256": "b9e910dd71a4a178e827b9a4f7c36a07b2d7189d11ef242ae4e4f7f63b9fd402"
+     "sha256": "25669384753dc032ae827f7daff3545ee55b58e470068cad0c6e14ae9a5fadb6"
     },
     {
      "name": "dist/translator.part019",
      "size": 9437184,
-     "sha256": "1e1eb2425da40cbcac640bb39dc6fc43d18f1b0d509188de2bdbb0d47eb0d8d0"
+     "sha256": "a87372831d89f72164c8242f5004751c265fc362fdbc6b79b9e2359c7611961a"
     },
     {
      "name": "dist/translator.part020",
      "size": 9437184,
-     "sha256": "e43ccdc7cb27f1e26c41ed17693eb34d005103fe96333af8ea8ed78cabfef4b4"
+     "sha256": "f1982f85d4f1192617a0d8b16e481a6ba0c3d672525e9d2017d8f06c15983eea"
     },
     {
      "name": "dist/translator.part021",
      "size": 9437184,
-     "sha256": "2bd9e711edfbfc6153230aff1068c489e9776519e7e93062a755ee176bf06630"
+     "sha256": "926ec710152bfb211f5d78d7356b7c9281887bc0508bdbc53e0cc30db3c55d41"
     },
     {
      "name": "dist/translator.part022",
      "size": 9437184,
-     "sha256": "106fc1de9ffbc0609a99d5bf14e9c9e01aa7e49eb402e6a37f2f5e24496e0390"
+     "sha256": "ca933426ee8e08b6b628ca532af0670f37f368daaf99f186be4128688ca7f9fb"
     },
     {
      "name": "dist/translator.part023",
      "size": 9437184,
-     "sha256": "c9d6afe5e796c599bdfabff2681d51d82d4850d0c6dd5667912c90bb7abe7f74"
+     "sha256": "f26e67cc239cff53a8f8ed5807ee15166d9f6e78c82fddf3a93daaa56f1130fd"
     },
     {
      "name": "dist/translator.part024",
      "size": 9437184,
-     "sha256": "f3eac09ab24992631fe95af56973941a53c35bd0a8d4a4afbd66beb9e2226058"
+     "sha256": "d68cca73cd3bff0d9075aa0fb16dee312b49b06851f902a14fbdd4a45c2217ff"
     },
     {
      "name": "dist/translator.part025",
      "size": 9437184,
-     "sha256": "cdc1c041d2ae603b36d54ed270855c1b5cb402e5abb85eb6ea34a6988388f24f"
+     "sha256": "959634639e3ceab10543c556ae734ae870b96f9d3f9b94e3942abc156cc8542c"
     },
     {
      "name": "dist/translator.part026",
      "size": 9437184,
-     "sha256": "289c136abdeb73a961e89e27eaacac539cb8330fd59af4815bac1e09f9e87692"
+     "sha256": "406a7199ecd6de4a449e8938df81604e5d21a074c837530c4954c0b2589d7254"
     },
     {
      "name": "dist/translator.part027",
      "size": 9437184,
-     "sha256": "f9b20dbdb8b4c89b074ab13d3e9c14025ee341df334c295a2ad7c7580933ca22"
+     "sha256": "54f880ed5f83097ffdb9ec9124a0693bb0cbfafc14699d2de6e7c8acb2733422"
     },
     {
      "name": "dist/translator.part028",
      "size": 9437184,
-     "sha256": "9e5206adb1bd084a0b6b67ff2908ca6ff230ff4f0d933c689a9c6128729b3e9f"
+     "sha256": "ad59b93a9faf87111d84743ff3fd86ee5e7257bb3eecea807de665c132688634"
     },
     {
      "name": "dist/translator.part029",
      "size": 9437184,
-     "sha256": "5a241fa2caa631094921deb129072886933c680ae63eaefb16e3c2f4aa028788"
+     "sha256": "c060ec7b9f3126369254d7fb3324f13fa7010cf4c20a30888d9fc86077b18287"
     },
     {
      "name": "dist/translator.part030",
-     "size": 8336023,
-     "sha256": "4283159dcf65529a35e3d7b69735cb01fe2e7704e34f712a74ac327fbc19b259"
+     "size": 8335967,
+     "sha256": "4dfeda78ccfd5ddbd1b0ef9a798a519ce7ceeb9fe02e9d070cb9a4eb1bd67389"
     }
    ]
   },
