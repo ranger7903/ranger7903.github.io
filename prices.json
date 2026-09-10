@@ -39,33 +39,33 @@
   },
   "keeper": {
    "이름": "폴더지킴이",
-   "원": 7900,
-   "달러": 5.9,
-   "paddle": "pri_01m0z35n3rs3k9jnyr3406tfet",
-   "설치파일": "keeper"
+   "원": 0,
+   "달러": 0,
+   "paddle": "",
+   "설치파일": "keeper",
+   "무료": true
   },
   "garden": {
    "이름": "책상 위 정원",
-   "원": 0,
-   "달러": 0,
-   "paddle": "",
-   "설치파일": "garden",
-   "무료": true
+   "원": 4900,
+   "달러": 3.9,
+   "paddle": "pri_01m0z36ex7w1ppywyevsftc4jq",
+   "설치파일": "garden"
   },
   "handwrite": {
    "이름": "마음 서랍",
-   "원": 0,
-   "달러": 0,
-   "paddle": "",
-   "설치파일": "handwrite",
-   "무료": true
+   "원": 4900,
+   "달러": 3.9,
+   "paddle": "pri_01m0z37mvsesyrn87r2f83d4dn",
+   "설치파일": "handwrite"
   },
   "pdfkit": {
    "이름": "PDF 반짇고리",
-   "원": 7900,
-   "달러": 5.9,
-   "paddle": "pri_01m0z33zys2kxd4mt2xnkm3b22",
-   "설치파일": "pdfkit"
+   "원": 0,
+   "달러": 0,
+   "paddle": "",
+   "설치파일": "pdfkit",
+   "무료": true
   },
   "crayon": {
    "이름": "캡처 색연필",
