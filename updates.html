@@ -161,8 +161,14 @@ document.getElementById('check').onclick = function(){
     info = JSON.parse(new TextDecoder().decode(payload));
   }catch(e){ showErr('키를 읽지 못했어요. 메일의 키 전체를 다시 복사해 주세요.'); return; }
 
+  // 「파는 도구 전부」 세트에 들어 있는 열한 가지. 통역책상·AI 사무직원은
+  // 따로 파는 물건이라 세트 키('*')로는 열리지 않는다.
+  var 세트 = ['merge','formfill','compare','quick','keeper','garden',
+             'handwrite','pdfkit','crayon','register','reservation'];
   var all = (info.p && info.p.indexOf('*') >= 0);
-  var mine = all ? Object.keys(NAMES) : (info.p || []);
+  var mine = all ? 세트.slice() : (info.p || []);
+  // 무료로 드리는 것은 누구에게나
+  if (mine.indexOf('memocard') < 0) mine = mine.concat(['memocard']);
   // 「밸류스 단추」는 다른 도구를 한 자리에서 여는 열쇠고리라, 어떤 키를 가진 분께든 드린다
   if(mine.indexOf('button') < 0) mine = mine.concat(['button']);
   document.getElementById('hello').textContent =
