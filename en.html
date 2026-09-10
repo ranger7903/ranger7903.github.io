@@ -194,7 +194,12 @@ Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
 function payWithPaddle(key) {
   const priceId = PADDLE_PRICES[key];
   if (!priceId) { alert("This item isn't ready for card checkout yet — please email us."); return; }
-  Paddle.Checkout.open({ items: [{ priceId: priceId, quantity: 1 }] });
+  // [2026-09-10] Keep the checkout in English on the English page,
+  // instead of following whatever language the visitor's browser is set to.
+  Paddle.Checkout.open({
+    items: [{ priceId: priceId, quantity: 1 }],
+    settings: { locale: "en" }
+  });
 }
 </script>
 </body>

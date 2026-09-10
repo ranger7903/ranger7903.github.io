@@ -195,7 +195,13 @@ Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
 function payWithPaddle(key) {
   const priceId = PADDLE_PRICES[key];
   if (!priceId) { alert("이 상품은 아직 카드 결제 준비 중입니다 — 이메일로 문의해주세요."); return; }
-  Paddle.Checkout.open({ items: [{ priceId: priceId, quantity: 1 }] });
+  // [2026-09-10] 결제창 글자를 한국어로 못 박는다.
+  // 지금까지는 손님 브라우저 설정을 따라갔다. 그래서 한글 홈페이지를 보다가
+  // 결제를 눌렀는데 결제창만 영어로 뜨는 일이 있었다.
+  Paddle.Checkout.open({
+    items: [{ priceId: priceId, quantity: 1 }],
+    settings: { locale: "ko" }
+  });
 }
 </script>
 
