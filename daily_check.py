@@ -81,7 +81,10 @@ if 집:
         "" if 토큰 in 집 else "토큰이 사라졌습니다 — 결제 단추가 전부 죽습니다")
     # 아직 Paddle 에 상품을 안 만든 것(가격ID가 빈 것)은 '빠진 것'이 아니라 '준비 중'이다.
     # 그걸 매일 아침 오류로 올리면 진짜 사고가 묻힌다.
-    준비중 = [v["이름"] for v in 상품.values() if not v["paddle"]]
+    # 무료로 돌린 도구는 가격ID가 없는 것이 정상이다.
+    # 그것까지 "준비 중"으로 올리면 매일 아침 헛경고가 뜬다.
+    준비중 = [v["이름"] for v in 상품.values()
+            if not v["paddle"] and not v.get("무료")]
     빠진 = [k for k, v in 상품.items() if v["paddle"] and v["paddle"] not in 집]
     알림(not 빠진, "상품 가격ID가 전부 있습니다", ("빠진 상품: " + ", ".join(빠진)) if 빠진 else "")
     if 준비중:

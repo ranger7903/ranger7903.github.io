@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무료로 드리는 도구 — 밸류스</title>
+<meta name="description" content="밸류스가 값을 받지 않고 그냥 드리는 도구들입니다. 회원가입도, 메일도, 정품 키도 필요 없습니다.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap">
+<style>
+:root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
+ --terra:#D97757;--terra-soft:#F6E3DA;--sage:#7E9B77;
+ --shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Gowun Dodum","Malgun Gothic",sans-serif;font-size:16px;line-height:1.8}
+.shell{max-width:720px;margin:0 auto;padding:0 20px 60px}
+nav{border-bottom:1px dashed var(--line)}
+nav .shell{display:flex;align-items:center;height:60px;padding-bottom:0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.stamp{width:32px;height:32px;border:2px solid var(--terra);border-radius:50%;display:grid;place-items:center;color:var(--terra);font-family:"Gowun Batang",serif;font-weight:700;font-size:14px;transform:rotate(-6deg)}
+.brand b{font-family:"Gowun Batang",serif;font-size:20px}
+h1{font-family:"Gowun Batang",serif;font-size:26px;margin:34px 0 6px;text-align:center}
+.sub{text-align:center;color:var(--ink2);font-size:14.5px;margin:0 0 26px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+.prod{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#fff;font-size:14.5px}
+.prod .nm{flex:1 1 200px}
+.prod .nm b{font-size:15.5px}
+.prod .nm em{display:block;font-style:normal;color:var(--ink3);font-size:13px;line-height:1.6}
+.prod .get{border:none;background:var(--sage);color:#fff;font-family:inherit;font-size:13.5px;font-weight:700;border-radius:9px;padding:9px 16px;cursor:pointer;min-width:124px;text-align:center;text-decoration:none;display:inline-block}
+.prod .get:disabled{opacity:.6;cursor:default}
+.bar{flex:1 1 100%;height:7px;background:#EFE7D8;border-radius:4px;overflow:hidden;display:none}
+.bar i{display:block;height:100%;width:0;background:var(--sage);transition:width .2s}
+.err{display:none;background:#F9E3E0;border:1px dashed var(--terra);color:#8a3d2b;border-radius:10px;padding:11px 15px;font-size:13.5px;margin-top:10px}
+.note{background:#F4F1E6;border:1px dashed var(--line);border-radius:10px;padding:12px 16px;font-size:13.5px;color:var(--ink2);margin-top:14px}
+.back{display:block;text-align:center;margin-top:26px;color:var(--ink3);font-size:13.5px;text-decoration:none}
+</style>
+</head>
+<body>
+<nav><div class="shell"><a class="brand" href="./"><span class="stamp">値</span><b>밸류스</b></a></div></nav>
+
+<div class="shell">
+  <h1>무료로 드리는 도구</h1>
+  <p class="sub">회원가입도, 메일도, 정품 키도 필요 없습니다. 그냥 받아 가세요.</p>
+
+  <div class="card">
+    <div id="prods">
+      <div class="prod"><span class="nm">목록을 불러오는 중입니다…</span></div>
+    </div>
+    <div class="err" id="err"></div>
+
+    <div class="note">
+      <b>받는 데 시간이 조금 걸립니다.</b> 파일이 커서 여러 조각으로 나눠 받은 뒤,
+      하나로 합치고 원본과 같은지 스스로 확인한 다음에 저장됩니다.
+      다 될 때까지 이 창을 닫지 말아 주세요.
+    </div>
+
+    <div class="note">
+      <b>받으실 때·여실 때 윈도우가 한 번 막습니다 — 고장이 아닙니다.</b><br>
+      밸류스는 아직 마이크로소프트에 내는 서명을 사지 않아서, 윈도우가 "처음 보는 만든이"라며 경고를 띄웁니다.<br>
+      · 받을 때 — 크롬 아래쪽 <b>⋮ → 계속</b> (엣지는 <b>… → 유지</b>)<br>
+      · 열 때 — 파란 창에서 <b>추가 정보 → 실행</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>왜 그냥 드리나요?</b><br>
+    이 세 가지는 비슷한 일을 하는 공짜 도구가 이미 많습니다.
+    그런 것에까지 값을 받는 것은 저희 생각에 맞지 않아서, 값을 내리는 대신 아예 무료로 돌렸습니다.<br>
+    써 보시고 마음에 드시면 <a href="./#products" style="color:var(--sage);font-weight:700">다른 도구</a>도 한 번 봐 주세요.
+  </div>
+
+  <a class="back" href="./">← 가게로 돌아가기</a>
+</div>
+
+<script>
+/* 무료 도구 내려받기 — 정품 키가 필요 없습니다.
+   조각을 하나씩 받아 합치고, 합친 것이 원본과 같은지(지문) 확인한 뒤에만 저장합니다. */
+var 무료들 = [
+  {slug:"crayon",    이름:"🖍 캡처 색연필",  설명:"찍고 · 가리고 · 그리고 — 설명은 그림 한 장이면 됩니다"},
+  {slug:"garden",    이름:"🌻 책상 위 정원", 설명:"집중한 시간만큼 새싹이 자라고, 업무일지가 저절로 적힙니다"},
+  {slug:"handwrite", 이름:"✒️ 마음 서랍",   설명:"하루 한 문장, 손끝으로 따라 쓰는 십 분"}
+];
+var 곧바로 = [
+  {파일:"nametag_free.exe", 저장이름:"밸류스 이름표 붙이기.exe",
+   이름:"🏷 이름표 붙이기", 설명:"파일 이름을 한꺼번에, 예쁘게"}
+];
+var MANIFEST = null;
+
+function 보임(n){ return (n/1048576).toFixed(1)+"MB"; }
+function hex(buf){ return Array.prototype.map.call(new Uint8Array(buf),
+  function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
+function 탈(msg){ var e=document.getElementById('err'); e.textContent=msg; e.style.display='block'; }
+
+function 받기(slug, btn, bar){
+  var info = MANIFEST.files[slug];
+  if(!info || !info.parts || !info.parts.length){ 탈('아직 준비 중이에요. 잠시 뒤에 다시 들러 주세요.'); return; }
+  btn.disabled = true; bar.style.display='block';
+  var fill = bar.firstChild, bufs = [], loaded = 0, i = 0;
+  function next(){
+    if(i >= info.parts.length) return Promise.resolve();
+    var p = info.parts[i];
+    return fetch(MANIFEST.base + p.name, {cache:'no-store'}).then(function(r){
+      if(!r.ok) throw new Error('part');
+      return r.arrayBuffer();
+    }).then(function(ab){
+      if(ab.byteLength !== p.size) throw new Error('size');
+      bufs[i] = new Uint8Array(ab); loaded += ab.byteLength; i++;
+      var pct = Math.round(loaded / info.totalSize * 100);
+      fill.style.width = pct + '%';
+      btn.textContent = '받는 중 ' + pct + '%';
+      return next();
+    });
+  }
+  next().then(function(){
+    var all = new Uint8Array(info.totalSize), off = 0;
+    for(var k=0;k<bufs.length;k++){ all.set(bufs[k], off); off += bufs[k].length; }
+    btn.textContent = '확인하는 중…';
+    return crypto.subtle.digest('SHA-256', all).then(function(d){
+      if(hex(d) !== info.sha256) throw new Error('sha');
+      var url = URL.createObjectURL(new Blob([all], {type:'application/octet-stream'}));
+      var a = document.createElement('a');
+      a.href = url; a.download = info.saveAs;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+      btn.textContent = '✔ 받았어요'; fill.style.width='100%';
+    });
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = '다시 받기';
+    탈('내려받다가 끊겼어요. 인터넷을 확인하고 [다시 받기]를 눌러 주세요. 계속 안 되면 ranger7903@nate.com 으로 알려 주시면 메일로 보내드립니다.');
+  });
+}
+
+function 그리기(){
+  var box = document.getElementById('prods');
+  box.innerHTML = '';
+  곧바로.forEach(function(x){
+    var row = document.createElement('div'); row.className='prod';
+    var nm = document.createElement('span'); nm.className='nm';
+    nm.innerHTML = '<b>'+x.이름+'</b><em>'+x.설명+'</em>';
+    var a = document.createElement('a'); a.className='get';
+    a.href = x.파일; a.setAttribute('download', x.저장이름); a.textContent='🎁 바로 받기';
+    row.appendChild(nm); row.appendChild(a); box.appendChild(row);
+  });
+  무료들.forEach(function(x){
+    var f = MANIFEST ? MANIFEST.files[x.slug] : null;
+    var row = document.createElement('div'); row.className='prod';
+    var nm = document.createElement('span'); nm.className='nm';
+    nm.innerHTML = '<b>'+x.이름+'</b><em>'+x.설명 +
+      (f ? '<br>'+f.version+' · '+보임(f.totalSize) : '') + '</em>';
+    row.appendChild(nm);
+    var bar = document.createElement('span'); bar.className='bar';
+    bar.appendChild(document.createElement('i'));
+    var btn = document.createElement('button'); btn.className='get';
+    var 됨 = !!(f && f.parts && f.parts.length);
+    btn.textContent = 됨 ? '🎁 무료로 받기' : '준비 중';
+    if(!됨) btn.disabled = true;
+    (function(slug,b,bb){ b.onclick=function(){ 받기(slug,b,bb); }; })(x.slug, btn, bar);
+    row.appendChild(btn); row.appendChild(bar);
+    box.appendChild(row);
+  });
+}
+
+fetch('tools.manifest.json', {cache:'no-store'})
+  .then(function(r){ return r.json(); })
+  .then(function(m){ MANIFEST = m; 그리기(); })
+  .catch(function(){ 그리기(); 탈('목록을 불러오지 못했어요. 새로고침을 한 번 해 주세요.'); });
+</script>
+</body>
+</html>
