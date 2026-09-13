@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 
@@ -79,18 +80,8 @@ if 집:
     토큰 = 표["결제"]["paddle_공개토큰"]
     알림(토큰 in 집, "결제 열쇠(공개 토큰)가 홈페이지에 있습니다",
         "" if 토큰 in 집 else "토큰이 사라졌습니다 — 결제 단추가 전부 죽습니다")
-    # 아직 Paddle 에 상품을 안 만든 것(가격ID가 빈 것)은 '빠진 것'이 아니라 '준비 중'이다.
-    # 그걸 매일 아침 오류로 올리면 진짜 사고가 묻힌다.
-    # 무료로 돌린 도구는 가격ID가 없는 것이 정상이다.
-    # 그것까지 "준비 중"으로 올리면 매일 아침 헛경고가 뜬다.
-    준비중 = [v["이름"] for v in 상품.values()
-            if not v["paddle"] and not v.get("무료")]
-    빠진 = [k for k, v in 상품.items() if v["paddle"] and v["paddle"] not in 집]
+    빠진 = [k for k, v in 상품.items() if v["paddle"] not in 집]
     알림(not 빠진, "상품 가격ID가 전부 있습니다", ("빠진 상품: " + ", ".join(빠진)) if 빠진 else "")
-    if 준비중:
-        주의("아직 카드 결제를 못 여는 상품이 있습니다",
-            ", ".join(준비중) + " — Paddle 에서 상품을 만들고 가격ID를 "
-            "prices.json 과 index.html 에 넣으면 열립니다")
 
     # ------------------------------------------ 3) 홈페이지 표시가격 대조
     보이는 = re.findall(r'<span class="g-price"[^>]*>([\d,]+)<small>원</small></span>', 집)
@@ -111,15 +102,29 @@ try:
     목록 = json.loads(몸통.decode("utf-8"))
     상한 = 0
     빠진조각 = []
+    # 🚨 2026-09-13 한 번 물어보고 없다고 하면 «헛경보»가 난다.
+    #    조각이 80개가 넘어서 잇달아 물어보면 깃허브가 가끔 한 번씩 안 받아 준다.
+    #    실제로 2026-09-13 아침 점검이 「translator.part011 이 없다」고 알렸는데
+    #    바로 다시 받아 보니 멀쩡했다. 헛경보가 잦으면 «진짜 경보»를 묻어 버린다.
+    #    (2026-09-12 의 진짜 문제가 그렇게 하루 묻혔다)
+    #    → 세 번까지 다시 물어보고, 세 번 다 안 되면 그때만 문제로 적는다.
     for 이름, 정보 in 목록["files"].items():
         for p in 정보["parts"]:
             상한 += 1
-            try:
-                c, 길이 = 머리만(목록["base"] + p["name"])
-                if c != 200 or (길이 and 길이 != p["size"]):
-                    빠진조각.append(p["name"])
-            except Exception:
-                빠진조각.append(p["name"])
+            좋음 = False
+            까닭 = ""
+            for 번째 in range(3):
+                try:
+                    c, 길이 = 머리만(목록["base"] + p["name"])
+                    if c == 200 and (not 길이 or 길이 == p["size"]):
+                        좋음 = True
+                        break
+                    까닭 = "응답 %s / 크기 %s" % (c, 길이)
+                except Exception as exc:
+                    까닭 = exc.__class__.__name__
+                time.sleep(1.5 * (번째 + 1))
+            if not 좋음:
+                빠진조각.append("%s (%s)" % (p["name"], 까닭))
     알림(not 빠진조각, f"설치파일 조각 {상한}개가 전부 제자리에 있습니다",
         ("빠진 조각: " + ", ".join(빠진조각[:8])) if 빠진조각 else "")
 except Exception as e:
@@ -185,8 +190,7 @@ if 쓸수있음:
       return out;
     }
     """
-    # 가격ID가 아직 없는 상품은 손님 화면 가격 대조에서 뺀다 (결제창을 못 여니 값도 없다)
-    ids = {k: v["paddle"] for k, v in 상품.items() if v["paddle"]}
+    ids = {k: v["paddle"] for k, v in 상품.items()}
     한개 = 상품["quick"]["paddle"]
     try:
         with sync_playwright() as pw:
