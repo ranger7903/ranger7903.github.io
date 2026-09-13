@@ -15,7 +15,7 @@ name: 두뇌창고
 on:
   workflow_dispatch:
     inputs:
-      무엇:
+      what:
         description: "담을 것 (전부 / 번역 / 귀)"
         default: "전부"
 
@@ -42,7 +42,7 @@ jobs:
           df -h /
 
       - name: 두뇌를 zip 으로 묶기
-        run: python _두뇌창고/두뇌담기.py "${{ inputs.무엇 }}"
+        run: python _두뇌창고/두뇌담기.py "${{ inputs.what }}"
 
       - name: 🚨 묶은 것이 진짜 열리는지 본다
         run: |
