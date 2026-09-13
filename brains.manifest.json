@@ -1,0 +1,45 @@
+{
+ "base": "https://github.com/ranger7903/ranger7903.github.io/releases/download/brains-20260913022705/",
+ "files": {
+  "mt-ct2-12b": {
+   "파일": "mt-ct2-12b.zip",
+   "크기": 1258585992,
+   "sha256": "063fdf2b586a57c1c58e73388e107763f635f45ca7272844cfd2eebbab312c7a"
+  },
+  "mt-ct2": {
+   "파일": "mt-ct2.zip",
+   "크기": 499598557,
+   "sha256": "3a38bf76f155339c1ad6215e8d26f25c356c1c22e59c8b6a967c8ac2a2857019"
+  },
+  "whisper-mn-ct2": {
+   "파일": "whisper-mn-ct2.zip",
+   "크기": 251048635,
+   "sha256": "a195441110bf69765dbf4b317f30f6751141dde53c442e6f10a61a7aef57e991"
+  },
+  "whisper-ne-ct2": {
+   "파일": "whisper-ne-ct2.zip",
+   "크기": 250897477,
+   "sha256": "5a3d69bb5f92153871f79996e88a70f9fdd2d2b9811b81ea4f581680a3177c5c"
+  },
+  "whisper-small": {
+   "파일": "whisper-small.zip",
+   "크기": 972428288,
+   "sha256": "991c46f148244404669c5552590e379bd7ea702b10083e05a37e74688d9f7a2f"
+  },
+  "whisper-turbo": {
+   "파일": "whisper-turbo.zip",
+   "크기": 1635675998,
+   "sha256": "45a3186779466e5a290c7396c7db5f4642efbdf38e5bd1a8bbe81526df19718f"
+  },
+  "whisper-uz-ct2": {
+   "파일": "whisper-uz-ct2.zip",
+   "크기": 250944851,
+   "sha256": "fac4ba56013f41359af9af95a776055887b59d471fee84d15e5f5ef14e7ac772"
+  },
+  "whisper-vi-ct2": {
+   "파일": "whisper-vi-ct2.zip",
+   "크기": 486822444,
+   "sha256": "d273a587767b841d4667b7c469244b9c7a207021b6c08f4da37d37067dc6167d"
+  }
+ }
+}
