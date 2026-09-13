@@ -299,10 +299,126 @@
   },
   "translator": {
    "saveAs": "밸류스 통역책상.exe",
-   "version": "다시 준비 중",
-   "totalSize": 302331361,
-   "sha256": "2153885eea13fa923447a5bae6af43255dd482c48b7edbbefeedcf8e3e516b13",
-   "parts": []
+   "version": "2026-09-13",
+   "totalSize": 215058016,
+   "sha256": "0c746acf454160910e76fee590c01b48526ed51541c6822b947db6fc848a0993",
+   "parts": [
+    {
+     "name": "dist/translator.part000",
+     "size": 9437184,
+     "sha256": "dea79afc8b23c8999834f5ce4e08d62ceca88e3691bfbe31d1db7b28b769af71"
+    },
+    {
+     "name": "dist/translator.part001",
+     "size": 9437184,
+     "sha256": "7a1d55c0f7a10bd3077fc411bbba8fa95fddfd5a0cd9c6fae7e0e40930bfad13"
+    },
+    {
+     "name": "dist/translator.part002",
+     "size": 9437184,
+     "sha256": "80e115899ba58fe18405af95068dcb54c6cf719ac42f813789e1143e5252d90b"
+    },
+    {
+     "name": "dist/translator.part003",
+     "size": 9437184,
+     "sha256": "25fd7975f13790411e568a390a0050e9be3aa065def1d8f587999892af62e632"
+    },
+    {
+     "name": "dist/translator.part004",
+     "size": 9437184,
+     "sha256": "4ac3f36b82917b719941d670acab0e9a4d5c34b03bf8f75037c065beccda65a5"
+    },
+    {
+     "name": "dist/translator.part005",
+     "size": 9437184,
+     "sha256": "b2d0c4d1c98ba2ddceaa0bc4bd4f1b6f19256a6239312386eac7b248cc23409c"
+    },
+    {
+     "name": "dist/translator.part006",
+     "size": 9437184,
+     "sha256": "5b4dc53df484f03c05adc32b3bd4abf9f4b8f14b80eacf8a86c1e35d52433345"
+    },
+    {
+     "name": "dist/translator.part007",
+     "size": 9437184,
+     "sha256": "140a3340e9e5c7624f18d1c63030d43912dc0d56b1cf81c4ce3f5cb76055fee8"
+    },
+    {
+     "name": "dist/translator.part008",
+     "size": 9437184,
+     "sha256": "9517f3512f4a126fd0223c61720a483bd836c67a13f73d83b99f3947cec0e535"
+    },
+    {
+     "name": "dist/translator.part009",
+     "size": 9437184,
+     "sha256": "af9c46d2b40a87e0d35950b8ab9849dbc35875f4299cfa5cc37836c9700b4c41"
+    },
+    {
+     "name": "dist/translator.part010",
+     "size": 9437184,
+     "sha256": "1b0c764897d138fd0927a1e03f37f2d04717ca9965bf0631783bcd00ce055010"
+    },
+    {
+     "name": "dist/translator.part011",
+     "size": 9437184,
+     "sha256": "ec13c57de30d68a3ec0426c530feaf0bfe2d65706fcee7900fb58261a0d3e765"
+    },
+    {
+     "name": "dist/translator.part012",
+     "size": 9437184,
+     "sha256": "c5a34d0f1c578c674f87673063520906effbc181491fe523d85a1058d7146408"
+    },
+    {
+     "name": "dist/translator.part013",
+     "size": 9437184,
+     "sha256": "c6cd65669546c736b6adf4d7c6d4891fb480df3a8759aa2690dea534b1b264d0"
+    },
+    {
+     "name": "dist/translator.part014",
+     "size": 9437184,
+     "sha256": "70af4d31860611bb7faa161fee1ce9df51962f166fab430b0a0c4dd718c26827"
+    },
+    {
+     "name": "dist/translator.part015",
+     "size": 9437184,
+     "sha256": "9dd3aae8c20318d1dcca3d8c3b21366bdf32a168649157765799d5b2130604d9"
+    },
+    {
+     "name": "dist/translator.part016",
+     "size": 9437184,
+     "sha256": "c2234bc072b9acfb88b2c86f28e62761c9b1f8d2682b433362f1834f8f5a8281"
+    },
+    {
+     "name": "dist/translator.part017",
+     "size": 9437184,
+     "sha256": "f4a06020ad20f28213c1aeaff3ba3a6dde902d5c5afb0b90ca1bf540f5206e30"
+    },
+    {
+     "name": "dist/translator.part018",
+     "size": 9437184,
+     "sha256": "889f2bcc4ea21dac3d0fc3a9eeb2afa2e29773e6fcd6633faee393ecd690d447"
+    },
+    {
+     "name": "dist/translator.part019",
+     "size": 9437184,
+     "sha256": "a9c121581f4e8e311f6e32138eafbb7d674faed2fd57df74a45b161bb09aff05"
+    },
+    {
+     "name": "dist/translator.part020",
+     "size": 9437184,
+     "sha256": "2702141972902c77c8f18101f1b5e8cfd35089fe72593f965ade8e6f897ee335"
+    },
+    {
+     "name": "dist/translator.part021",
+     "size": 9437184,
+     "sha256": "896f9df778cd9bab6d43046d34c0a1506af9593163fd409f343d7ac0bb81b338"
+    },
+    {
+     "name": "dist/translator.part022",
+     "size": 7439968,
+     "sha256": "88b358a818703c03f5feab720b746f6860470e4c1948fa056138952bcc888b33"
+    }
+   ]
   },
   "garisend": {
    "saveAs": "밸류스 가려서 보내기.apk",
