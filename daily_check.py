@@ -190,7 +190,12 @@ if 쓸수있음:
       return out;
     }
     """
-    ids = {k: v["paddle"] for k, v in 상품.items()}
+    # 🚨 2026-09-13 무료로 돌린 도구(폴더지킴이·PDF 반짇고리·캡처 색연필)는
+    #    Paddle 가격이 아예 없다(빈칸). 그런데도 물어보니 Paddle 이 오류를 돌려주고,
+    #    그 오류가 매일 아침 「가격이 다릅니다」 헛경보로 올라왔다.
+    #    값을 받는 것만 물어본다.
+    ids = {k: v["paddle"] for k, v in 상품.items()
+           if v.get("paddle") and not v.get("무료")}
     한개 = 상품["quick"]["paddle"]
     try:
         with sync_playwright() as pw:
