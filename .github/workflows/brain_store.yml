@@ -1,0 +1,119 @@
+name: 두뇌창고
+
+# 번역 두뇌를 «우리 창고»에 갖다 둔다.
+#
+# 2026-09-13 사장님:
+#   "핫스팟도 고객의 지갑을 여는 행위입니다. 왜 자꾸 어려운 일을 벌이시는 거죠?"
+#
+# 지금까지 손님은 두뇌를 huggingface.co(남의 창고)에서 받아야 했다.
+# 학교·회사가 그곳을 막으면 프로그램이 통째로 멈췄다.
+# 설치파일이 오는 자리(우리 깃허브)에서 두뇌도 주면 그 문제가 사라진다.
+#
+# 이 일꾼이 남의 창고에서 받아 zip 으로 묶어 우리 릴리스에 올린다.
+# 사람이 4GB를 손으로 옮길 일은 없다.
+
+on:
+  workflow_dispatch:
+    inputs:
+      무엇:
+        description: "담을 것 (전부 / 번역 / 귀)"
+        default: "전부"
+
+permissions:
+  contents: write
+
+jobs:
+  store:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 필요한 것 깔기
+        run: |
+          python -m pip install --upgrade pip
+          pip install huggingface_hub faster-whisper ctranslate2 "transformers<5" \
+                      sentencepiece protobuf
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          df -h /
+
+      - name: 두뇌를 zip 으로 묶기
+        run: python _두뇌창고/두뇌담기.py "${{ inputs.무엇 }}"
+
+      - name: 🚨 묶은 것이 진짜 열리는지 본다
+        run: |
+          python3 - <<'PY'
+          import json, io, os, zipfile
+          목록 = json.load(io.open('out/두뇌목록.json', encoding='utf-8'))
+          if not 목록:
+              raise SystemExit('!! 묶인 것이 하나도 없습니다')
+          for 이름, 잼 in 목록.items():
+              p = os.path.join('out', 잼['파일'])
+              with zipfile.ZipFile(p) as z:
+                  이름들 = z.namelist()
+                  나쁜것 = z.testzip()
+              if 나쁜것:
+                  raise SystemExit('!! %s 안이 깨졌습니다 (%s)' % (이름, 나쁜것))
+              if '.준비완료' not in 이름들:
+                  raise SystemExit('!! %s 에 도장(.준비완료)이 없습니다' % 이름)
+              큰것 = [n for n in 이름들 if n.endswith(('.bin', 'model.bin'))]
+              print('  %-16s 파일 %3d개 · %6.1f MB · 알맹이 %d개'
+                    % (이름, len(이름들), 잼['크기'] / 1048576.0, len(큰것)))
+              if not 큰것:
+                  raise SystemExit('!! %s 에 모델 알맹이(.bin)가 없습니다' % 이름)
+          print('전부 열립니다 ✔')
+          PY
+
+      - name: 우리 창고에 올리기
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="brains-$(date -u +%Y%m%d%H%M%S)"
+          {
+            echo "밸류스 통역책상이 쓰는 **번역 두뇌**입니다."
+            echo
+            echo "손님이 직접 받을 일은 없습니다 — 프로그램이 알아서 여기서 받아 갑니다."
+            echo "(예전에는 외국 사이트에서 받았는데, 학교·회사가 그곳을 막아 두면 멈췄습니다)"
+            echo
+            echo "| 이름 | 크기 | 무엇 |"
+            echo "|---|---|---|"
+            python3 - <<'PY'
+          import json, io
+          뜻 = {'mt-ct2': '번역 두뇌 (아주 가벼움·보통)',
+                'mt-ct2-12b': '번역 두뇌 (좋음)',
+                'whisper-turbo': '여러 나라 말을 알아듣는 귀 (큰 귀)',
+                'whisper-small': '여러 나라 말을 알아듣는 귀 (가벼운 컴퓨터용)',
+                'whisper-uz-ct2': '우즈베크 귀', 'whisper-vi-ct2': '베트남 귀',
+                'whisper-ne-ct2': '네팔 귀', 'whisper-mn-ct2': '몽골 귀'}
+          목록 = json.load(io.open('out/두뇌목록.json', encoding='utf-8'))
+          for k, v in 목록.items():
+              print('| `%s.zip` | %.0f MB | %s |' % (k, v['크기']/1048576.0, 뜻.get(k, '')))
+          PY
+          } > notes.md
+          gh release create "$TAG" out/*.zip out/두뇌목록.json \
+            --title "번역 두뇌 창고" --notes-file notes.md
+          echo "릴리스: https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG"
+          echo "$TAG" > 최신태그.txt
+
+      - name: 어느 창고를 쓰는지 저장소에 적어 두기
+        run: |
+          git config user.name  "github-actions"
+          git config user.email "actions@github.com"
+          git pull --rebase --autostash || true
+          python3 - <<'PY'
+          import io, json, os
+          태그 = io.open('최신태그.txt', encoding='utf-8').read().strip()
+          목록 = json.load(io.open('out/두뇌목록.json', encoding='utf-8'))
+          바탕 = 'https://github.com/%s/releases/download/%s/' % (
+              os.environ['GITHUB_REPOSITORY'], 태그)
+          io.open('brains.manifest.json', 'w', encoding='utf-8').write(
+              json.dumps({'base': 바탕, 'files': 목록}, ensure_ascii=False, indent=1))
+          print('brains.manifest.json 적음 :', 바탕)
+          PY
+          git add -f brains.manifest.json
+          git commit -m "두뇌 창고 목록 갱신" || echo "바뀐 것 없음"
+          git push || (git pull --rebase --autostash && git push) || true
