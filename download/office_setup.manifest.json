@@ -1,132 +1,132 @@
 {
   "file": "valuestools_ai_office_setup.exe",
-  "totalSize": 230503001,
-  "sha256": "ab04c2c682ed6664e22dbb9a00db6593024919f46bf9e512bcfbaf3860d7569c",
+  "totalSize": 230529683,
+  "sha256": "eb2bbf367d12dbbaea97e0cfcf595e8f4a67d64aed9929123da8ed9072756b23",
   "parts": [
     {
       "name": "office_setup.exe.part000",
       "size": 9437184,
-      "sha256": "5279d72ee9ab80a688b75897dc07610fd28c0962efe92d940f86829d0ac2638e"
+      "sha256": "08023953a2859280bbc229612f7cc2b763f09fd3409b2ede17e67ea86b8bcdfe"
     },
     {
       "name": "office_setup.exe.part001",
       "size": 9437184,
-      "sha256": "a7ccd77a604606e4aec098f1581a8d91be52f61b535bb6cd5c460ebd4caccceb"
+      "sha256": "039666bb1b216b15c65804f335b060d32156aac0fcb9605a86f38e35a414c35b"
     },
     {
       "name": "office_setup.exe.part002",
       "size": 9437184,
-      "sha256": "194edb04e44fe7be8d465b67a8989ed8a3e24204a1bf523cd98b22f932f6f422"
+      "sha256": "001ccd5df69870112462b88111554102bf8cacb03d25d4ea7ed907f1504584a3"
     },
     {
       "name": "office_setup.exe.part003",
       "size": 9437184,
-      "sha256": "e2287ff90fda115f75a32397911601f75d3855a89347185c743d843d2b8d07e4"
+      "sha256": "cf8bed40acbcff2cf975b53eb6d1cdfc5f5d8b7319e81c0221189675f82e337c"
     },
     {
       "name": "office_setup.exe.part004",
       "size": 9437184,
-      "sha256": "8ab4dc112f517ee6e7f8bc9c8c29d419123233437505329bcf86214cea45e8b4"
+      "sha256": "eb7889edbbb089125be88531527bcf1287f9690e7a0d69cfca970755f850c451"
     },
     {
       "name": "office_setup.exe.part005",
       "size": 9437184,
-      "sha256": "9dfa7f8b8e40f32c1c74d5715f4be68cbe48706532db3bbde54ee1fa342ca35b"
+      "sha256": "fc24cb537e336241095a384ee42d58d781d6a5c04b55df2416863a6852264fa4"
     },
     {
       "name": "office_setup.exe.part006",
       "size": 9437184,
-      "sha256": "70022455c8046f7012ae6788b6528e94ee18b457bb1941d524b265a1d76f6333"
+      "sha256": "54c37c53c6abf63c5416d12dade9437e2dcbdcd313b683f2488f0c31ac977219"
     },
     {
       "name": "office_setup.exe.part007",
       "size": 9437184,
-      "sha256": "d23117039aace6cf3000120aded3e93dfc7a9d8e25ab89292f4eaf93cc6c5a59"
+      "sha256": "a7fb10524e27298d5d51fd7e7d3a30b0f87c9b73c29560d20a3f0dd4df204cc2"
     },
     {
       "name": "office_setup.exe.part008",
       "size": 9437184,
-      "sha256": "d897a59def58199fe87c25d3987e6920ef7219b852bfc2a4e1e2d6928aa9d098"
+      "sha256": "44a287b517d21385ce4097b63abc871d0fb5e80a364c7dfed70572a75032e036"
     },
     {
       "name": "office_setup.exe.part009",
       "size": 9437184,
-      "sha256": "12d583eadfb672ea118d7fd3cd9f7e932acfee67502f57273907ffaaf1976b67"
+      "sha256": "a179e779a93afd9cd77ac72d69482ac56afa5a90670710d8044b455187614ad7"
     },
     {
       "name": "office_setup.exe.part010",
       "size": 9437184,
-      "sha256": "36456a86f4f83ea4b54d5592fe069e5efed3e8ebd690b1f255d42ba03c21693f"
+      "sha256": "c62fbe59f7af7e6f95fedac87bf31d661976c3bb6499ff270c89573a06de146e"
     },
     {
       "name": "office_setup.exe.part011",
       "size": 9437184,
-      "sha256": "925a8b14c7086e1e666cd4a9d245adc9f9f6a7ddb0710f955be84e434ea4d263"
+      "sha256": "86286d3f2d4facdbaed316058774dda79d9bf25a491cae8cd6a124463824aaed"
     },
     {
       "name": "office_setup.exe.part012",
       "size": 9437184,
-      "sha256": "795ae90ca35c617146e382945f5a475cf188f9170b7af697c355d14dea1c9e68"
+      "sha256": "e85aaceff963f8128c846de4ddeb7706f01b9ac3ee8304e00c1ca4f45f3386a5"
     },
     {
       "name": "office_setup.exe.part013",
       "size": 9437184,
-      "sha256": "f660df338874e36e93e40d70e72c380b0ef92ce9f1fb031ae874a634953438b6"
+      "sha256": "7aa8906245603b73f2a6009388a1d765b96d305806f9aa1d2f0b84d259aaae08"
     },
     {
       "name": "office_setup.exe.part014",
       "size": 9437184,
-      "sha256": "63cded8197bb0680924292d096fbd2db229340dd89470e4f5bd6d393075cefd7"
+      "sha256": "ccffa1073dbc2b704b56fd996476ce0cc9e601aade48e72788ec2d92cd8b789a"
     },
     {
       "name": "office_setup.exe.part015",
       "size": 9437184,
-      "sha256": "ac099716aa05381aa2cd7617a7cb911a474d99c166e108b7224a0c31fe39ba87"
+      "sha256": "2fe82ca3d7d2f5bec236bd532fe946affdd6bfeb0620d0c58b2924cd7f45bd01"
     },
     {
       "name": "office_setup.exe.part016",
       "size": 9437184,
-      "sha256": "25d3d41f9cdc6b33e2ac76a10fcd3affcadb5ea4e6cef781a455649c26532aee"
+      "sha256": "44cfee52b61e2f9ee1daa62033e8ead728c7c837d2273f07b278c6256a9e8f38"
     },
     {
       "name": "office_setup.exe.part017",
       "size": 9437184,
-      "sha256": "cf204ad0e6558157424c65326a3271622f91889f89030c8092a987260773f09d"
+      "sha256": "8e326dfc4d135944a001204a782c1c5709cf17b8b8c6de36122d3f8cdce3486f"
     },
     {
       "name": "office_setup.exe.part018",
       "size": 9437184,
-      "sha256": "7174702de3fbb2ac78bf62b8837918b5953a149e1ef949b6be1ed03fdb3e374f"
+      "sha256": "c8561ede02ff27c0bf44dc4813491aed2d97e9d13fce694194c3d465ff6d996e"
     },
     {
       "name": "office_setup.exe.part019",
       "size": 9437184,
-      "sha256": "162eeee46c0776580af198ce50ce4eb4045605d2690f96f467067eab6a48e8aa"
+      "sha256": "1d45ba7608ae0157e92917fcc9e22c314eda7ef9341e1b52f16eb43d62947e50"
     },
     {
       "name": "office_setup.exe.part020",
       "size": 9437184,
-      "sha256": "0b3d1c7d825e5428a4214a27b73d037ad857eb388ae80e33ad4f1d0eb10eb254"
+      "sha256": "3e3cb4d44690c08e15489dfc2b73611d73470c686520f4181b441a1c55ca2615"
     },
     {
       "name": "office_setup.exe.part021",
       "size": 9437184,
-      "sha256": "43993e67e7efd7cda79a3aa800448dacf6d33139c93149642e494ba51755e7ed"
+      "sha256": "b750bf0094e04620120e9685551bb1c6b2e3f3c7f8795bcbdfee7649a2caf86e"
     },
     {
       "name": "office_setup.exe.part022",
       "size": 9437184,
-      "sha256": "ab9c72270e8cc200bb8c585136ba23d0bba9b46344f4cc97186b6e59e659a34c"
+      "sha256": "89e201125c9f9580a03c56d345da69f0b01a98db190d433d0c0acb190a114ce7"
     },
     {
       "name": "office_setup.exe.part023",
       "size": 9437184,
-      "sha256": "3c0db3f6b2538607b6161dee197a01995f1707a8e127aa0ca63bc60ad511dbd8"
+      "sha256": "6dc8ee12e563a5c2102a17bfa36fead10426b030b51e74815c3fd1409699f669"
     },
     {
       "name": "office_setup.exe.part024",
-      "size": 4010585,
-      "sha256": "cb25a32051e3acffa8948cf9da716c1f67ba6730c620e18bbac263b5334d5f71"
+      "size": 4037267,
+      "sha256": "af2eca6e9be64f4f6c518229704579d2a676add9fbc596f730cbf80d90b7b149"
     }
   ]
 }
