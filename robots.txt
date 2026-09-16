@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /buy.html
+Disallow: /success.html
+Disallow: /fail.html
+
+Sitemap: https://valuestools.kr/sitemap.xml
