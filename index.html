@@ -177,11 +177,8 @@ const PADDLE_PRICES = {
   formfiller:  "pri_01m18rpcj8f4bym71vb7p9kag3",
   listcompare: "pri_01m18s12xn0t1p4tqr1dnnab21",
   quick:     "pri_01m0z34ty2ry1w0r0jmq2tqdax",
-  keeper:    "pri_01m0z35n3rs3k9jnyr3406tfet",
   garden:    "pri_01m0z36ex7w1ppywyevsftc4jq",
   handwrite: "pri_01m0z37mvsesyrn87r2f83d4dn",
-  pdfkit:    "pri_01m0z33zys2kxd4mt2xnkm3b22",
-  crayon:    "pri_01m0z3336s0depa5t2sga4gffa",
   counter:   "pri_01m0z31dpz4gvc05jvpd45c8qq",
   // 밸류스 예약수첩 — Paddle 에 상품을 만든 뒤 그 가격 열쇠(pri_...)를 여기에 붙여넣으면
   // 바로 결제가 열립니다. 비어 있는 동안에는 "아직 준비 중"이라고 한국어로 안내합니다.
@@ -801,7 +798,7 @@ article.goods.hide{display:none !important}
 <li>덮어쓰기 없음 · <b>삭제 없음</b> · 되돌리기 한 번이면 원위치</li>
 <li>미리보기로 먼저 보여드리고 움직여요</li></ul>
       <div class="g-buy">
-        <span class="g-price" style="color:var(--sage)">0<small>원</small></span>
+        <span class="g-price" style="color:var(--sage)">무료</span>
         <span class="g-note">회원가입 없음 · 조건 없음</span>
         <a class="btn fill" style="background:var(--sage)" href="free.html">🎁 무료로 받기</a>
         <a class="mbtn" href="manual_keeper.pdf" download>📖 설명서</a>
@@ -881,7 +878,7 @@ article.goods.hide{display:none !important}
 <li>합치기 · 나누기 · 돌리기 · 도장 찍기 · 쪽번호 · 사진→PDF 도 그대로</li>
 <li>원본은 절대 안 건드려요 — 광고·구독·인터넷 없음 · 한국어/영어 전환</li></ul>
       <div class="g-buy">
-        <span class="g-price" style="color:var(--sage)">0<small>원</small></span>
+        <span class="g-price" style="color:var(--sage)">무료</span>
         <span class="g-note">회원가입 없음 · 조건 없음</span>
         <a class="btn fill" style="background:var(--sage)" href="free.html">🎁 무료로 받기</a>
         <a class="mbtn" href="manual_pdfkit.pdf" download>📖 설명서</a>
@@ -907,7 +904,7 @@ article.goods.hide{display:none !important}
 <li>화살표 · 네모 · 형광펜 · 순서 번호 ①②③ · 글자 · 모자이크 붓 · 무제한 되돌리기</li>
 <li>PNG 저장 · 카톡에 바로 붙여넣기 · 여러 장 모아 PDF 설명서 · 15초 움짤 녹화</li></ul>
       <div class="g-buy">
-        <span class="g-price" style="color:var(--sage)">0<small>원</small></span>
+        <span class="g-price" style="color:var(--sage)">무료</span>
         <span class="g-note">회원가입 없음 · 조건 없음</span>
         <a class="btn fill" style="background:var(--sage)" href="free.html">🎁 무료로 받기</a>
         <a class="mbtn" href="manual_crayon.pdf" download>📖 설명서</a>
@@ -1015,7 +1012,7 @@ article.goods.hide{display:none !important}
 
   <article class="goods" id="p-translator" data-job="school shop office solo" style="display:block;background:var(--cream-2);border:2px solid var(--mustard);border-radius:22px;padding:26px 28px;margin-top:26px">
     <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:26px">
-      <div style="flex:1 1 340px">
+      <div style="flex:1 1 300px;min-width:0">
         <div class="g-head"><span class="g-emoji">🗣️</span><h3>밸류스 통역책상</h3><span class="newtag">말하면 저절로 들어요</span></div>
         <p class="g-tag">마주 앉아, 각자 자기 나라 말로 — 인터넷 없이도</p>
         <p class="g-story">외국인 손님이나 직원과 말이 안 통할 때, 태블릿이나 노트북 한 대를 가운데 놓고 서로 자기 말로 하시면 됩니다.
@@ -1037,7 +1034,7 @@ article.goods.hide{display:none !important}
 <li>사람 이름·상품 이름을 적어 두면 엉뚱하게 번역되지 않아요</li>
 <li>전부 내 컴퓨터 안에서 — 대화가 밖으로 한 발짝도 안 나가요</li></ul>
       </div>
-      <div style="flex:0 0 auto;text-align:center;min-width:278px">
+      <div style="flex:1 1 260px;text-align:center;min-width:0;max-width:100%">
         <div style="font-size:13px;color:var(--ink-2);margin-bottom:2px">한국어 ↔ 영어 기본판</div>
         <span class="g-price" style="font-size:32px">69,000<small>원</small></span>
         <div style="font-size:13px;color:var(--ink-2);margin:10px 0 2px">열다섯 가지 말 전부<br><span style="font-size:11px">(통역 열 말 + 받아쓰기 다섯 말)</span></div>
@@ -1132,7 +1129,7 @@ article.goods.hide{display:none !important}
         <li>이름만 바꿔요 — 내용은 그대로 · 인터넷 없이 동작</li>
       </ul>
       <div class="g-buy">
-        <span class="g-price" style="color:var(--sage)">0<small>원</small></span>
+        <span class="g-price" style="color:var(--sage)">무료</span>
         <span class="g-note">회원가입 없음 · 조건 없음</span>
         <a class="btn fill" style="background:var(--sage)" href="nametag_free.exe" download="밸류스 이름표 붙이기.exe">🎁 바로 받기</a>
         <a class="mbtn" href="manual_nametag.pdf" download>📖 설명서</a>
@@ -1192,7 +1189,7 @@ article.goods.hide{display:none !important}
   <div><span class="hand">오늘도 무사히 퇴근하시길 바라며,</span><br>
     <b class="serif" style="font-size:16px;color:var(--ink)">밸류스</b> · 반복 작업을 덜어주는 작은 도구 상점</div>
   <div style="text-align:right">편지 ranger7903@nate.com<br>
-    <a href="terms.html" style="color:var(--terra);text-decoration:none">이용약관</a> · <a href="privacy.html" style="color:var(--terra);text-decoration:none">개인정보처리방침</a> · <a href="refund.html" style="color:var(--terra);text-decoration:none">환불정책</a><br>
+    <a href="사업자정보.html" style="color:var(--terra);text-decoration:none">사업자정보</a> · <a href="terms.html" style="color:var(--terra);text-decoration:none">이용약관</a> · <a href="privacy.html" style="color:var(--terra);text-decoration:none">개인정보처리방침</a> · <a href="refund.html" style="color:var(--terra);text-decoration:none">환불정책</a><br>
     © 2026 밸류스</div>
 </div></footer>
 
