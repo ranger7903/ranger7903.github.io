@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>밸류스 소식 — 만들면서 생각한 것들</title>
+<meta name="description" content="밸류스를 만들면서 생각한 것, 실제로 재 본 숫자, 고치다 배운 것. 경주에서 혼자 프로그램을 만드는 사람의 기록.">
+<link rel="canonical" href="https://valuestools.kr/%EC%86%8C%EC%8B%9D.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="밸류스">
+<meta property="og:title" content="밸류스 소식 — 만들면서 생각한 것들">
+<meta property="og:description" content="실제로 재 본 숫자와, 고치다 배운 것을 적습니다.">
+<meta property="og:url" content="https://valuestools.kr/%EC%86%8C%EC%8B%9D.html">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Gothic+A1:wght@300;400;500;700;800&display=swap">
+<style>
+:root{--cream:#FDF3E7;--cream-2:#FFFBF3;--cream-3:#F5E8D6;--line:#EAD9BE;--line-soft:#F0E2CC;
+ --ink:#3D3226;--ink-2:#7A6A52;--ink-3:#A8927A;--terra:#D97757;--terra-soft:#FBE4D3;
+ --mustard:#E8A93D;--sage:#8CAA7E;--shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5);}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --cream:#1C1712;--cream-2:#241E17;--cream-3:#2D251C;--line:#40342A;--line-soft:#332A20;
+ --ink:#F2E9DA;--ink-2:#C4B49F;--ink-3:#91826D;--terra:#E89574;--terra-soft:#3A2721;
+ --mustard:#E8BA66;--sage:#9CBB8F;--shadow:0 2px 4px rgba(0,0,0,.5),0 18px 46px -30px rgba(0,0,0,.95);}}
+:root[data-theme="dark"]{--cream:#1C1712;--cream-2:#241E17;--cream-3:#2D251C;--line:#40342A;--line-soft:#332A20;
+ --ink:#F2E9DA;--ink-2:#C4B49F;--ink-3:#91826D;--terra:#E89574;--terra-soft:#3A2721;
+ --mustard:#E8BA66;--sage:#9CBB8F;--shadow:0 2px 4px rgba(0,0,0,.5),0 18px 46px -30px rgba(0,0,0,.95);}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);
+ font-family:"Gowun Dodum","Gothic A1","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.9;-webkit-font-smoothing:antialiased}
+.shell{max-width:760px;margin:0 auto;padding:0 24px}
+.wide{max-width:1040px}
+a{color:var(--terra)}
+.ribbon{background:var(--terra);color:#FFF8F2;text-align:center;font-size:13.5px;padding:8px 16px}
+nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--cream) 90%,transparent);
+ backdrop-filter:blur(10px);border-bottom:1px dashed var(--line)}
+nav .shell{display:flex;align-items:center;justify-content:space-between;height:64px;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.stamp{width:34px;height:34px;border:2px solid var(--terra);border-radius:50%;display:grid;place-items:center;
+ color:var(--terra);font-family:"Gowun Batang",serif;font-weight:700;font-size:15px;transform:rotate(-6deg)}
+.brand b{font-family:"Gowun Batang",serif;font-size:22px;font-weight:700}
+.navlinks{display:flex;gap:22px;align-items:center}
+.navlinks a{color:var(--ink-2);text-decoration:none;font-size:14.5px}
+.navlinks a:hover{color:var(--terra)}
+@media (max-width:640px){.navlinks a:not(.navbuy){display:none}}
+.navbuy{background:var(--terra);color:#FFF8F2 !important;padding:9px 18px !important;border-radius:999px;font-weight:700}
+header.hero{padding:64px 0 34px;text-align:center}
+h1{font-family:"Gowun Batang",serif;font-weight:700;margin:12px 0 0;font-size:clamp(30px,5vw,46px);line-height:1.35}
+h1 .warm{color:var(--terra)}
+.hand-line{font-family:"Gaegu",cursive;font-size:20px;color:var(--terra);margin:0}
+header.hero p.pitch{font-size:17px;color:var(--ink-2);max-width:46ch;margin:18px auto 0}
+.toc{background:var(--cream-2);border:1px dashed var(--line);border-radius:20px;padding:22px 26px;margin:34px 0 10px}
+.toc b{font-family:"Gowun Batang",serif;font-size:16px;display:block;margin-bottom:10px}
+.toc ol{margin:0;padding-left:20px} .toc li{margin:6px 0;font-size:15px}
+.toc a{text-decoration:none} .toc a:hover{text-decoration:underline}
+article.post{border-top:1px dashed var(--line);padding:52px 0 6px}
+article.post .no{font-family:"Gaegu",cursive;font-size:18px;color:var(--terra);margin:0 0 6px}
+article.post h2{font-family:"Gowun Batang",serif;font-size:clamp(23px,3.2vw,30px);line-height:1.45;margin:0 0 22px}
+article.post h3{font-family:"Gowun Batang",serif;font-size:18px;margin:34px 0 10px;color:var(--ink)}
+article.post p{margin:0 0 18px;color:var(--ink-2)}
+article.post p b{color:var(--ink)}
+.backtop{display:inline-block;font-size:13px;color:var(--ink-3);text-decoration:none;margin-top:10px}
+footer{border-top:1px dashed var(--line);padding:38px 0 60px;color:var(--ink-2);font-size:14px;margin-top:50px}
+footer .shell{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+</style></head>
+<body>
+
+<div class="ribbon">✍️ 만들면서 생각한 것들 — <b>실제로 재 본 숫자</b>만 적습니다</div>
+
+<nav><div class="shell wide">
+  <a class="brand" href="./"><span class="stamp">値</span><b>밸류스</b></a>
+  <div class="navlinks">
+    <a href="./">🧰 도구 선반</a>
+    <a href="책방.html">📚 책방</a>
+    <a href="#글들">✍️ 소식</a>
+    <a href="en.html">🌐 English</a>
+    <a class="navbuy" href="./#products">도구 구경하기</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="shell">
+  <p class="hand-line">경주에서 혼자 만듭니다</p>
+  <h1>만들면서 <span class="warm">생각한 것들</span></h1>
+  <p class="pitch">프로그램을 만들며 생각한 것, 실제로 재 본 숫자,
+     고치다 배운 것을 적습니다. 좋게 보이려고 쓰는 글이 아니라,
+     제가 무엇을 어떻게 만들었는지 밝혀 두는 글입니다.</p>
+</div></header>
+
+<div class="shell" id="글들">
+<div class="toc"><b>다섯 편이 있습니다</b><ol>
+<li><a href="#g1">열두 명이 보낸 엑셀을 손으로 합치던 사람이 만든 것</a></li>
+<li><a href="#g2">계좌번호가 1.23E+12 로 바뀌는 그 짜증에 대하여</a></li>
+<li><a href="#g3">200명분 증명서를 5.7초에 만들고, 600칸을 손으로 대조한 이야기</a></li>
+<li><a href="#g4">인터넷 없이 되는 통역기를 만든 까닭</a></li>
+<li><a href="#g5">프로그램을 팔면서 제가 안 하기로 한 것들</a></li>
+</ol></div>
+<article class="post" id="g1">
+<p class="no">1번째 글</p>
+<h2>열두 명이 보낸 엑셀을 손으로 합치던 사람이 만든 것</h2>
+<p>안녕하세요. 민해입니다.</p>
+<p>경주에서 혼자 작은 프로그램을 만들어 팝니다. 밸류스라고 합니다.</p>
+<p>처음 만든 것은 자료취합기였습니다. 까닭은 단순합니다.<br>같은 표를 열두 사람에게 받는데, 그 열두 개가 다 달랐습니다.<br>누구는 엑셀, 누구는 한글, 누구는 워드에 표를 그려서 보냅니다.<br>어떤 사람은 「이름」이라고 쓰고, 어떤 사람은 「성명」이라고 씁니다.<br>그걸 매달 손으로 맞췄습니다. 두 시간씩 걸렸습니다.</p>
+<p>그래서 만들었습니다. 지금은 10,000줄을 0.8초에 합칩니다.</p>
+<p>한글(hwp) 표를 합쳐 주는 물건은 공짜로도 돈 주고도 못 찾았습니다.<br>그래서 이것부터 만들었습니다.</p>
+<h3>제가 지키는 것 세 가지</h3>
+<p>하나. <b>인터넷으로 아무 데도 안 보냅니다.</b><br>   파일이 사장님 컴퓨터 밖으로 나가지 않습니다.<br>   보낼 곳을 아예 만들지 않았습니다.</p>
+<p>둘. <b>한 번 사면 평생 씁니다.</b> 다달이 내는 것이 없습니다.</p>
+<p>셋. <b>회원가입이 없습니다.</b> 열쇠 하나로 씁니다.</p>
+<p>앞으로 여기에 프로그램을 만들면서 생각한 것,<br>실제로 재 본 숫자, 고치다 배운 것을 적겠습니다.</p>
+<p>프로그램은 <a href="./">valuestools.kr</a> 에 있습니다.</p>
+<a class="backtop" href="#글들">↑ 목록으로</a>
+</article>
+<article class="post" id="g2">
+<p class="no">2번째 글</p>
+<h2>계좌번호가 1.23E+12 로 바뀌는 그 짜증에 대하여</h2>
+<p>엑셀에 13자리 계좌번호를 붙여 넣으면 1.23E+12 가 됩니다.<br>이걸 모르고 저장했다가 돈을 엉뚱한 데 보낼 뻔한 분을 봤습니다.</p>
+<p>까닭은 엑셀이 «긴 숫자는 계산할 숫자겠지»라고 짐작하기 때문입니다.<br>사람 이름 옆에 있는 13자리는 계산할 숫자가 아닌데도요.</p>
+<p>자료취합기를 만들 때 이 문제를 먼저 풀었습니다.<br>표를 합칠 때 <b>숫자처럼 생겼지만 숫자가 아닌 칸</b>을 따로 가립니다.<br>계좌번호, 주민번호 뒷자리, 전화번호, 우편번호.<br>이런 것은 글자 그대로 옮깁니다.</p>
+<p>재 봤습니다. 13자리 계좌번호 1,000개를 합쳐서 한 개도 안 깨졌습니다.</p>
+<p>이런 것이 프로그램의 값입니다.<br>「합쳐 준다」가 아니라 「합쳤는데 안 깨져 있다」가 값입니다.</p>
+<a class="backtop" href="#글들">↑ 목록으로</a>
+</article>
+<article class="post" id="g3">
+<p class="no">3번째 글</p>
+<h2>200명분 증명서를 5.7초에 만들고, 600칸을 손으로 대조한 이야기</h2>
+<p>서식채우기는 이런 프로그램입니다.<br>서류 한 장과 명단 하나를 주면, 사람마다 한 장씩 따로 만들어 줍니다.<br>워드도 되고 엑셀도 되고 한글도 됩니다.</p>
+<p>200명분을 5.7초에 만듭니다. 한 사람에 29밀리초입니다.</p>
+<p>그런데 빠른 것보다 중요한 게 있습니다. <b>틀리지 않는 것</b>입니다.</p>
+<p>그래서 만들고 나서 200장을 하나씩 열었습니다.<br>장마다 세 칸씩, 모두 600칸을 손으로 대조했습니다.<br>전부 맞았습니다.</p>
+<p>「검사 통과」라는 말은 저도 쓸 수 있습니다.<br>하지만 200장을 실제로 열어 본 사람만 그 말을 믿을 자격이 있다고 생각합니다.</p>
+<p>한컴에 문의해서 확인한 것도 있습니다.<br><b>한글 메일머지로는 사람마다 따로 저장하는 것이 안 됩니다.</b><br>그래서 이 프로그램이 있습니다.</p>
+<a class="backtop" href="#글들">↑ 목록으로</a>
+</article>
+<article class="post" id="g4">
+<p class="no">4번째 글</p>
+<h2>인터넷 없이 되는 통역기를 만든 까닭</h2>
+<p>관공서 민원실에 통역이 필요합니다.<br>그런데 공공기관 내부망은 인터넷이 끊겨 있습니다.<br>국가 정보보안 기본지침이 내부망과 인터넷망을 나누라고 하기 때문입니다.</p>
+<p>그래서 클라우드 통역은 그 자리에서 아예 안 됩니다.</p>
+<p>통역책상은 인터넷 없이 됩니다.<br>두뇌가 컴퓨터 안에 들어 있습니다. 소리도 글도 밖으로 안 나갑니다.</p>
+<p>말은 열다섯 가지입니다.<br>마주 보고 통역까지 되는 말 열 가지 —<br>한국어·영어·러시아어·일본어·중국어·인도네시아어·베트남어·힌디어·태국어·타갈로그어.</p>
+<p>스무 가지 말을 실제 음성으로 재서 나눴습니다.<br>잘 되는 것과 덜 되는 것을 갈라 적었습니다.<br>「다 됩니다」라고 쓰지 않은 까닭은, 재 봤더니 다 되지는 않았기 때문입니다.</p>
+<a class="backtop" href="#글들">↑ 목록으로</a>
+</article>
+<article class="post" id="g5">
+<p class="no">5번째 글</p>
+<h2>프로그램을 팔면서 제가 안 하기로 한 것들</h2>
+<p>하나. <b>구독을 안 받습니다.</b><br>   다달이 돈이 나가면 쓰지도 않는 달에도 나갑니다. 한 번만 받겠습니다.</p>
+<p>둘. <b>회원가입을 안 시킵니다.</b><br>   프로그램 하나 쓰려고 계정을 만들어야 하는 것이 싫었습니다.</p>
+<p>셋. <b>파일을 서버로 안 보냅니다.</b><br>   보낼 곳을 만들지 않았습니다. 만들지 않으면 실수로도 못 보냅니다.</p>
+<p>넷. <b>광고를 안 붙입니다.</b></p>
+<p>다섯. <b>안 재 본 것은 안 적습니다.</b><br>   홈페이지의 숫자는 전부 제가 돌려서 잰 것입니다.<br>   못 잰 것은 「못 쟀습니다」라고 적습니다.</p>
+<p>이게 다입니다. 대단한 철학은 아니고,<br>제가 손님이었으면 이런 걸 사고 싶었을 것 같아서입니다.</p>
+<p><a href="./">valuestools.kr</a></p>
+<a class="backtop" href="#글들">↑ 목록으로</a>
+</article>
+</div>
+
+<footer><div class="shell wide">
+  <div><span style="font-family:Gaegu,cursive">오늘도 무사히 퇴근하시길 바라며,</span><br>
+    <b style="font-family:'Gowun Batang',serif;font-size:16px;color:var(--ink)">밸류스</b> · 반복 작업을 덜어주는 작은 도구 상점</div>
+  <div style="text-align:right">편지 ranger7903@nate.com<br>
+    <a href="terms.html" style="text-decoration:none">이용약관</a> ·
+    <a href="privacy.html" style="text-decoration:none">개인정보처리방침</a> ·
+    <a href="refund.html" style="text-decoration:none">환불정책</a><br>
+    © 2026 밸류스</div>
+</div></footer>
+</body></html>
