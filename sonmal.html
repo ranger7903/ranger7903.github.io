@@ -41,6 +41,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* 화면 말(한국어/English) 바꾸는 단추 — 글자가 들어가므로 너비를 글에 맞춘다 */
 #화면말단추{width:auto;min-width:46px;padding:0 11px;font-size:13.5px;font-weight:800;
   white-space:nowrap;color:var(--색)}
+/* 어느 말을 크게 볼지 바꾸는 단추 — 글자가 들어가므로 너비를 글에 맞춘다 */
+#방향단추{width:auto;min-width:46px;padding:0 11px;font-size:13.5px;font-weight:800;
+  white-space:nowrap;color:var(--색)}
 #찾기{width:100%;margin-top:8px;padding:10px 12px;border-radius:12px;
   border:1px solid var(--테두리);background:var(--바탕);color:var(--글);font-size:15px}
 #탭들{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:2px;
@@ -110,11 +113,12 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
     <button id="말단추" aria-label="손님 말 고르기">
       <span id="말이름">English</span><span class="작게" id="말우리이름">영어 ▾</span>
     </button>
+    <button class="둥근" id="방향단추" title="어느 말을 크게 볼지 바꾸기">한 ▸ 영</button>
     <button class="둥근" id="숫자단추" title="숫자 보여 주기">123</button>
     <button class="둥근" id="밤낮단추" title="밝게/어둡게">◐</button>
     <button class="둥근" id="화면말단추" title="한국어 / English">English</button>
   </div>
-  <input id="찾기" type="search" placeholder="찾기 — 우리말로 치세요 (예: 서명)" autocomplete="off">
+  <input id="찾기" type="search" placeholder="찾기 — 우리말·영어 아무거나 (예: 서명, sign)" autocomplete="off">
   <div id="탭들"></div>
 </div>
 
@@ -187,13 +191,14 @@ var 말글 = {
   닫기:'닫기',
   화면말바꾸기:'한국어 / English',
   건너편:'English',            /* 이 단추를 누르면 갈 말 */
-  찾기안내:'찾기 — 우리말로 치세요 (예: 서명)',
+  찾기안내:'찾기 — 우리말·영어 아무거나 (예: 서명, sign)',
   앞:'◀ 앞', 뒤:'뒤 ▶',
   즐겨찾기:'즐겨찾기', 손님답:'손님이 답하기',
   즐겨빔:'아직 즐겨찾기가 없습니다. 문장 오른쪽의 ☆ 을 눌러 담아 두세요.',
   못찾음:'찾는 말이 없습니다.',
   건네주기:'손님에게 폰을 건네주고, 맞는 것을 누르시라고 하세요.',
   영어딱지:'영어: ', 없음:'(없음)', 지움:'지움',
+  방향바꾸기:'어느 말을 크게 볼지 바꾸기', 우리짧게:'한',
   묶음:{},                    /* 비우면 자료에 적힌 이름 그대로 (한국어) */
   말이름:{}                   /* 비우면 자료에 적힌 우리이름 그대로 */
  },
@@ -206,13 +211,14 @@ var 말글 = {
   닫기:'Close',
   화면말바꾸기:'한국어 / English',
   건너편:'한국어',
-  찾기안내:'Search — type in English (e.g. sign)',
+  찾기안내:'Search — Korean or English (e.g. sign, 서명)',
   앞:'◀ Prev', 뒤:'Next ▶',
   즐겨찾기:'Favourites', 손님답:'Visitor replies',
   즐겨빔:'No favourites yet. Tap the ☆ beside a phrase to keep it here.',
   못찾음:'Nothing found.',
   건네주기:'Hand the phone to the visitor and ask them to tap the right one.',
   영어딱지:'English: ', 없음:'(none)', 지움:'Clear',
+  방향바꾸기:'Swap which language is shown large', 우리짧게:'KO',
   묶음:{맞이:'Greeting the visitor', 서류:'Taking & giving papers',
         등록:'Enrolment & payment', 길:'Giving directions',
         때:'Dates & times', 곤란:'When it gets difficult'},
@@ -256,6 +262,10 @@ function 말이름표(m){ return (ㄱ('말이름')||{})[m.코드] || m.우리이
 var 지금말 = 읽기('말','en');
 if(!자료.말들.some(function(m){return m.코드===지금말;})) 지금말='en';
 var 지금탭 = 읽기('탭', 자료.묶음들[0].열쇠);
+/* 어느 말을 «크게» 볼 것인가 — 두 쪽 다 쓰라고 둔 것이다.
+   'ko2x' 우리말이 위(직원이 본다) · 'x2ko' 저쪽 말이 위(손님이 본다) */
+var 방향 = 읽기('방향', 'ko2x');
+if(방향!=='ko2x' && 방향!=='x2ko') 방향 = 'ko2x';
 var 즐겨 = 읽기('즐겨', []);
 var 테마 = 읽기('테마', null);
 if(테마) document.documentElement.setAttribute('data-theme', 테마);
@@ -311,7 +321,30 @@ function 껍데기그리기(){
     바꿈.setAttribute('title', ㄱ('화면말바꾸기'));
     바꿈.setAttribute('aria-label', ㄱ('화면말바꾸기'));
   }
+  방향단추그리기();
   숫자키그리기();
+}
+
+/* ── 어느 말을 크게 볼지 ── */
+function 방향단추그리기(){
+  var b = document.getElementById('방향단추');
+  if(!b) return;
+  var 우리 = ㄱ('우리짧게');
+  var 저쪽 = String(지금말||'').toUpperCase();
+  b.textContent = (방향==='ko2x') ? (우리+' ▸ '+저쪽) : (저쪽+' ▸ '+우리);
+  b.setAttribute('title', ㄱ('방향바꾸기'));
+  b.setAttribute('aria-label', ㄱ('방향바꾸기'));
+}
+function 방향바꾸기(){
+  방향 = (방향==='ko2x') ? 'x2ko' : 'ko2x';
+  쓰기('방향', 방향);
+  방향단추그리기(); 목록그리기(); 큰그리기();
+}
+/* 「한 ▸ EN」이면 저쪽 말을 크게(손님이 읽는다),
+   「EN ▸ 한」이면 우리말을 크게(직원이 읽는다). 작은 글은 늘 그 반대쪽이다. */
+function 위아래(r){
+  var 우리 = r.ko, 저쪽 = 저쪽말(r) || ㄱ('없음');
+  return (방향==='ko2x') ? {큰:저쪽, 작은:우리} : {큰:우리, 작은:저쪽};
 }
 
 /* [English]/[한국어] 를 누르면 화면 껍데기만 갈아 끼운다.
@@ -351,11 +384,10 @@ function 보일줄들(){
   if(찾는말){
     var ㄴ = 찾는말.toLowerCase();
     return 줄들.filter(function(r){
+      /* 두 쪽 다 쓰는 물건이므로 «우리말·고른 말·영어» 어느 것으로 쳐도 찾힌다. */
       return r.ko.toLowerCase().indexOf(ㄴ)>=0 ||
              (저쪽말(r)||'').toLowerCase().indexOf(ㄴ)>=0 ||
-             /* 영어 화면에서는 영어로도 찾을 수 있어야 한다.
-                (담긴 문장을 바꾸는 것이 아니라, 찾는 자리만 넓히는 것) */
-             (화면말==='en' && (r.글.en||'').toLowerCase().indexOf(ㄴ)>=0);
+             (r.글.en||'').toLowerCase().indexOf(ㄴ)>=0;
     });
   }
   if(지금탭==='즐겨') return 줄들.filter(function(r){return 즐겨.indexOf(r.id)>=0;});
@@ -383,10 +415,10 @@ function 목록그리기(){
     칸.className = '칸';
     var 속 = document.createElement('div');
     속.className='속';
-    var a = document.createElement('div'); a.className='우리말'; a.textContent = r.ko;
-    var b = document.createElement('div'); b.className='저쪽말'; b.textContent = 저쪽말(r) || ㄱ('없음');
-    속.appendChild(r.누구==='손님' ? b : a);
-    속.appendChild(r.누구==='손님' ? a : b);
+    var 짝 = 위아래(r);
+    var a = document.createElement('div'); a.className='우리말';  a.textContent = 짝.작은;
+    var b = document.createElement('div'); b.className='저쪽말'; b.textContent = 짝.큰;
+    속.appendChild(a); 속.appendChild(b);
     if(미덥지않나(r)){
       var c = document.createElement('div'); c.className='덧';
       c.textContent = ㄱ('영어딱지') + (r.글.en||'');
@@ -418,15 +450,10 @@ function 크게보이기(목, 자리){
 function 큰그리기(){
   var r = 큰목록[큰자리];
   if(!r) return;
-  /* 손님이 누른 대답은 **직원이 읽어야** 하므로 우리말을 크게,
-     직원이 보여 주는 말은 **손님이 읽어야** 하므로 저쪽 말을 크게. */
-  if(r.누구==='손님'){
-    document.getElementById('큰글').textContent = r.ko;
-    document.getElementById('큰우리말').textContent = 저쪽말(r) || '';
-  }else{
-    document.getElementById('큰글').textContent = 저쪽말(r) || r.ko;
-    document.getElementById('큰우리말').textContent = r.ko;
-  }
+  /* 크게 보여 줄 말은 «방향 단추»가 정한다. 목록에서 보던 것과 똑같이 나온다. */
+  var 짝 = 위아래(r);
+  document.getElementById('큰글').textContent = 짝.큰;
+  document.getElementById('큰우리말').textContent = 짝.작은;
   document.getElementById('큰자리표').textContent =
     (큰목록.length>1) ? ((큰자리+1) + ' / ' + 큰목록.length) : '';
   var 영 = document.getElementById('큰영어');
@@ -462,7 +489,7 @@ function 말판그리기(){
     b.onclick = function(){
       지금말 = m.코드; 쓰기('말', 지금말);
       document.getElementById('말판').classList.remove('켬');
-      말이름그리기(); 목록그리기(); 큰그리기();
+      말이름그리기(); 방향단추그리기(); 목록그리기(); 큰그리기();
     };
     통.appendChild(b);
   });
@@ -512,6 +539,7 @@ document.getElementById('밤낮단추').onclick = function(){
 };
 
 document.getElementById('화면말단추').onclick = 화면말바꾸기;
+document.getElementById('방향단추').onclick = 방향바꾸기;
 document.getElementById('찾기').addEventListener('input', 목록그리기);
 window.addEventListener('resize', 자리맞추기);
 
