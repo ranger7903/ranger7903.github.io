@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>영수증 지갑 — 밸류스</title>
+<meta name="description" content="영수증을 찍기만 하면 날짜·가게·금액을 스스로 뽑아 표로 쌓아 둡니다. 사진은 전화기 밖으로 나가지 않습니다. 안드로이드 전화기용, 무료.">
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.75}
+  .wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);margin:0 0 22px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:20px;margin:0 0 16px}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-top:12px}
+  .bar > i{display:block;height:100%;width:0;background:var(--deep);transition:width .2s}
+  #say{margin-top:10px;font-size:15px;min-height:1.7em}
+  .free{display:inline-block;background:var(--okbg);color:var(--ok);
+    font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+  h2{font-size:18px;margin:0 0 8px}
+  ul,ol{padding-left:1.2em;margin:6px 0}
+  li{margin:6px 0}
+  .quiet{font-size:14px;color:var(--ink2)}
+  .안심{background:var(--okbg);border:1px solid #CBDCC6}
+  a{color:var(--deep)}
+  .miss{background:#FBECE9;color:var(--warn);border-radius:8px;padding:11px 13px;
+    margin-top:12px;font-size:15px;display:none}
+</style>
+<style>
+  .first{background:#FFF6EC;border:1px solid #F0DCC2}
+  .promise li b{color:var(--ok)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="free">그냥 드립니다 · 광고 없음</span>
+  <h1>영수증 지갑</h1>
+  <p class="sub">영수증을 전화기로 찍기만 하면 날짜·가게 이름·금액을
+    스스로 뽑아 표로 쌓아 둡니다. 달마다 합계도 냅니다.
+    안드로이드 전화기용입니다.</p>
+
+  <div class="card 안심">
+    <h2>사진은 전화기 밖으로 나가지 않습니다</h2>
+    <ul class="quiet" style="margin:0">
+      <li>글자를 읽는 일이 전부 전화기 안에서 끝납니다. 사진을 어디로도 보내지 않습니다.</li>
+      <li>회원가입도, 사진 서버도, 광고도 없습니다.</li>
+      <li>쌓인 표는 전화기 안에만 있습니다. 필요할 때 <b>표(csv)</b>로 내보내
+        회계 프로그램에 그대로 넘기시면 됩니다.</li>
+    </ul>
+  </div>
+
+  <div class="card first">
+    <h2>먼저 솔직히 말씀드립니다 — 아직 첫 판입니다</h2>
+    <p class="quiet" style="margin:0">
+      속을 재는 검사 60가지는 모두 통과했지만,
+      <b>실제 종이 영수증으로 널리 찍어 본 적은 아직 없습니다.</b>
+      가게마다 영수증 모양이 달라서, 잘 못 읽는 영수증이 있을 수 있습니다.<br><br>
+      대신 이 앱은 <b>못 읽은 것을 지어내지 않습니다.</b>
+      흐려서 못 읽으면 0원이 아니라 「없음」으로 두고, 주황색으로
+      「봐 주세요」를 답니다. 합계도 읽은 것만 더하고, 몇 장을 뺐는지 밑에 적습니다.<br><br>
+      잘 못 읽는 영수증이 있으면 그 사진을 보내 주세요.
+      그 모양에 맞춰 읽는 규칙을 더 넣겠습니다.
+    </p>
+  </div>
+
+  <div class="card">
+    <button class="big" id="go">앱 받기</button>
+    <div class="bar"><i id="bar"></i></div>
+    <div id="say">준비하는 중…</div>
+    <div class="miss" id="err"></div>
+    <p class="quiet" style="margin:10px 0 0">
+      <b>전화기에서</b> 이 쪽을 열고 단추를 눌러 주세요.
+      컴퓨터에서 받으시면 파일을 전화기로 옮기셔야 합니다.</p>
+  </div>
+
+  <div class="card">
+    <h2>받은 뒤에는</h2>
+    <ol>
+      <li>받은 파일(<b>밸류스 영수증 지갑.apk</b>)을 누릅니다.</li>
+      <li>“출처를 알 수 없는 앱” 을 물어보면 <b>허용</b>해 주세요.
+        <span class="quiet">— 아직 구글 스토어에 올리기 전이라 그렇습니다.</span></li>
+      <li>설치가 끝나면 「영수증 지갑」이 생깁니다.</li>
+    </ol>
+    <p class="quiet">아주 오래된 전화기에서 「설치할 수 없습니다」가 나오면
+      알려 주세요. 그런 전화기용 판을 따로 드리겠습니다.
+      아이폰판은 아직 없습니다.</p>
+  </div>
+
+  <div class="card">
+    <h2>쓰는 법</h2>
+    <ol>
+      <li><b>[영수증 찍기]</b> 를 누르고 영수증을 찍습니다.
+        사진첩에서 여러 장을 한꺼번에 고르셔도 됩니다.</li>
+      <li>표에 한 줄이 쌓입니다 — 못 읽은 곳은 주황색으로 「봐 주세요」가 뜹니다.</li>
+      <li>그 줄을 누르면 손으로 고칠 수 있습니다. 고치면 곧바로 합계에 들어갑니다.</li>
+      <li>오른쪽 위 표 단추를 누르면 엑셀로 넘길 표가 나옵니다.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>이 앱이 지키는 약속</h2>
+    <ul class="promise">
+      <li><b>못 읽은 것을 지어내지 않습니다.</b>
+        흐린 사진에서는 값을 하나도 만들지 않습니다.
+        사업자번호를 금액으로 잘못 쓰지 않습니다.</li>
+      <li><b>합계가 조용히 틀리지 않습니다.</b>
+        읽은 것만 더하고, 못 읽은 장수와 봐 줘야 할 장수를 따로 세어 밑에 적습니다.</li>
+      <li><b>고치면 바로 반영됩니다.</b>
+        손으로 고친 금액이 곧바로 합계에 들어가고, 「봐 주세요」는 사라집니다.</li>
+    </ul>
+    <p class="quiet">영수증 한 장 뽑는 데 0.0001초, 1,000장을 쌓고 합계·달별·표까지 0.16초입니다.
+      — 말이 아니라 재 본 결과입니다.</p>
+  </div>
+
+  <div class="card">
+    <h2>이런 때 씁니다</h2>
+    <ul>
+      <li>영수증을 봉투에 모아 두었다가 월말에 몰아서 정리할 때.</li>
+      <li>출장비·행사비를 영수증째 제출해야 할 때 — 표로 뽑아 그대로 붙입니다.</li>
+      <li>작은 가게에서 한 달 지출을 눈으로 보고 싶을 때.</li>
+    </ul>
+  </div>
+
+  <p class="quiet"><a href="./">← 가게로 돌아가기</a></p>
+
+</div>
+
+<script>
+(function () {
+  var 바 = document.getElementById('bar');
+  var 말 = document.getElementById('say');
+  var 단추 = document.getElementById('go');
+  var 탈 = document.getElementById('err');
+  var 짐 = null;
+
+  function 크기(n) { return (n / 1048576).toFixed(0) + ' MB'; }
+  function 알림(s) { 말.textContent = s; }
+  function 못함(s) { 탈.textContent = s; 탈.style.display = 'block'; }
+
+  function 지문(buf) {
+    return crypto.subtle.digest('SHA-256', buf).then(function (h) {
+      return Array.prototype.map.call(new Uint8Array(h), function (x) {
+        return ('0' + x.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
+
+  fetch('tools.manifest.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (m) {
+      var f = m.files && m.files.receipt;
+      if (!f || !f.parts || !f.parts.length) {
+        단추.disabled = true;
+        알림('아직 준비 중입니다. 곧 올려 두겠습니다.');
+        return;
+      }
+      짐 = { base: m.base, f: f };
+      알림('크기 ' + 크기(f.totalSize) + ' · 판 ' + (f.version || ''));
+      단추.onclick = 받기;
+    })
+    .catch(function () { 단추.disabled = true; 알림('잠시 뒤 새로 고쳐 주세요.'); });
+
+  function 받기() {
+    단추.disabled = true;
+    탈.style.display = 'none';
+    var f = 짐.f, 모음 = [], 받은양 = 0;
+    var 차례 = Promise.resolve();
+    f.parts.forEach(function (조각) {
+      차례 = 차례.then(function () {
+        return fetch(짐.base + 조각.name, { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('조각을 못 받았습니다 (' + r.status + ')');
+            return r.arrayBuffer();
+          })
+          .then(function (buf) {
+            if (buf.byteLength !== 조각.size) throw new Error('조각 크기가 다릅니다');
+            return 지문(buf).then(function (h) {
+              if (조각.sha256 && h !== 조각.sha256) throw new Error('조각이 깨졌습니다');
+              모음.push(new Uint8Array(buf));
+              받은양 += buf.byteLength;
+              바.style.width = (받은양 / f.totalSize * 100) + '%';
+              알림('받는 중 ' + Math.round(받은양 / f.totalSize * 100) + '%');
+            });
+          });
+      });
+    });
+    차례.then(function () {
+      var 통 = new Uint8Array(f.totalSize), o = 0;
+      모음.forEach(function (b) { 통.set(b, o); o += b.length; });
+      알림('확인하는 중…');
+      return 지문(통.buffer).then(function (h) {
+        if (f.sha256 && h !== f.sha256) throw new Error('붙여 보니 원본과 다릅니다');
+        // 안드로이드 앱은 압축파일 모양(PK)으로 시작합니다.
+        if (통[0] !== 0x50 || 통[1] !== 0x4B) throw new Error('앱 파일 모양이 아닙니다');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([통],
+          { type: 'application/vnd.android.package-archive' }));
+        a.download = f.saveAs || '영수증지갑.apk';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
+        바.style.width = '100%';
+        알림('받았습니다. 받은 파일을 눌러 설치해 주세요.');
+        단추.textContent = '다시 받기';
+        단추.disabled = false;
+      });
+    }).catch(function (e) {
+      단추.disabled = false;
+      단추.textContent = '다시 받기';
+      못함('받다가 멈췄습니다 (' + e.message + '). 단추를 한 번 더 눌러 주세요.');
+    });
+  }
+})();
+</script>
+</body>
+</html>

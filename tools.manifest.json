@@ -477,6 +477,34 @@
      "sha256": "b7455174031b40772d6ce09bbf67942b0ff439bdb406aa37a5e620d2541d670b"
     }
    ]
+  },
+  "receipt": {
+   "saveAs": "밸류스 영수증 지갑.apk",
+   "version": "2026-09-12",
+   "totalSize": 34288079,
+   "sha256": "0a8151b70f3b589d57e8a884699ea8bb2d075ac6b5f7f056655ff23c32533118",
+   "parts": [
+    {
+     "name": "dist/receipt.part000",
+     "size": 9437184,
+     "sha256": "c017ea74357f576033fca2bebc4cf1db6a955626a2076752c598b8bd033fb80d"
+    },
+    {
+     "name": "dist/receipt.part001",
+     "size": 9437184,
+     "sha256": "a87fcac085143cea04163beb98f5872d07bf0c88b27aa84e6eea2ccb7b8c9e55"
+    },
+    {
+     "name": "dist/receipt.part002",
+     "size": 9437184,
+     "sha256": "c625c303a470738cdcd5f097cf22b4bb8fe9e1693a1139c22c3ba21525e8ab20"
+    },
+    {
+     "name": "dist/receipt.part003",
+     "size": 5976527,
+     "sha256": "3ec8acbffa9cef3b44772f5440be152a853c277bbb382eeffd6b58c101419ee9"
+    }
+   ]
   }
  }
 }
