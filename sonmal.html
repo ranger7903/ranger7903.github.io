@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>밸류스 손말</title>
+<meta name="theme-color" content="#26608E">
+<meta name="description" content="창구에서 외국인 손님과 말이 통하게 해 주는 폰 앱. 인터넷이 없어도 됩니다.">
+
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzI2NjA4RSIvPjxwYXRoIGQ9Ik0xMjAgMTUwaDIwMGE0MCA0MCAwIDAgMSA0MCA0MHY5MmE0MCA0MCAwIDAgMS00MCA0MGgtOTZsLTYyIDQ2di00NmgtNDJhNDAgNDAgMCAwIDEtNDAtNDB2LTkyYTQwIDQwIDAgMCAxIDQwLTQweiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0zMDAgMjM2aDkyYTQwIDQwIDAgMCAxIDQwIDQwdjc0YTQwIDQwIDAgMCAxLTQwIDQwaC0xNHYzOGwtNTAtMzhoLTI4YTQwIDQwIDAgMCAxLTQwLTQwdi03NGE0MCA0MCAwIDAgMSA0MC00MHoiIGZpbGw9IiM5ZWNiZTgiLz48L3N2Zz4=">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --바탕:#f4f6f9; --판:#ffffff; --글:#1b2430; --흐린글:#6b7684;
+  --테두리:#e3e7ec; --색:#26608E; --색연한:#eaf1f7; --노랑:#f0a02a;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --바탕:#11161d; --판:#1a222c; --글:#eef2f6; --흐린글:#9aa5b1;
+  --테두리:#2a3440; --색:#68a8d8; --색연한:#1f2c38; --노랑:#f0b95a;
+}}
+:root[data-theme="dark"]{
+  --바탕:#11161d; --판:#1a222c; --글:#eef2f6; --흐린글:#9aa5b1;
+  --테두리:#2a3440; --색:#68a8d8; --색연한:#1f2c38; --노랑:#f0b95a;
+}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--바탕);color:var(--글);
+  font-family:"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  font-size:16px;line-height:1.5;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+
+/* ── 머리 ───────────────────────────────── */
+#머리{position:fixed;top:0;left:0;right:0;z-index:20;background:var(--판);
+  border-bottom:1px solid var(--테두리);padding:max(8px,env(safe-area-inset-top)) 10px 8px}
+.줄{display:flex;align-items:center;gap:8px}
+#말단추{flex:1;display:flex;align-items:center;justify-content:space-between;
+  background:var(--색연한);border:1px solid var(--테두리);border-radius:12px;
+  padding:10px 14px;font-weight:800;font-size:17px;min-height:46px}
+#말단추 .작게{font-weight:600;font-size:13px;color:var(--흐린글)}
+.둥근{width:46px;height:46px;border-radius:12px;border:1px solid var(--테두리);
+  background:var(--판);display:flex;align-items:center;justify-content:center;font-size:20px}
+/* 화면 말(한국어/English) 바꾸는 단추 — 글자가 들어가므로 너비를 글에 맞춘다 */
+#화면말단추{width:auto;min-width:46px;padding:0 11px;font-size:13.5px;font-weight:800;
+  white-space:nowrap;color:var(--색)}
+#찾기{width:100%;margin-top:8px;padding:10px 12px;border-radius:12px;
+  border:1px solid var(--테두리);background:var(--바탕);color:var(--글);font-size:15px}
+#탭들{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:2px;
+  scrollbar-width:none}
+#탭들::-webkit-scrollbar{display:none}
+.탭{white-space:nowrap;padding:8px 13px;border-radius:999px;border:1px solid var(--테두리);
+  background:var(--판);font-size:14px;font-weight:700;color:var(--흐린글)}
+.탭.켬{background:var(--색);border-color:var(--색);color:#fff}
+
+/* ── 목록 ───────────────────────────────── */
+#몸{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;padding:0 10px 28px}
+.칸{background:var(--판);border:1px solid var(--테두리);border-radius:14px;
+  padding:13px 14px;margin-bottom:9px;display:flex;gap:10px;align-items:flex-start}
+.칸 .속{flex:1;min-width:0}
+.칸 .우리말{font-size:13.5px;color:var(--흐린글);margin-bottom:3px}
+.칸 .저쪽말{font-size:19px;font-weight:700;line-height:1.4;word-break:break-word}
+.칸 .덧{font-size:13px;color:var(--흐린글);margin-top:4px}
+.별{font-size:21px;color:var(--테두리);padding:2px 2px 0;line-height:1}
+.별.켬{color:var(--노랑)}
+.머리글{font-size:13px;font-weight:800;color:var(--흐린글);margin:14px 2px 7px}
+.빔{text-align:center;color:var(--흐린글);padding:40px 20px;font-size:15px}
+
+/* ── 크게 보여 주기 ─────────────────────── */
+#크게{position:fixed;inset:0;z-index:40;background:var(--판);display:none;
+  flex-direction:column;padding:max(10px,env(safe-area-inset-top)) 16px
+  max(10px,env(safe-area-inset-bottom))}
+#크게.켬{display:flex}
+#크게 .위{display:flex;align-items:center;gap:8px}
+#크게 .가운데{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:18px;overflow-y:auto;padding:10px 0}
+#큰글{font-size:34px;font-weight:800;line-height:1.35;word-break:break-word}
+#큰우리말{font-size:17px;color:var(--흐린글);line-height:1.45}
+#큰영어{font-size:16px;color:var(--흐린글)}
+#크게 .아래{display:flex;gap:10px}
+#크게 .아래 button{flex:1;padding:15px;border-radius:14px;border:1px solid var(--테두리);
+  background:var(--바탕);font-weight:800;font-size:16px}
+
+/* ── 말 고르기 ──────────────────────────── */
+#말판{position:fixed;inset:0;z-index:50;background:var(--바탕);display:none;
+  flex-direction:column;padding:max(10px,env(safe-area-inset-top)) 12px 12px}
+#말판.켬{display:flex}
+#말목록{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);
+  gap:8px;align-content:start;padding-bottom:16px}
+@media(min-width:520px){#말목록{grid-template-columns:repeat(3,1fr)}}
+.말칸{background:var(--판);border:1px solid var(--테두리);border-radius:12px;
+  padding:11px 12px;text-align:left}
+.말칸.켬{border-color:var(--색);background:var(--색연한)}
+.말칸 b{display:block;font-size:16px}
+.말칸 span{font-size:12.5px;color:var(--흐린글)}
+
+/* ── 숫자판 ─────────────────────────────── */
+#숫자판{position:fixed;inset:0;z-index:45;background:var(--판);display:none;
+  flex-direction:column;padding:max(10px,env(safe-area-inset-top)) 14px 14px}
+#숫자판.켬{display:flex}
+#숫자값{flex:1;display:flex;align-items:center;justify-content:center;
+  font-size:52px;font-weight:800;word-break:break-all;text-align:center}
+#숫자키{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+#숫자키 button{padding:17px;border-radius:14px;border:1px solid var(--테두리);
+  background:var(--바탕);font-size:23px;font-weight:800}
+</style>
+</head>
+<body>
+
+<div id="머리">
+  <div class="줄">
+    <button id="말단추" aria-label="손님 말 고르기">
+      <span id="말이름">English</span><span class="작게" id="말우리이름">영어 ▾</span>
+    </button>
+    <button class="둥근" id="숫자단추" title="숫자 보여 주기">123</button>
+    <button class="둥근" id="밤낮단추" title="밝게/어둡게">◐</button>
+    <button class="둥근" id="화면말단추" title="한국어 / English">English</button>
+  </div>
+  <input id="찾기" type="search" placeholder="찾기 — 우리말로 치세요 (예: 서명)" autocomplete="off">
+  <div id="탭들"></div>
+</div>
+
+<div id="몸"><div id="목록"></div></div>
+
+<div id="크게">
+  <div class="위">
+    <button class="둥근" id="닫기" title="닫기">✕</button>
+    <div style="flex:1;text-align:center;color:var(--흐린글);font-size:14px" id="큰자리표"></div>
+    <button class="둥근" id="큰별">☆</button>
+  </div>
+  <div class="가운데">
+    <div id="큰글"></div>
+    <div id="큰우리말"></div>
+    <div id="큰영어"></div>
+  </div>
+  <div class="아래">
+    <button id="앞으로">◀ 앞</button>
+    <button id="뒤로">뒤 ▶</button>
+  </div>
+</div>
+
+<div id="말판">
+  <div class="줄" style="margin-bottom:10px">
+    <b style="flex:1;font-size:18px" id="말판제목">손님 말 고르기</b>
+    <button class="둥근" id="말판닫기" title="닫기">✕</button>
+  </div>
+  <div id="말목록"></div>
+</div>
+
+<div id="숫자판">
+  <div class="줄" style="margin-bottom:6px">
+    <b style="flex:1;font-size:17px" id="숫자판제목">숫자 보여 주기</b>
+    <button class="둥근" id="숫자닫기" title="닫기">✕</button>
+  </div>
+  <div id="숫자값">0</div>
+  <div id="숫자키"></div>
+</div>
+
+<script id="말모음" type="application/json">{"판":1,"만든날":"2026-09-11","두뇌":"Heng666/madlad400-3b-mt-ct2-int8","묶음들":[{"열쇠":"맞이","이름":"처음 맞이할 때","그림":"👋"},{"열쇠":"서류","이름":"서류 받고 주기","그림":"📄"},{"열쇠":"등록","이름":"등록·수강·납부","그림":"💳"},{"열쇠":"길","이름":"길 알려 주기","그림":"🧭"},{"열쇠":"때","이름":"날짜와 시간","그림":"📅"},{"열쇠":"곤란","이름":"어려울 때","그림":"🙏"}],"말들":[{"코드":"en","제이름":"English","우리이름":"영어"},{"코드":"zh","제이름":"中文","우리이름":"중국어"},{"코드":"ja","제이름":"日本語","우리이름":"일본어"},{"코드":"vi","제이름":"Tiếng Việt","우리이름":"베트남어"},{"코드":"id","제이름":"Bahasa Indonesia","우리이름":"인도네시아어"},{"코드":"th","제이름":"ไทย","우리이름":"태국어"},{"코드":"tl","제이름":"Filipino","우리이름":"따갈로그어"},{"코드":"hi","제이름":"हिन्दी","우리이름":"힌디어"},{"코드":"ru","제이름":"Русский","우리이름":"러시아어"},{"코드":"fr","제이름":"Français","우리이름":"프랑스어"},{"코드":"de","제이름":"Deutsch","우리이름":"독일어"},{"코드":"es","제이름":"Español","우리이름":"스페인어"},{"코드":"pt","제이름":"Português","우리이름":"포르투갈어"},{"코드":"it","제이름":"Italiano","우리이름":"이탈리아어"},{"코드":"nl","제이름":"Nederlands","우리이름":"네덜란드어"},{"코드":"pl","제이름":"Polski","우리이름":"폴란드어"},{"코드":"tr","제이름":"Türkçe","우리이름":"터키어"},{"코드":"uk","제이름":"Українська","우리이름":"우크라이나어"},{"코드":"ro","제이름":"Română","우리이름":"루마니아어"},{"코드":"cs","제이름":"Čeština","우리이름":"체코어"},{"코드":"el","제이름":"Ελληνικά","우리이름":"그리스어"},{"코드":"sv","제이름":"Svenska","우리이름":"스웨덴어"},{"코드":"ar","제이름":"العربية","우리이름":"아랍어"},{"코드":"fa","제이름":"فارسی","우리이름":"페르시아어"},{"코드":"he","제이름":"עברית","우리이름":"히브리어"},{"코드":"ms","제이름":"Bahasa Melayu","우리이름":"말레이어"},{"코드":"uz","제이름":"Oʻzbekcha","우리이름":"우즈베크어"},{"코드":"mn","제이름":"Монгол","우리이름":"몽골어"},{"코드":"ne","제이름":"नेपाली","우리이름":"네팔어"},{"코드":"kk","제이름":"Қазақша","우리이름":"카자흐어"},{"코드":"ur","제이름":"اردو","우리이름":"우르두어"},{"코드":"bn","제이름":"বাংলা","우리이름":"벵골어"},{"코드":"km","제이름":"ភាសាខ្មែរ","우리이름":"캄보디아어"},{"코드":"my","제이름":"မြန်မာ","우리이름":"미얀마어"},{"코드":"ta","제이름":"தமிழ்","우리이름":"타밀어"},{"코드":"si","제이름":"සිංහල","우리이름":"싱할라어"}],"직원말":[{"묶음":"맞이","ko":"안녕하세요. 무엇을 도와드릴까요?","en":"Hello, what can I do for you?","zh":"您好,我可以为您提供什么帮助?","ja":"こんにちは どうぞ","vi":"Tôi có thể giúp gì cho anh?","id":"Ada yang bisa kubantu?","th":"สวัสดีค่ะ มีอะไรให้ช่วยมั้ยครับ?","tl":"Ano ang maaari kong gawin para sa iyo?","hi":"क्या मैं आपकी मदद कर सकता हूँ?","ru":"Как я могу помочь вам?","fr":"Bonjour, comment puis-je vous aider?","de":"Hallo, wie können wir Ihnen helfen?","es":"Hola, ¿cómo puedo ayudarle?","pt":"Olá, como posso ajudá-lo?","it":"Come possiamo aiutarla?","nl":"Hoe kunnen we u helpen?","pl":"Cześć, w czym mogę pomóc?","tr":"Nasıl yardımcı olabilirim?","uk":"Как я могу помочь?","ro":"Bună ziua, cu ce vă pot ajuta?","cs":"Dobrý den, jak vám mohu pomoci?","el":"Γεια σας, μπορώ να σας βοηθήσω;","sv":"Hej, kan jag hjälpa dig?","ar":"كيف أستطيع مساعدتك؟","fa":"سلام، چطور ميتونم کمکتون کنم؟","he":"איך אוכל לעזור לך?","ms":"Apa yang boleh saya bantu?","uz":"Сизга нима қилишимиз мумкин?","mn":"Юу хийж чадах вэ?","ne":"के म तपाईँलाई मद्दत गर्न सक्छु?","kk":"Қалай көмектесе аламын?","ur":"کیا میں آپ کی مدد کر سکتا ہوں؟","bn":"আমি কিভাবে আপনাকে সাহায্য করতে পারি?","km":"តើ​ខ្ញុំ​អាច​ជួយ​អ្នក​បាន​យ៉ាង​ដូចម្តេច?","my":"ဘယ်လိုကူညီနိုင်မလဲ?","ta":"நான் உங்களுக்கு என்ன செய்ய முடியும்?","si":"කොහොමද ඔයාට උදව් කරන්න පුලුවන්?","약함":["mn"]},{"묶음":"맞이","ko":"잠시만 기다려 주세요.","en":"Wait a minute.","zh":"请稍候。","ja":"ちょっと待って","vi":"Chờ một chút.","id":"Tunggu sebentar.","th":"รอเดี๋ยวนะครับ","tl":"Maghintay ka lamang ng ilang sandali.","hi":"एक मिनट रुको.","ru":"Подождите, пожалуйста.","fr":"Attendez un instant, s'il vous plaît.","de":"Bitte warten Sie einen Moment.","es":"Espera un momento.","pt":"Aguarde um momento.","it":"Aspetta un attimo.","nl":"Een moment geduld aub.","pl":"Proszę poczekać chwilę.","tr":"Bekle biraz.","uk":"Зачекайте, будь ласка.","ro":"Aşteptaţi o secundă.","cs":"Prosím, počkejte chvíli.","el":"Περιμένετε ένα λεπτό.","sv":"Vänta lite.","ar":"انتظر لحظة.","fa":"يه لحظه صبر کنيد","he":"חכה רגע, בבקשה.","ms":"Tunggu sebentar.","uz":"Бир оз кутинглар.","mn":"Зүгээр л нэг минут хүлээ.","ne":"कृपया प्रतिक्षा गर्नुहोस् ।","kk":"Біраз күте тұрыңыз.","ur":"ایک منٹ انتظار کریں.","bn":"এক মিনিট দাঁড়ান।","km":"សូម​រង់ចាំ​បន្តិច & # 160; ។","my":"ခဏစောင့်ပါ ။","ta":"ஒரு நிமிடம்.","si":"පොඩ්ඩක් ඉන්න."},{"묶음":"맞이","ko":"여권을 보여 주시겠어요?","en":"Can I see your passport?","zh":"您能给我看看您的护照吗?","ja":"パスポートを見せてくれませんか。","vi":"Cho tôi xem hộ chiếu được không?","id":"Dapatkah saya melihat paspor Anda?","th":"ขอดูหนังสือเดินทางหน่อยได้มั้ย","tl":"Maaari mo bang ipakita ang iyong pasaporte?","hi":"आप मुझे अपना पासपोर्ट दिखा सकते हैं?","ru":"Могу я посмотреть ваш паспорт?","fr":"Pouvez-vous me montrer votre passeport?","de":"Können Sie mir Ihren Reisepass zeigen?","es":"¿Puede mostrarme su pasaporte?","pt":"Pode mostrar-me o seu passaporte?","it":"Può mostrarmi il suo passaporto?","nl":"Mag ik uw paspoort zien?","pl":"Czy mogę zobaczyć twój paszport?","tr":"Pasaportunuzu gösterebilir misiniz?","uk":"Покажите паспорт.","ro":"Îmi puteţi arăta paşaportul?","cs":"Můžete mi ukázat svůj pas?","el":"Μπορώ να έχω το διαβατήριό σας;","sv":"Kan jag se ditt pass?","ar":"هلا أريتني جواز سفرك؟","fa":"ميشه پاسپورتت رو نشونم بدي؟","he":"אפשר לראות את הדרכון שלך?","ms":"Boleh saya lihat pasport awak?","uz":"Паспортингизни кўрсатасизми?","mn":"Таны паспортыг харуулах уу?","ne":"तपाईँको पासपोर्ट देखाउनुहोस् ।","kk":"Паспортыңызды көрсете аласыз ба?","ur":"مجھے اپنا پاسپورٹ دکھاؤ۔","bn":"আপনার পাসপোর্ট দেখাবেন?","km":"តើ​អ្នក​អាច​បង្ហាញ​លិខិត​ឆ្លងដែន​របស់​អ្នក​បាន​ទេ & # 160;?","my":"သင်၏နိုင်ငံကူးလက်မှတ်ကိုပြပါ","ta":"உங்கள் பாஸ்போர்ட்டை காண்பிக்க முடியுமா?","si":"ඔයාගෙ ගමන් බලපත්‍රය පෙන්වන්න පුලුවන්ද?","약함":["vi","id","th","hi","ru","sv","ar","fa","he","ms","bn","si"]},{"묶음":"맞이","ko":"성함을 알려 주세요.","en":"Please enter your name.","zh":"请输入您的姓名。","ja":"名前を教えて","vi":"Hãy cho tôi biết tên của anh.","id":"Berikan namamu.","th":"ขอชื่อด้วยครับ","tl":"Isulat ang iyong pangalan.","hi":"कृपया अपना नाम बताएं.","ru":"Ваше имя, пожалуйста.","fr":"Veuillez indiquer votre nom.","de":"Bitte geben Sie Ihren Namen an.","es":"Por favor, escriba su nombre.","pt":"Por favor, forneça seu nome.","it":"Inserisci il tuo nome","nl":"Geef uw naam op.","pl":"Proszę podać swoje imię.","tr":"Lütfen adınızı söyleyin.","uk":"Прошу, скажіть мені своє ім'я.","ro":"Vă rugăm să introduceţi numele dvs.","cs":"Vaše jméno: *","el":"Παρακαλώ εισάγετε το όνομά σας.","sv":"Ange ditt namn.","ar":"اسمك من فضلك","fa":"لطفا اسمتون رو بگين","he":"תן לי את השם שלך.","ms":"Sila beri saya nama awak.","uz":"Илтимос, исмингизни киритинг.","mn":"Таны нэрийг хэлнэ үү.","ne":"कृपया नाम प्रविष्ट गर्नुहोस् ।","kk":"Сіздің аты- жөніңізді айтыңыз.","ur":"آپ کا نام براہ مہربانی.","bn":"আপনার নাম বলুন.","km":"សូម​បញ្ចូល​ឈ្មោះ & # 160; ។","my":"ကျေးဇူးပြု၍ သင့်အမည်ကို ထည့်သွင်းပါ","ta":"தயவு செய்து உங்கள் பெயர்.","si":"ඔයාගේ නම කියන්න."},{"묶음":"맞이","ko":"학생증을 보여 주시겠어요?","en":"Can I see your student card?","zh":"请出示您的学生证件。","ja":"身分証を見せてくれませんか。","vi":"Tôi có thể xem thẻ sinh viên của anh được không?","id":"Bisakah saya melihat kartu identitasmu?","th":"ขอดูบัตรนักเรียนหน่อยได้มั้ย","tl":"Maaari mo bang ipakita ang iyong ID?","hi":"क्या आप मुझे अपना छात्र पहचान पत्र दिखा सकते हैं?","ru":"Могу я посмотреть ваше студенческое удостоверение?","fr":"Pouvez-vous me montrer votre carte d’étudiant?","de":"Können Sie mir Ihren Studentenausweis zeigen?","es":"¿Puede mostrarme su tarjeta de estudiante?","pt":"Pode mostrar-me o seu cartão de estudante?","it":"Mi può mostrare il suo documento di identità?","nl":"Kunt u uw studentenkaart laten zien?","pl":"Czy może pan pokazać mój dowód osobisty?","tr":"Öğrenci kimliğinizi gösterebilir misiniz?","uk":"Покажите мне свою студенческую карточку.","ro":"Îmi puteţi arăta cartea de identitate?","cs":"Můžete mi ukázat svůj studentský průkaz?","el":"Μπορώ να έχω την φοιτητική μου ταυτότητα;","sv":"Kan jag få se mitt studentkort?","ar":"هلا أريتني بطاقة الطالب؟","fa":"ميشه کارت دانشجويي تون رو نشونم بدين؟","he":"את יכולה להראות לי את תעודת הסטודנטים שלך?","ms":"Boleh saya lihat kad pelajar awak?","uz":"Сизга гувоҳномангизни кўрсатайми?","mn":"Сурагчдын үнэмлэхээ харуулах уу?","ne":"तपाईँको विद्यार्थी परिचयपत्र देखाउनुहोस् ।","kk":"Студенттік куәлігіңізді көрсете аласыз ба?","ur":"مجھے آپ کا شناختی کارڈ دکھاؤ؟","bn":"আপনার ছাত্র পরিচয়পত্র দেখাবেন?","km":"តើ​អ្នក​ចង់​បង្ហាញ​ប័ណ្ណ​សិស្ស​របស់​អ្នក​ឬ & # 160;?","my":"ကျောင်းသားကတ်ပြားကို ပြပါ","ta":"உங்கள் அடையாள அட்டையை காண்பிக்க முடியுமா?","si":"ඔයාගෙ ශිෂ්‍ය හැඳුනුම්පත පෙන්වන්න පුලුවන්ද?","약함":["id","uz","km","my"]},{"묶음":"맞이","ko":"여기 앉아서 기다려 주세요.","en":"Please sit here and wait.","zh":"请坐在这里等我。","ja":"ここに座って待って","vi":"Ngồi đây và chờ tôi.","id":"Duduklah di sini.","th":"รอที่นี่ก่อนนะครับ","tl":"Mangyaring umupo at maghintay dito.","hi":"यहाँ बैठो और इंतजार करो.","ru":"Пожалуйста, сидите и ждите.","fr":"Asseyez-vous et attendez ici.","de":"Bitte sitzen Sie hier und warten Sie.","es":"Espera aquí, por favor.","pt":"Por favor, sente-se aqui.","it":"Aspettate qui, per favore.","nl":"Ga hier zitten en wacht.","pl":"Proszę usiąść i poczekać.","tr":"Lütfen burada bekleyin.","uk":"Будь ласка, почекайте тут.","ro":"Aşteptaţi aici, vă rog.","cs":"Prosím, posaďte se a počkejte.","el":"Κάθισε εδώ και περίμενε.","sv":"Sitt här och vänta.","ar":"إجلس هنا و انتظر","fa":"اينجا بشين و منتظر بمون","he":"שב ותחכה.","ms":"Duduk dan tunggu di sini.","uz":"Мана бу ерда ўтиринглар.","mn":"Энд суугаад хүлээ.","ne":"कृपया यहाँ बस्नुहोस् ।","kk":"Мұнда отырыңыз.","ur":"یہاں بیٹھ جاؤ.","bn":"অপেক্ষা করো.","km":"សូម​អង្គុយ​នៅ​ទីនេះ & # 160; ។","my":"ဒီမှာ ထိုင်ပြီး စောင့်ပါ ။","ta":"இங்கே உட்காருங்கள்.","si":"මෙතන ඉඳගෙන ඉන්න.","약함":["bn","km"]},{"묶음":"맞이","ko":"담당자를 불러 드리겠습니다.","en":"I'll get you a representative.","zh":"我会叫一个代表。","ja":"担当者に連絡します","vi":"Tôi sẽ gọi cho anh.","id":"Aku akan memanggil petugas.","th":"ฉันจะเรียกเจ้าหน้าที่มา","tl":"Makipag-usap ako sa iyo.","hi":"मैं तुम्हें एक अधिकारी मिल जाएगा.","ru":"Я позвоню тебе.","fr":"Je vais vous appeler.","de":"Ich rufe einen Vertreter.","es":"Te llamaré a alguien.","pt":"Vou chamar alguém.","it":"Ti chiamerò un rappresentante.","nl":"Ik zal iemand bellen.","pl":"Zadzwonię po kogoś.","tr":"Bir adam çağıracağım.","uk":"Я викликаю агента.","ro":"Vă voi chema un reprezentant.","cs":"Zavolám vám zástupce.","el":"Θα σας καλέσω κάποιον.","sv":"Jag ska ringa en agent.","ar":"أنا سأتصل بكم","fa":"يه نفر رو ميگم.","he":"אני אתקשר למנהל.","ms":"Saya akan panggil seorang pegawai.","uz":"Мен сизга ёрдам бераман.","mn":"Би чамайг дуудна.","ne":"म तपाईँलाई कल गर्नेछु ।","kk":"Сіздерге көмекші шақырамын.","ur":"میں آپ کے لئے ایک کارکن بلاؤں گا.","bn":"আমি তোমাকে একজনকে ডাকবো।","km":"ខ្ញុំ​នឹង​ទាក់ទង​អ្នក​វិញ & # 160; ។","my":"ခင်ဗျားတို ့ ကို ခေါ်သွားပါ့မယ်။","ta":"நான் ஒரு ஆலோசகர் அழைப்பேன்.","si":"මම ඔයාට කෙනකේව කතාකරන්නම්."},{"묶음":"맞이","ko":"한국말을 할 줄 아는 분과 같이 오셨나요?","en":"Do you come with someone who speaks Korean?","zh":"您是否带着能说韩语的人来的?","ja":"韓国語を話せる人と一緒に来たのですか。","vi":"Anh có đi cùng một người biết nói tiếng Hàn không?","id":"Apakah Anda datang dengan seseorang yang bisa berbicara bahasa Korea?","th":"คุณมากับคนที่พูดเกาหลีได้ไหม?","tl":"Ang lathalaing ito na tungkol sa Talambuhay at Pilipinas ay isang usbong.","hi":"आप किसी ऐसे व्यक्ति के साथ आए हैं जो कोरियाई बोलता है?","ru":"Вы приехали с кем-то, кто говорит по-корейски?","fr":"Vous venez avec quelqu'un qui parle coréen?","de":"Kommen Sie mit jemandem, der Koreanisch spricht?","es":"¿Viene con alguien que habla coreano?","pt":"Você vem com alguém que fala coreano?","it":"Siete venuti con qualcuno che parla coreano?","nl":"Komt u met iemand mee die Koreaans spreekt?","pl":"Czy jesteś z kimś, kto mówi po koreańsku?","tr":"Korece konuşabilen biri ile mi geldiniz?","uk":"Ви з кимось, хто розмовляє корейською?","ro":"Veniţi cu cineva care vorbeşte coreeană?","cs":"Doprovází vás někdo, kdo mluví korejsky?","el":"Έρχεστε με κάποιον που μιλάει κορεάτικα;","sv":"Har du med dig någon som talar koreanska?","ar":"هل أنت بصحبة شخص يتحدث الكورية؟","fa":"شما با کسي که کره اي صحبت ميکنه اومدين؟","he":"אתה מדבר קוריאנית?","ms":"Adakah anda datang dengan seseorang yang boleh bercakap bahasa Korea?","uz":"Сизга кимдир корейсча гапирадиган киши билан келдими?","mn":"Та монголоор ярьдаг хүнтэй хамт ирсэн үү?","ne":"तपाईँ यहाँ कोसँग हुनुहुन्छ?","kk":"Сіз корей тілін білетін адаммен келдіңіз бе?","ur":"کیا آپ کو کوئی ساتھی ہے جو کورین بولتا ہے؟","bn":"আপনি কি কোরিয়ান ভাষায় কথা বলতে পারেন?","km":"តើ​អ្នក​មក​ជាមួយ​នរណា​ម្នាក់​ដែល​អាច​និយាយ​ភាសា​កូរ៉េ​បាន​ទេ & # 160;?","my":"ကိုရီးယားစကားပြောနိုင်တဲ့လူနဲ့အတူလာတာလား။","ta":"நீங்கள் யாரையாவது கொரியன் பேச தெரியுமா?","si":"ඔයා කොරියානු කතා කරන කෙනෙක් එක්කද ආවේ?","약함":["zh","ja","tl","hi","it","pl","ro","el","sv","ar","fa","ms","uz","mn","ne","kk","bn","km"]},{"묶음":"서류","ko":"필요한 서류는 이것입니다.","en":"Here are the documents you need.","zh":"这些是您需要的文件。","ja":"これが必要な書類です。","vi":"Đây là những giấy tờ cần thiết.","id":"Inilah dokumen yang dibutuhkan.","th":"นี่คือเอกสารที่คุณต้องการ","tl":"Ang mga dokumentong kailangan mo ay ang mga sumusunod.","hi":"इसका एक उदाहरण निम्नलिखित है।","ru":"Вот необходимые документы.","fr":"Voici les documents requis.","de":"Dies sind die erforderlichen Dokumente.","es":"Estos son los documentos necesarios.","pt":"Estes são os documentos necessários.","it":"Ecco i documenti necessari.","nl":"Dit zijn de vereiste documenten.","pl":"Oto wymagane dokumenty.","tr":"İhtiyaç duyduğunuz belgeler bunlar.","uk":"Документи, які потрібні.","ro":"Acestea sunt documentele necesare.","cs":"Zde jsou požadované dokumenty.","el":"Αυτά είναι τα έγγραφα που χρειάζεστε.","sv":"Här är de dokument som krävs.","ar":"هذه هي الوثائق المطلوبة.","fa":"اينا مدارکي هستن که لازم دارين","he":"זה מה שאתה צריך.","ms":"Ini dokumen yang awak perlukan.","uz":"Бу сизга керак бўлган ҳужжат.","mn":"Энэ бол таны шаардагдах баримт бичиг юм.","ne":"यो आवश्यक कागजात हो ।","kk":"Келесі құжаттар қажет.","ur":"یہ وہ ہے جو آپ کو ضرورت ہے.","bn":"এইগুলো আপনার প্রয়োজনীয় কাগজপত্র।","km":"នេះ​ជា​ឯកសារ​ដែល​អ្នក​ត្រូវការ & # 160; ។","my":"လိုအပ်သော စာရွက်စာတမ်းများ","ta":"இதற்கு தேவையான ஆவணங்கள் இவை.","si":"මේවා තමයි ඔයාට අවශ්‍ය ලියකියවිලි.","약함":["th","hi","ta"]},{"묶음":"서류","ko":"여기에 이름을 적어 주세요.","en":"Please enter your name here.","zh":"请在这里输入您的姓名。","ja":"ここに名前を入力してください。","vi":"Hãy ghi tên của bạn ở đây.","id":"Silakan tulis nama Anda di sini.","th":"กรุณาเขียนชื่อของคุณที่นี่","tl":"Isulat ang iyong pangalan dito.","hi":"यहाँ अपना नाम भरें.","ru":"Пожалуйста, введите Ваше имя.","fr":"Entrez votre nom ici.","de":"Bitte geben Sie hier Ihren Namen ein.","es":"Escriba su nombre aquí.","pt":"Digite seu nome aqui.","it":"Inserisci il tuo nome qui.","nl":"Geef hier uw naam op.","pl":"Wpisz tutaj swoje imię.","tr":"Lütfen isminizi buraya yazın.","uk":"Будь ласка, введіть ваше ім' я.","ro":"Vă rugăm să introduceți numele aici.","cs":"Zde napište své jméno.","el":"Γράψτε το όνομα σας εδώ.","sv":"Ange ditt namn här","ar":"أكتب اسمك هنا","fa":"لطفاً اسم خود را اینجا بنویسید.","he":"כתוב את השם שלך כאן.","ms":"Sila masukkan nama anda di sini.","uz":"Илтимос, бу ерга номингизни киритинг.","mn":"Энд өөрийн нэрийг бичнэ үү.","ne":"कृपया यहाँ नाम प्रविष्ट गर्नुहोस् ।","kk":"Мұнда атауын келтіріңіз.","ur":"آپ کا نام لکھیں.","bn":"এখানে আপনার নাম লিখুন ।","km":"សូម​បញ្ចូល​ឈ្មោះ​នៅ​ទីនេះ & # 160; ។","my":"ဤနေရာတွင် သင့်အမည်ကို ရိုက်ထည့်ပါ","ta":"தயவு செய்து உங்கள் பெயரை இங்கே உள்ளிடவும்.","si":"කරුණාකර ඔබේ නම මෙහි ලියන්න.","약함":["zh","ru","uk","ro","ms","ne","km","my"]},{"묶음":"서류","ko":"여기에 서명해 주세요.","en":"Please sign here.","zh":"请在这里签名。","ja":"ここにサインして","vi":"Hãy ký vào đây.","id":"Tanda tangani di sini.","th":"เซ็นต์ไว้ที่นี่","tl":"Mangyaring mag-sign dito.","hi":"यहाँ हस्ताक्षर करें.","ru":"Пожалуйста, подпишите.","fr":"Signez ici.","de":"Bitte unterschreiben Sie hier.","es":"Por favor, firme aquí.","pt":"Assine aqui.","it":"Firma qui.","nl":"Teken hier alstublieft.","pl":"Podpisz tutaj.","tr":"Burada imza atın.","uk":"Будь ласка, підпишіть тут.","ro":"Semnează aici.","cs":"Podepište to tady, prosím.","el":"Υπογράψτε εδώ.","sv":"Skriv under här.","ar":"يرجى التوقيع هنا.","fa":"اينجا رو امضا کنيد","he":"חתום כאן.","ms":"Sila tandatangan di sini.","uz":"Илтимос, бу ерга имзо чекинг.","mn":"Энд гарын үсэг зур.","ne":"यहाँ साइन गर्नुहोस् ।","kk":"Мұнда қолтаңба қойыңыз.","ur":"یہاں دستخط کریں.","bn":"এখানে স্বাক্ষর করুন.","km":"សូម​ចុះហត្ថលេខា​នៅ​ទីនេះ & # 160; ។","my":"ဒီမှာ လက်မှတ်ထိုးလိုက်ပါ။","ta":"இங்கே கையெழுத்திடவும்.","si":"මෙතන අත්සන් කරන්න.","약함":["fr"]},{"묶음":"서류","ko":"서류가 한 장 빠졌습니다.","en":"I'm missing a piece of paper.","zh":"丢失了一张文件。","ja":"書類が一枚欠けています。","vi":"Tôi mất một tờ giấy.","id":"Aku kehilangan dokumen.","th":"ผมขาดเอกสาร","tl":"Mayroon akong isang papel na nawala.","hi":"एक कागज लापता है.","ru":"Не хватает одного документа.","fr":"Il manque un document.","de":"Ein Blatt fehlt.","es":"Falta una hoja de papel.","pt":"Falta um documento.","it":"Manca un documento.","nl":"Er ontbreekt een document.","pl":"Brakuje jednego dokumentu.","tr":"Bir kağıt eksik.","uk":"Відсутній один аркуш.","ro":"Lipseşte o foaie de hârtie.","cs":"Chybí jeden list papíru.","el":"Λείπει ένα έγγραφο.","sv":"Det saknas ett papper.","ar":"هناك ورقة مفقودة.","fa":"يه کاغذ گم شده.","he":"יש לי מסמך חסר.","ms":"Satu kertas hilang.","uz":"Ҳужжат йўқ.","mn":"Нэг хуудас алга.","ne":"कागजात हराइरहेको छ ।","kk":"Құжат жоқ.","ur":"ایک کاغذ گم ہے.","bn":"একটি কাগজ বাদ পড়েছে।","km":"បាត់​ឯកសារ​មួយ & # 160; ។","my":"စာရွက်တစ်ရွက် လွတ်နေသည်","ta":"ஒரு ஆவணம் காணவில்லை.","si":"ඔයාගෙ කඩදාසි කෑල්ලක් නැතිවුනා."},{"묶음":"서류","ko":"원본을 가져오셔야 합니다. 복사본은 안 됩니다.","en":"You must bring the original, not a copy.","zh":"您必须带上原件,不能带复印件。","ja":"オリジナルをインポートしなければなりません。コピーはできません。","vi":"Bạn phải nhập bản gốc, không được sao chép.","id":"Anda harus mengunduh aslinya, bukan salinan.","th":"คุณต้องนำเข้าต้นฉบับเท่านั้น ไม่ใช่สำเนา","tl":"Dapat mong dalhin ang orihinal na dokumento, hindi ang mga kopya.","hi":"आपको मूल आयात करना होगा. नक़ल नहीं.","ru":"Вы должны принести оригинал, а не копию.","fr":"Vous devez apporter l'original, pas une copie.","de":"Bitte bringen Sie das Original mit, keine Kopien.","es":"Debe traer el original, no una copia.","pt":"Você deve trazer o original, não uma cópia.","it":"Devi portare l'originale, non una copia.","nl":"U dient het origineel mee te brengen, geen kopieën.","pl":"Musisz przynieść oryginał, nie kopię.","tr":"Orijinal dosyayı getirmelisiniz, kopyaları kabul etmiyoruz.","uk":"Ви повинні імпортувати початковий файл, а не копію.","ro":"Trebuie să aduceți originalul, nu copii.","cs":"Musíte si přinést originál, nikoliv kopii.","el":"Πρέπει να φέρετε το πρωτότυπο, όχι αντίγραφα.","sv":"Du måste ta med originalet, inga kopior.","ar":"يجب عليك إحضار النسخة الأصلية وليس نسخة.","fa":"باید منبع را وارد کنید ، نه رونوشت.","he":"אתה חייב להביא את המקור, לא עותק.","ms":"Anda mesti mengimport fail asal, bukan salinan.","uz":"Сиз манбани импорт қилишингиз керак. Нусха олиш мумкин эмас.","mn":"Эх үүсвэрийг оруулна уу, хуулбарлах боломжгүй.","ne":"तपाईँले मौलिक आयात गर्नु पर्दछ । प्रतिलिपि गर्न सकिँदैन ।","kk":"Бастапқыны импорттау керек, көшірмесін импорттау мүмкін емес.","ur":"آپ کو اصل فہرست حاصل کرنی چاہیے، کوئی کاپی نہیں.","bn":"আপনাকে অবশ্যই মূল ফাইলটি আমদানি করতে হবে, নকল ফাইল আমদানি করা যাবে না ।","km":"អ្នក​ត្រូវ​តែ​នាំចូល​ឯកសារ​ដើម & # 160; ។ ចម្លង​មិន​ត្រូវ​បាន​អនុញ្ញាត & # 160; ។","my":"မူရင်းကို ကူးယူရမည်၊ မိတ္တူကို မကူးယူပါ","ta":"நீங்கள் மூலத்தை இறக்குமதி செய்ய வேண்டும். நகலெடுக்க முடியாது.","si":"ඔබට මුල් පිටපත ලබාගත යුතුයි. පිටපත් නොකරන්න."},{"묶음":"서류","ko":"사진 한 장이 더 필요합니다.","en":"I need one more photo.","zh":"我需要更多的照片。","ja":"もう一枚必要です。","vi":"Tôi cần thêm một tấm nữa.","id":"Aku butuh satu foto lagi.","th":"ฉันต้องการอีกรูปหนึ่ง","tl":"Kailangan ko ng isa pang larawan.","hi":"आपको एक और तस्वीर चाहिए.","ru":"Нужна еще одна фотография.","fr":"J'ai besoin d'une autre photo.","de":"Ich benötige ein weiteres Foto.","es":"Necesito una foto más.","pt":"Preciso de mais uma foto.","it":"Ho bisogno di un'altra foto.","nl":"Ik heb nog een foto nodig.","pl":"Potrzebuję jeszcze jednego zdjęcia.","tr":"Bir fotoğraf daha istiyorum.","uk":"Потрібна ще одна фотографія.","ro":"Am nevoie de încă o fotografie.","cs":"Potřebuji další fotografii.","el":"Χρειαζόμαστε μία ακόμη φωτογραφία.","sv":"Jag behöver ett foto till.","ar":"أحتاج صورة أخرى","fa":"يه عکس ديگه لازم دارم","he":"אני צריך עוד תמונה.","ms":"Kita perlukan satu lagi gambar.","uz":"Сизга яна бир сурат керак.","mn":"Надад нэг зураг илүү хэрэгтэй байна.","ne":"तपाईँलाई एउटा थप फोटो आवश्यक पर्दछ ।","kk":"Сізге тағы бір фото керек.","ur":"مجھے ایک اور تصویر کی ضرورت ہے.","bn":"আমাকে আরো একটা ছবি দরকার।","km":"អ្នក​ត្រូវការ​រូបថត​មួយ​ទៀត & # 160; ។","my":"ဓါတ်ပုံတစ်ပုံ ထပ်လိုပါသေးတယ်။","ta":"உங்களுக்கு மேலும் ஒரு புகைப்படம் தேவை.","si":"මට තව පින්තූරයක් ඕනේ."},{"묶음":"서류","ko":"서류는 다 되었습니다. 이제 됩니다.","en":"All the paperwork is done.","zh":"文件都准备好了,现在就可以了。","ja":"書類は整いました もういいわ","vi":"Giấy tờ xong rồi.","id":"Kita sudah selesai.","th":"เอกสารเรียบร้อยแล้ว","tl":"Ang lahat ng mga papeles ay handa na.","hi":"अब हम कर सकते हैं.","ru":"Бумаги готовы.","fr":"Les papiers sont prêts.","de":"Die Papiere sind fertig.","es":"La documentación está lista.","pt":"A documentação está pronta.","it":"Adesso è tutto pronto.","nl":"Het papierwerk is klaar.","pl":"Mamy już wszystkie dokumenty.","tr":"Kağıtlar hazır.","uk":"Все документы готовы.","ro":"Am terminat cu documentele.","cs":"Máme všechny papíry.","el":"Τώρα είμαι έτοιμος.","sv":"Nu är det klart.","ar":"لقد قمنا بذلك.","fa":"کاغذها تموم شده.","he":"עכשיו אנחנו בסדר.","ms":"Kita dah selesaikan semua dokumen.","uz":"Ҳозир.","mn":"Одоо боллоо.","ne":"तपाईँको कागजात पूरा भयो । अब तपाईँ तयार हुनुहुन्छ ।","kk":"Құжаттарыңыз дайын. Енді бастайық.","ur":"ہم اس کے لئے تیار ہیں.","bn":"আমি সব কাগজপত্র পেয়েছি।","km":"អ្នក​បាន​បញ្ចប់​ឯកសារ​របស់​អ្នក & # 160; ។ ឥឡូវ​នេះ​អ្នក​អាច​ធ្វើ​វា​បាន & # 160; ។","my":"စာရွက်စာတမ်းတွေ ပြီးသွားပြီ ။ ပြီးပြီလေ ။","ta":"நீங்கள் போகிறீர்கள்.","si":"අපි දැන් ලියකියවිලි සම්පූර්ණ කරා."},{"묶음":"서류","ko":"발급까지 며칠 걸립니다.","en":"It will take a few days to issue.","zh":"签发需要几天时间。","ja":"発行には数日かかります。","vi":"Phải mất vài ngày mới có được.","id":"Memakan waktu beberapa hari.","th":"ใช้เวลาสองสามวัน","tl":"Maaaring tumagal ng ilang araw bago ito ma-isyu.","hi":"यह जारी होने में कुछ दिन लग सकते हैं.","ru":"Выдача займет несколько дней.","fr":"L'émission peut prendre plusieurs jours.","de":"Die Ausstellung dauert ein paar Tage.","es":"Tardará unos días en emitirse.","pt":"Leva alguns dias para ser emitido.","it":"Ci vogliono alcuni giorni per l'emissione.","nl":"Het kan een paar dagen duren voordat het wordt uitgegeven.","pl":"Wydanie zajmuje kilka dni.","tr":"Birkaç gün sürer.","uk":"Протягом декількох днів готується до висадки.","ro":"Emiterea durează câteva zile.","cs":"Vydání může trvat několik dní.","el":"Η έκδοση διαρκεί μερικές ημέρες.","sv":"Det kan ta några dagar att utfärda.","ar":"يستغرق الأمر بضعة أيام.","fa":"چند روز طول ميکشه","he":"זה ייקח כמה ימים.","ms":"Ia akan mengambil masa beberapa hari untuk dikeluarkan.","uz":"Бир неча кун.","mn":"Хэдэн хоног шаардагдана.","ne":"जारी गर्न केही दिन लाग्छ ।","kk":"Бірнеше күннен кейін шығарылады.","ur":"اس میں چند دن لگ جاتے ہیں.","bn":"এটা প্রকাশ করতে কয়েকদিন সময় লাগবে।","km":"វា​នឹង​ត្រូវ​ចំណាយ​ពេល​ប៉ុន្មាន​ថ្ងៃ​ដើម្បី​ចេញ & # 160; ។","my":"ထုတ်ပေးရန်ရက်အနည်းငယ်ကြာလိမ့်မည်။","ta":"சில நாட்கள் வரை நீடிக்கும்.","si":"ඒකට දවස් කීපයක් යයි.","약함":["vi","id","th","ru","fr","pl","tr","uk","ro","ar","he","ms","uz","kk","bn","ta","si"]},{"묶음":"서류","ko":"다 되면 문자로 알려 드리겠습니다.","en":"I'll text you when it's done.","zh":"我们会在完成后通过短信通知您。","ja":"終わったらメールで連絡します","vi":"Tôi sẽ nhắn tin cho anh khi xong.","id":"Aku akan mengirimkan pesan kepadamu.","th":"ฉันจะส่งข้อความให้คุณเมื่อมันเสร็จ","tl":"Ang mga ito ay tinatawag na mga teksto.","hi":"मैं तुम्हें एक संदेश भेज दूँगा.","ru":"Я свяжусь с вами, когда все будет готово.","fr":"Nous vous enverrons un message lorsque nous aurons terminé.","de":"Ich werde Sie per SMS benachrichtigen, sobald es fertig ist.","es":"Le enviaremos un mensaje de texto cuando esté listo.","pt":"Enviar-lhe-emos uma mensagem de texto quando estiver pronto.","it":"Ti invieremo un messaggio quando sarà pronto.","nl":"Ik zal je een berichtje sturen zodra het klaar is.","pl":"Powiadomimy Cię, gdy będzie gotowy.","tr":"Her şey bittikten sonra size mesaj atacağım.","uk":"Я вам напишу, коли все буде готово.","ro":"Vă vom anunța printr-un mesaj atunci când va fi gata.","cs":"Až to bude hotové, pošlu vám zprávu.","el":"Θα σας ενημερώσουμε με μήνυμα όταν τελειώσουμε.","sv":"Vi meddelar dig när det är klart.","ar":"سأرسل لك رسالة نصية عندما أكون جاهزاً","fa":"وقتي تموم شد بهت پيغام ميدم","he":"אני אשלח לך הודעה כשזה יקרה.","ms":"Saya akan SMS awak apabila ia selesai.","uz":"Сизга хабар бераман.","mn":"Би танд мессеж бичнэ.","ne":"तपाईँलाई सन्देश पठाइनेछ जब यो पूरा हुन्छ","kk":"Сізге хабарлаймыз","ur":"میں آپ کو ایک پیغام بھیجوں گا جب میں اس کے بارے میں جانتا ہوں.","bn":"আমি তোমাকে মেসেজ করবো যখন আমি এটা পেয়ে যাবো।","km":"យើង​នឹង​ផ្ញើ​សារ​ទៅ​អ្នក​នៅពេល​ដែល​វា​រួចរាល់ & # 160; ។","my":"ပြီးသွားရင် စာတိုပို့ပေးပါ့မယ်။","ta":"இறுதியில் எழுதிய நூலாக இது விளங்குகிறது.","si":"මම ඔයාට පණිවිඩයක් එවන්නම්.","약함":["ja","vi","id","th","hi","ru","nl","tr","uk","cs","fa","he","mn","ne","bn","si"]},{"묶음":"서류","ko":"이 서류는 여기서 발급할 수 없습니다.","en":"This document cannot be issued here.","zh":"此文件无法在这里签发。","ja":"この文書はここでは発行できません。","vi":"Giấy tờ này không thể được cấp tại đây.","id":"Dokumen ini tidak dapat diterbitkan di sini.","th":"เอกสารนี้ไม่สามารถพิมพ์ได้ที่นี่","tl":"Ang dokumentong ito ay hindi maaaring ilabas dito.","hi":"यह दस्तावेज़ यहाँ से जारी नहीं किया जा सकता.","ru":"Этот документ не может быть выдан здесь.","fr":"Ce document ne peut pas être délivré ici.","de":"Dieses Dokument kann hier nicht ausgestellt werden.","es":"Este documento no se puede emitir aquí.","pt":"Este documento não pode ser emitido aqui.","it":"Questo documento non può essere rilasciato qui.","nl":"Dit document kan hier niet worden afgegeven.","pl":"Ten dokument nie może zostać wydany tutaj.","tr":"Bu belge buradan çıkarılamamaktadır.","uk":"Цей документ не може бути виданий тут.","ro":"Acest document nu poate fi emis aici.","cs":"Tento dokument zde nelze vydat.","el":"Αυτό το έγγραφο δεν μπορεί να εκδοθεί εδώ.","sv":"Det här dokumentet kan inte utfärdas här.","ar":"هذه الوثيقة لا يمكن إصدارها هنا.","fa":"اين سند نميتونه از اينجا صادر بشه","he":"המסמך הזה לא ניתן להוצאה כאן.","ms":"Dokumen ini tidak boleh dikeluarkan di sini.","uz":"Ушбу ҳужжат бу ерда чоп этилмайди.","mn":"Энэ баримтыг эндээс гаргах боломжгүй.","ne":"यो कागजात यहाँबाट जारी गर्न सकिँदैन ।","kk":"Бұл құжат мұнда шығарылмайды.","ur":"یہ دستاویز یہاں سے نہیں بنایا جاسکتا.","bn":"এই নথিটি এখানে প্রকাশ করা যাবে না ।","km":"ឯកសារ​នេះ​មិន​អាច​ត្រូវ​បាន​ចេញ​នៅ​ទីនេះ​ទេ & # 160; ។","my":"ဒီစာရွက်စာတမ်းကိုဒီမှာထုတ်ဝေလို့မရပါဘူး","ta":"இந்த ஆவணத்தை இங்கிருந்து வெளியிட முடியாது.","si":"මේ ලිපිය මෙතනින් නිකුත් කරන්න බැහැ.","약함":["tr"]},{"묶음":"등록","ko":"등록 기간은 아직 남아 있습니다.","en":"The registration period is still open.","zh":"注册期限尚未结束。","ja":"登録期間はまだ残っている。","vi":"Thời gian đăng ký vẫn còn.","id":"Waktu untuk mendaftar masih ada.","th":"ยังมีเวลาเหลืออยู่","tl":"Ang panahon ng pagpaparehistro ay nananatiling bukas.","hi":"इसका प्रकाशन अभी भी जारी है।","ru":"Регистрационный период еще не истек.","fr":"La période d'inscription est encore ouverte.","de":"Der Anmeldezeitraum ist noch nicht abgelaufen.","es":"El período de inscripción aún está abierto.","pt":"O período de inscrição ainda está aberto.","it":"Il periodo di registrazione è ancora aperto.","nl":"De registratieperiode is nog niet afgelopen.","pl":"Okres rejestracji jest jeszcze otwarty.","tr":"Kayıtlar halen devam etmektedir.","uk":"Реєстраційний період ще не закінчений.","ro":"Perioada de înregistrare este încă deschisă.","cs":"Registrace je stále otevřená.","el":"Η περίοδος εγγραφής είναι ακόμα ανοιχτή.","sv":"Registreringsperioden är fortfarande öppen.","ar":"لا يزال التسجيل مفتوحاً.","fa":"ثبت نام هنوز ادامه دارد.","he":"רשימות הישיבות נותרו ללא שינוי.","ms":"Tempoh pendaftaran masih ada.","uz":"Сизда ҳали вақт бор.","mn":"Бүртгүүлэх хугацаа дуусаагүй байна.","ne":"तपाईँको सदस्यता अवधि अझै बाँकी छ ।","kk":"Сақтау мерзімі біткен жоқ.","ur":"آپ کا رجسٹریشن ابھی بھی باقی ہے.","bn":"এখনো নিবন্ধনের সময় বাকি আছে।","km":"ការ​ចុះឈ្មោះ​នៅ​សល់ & # 160; ។","my":"မှတ်ပုံတင်ခြင်းကာလသည်ကျန်ရှိနေသေးသည်။","ta":"இக்கோயிலில் மணிமேகலை சன்னதி உள்ளது.","si":"ලියාපදිංචිය තවම අවසන් වෙලා නෑ.","약함":["id","th","tr","ar","he","ms","uz","ta"]},{"묶음":"등록","ko":"등록 기간이 이미 끝났습니다.","en":"The registration period has already expired.","zh":"您的注册已过期。","ja":"登録は既に終了しています。","vi":"Thời gian đăng ký đã hết.","id":"Pendaftaran telah berakhir.","th":"การลงทะเบียนของคุณหมดอายุแล้ว","tl":"Ang iyong rehistrasyon ay natapos na.","hi":"आपकी पंजीकरण अवधि समाप्त हो चुकी है.","ru":"Регистрация закончилась.","fr":"La période d'inscription est déjà terminée.","de":"Die Registrierung ist bereits abgelaufen.","es":"El periodo de inscripción ya ha finalizado.","pt":"O período de inscrição já terminou.","it":"Il periodo di registrazione è terminato.","nl":"De registratieperiode is afgelopen.","pl":"Rejestracja już się zakończyła.","tr":"Kayıt süresi bitti.","uk":"Ваша реєстрація вже закінчилася.","ro":"Acest cont a fost suspendat.","cs":"Registrace již skončila.","el":"Η περίοδος εγγραφής έχει λήξει.","sv":"Anmälningstiden har gått ut.","ar":"لقد انتهى التسجيل.","fa":"ثبت نام شما از قبل به پایان رسیده است.","he":"הרשמה כבר הסתיימה.","ms":"Pendaftaran telah tamat.","uz":"Сизнинг рўйхатдан ўтиш муддатингиз ўтиб кетди.","mn":"Таны бүртгэл дууссан.","ne":"तपाईँको सदस्यता पहिले नै समाप्त भएको छ ।","kk":"Сақтау мерзімі өтіп кеткен.","ur":"آپ کا رجسٹریشن پہلے ہی ختم ہو چکا ہے.","bn":"আপনার নিবন্ধনের মেয়াদ ইতিমধ্যেই শেষ হয়ে গেছে ।","km":"ការ​ចុះឈ្មោះ​បាន​ផុត​កំណត់​ហើយ & # 160; ។","my":"သင်၏မှတ်ပုံတင်မှုသည်ပြီးဆုံးသွားပါပြီ။","ta":"பதிவு காலாவதியாகிவிட்டது.","si":"ඔබගේ ලියාපදිංචිය දැනටමත් අවසන් වී ඇත."},{"묶음":"등록","ko":"등록금은 은행에서 내셔야 합니다.","en":"The registration fee must be paid at the bank.","zh":"注册费必须在银行支付。","ja":"入学金は銀行で支払わなければなりません。","vi":"Bạn phải trả tiền học phí tại ngân hàng.","id":"Anda harus membayar biaya pendaftaran di bank.","th":"คุณต้องจ่ายค่าเรียนที่ธนาคาร","tl":"Ang bayad sa matrikula ay babayaran sa bangko.","hi":"बैंकों में जमा राशि का भुगतान किया जाता है।","ru":"Регистрационный взнос должен быть оплачен в банке.","fr":"Les frais d'inscription doivent être payés en banque.","de":"Die Anmeldegebühr wird von der Bank überwiesen.","es":"La cuota de inscripción se debe pagar en el banco.","pt":"A taxa de inscrição deve ser paga no banco.","it":"La tassa di iscrizione deve essere pagata in banca.","nl":"Het inschrijfgeld moet bij de bank worden betaald.","pl":"Opłatę należy uiścić w banku.","tr":"Bankalardan kredi alabilirsiniz.","uk":"Оплата здійснюється в банку.","ro":"Taxa de înscriere trebuie plătită la bancă.","cs":"Registrační poplatek musíte zaplatit v bance.","el":"Το τέλος εγγραφής πρέπει να καταβληθεί στην τράπεζα.","sv":"Anmälningsavgiften ska betalas på banken.","ar":"يجب أن تدفع رسوم التسجيل في المصرف.","fa":"شما بايد هزينه ثبت نام رو از بانک پرداخت کنيد.","he":"ניתן לשלם את התשלום באמצעות כרטיס אשראי.","ms":"Anda perlu membayar yuran pendaftaran di bank.","uz":"Сизга нима бўлди?","mn":"Та төлбөрөө банкнаас төлөх ёстой.","ne":"तपाईँले आफ्नो खातामा भुक्तानी गर्नुपर्दछ।","kk":"Сіз банкте төлеуіңіз керек.","ur":"آپ کو بینک سے فیس ادا کرنی ہوگی۔","bn":"আপনার ব্যাংকে রেজিস্ট্রেশন ফি দিতে হবে।","km":"អ្នក​ត្រូវ​តែ​បង់​ថ្លៃ​ចុះឈ្មោះ​នៅ​ធនាគារ​។","my":"သင်သည်သင်၏ဘဏ်အကောင့်မှသင်၏ကျောင်းဝင်ငွေကိုပေးဆောင်ရမည်ဖြစ်သည်။","ta":"வங்கி கணக்கில் பணம் செலுத்த வேண்டும்.","si":"ඔයා බැංකුවට ගිහින් ගෙවන්න ඕනේ.","약함":["nl","uk","sv","ar","he","uz","mn","ta","si"]},{"묶음":"등록","ko":"카드는 받지 않습니다. 계좌로 보내 주세요.","en":"We don't accept cards. Please send them to the account.","zh":"我们不接受信用卡。 请将信用卡转入您的账户。","ja":"クレジットカードは受け付けません。 口座に送ってください。","vi":"Tôi không chấp nhận thẻ.","id":"Kami tidak menerima kartu.","th":"ผมไม่รับบัตร โปรดส่งไปที่บัญชีของคุณ","tl":"Hindi kami tumatanggap ng mga card. Mangyaring ipadala ito sa iyong account.","hi":"कार्ड स्वीकार्य नहीं है. कृपया इसे खाता में भेजें.","ru":"Мы не принимаем карты. Пожалуйста, отправьте их на счет.","fr":"Nous n'acceptons pas les cartes, veuillez les envoyer sur votre compte.","de":"Wir akzeptieren keine Karten. Bitte senden Sie an Ihr Konto.","es":"No aceptamos tarjetas, por favor envíenos su cuenta.","pt":"Não aceitamos cartões, por favor, envie-os para a conta.","it":"Non accettiamo carte di credito.","nl":"Wij accepteren geen creditcards. Stuur ze naar uw rekening.","pl":"Nie akceptujemy kart.","tr":"Kart kabul etmiyoruz.","uk":"Картки не приймаються. Будь ласка, відправте їх на рахунок.","ro":"Vă rugăm să trimiteți banii în contul dumneavoastră.","cs":"Karty nepřijímáme. Zašlete je na účet.","el":"Δεν δεχόμαστε κάρτες, παρακαλούμε στείλτε τις στον λογαριασμό σας.","sv":"Vi tar inte emot kort. Vänligen skicka till ditt konto.","ar":"لا نقبل بطاقات الائتمان.","fa":"کارت قبول نميشه. لطفا به حسابم بفرستيد.","he":"אני לא מקבל כרטיסי אשראי.","ms":"Kami tidak menerima kad. Sila hantar ke akaun anda.","uz":"Карта қабул қилинмайди. Илтимос, ҳисобга юборинг.","mn":"Карт хүлээн авахгүй байна, дансанд нь шилжүүлээрэй.","ne":"कार्ड स्वीकार गरिदैन । कृपया खातामा पठाउनुहोस् ।","kk":"Карта қабылданбайды. Тіркелгіңізге жіберіңіз.","ur":"ہم کارڈ قبول نہیں کرتے، براہ مہربانی اسے اپنے اکاؤنٹ میں منتقل کریں.","bn":"কার্ড গ্রহণ করা হবে না । অনুগ্রহ করে এটি অ্যাকাউন্টে পাঠান ।","km":"មិន​ទទួល​យក​កាត​ទេ & # 160; ។ សូម​ផ្ញើ​វា​ទៅ​គណនី​របស់​អ្នក & # 160; ។","my":"ကဒ်ကိုလက်မခံပါ၊ သင့်အကောင့်သို့ပို့ပေးပါ","ta":"அட்டைகள் ஏற்கப்படவில்லை. தயவு செய்து கணக்கிற்கு அனுப்பவும்.","si":"අපි කාඩ්පත් පිළිගන්නේ නැහැ."},{"묶음":"등록","ko":"납부가 확인되었습니다.","en":"Payment has been confirmed.","zh":"付款已确认。","ja":"支払いが確認されました。","vi":"Đã xác nhận.","id":"Pembayaran telah dikonfirmasi.","th":"การชำระเงินได้รับการยืนยัน","tl":"Ang iyong pagbabayad ay nakumpirma.","hi":"भुगतान स्वीकृत.","ru":"Оплата подтверждена.","fr":"Votre paiement a été confirmé.","de":"Die Zahlung wurde bestätigt.","es":"El pago ha sido confirmado.","pt":"O pagamento foi confirmado.","it":"Il pagamento è stato confermato.","nl":"De betaling is bevestigd.","pl":"Płatność została potwierdzona.","tr":"Ödeme onaylandı.","uk":"Платеж підтверджено.","ro":"Plata a fost confirmată.","cs":"Platba byla potvrzena.","el":"Η πληρωμή σας επιβεβαιώθηκε.","sv":"Din betalning har bekräftats.","ar":"تم تأكيد الدفع.","fa":"پرداخت تأیید شد.","he":"משלוח מאושר.","ms":"Pembayaran telah disahkan.","uz":"Тасдиқланди.","mn":"Нэхэмжлэлийг баталгаажуулсан.","ne":"भुक्तानी स्वीकृत भयो ।","kk":"Сатып алу құпталды.","ur":"آپ کی ادائیگی کی تصدیق.","bn":"আপনার পেমেন্ট সফল হয়েছে।","km":"ការ​ទូទាត់​ត្រូវ​បាន​បញ្ជាក់ & # 160; ។","my":"ငွေပေးချေမှုအတည်ပြုခဲ့သည်။","ta":"பணப்பரிமாற்றம் உறுதி செய்யப்பட்டது.","si":"ගෙවීම තහවුරු කර ඇත.","약함":["vi","th","hi","ru","tr","uk","ar","fa","he","uz","ne","kk","my","ta","si"]},{"묶음":"등록","ko":"아직 납부가 확인되지 않았습니다.","en":"The payment has not been confirmed yet.","zh":"付款尚未确认。","ja":"支払いはまだ確認されていません","vi":"Vẫn chưa xác nhận.","id":"Pembayaran belum dikonfirmasi.","th":"ยังไม่มีการยืนยันการชำระเงิน","tl":"Ang iyong pagbabayad ay hindi pa nakumpirma.","hi":"भुगतान अभी तक पुष्टि नहीं किया गया है.","ru":"Оплата еще не подтверждена.","fr":"Le paiement n'a pas encore été confirmé.","de":"Die Zahlung wurde noch nicht bestätigt.","es":"El pago aún no ha sido confirmado.","pt":"O pagamento ainda não foi confirmado.","it":"Il pagamento non è stato ancora confermato.","nl":"De betaling is nog niet bevestigd.","pl":"Płatność nie została jeszcze potwierdzona.","tr":"Bu ödeme henüz onaylanmamıştır.","uk":"Плата ще не підтверджена.","ro":"Plata nu a fost confirmată încă.","cs":"Platba ještě nebyla potvrzena.","el":"Η πληρωμή δεν έχει επιβεβαιωθεί ακόμα.","sv":"Betalningen har inte bekräftats ännu.","ar":"لم يتم تأكيد الدفع بعد.","fa":"هنوز پرداختت تایید نشده.","he":"הסכום לא אושר עדיין.","ms":"Pembayaran belum disahkan.","uz":"Ҳозирча тасдиқланмаган.","mn":"Таны төлбөр одоогоор баталгаажаагүй байна.","ne":"तपाईँको भुक्तानी अझै पुष्टि गरिएको छैन ।","kk":"Сіздің төлеміңіз әлі расталмады.","ur":"آپ کی ادائیگی ابھی تک تصدیق نہیں کی گئی ہے.","bn":"এখনো টাকা পাঠানো হয়নি।","km":"ការ​ទូទាត់​មិន​ទាន់​បាន​បញ្ជាក់​នៅ​ឡើយ​ទេ & # 160; ។","my":"ငွေပေးချေမှုအတည်ပြုခြင်းမရှိသေးပါ","ta":"இது இன்னும் நிரூபிக்கப்படவில்லை.","si":"ඔබගේ ගෙවීම තවම තහවුරු කර නැත.","약함":["ar","bn"]},{"묶음":"등록","ko":"영수증을 드리겠습니다.","en":"I'll give you a receipt.","zh":"我会给你一张收据。","ja":"レシートを渡します","vi":"Tôi sẽ cho anh một hóa đơn.","id":"Aku akan memberimu resi.","th":"ผมจะให้ใบเสร็จรับเงิน","tl":"Magbibigay ako sa iyo ng resibo.","hi":"मैं तुम्हें एक रसीद दूँगा.","ru":"Я выдам вам квитанцию.","fr":"Je vous donnerai un reçu.","de":"Ich gebe Ihnen eine Quittung.","es":"Le daré un recibo.","pt":"Eu lhe darei um recibo.","it":"Le darò una ricevuta.","nl":"Ik geef u een ontvangstbewijs.","pl":"Wystawię ci paragon.","tr":"Hesabını vereceğim.","uk":"Я дам тобі квитанцію.","ro":"Vă voi da o chitanță.","cs":"Vystavím vám účtenku.","el":"Θα σας δώσω μια απόδειξη.","sv":"Jag ger dig ett kvitto.","ar":"سأعطيك إيصالاً","fa":"من يه دريافتنامه ميدم","he":"אני אתן לך קבלה.","ms":"Saya akan berikan awak resit.","uz":"Мен сизга ҳисоб-китобни бераман.","mn":"Би чамд төлбөрийн баримт өгье.","ne":"म तपाईँलाई एउटा रिसिप्ट दिन्छु ।","kk":"Мен саған төлем құжатын берейін.","ur":"میں آپ کو ایک وصولی دے دوں گا.","bn":"আমি তোমাকে রিসিভ দিচ্ছি।","km":"ខ្ញុំ​នឹង​ផ្ដល់​ជូន​អ្នក​នូវ​ការ​ទទួល​ស្គាល់ & # 160; ។","my":"ခင်ဗျားတို ့ ကို လက်ခံလွှာတစ်ခု ပေးပါမယ်။","ta":"நான் ஒரு வசூலிக்க வேண்டும்.","si":"මම ඔයාට ලියවිල්ලක් දෙන්නම්.","약함":["tr","el","uz","kk","bn","km","ta","si"]},{"묶음":"등록","ko":"수업은 다음 주부터 시작합니다.","en":"Classes start next week.","zh":"课程将于下周开始。","ja":"授業は来週から始まります。","vi":"Lớp học bắt đầu từ tuần sau.","id":"Kelas dimulai minggu depan.","th":"ชั้นเรียนจะเริ่มอาทิตย์หน้า","tl":"Ang klase ay magsisimula sa susunod na linggo.","hi":"कक्षाएं अगले हफ्ते से शुरू होंगी।","ru":"Занятия начинаются на следующей неделе.","fr":"Les cours commencent la semaine prochaine.","de":"Der Unterricht beginnt nächste Woche.","es":"Las clases comienzan la próxima semana.","pt":"As aulas começam na próxima semana.","it":"Le lezioni inizieranno la prossima settimana.","nl":"De lessen beginnen volgende week.","pl":"Zajęcia rozpoczynają się w przyszłym tygodniu.","tr":"Dersler gelecek hafta başlıyor.","uk":"Заняття починаються наступного тижня.","ro":"Cursurile încep săptămâna viitoare.","cs":"Třídy začínají příští týden.","el":"Τα μαθήματα ξεκινούν την επόμενη εβδομάδα.","sv":"Lektionerna börjar nästa vecka.","ar":"ستبدأ الدروس في الأسبوع القادم","fa":"کلاس ها از هفته بعد شروع ميشه","he":"הלימודים מתחילים בשבוע הבא.","ms":"Kelas bermula minggu depan.","uz":"Ўқиш келаси ҳафта бошланади.","mn":"Дараагийн долоо хоногоос хичээл эхэлнэ.","ne":"कक्षा अर्को हप्ता सुरु हुनेछ ।","kk":"Сабақтар келесі аптада басталады.","ur":"کلاس اگلے ہفتے سے شروع ہوگا.","bn":"পরের সপ্তাহ থেকে ক্লাস শুরু হবে।","km":"ថ្នាក់​នឹង​ចាប់ផ្ដើម​នៅ​សប្ដាហ៍​ក្រោយ & # 160; ។","my":"သင်တန်းတွေ လာမယ့်အပတ်မှာ စတော့မယ်။","ta":"அடுத்த வாரத்தில் பள்ளி தொடங்குகிறது.","si":"පාඩම් ලබන සතියෙ පටන් ගන්නවා.","약함":["kk","ta"]},{"묶음":"등록","ko":"반 배정은 시험을 본 뒤에 정해집니다.","en":"Class assignments are determined after the exam.","zh":"分班是通过考试决定的。","ja":"試験の結果は試験後に発表される。","vi":"Điều này sẽ được xác định sau khi xem xét kiểm tra.","id":"Ujian ini dilaksanakan setelah lulus ujian nasional.","th":"การจัดชั้นเรียนจะถูกกำหนด หลังจากการสอบ","tl":"Ang assignment ng klase ay natukoy pagkatapos ng pagsusulit.","hi":"परीक्षा के पश्चात्‌ परीक्षार्थी को प्रमाणपत्र प्रदान किया जाता है।","ru":"Распределение по классам определяется после сдачи экзамена.","fr":"L'affectation à une classe est déterminée après l'examen.","de":"Die Klassenzuordnung wird nach der Prüfung festgelegt.","es":"La asignación de clases se determina después del examen.","pt":"As turmas são definidas após o exame.","it":"L'assegnazione della classe viene stabilita dopo l'esame.","nl":"De indeling in klassen wordt bepaald na het afleggen van het examen.","pl":"Przydzielenie do klasy jest ustalane po egzaminie.","tr":"Sınavdan sonra sınava girer.","uk":"Після закінчення навчання проходить іспит.","ro":"Atribuirea clasei se face după ce ați susținut examenul.","cs":"Zařazení do třídy je určeno po absolvování zkoušky.","el":"Η τοποθέτησή σας στο τμήμα θα καθοριστεί μετά την ολοκλήρωση της εξέτασης.","sv":"Tilldelningen av klass bestäms efter att du har gjort provet.","ar":"يتم تقييم الطالب بعد إجراء الامتحان.","fa":"بعد از آزمون قرار دادن تو کلاس مشخص ميشه","he":"הבחינה מתבצעת לאחר סיום הבחינה הבסיסית.","ms":"Pemilihan kelas akan dibuat selepas peperiksaan.","uz":"Ўқитувчи","mn":"Сургалтын хуваарийг шалгалтын дараа тогтооно.","ne":"परीक्षा पछि भाग बाँडफाँड निर्धारण गरिन्छ ।","kk":"Тестілеуден кейін сыныптар бөлінеді.","ur":"آپ کے امتحان کے بعد آپ کے حصے کا تعین کیا جائے گا.","bn":"পরীক্ষার পরই ক্লাস বরাদ্দ করা হবে।","km":"ការ​ផ្ដល់​ថ្នាក់​នឹង​ត្រូវ​បាន​កំណត់​បន្ទាប់​ពី​ការ​សាកល្បង & # 160; ។","my":"သင်တန်းခွဲဝေမှုသည်သင်၏စာမေးပွဲပြီးနောက်ဆုံးတွင်ဆုံးဖြတ်လိမ့်မည်။","ta":"பயிற்சி முடிந்த பிறகு பயிற்சியாளரிடம் பயிற்சி பெறலாம்.","si":"විභාගයෙන් පස්සේ තමයි පන්තිය තීරණය වෙන්නේ.","약함":["zh","ja","vi","id","th","ru","nl","pl","uk","fa","uz","kk","bn","ta","si"]},{"묶음":"길","ko":"이쪽으로 가세요.","en":"Go this way.","zh":"这边走","ja":"こっちだ","vi":"Lối này.","id":"Kemarilah.","th":"ทางนี้ครับ","tl":"Pumunta ka rito.","hi":"इस तरफ आओ.","ru":"Иди сюда.","fr":"Allez par ici.","de":"Bitte gehen Sie diesen Weg.","es":"Por aquí.","pt":"Por favor, por aqui.","it":"Per favore, venite qui.","nl":"Ga deze kant op.","pl":"Proszę, idźcie tędy.","tr":"Bu taraftan.","uk":"Сюди, будь ласка.","ro":"Pe aici, te rog.","cs":"Pojď sem.","el":"Από δω, παρακαλώ.","sv":"Gå den här vägen.","ar":"من هنا.","fa":"از اين طرف بيا","he":"בוא מכאן.","ms":"Ikut sini.","uz":"Бу ёққа кел.","mn":"Энэ зүгт очно уу.","ne":"यहाँ जानुहोस् ।","kk":"Бұл жақтан.","ur":"اس طرف چلو.","bn":"এই দিকে আসুন.","km":"សូម​ចូល​មក​ទីនេះ & # 160; ។","my":"ဒီဘက်ကိုသွားပါ ။","ta":"இந்த வழியில்.","si":"මේ පැත්තෙන් එන්න.","약함":["ja","vi","id","ru","es","it","tr","cs","ar","uz","ne","kk","bn","km","ta"]},{"묶음":"길","ko":"저쪽 건물에 있습니다.","en":"It's in that building.","zh":"他在那栋楼里。","ja":"あのビルにいる","vi":"Nó ở trong tòa nhà kia.","id":"Dia ada di gedung itu.","th":"เขาอยู่ตรงนั้น","tl":"Siya ay sa gusali doon.","hi":"वह वहाँ बिल्डिंग में है.","ru":"Он в том здании.","fr":"C'est dans le bâtiment.","de":"Dort im Gebäude.","es":"Está en ese edificio.","pt":"Ele está ali no prédio.","it":"E' in quel palazzo.","nl":"Daar in het gebouw.","pl":"Jest tam w budynku.","tr":"Şurada.","uk":"Вона в тому будинку.","ro":"E în clădirea de acolo.","cs":"Je to tamhle v budově.","el":"Είναι εκεί πέρα στο κτίριο.","sv":"Han är där borta.","ar":"إنه في المبنى هناك","fa":"اونجاست.","he":"הוא שם בבניין.","ms":"Dia di bangunan itu.","uz":"У ўша бинода.","mn":"Тэр нөгөө барилгад байна.","ne":"यो भवनमा छ।","kk":"Ол мына ғимаратта.","ur":"وہ عمارت میں ہے.","bn":"ওটা ওখানেই।","km":"វា​នៅ​ក្នុង​អគារ​នោះ​ហើយ ។","my":"အဲဒီအဆောက်အဦထဲမှာပါ ။","ta":"அங்கே கட்டிடத்தில்.","si":"අතන ගොඩනැගිල්ලේ."},{"묶음":"길","ko":"위층으로 올라가세요.","en":"Go upstairs.","zh":"上楼。","ja":"二階に行って","vi":"Lên lầu đi.","id":"Pergi ke atas.","th":"ขึ้นไปข้างบน","tl":"Pumunta sa itaas.","hi":"ऊपर जाओ.","ru":"Идите наверх.","fr":"Montez à l'étage.","de":"Gehen Sie nach oben.","es":"Sube arriba.","pt":"Vá lá em cima.","it":"Vai al piano di sopra.","nl":"Ga naar boven.","pl":"Idź na górę.","tr":"Yukarı çık.","uk":"Піднімайтеся.","ro":"Du-te sus.","cs":"Jděte nahoru.","el":"Πήγαινε επάνω.","sv":"Gå upp på övervåningen.","ar":"إذهبي للأعلى","fa":"برو طبقه بالا","he":"תעלה למעלה.","ms":"Pergi ke tingkat atas.","uz":"Юқорига чиқ.","mn":"Дээр очно уу.","ne":"माथिल्लो तलामा जानुहोस् ।","kk":"Жоғарғы қабатқа шығыңыз.","ur":"اوپر جاؤ.","bn":"উপরে যাও.","km":"ឡើង​ទៅ​ជាន់​លើ","my":"အပေါ်ထပ်ကို တက်လိုက်ပါ ။","ta":"மேலே போ.","si":"උඩට යන්න.","약함":["uk","he"]},{"묶음":"길","ko":"아래층으로 내려가세요.","en":"Go downstairs.","zh":"下楼。","ja":"下に行って","vi":"Mọi người xuống dưới.","id":"Pergi ke lantai bawah.","th":"ลงไปข้างล่าง","tl":"Pumunta sa ibaba.","hi":"नीचे जाओ.","ru":"Идите вниз.","fr":"Allez en bas.","de":"Gehen Sie nach unten.","es":"Baja a la planta baja.","pt":"Desça o andar.","it":"Scendi al piano di sotto.","nl":"Ga naar beneden.","pl":"Idź na dół.","tr":"Aşağıya in.","uk":"Спускайтесь вниз.","ro":"Coborâţi jos.","cs":"Jděte dolů.","el":"Πηγαίνετε κάτω.","sv":"Gå ner.","ar":"إذهبي للأسفل","fa":"برو پايين","he":"תרד למטה.","ms":"Pergi ke tingkat bawah.","uz":"Қуйига тушинг.","mn":"Доош орно уу.","ne":"तल जानुहोस् ।","kk":"Төменге түсіңдер.","ur":"نیچے چلو.","bn":"নিচে যাও.","km":"ចុះ​ក្រោម","my":"အောက်ထပ်ကိုဆင်းပါ ။","ta":"கீழே இறங்கு.","si":"පහළට යන්න.","약함":["tl","tr","uk","ro","he","uz","ne","kk","km","ta"]},{"묶음":"길","ko":"엘리베이터를 타고 올라가세요.","en":"Take the elevator.","zh":"乘坐电梯上楼。","ja":"エレベーターに乗って","vi":"Lên thang máy đi.","id":"Ambil lift.","th":"ขึ้นลิฟท์","tl":"Sumakay ng elevator.","hi":"लिफ्ट ले लो.","ru":"Поднимитесь на лифт.","fr":"Prenez l'ascenseur.","de":"Nehmen Sie den Aufzug.","es":"Sube en el ascensor.","pt":"Pegue o elevador.","it":"Prendi l'ascensore.","nl":"Neem de lift naar boven.","pl":"Proszę wsiąść do windy.","tr":"Asansöre bin.","uk":"Піднімайтеся ліфтом.","ro":"Luaţi liftul.","cs":"Jeďte výtahem.","el":"Πάρτε το ασανσέρ.","sv":"Ta hissen upp.","ar":"خذ المصعد","fa":"از آسانسور استفاده کن","he":"תעלה במעלית.","ms":"Ambil lif.","uz":"Лифтга чиқинг.","mn":"Лифтэнд суу.","ne":"लिफ्टमा जानुहोस्।","kk":"Лифтпен көтеріліңіз.","ur":"لیفت میں جاؤ.","bn":"লিফটে উঠুন।","km":"ឡើង​ទៅ​លើ​ឡាន​ផ្ទុក​ទំនិញ ។","my":"လျှပ်စစ်လှေကားကို တက်လိုက်ပါ ။","ta":"எலெக்ட்ரிக் எஸ்கலேட்டர்.","si":"සෝපානයට යන්න.","약함":["km","my","ta"]},{"묶음":"길","ko":"화장실은 복도 끝에 있습니다.","en":"The bathroom is at the end of the hallway.","zh":"卫生间位于走廊尽头。","ja":"トイレは廊下の端にあります。","vi":"Nhà vệ sinh ở cuối hành lang.","id":"Kamar mandi berada di ujung koridor.","th":"ห้องน้ำอยู่สุดทางเดิน","tl":"Ang banyo ay nasa dulo ng koridor.","hi":"बाथरूम हॉल के अंत में है.","ru":"Туалет находится в конце коридора.","fr":"Les toilettes sont situées au bout du couloir.","de":"Die Toilette befindet sich am Ende des Flurs.","es":"El baño está al final del pasillo.","pt":"O banheiro está no final do corredor.","it":"Il bagno si trova alla fine del corridoio.","nl":"Het toilet is aan het einde van de gang.","pl":"Toaleta znajduje się na końcu korytarza.","tr":"Tuvalet koridorun sonundadır.","uk":"Туалет знаходиться в кінці коридору.","ro":"Toaleta se află la capătul holului.","cs":"Koupelna je na konci chodby.","el":"Το μπάνιο βρίσκεται στο τέλος του διαδρόμου.","sv":"Toaletten ligger i slutet av korridoren.","ar":"الحمام في نهاية الممر.","fa":"دستشويي در پايين راهروست","he":"השירותים נמצאים בקצה המסדרון.","ms":"Bilik mandi di hujung lorong.","uz":"Туалетим коридорнинг охирида.","mn":"Угаалгын өрөө коридорын төгсгөлд байна.","ne":"बाथरूम कोठा को अन्त मा छ।","kk":"Туалет коридордың соңында.","ur":"توہین کورین کے آخر میں ہے.","bn":"বাথরুম হলিউডের শেষে।","km":"បន្ទប់ទឹកគឺនៅចុងផ្លូវ.","my":"ရေချိုးခန်းက ခန်းမရဲ့ အဆုံးမှာရှိတယ်။","ta":"இக்கோயிலின் அருகில் ஒரு குளம் உள்ளது.","si":"නාන කාමරය කොරිඩෝවේ අවසානයේ."},{"묶음":"길","ko":"제가 데려다 드리겠습니다.","en":"I'll take you there.","zh":"我带你去","ja":"連れて行くわ","vi":"Tôi sẽ đưa cô tới đó.","id":"Aku akan mengantarmu.","th":"ฉันจะพาคุณไป","tl":"Ibibigay ko sa iyo.","hi":"मैं तुम्हें ले जाऊँगा.","ru":"Я отвезу тебя.","fr":"Je vais vous emmener.","de":"Ich bringe Sie dorthin.","es":"Te llevaré a ella.","pt":"Vou levá-lo até lá.","it":"La accompagnerò.","nl":"Ik breng je erheen.","pl":"Zabiorę cię tam.","tr":"Seni oraya götüreceğim.","uk":"Я приведу тебя.","ro":"O să te duc acolo.","cs":"Odvedu tě tam.","el":"Θα σε πάω εκεί.","sv":"Jag tar dig dit.","ar":"سأأخذك إلى هناك","fa":"من ميبرمت اونجا.","he":"אני אקח אותך לשם.","ms":"Saya akan bawa awak ke sana.","uz":"Мен сени олиб бораман.","mn":"Би чамайг аваад явъя.","ne":"म तपाईंलाई लिएर जान्छु।","kk":"Мен сізді алып кетейін.","ur":"میں آپ کو وہاں لے جاؤں گا.","bn":"আমি তোমাকে নিয়ে যাচ্ছি।","km":"ខ្ញុំ​នឹង​នាំ​អ្នក​ទៅ​ទីនោះ​។","my":"ခင်ဗျားတို ့ ကို ခေါ်သွားပါ ့ မယ်။","ta":"நான் உன்னை அங்கு கொண்டு செல்ல வேண்டும்.","si":"මම ඔයාව අරන් යන්නම්.","약함":["zh","ja","id","tl","es","it","kk"]},{"묶음":"길","ko":"여기가 아닙니다. 다른 곳으로 가셔야 합니다.","en":"Not here, you have to go somewhere else.","zh":"不是这里,你应该去别的地方。","ja":"ここじゃない 別の場所に行くんだ","vi":"Không phải ở đây, anh nên đi chỗ khác.","id":"Kau harus pergi ke tempat lain.","th":"ไม่ใช่ที่นี่ คุณต้องไปที่อื่น","tl":"Hindi ito dito. Dapat kang pumunta sa ibang lugar.","hi":"आप कहीं और जाना चाहिए.","ru":"Вам нужно идти куда-нибудь еще.","fr":"Ce n'est pas ici, vous devriez aller ailleurs.","de":"Sie müssen woanders hingehen.","es":"No es aquí, tienes que ir a otro lugar.","pt":"Você tem que ir para outro lugar.","it":"Non è qui, devi andare altrove.","nl":"Je moet ergens anders heen.","pl":"Nie tutaj, musisz iść gdzie indziej.","tr":"Başka bir yere gitmelisin.","uk":"Вам слід йти кудись інше.","ro":"Trebuie să mergeţi în altă parte.","cs":"Musíte jít někam jinam.","el":"Πρέπει να πάτε κάπου αλλού.","sv":"Du måste gå någon annanstans.","ar":"يجب أن تذهب إلى مكان آخر","fa":"بايد يه جاي ديگه برين","he":"אתה צריך ללכת למקום אחר.","ms":"Bukan di sini, awak perlu pergi ke tempat lain.","uz":"Бу ерда эмас. Сиз бошқа жойга боришингиз керак.","mn":"Энэ биш. Та өөр газар очих хэрэгтэй.","ne":"यो यहाँ छैन । तपाईँले अन्यत्र जानु पर्दछ ।","kk":"Мұнда емес. Басқа жерге баруыңыз керек.","ur":"آپ کو کہیں اور جانا ہوگا.","bn":"এখানে নয়, তোমাকে অন্য কোথাও যেতে হবে।","km":"មិនមែន​នៅ​ទីនេះ​ទេ & # 160; ។ អ្នក​គួរ​តែ​ទៅ​កន្លែង​ផ្សេង & # 160; ។","my":"ဒီနေရာမဟုတ်ပါဘူး၊ အခြားနေရာတစ်ခုကို သွားသင့်ပါတယ်။","ta":"நீங்கள் வேறு எங்காவது செல்ல வேண்டும்.","si":"ඔයා වෙන තැනකට යන්න ඕනේ."},{"묶음":"때","ko":"오늘은 업무가 끝났습니다.","en":"Today's work is over.","zh":"今天的工作已经结束。","ja":"今日は仕事が終わった。","vi":"Hôm nay là ngày kết thúc.","id":"Hari ini sudah berakhir.","th":"วันนี้งานจบแล้ว","tl":"Ang trabaho ay tapos na ngayon.","hi":"आज यह कार्य समाप्त हो चुका है।","ru":"На сегодняшний день работа завершена.","fr":"Le travail est terminé aujourd'hui.","de":"Heute ist die Arbeit beendet.","es":"El trabajo ha terminado hoy.","pt":"O trabalho acabou hoje.","it":"Oggi il lavoro è finito.","nl":"Vandaag is het werk gedaan.","pl":"Dzisiejszy dzień jest zakończony.","tr":"Bugün işimiz bitti.","uk":"Сьогодні робота завершена.","ro":"Astăzi munca s-a terminat.","cs":"Dnes je konec.","el":"Η δουλειά τελείωσε σήμερα.","sv":"Idag är arbetet över.","ar":"لقد انتهى العمل اليوم.","fa":"امروز کارمون تموم شد","he":"העסקה הסתיימה.","ms":"Kita dah selesai hari ini.","uz":"Бугун иш тугади.","mn":"Өнөөдөр миний ажил дууссан.","ne":"तपाईँको आजको कार्य समाप्त भयो ।","kk":"Бүгін жұмысым бітті.","ur":"آج کے لئے کام ختم ہے.","bn":"আজকের কাজ শেষ।","km":"ការងារ​ត្រូវ​ធ្វើ​បាន​បញ្ចប់​នៅ​ថ្ងៃ​នេះ & # 160; ។","my":"ဒီနေ ့ အလုပ်ပြီးသွားပြီ ။","ta":"இன்று வேலை முடிந்தது.","si":"අද වැඩේ ඉවරයි.","약함":["ru","es","it","nl","ro","el","sv","ar","he","mn","kk","ta"]},{"묶음":"때","ko":"내일 다시 와 주세요.","en":"Please come back tomorrow.","zh":"明天再来。","ja":"明日また来て","vi":"Hãy quay lại ngày mai.","id":"Datang lagi besok.","th":"กลับมาพรุ่งนี้","tl":"Bumalik ka bukas.","hi":"कल वापस आओ.","ru":"Приходите завтра.","fr":"Revenez demain.","de":"Bitte kommen Sie morgen wieder.","es":"Por favor, vuelva mañana.","pt":"Por favor, volte amanhã.","it":"Torna domani.","nl":"Kom morgen terug.","pl":"Proszę wrócić jutro.","tr":"Yarın tekrar gel.","uk":"Будь ласка, повертайтеся завтра.","ro":"Vă rugăm să reveniţi mâine.","cs":"Vraťte se prosím zítra.","el":"Ελάτε ξανά αύριο.","sv":"Kom tillbaka i morgon.","ar":"أرجعي غدا","fa":"فردا برگرد.","he":"בבקשה תחזרי מחר.","ms":"Datang lagi esok.","uz":"Эртага қайтинг.","mn":"Маргааш ир.","ne":"कृपया भोलि फेरि आउनुहोस् ।","kk":"Ертең қайта келіңіз.","ur":"کل واپس آئیں.","bn":"কাল আবার আসুন।","km":"សូម​មក​វិញ​ថ្ងៃ​ស្អែក & # 160; ។","my":"မနက်ဖြန်ပြန်လာပါဦး။","ta":"நாளை மீண்டும் வரலாம்.","si":"හෙට එන්න.","약함":["vi","th","tl","hi","ru","fr","it","nl","sv","ar","fa","he","uz","mn","si"]},{"묶음":"때","ko":"점심시간입니다. 한 시에 다시 열립니다.","en":"It's lunchtime. We'll be back at one.","zh":"午餐时间,1点再开。","ja":"午前1時に再開します","vi":"Đến giờ ăn trưa rồi.","id":"Ini waktu makan siang.","th":"ถึงเวลาอาหารกลางวันแล้ว เราจะเปิดอีกครั้งในเวลา 1:","tl":"Magbubukas muli sa 1:00.","hi":"यह दोपहर का भोजन समय है. एक बजे फिर से खुलेगा.","ru":"Время обеда.","fr":"C'est l'heure du déjeuner.","de":"Es ist Mittagszeit. Wir öffnen um 1 Uhr wieder.","es":"Es hora de almuerzo.","pt":"É hora do almoço.","it":"È ora di pranzo, riapriamo all'una.","nl":"Het is lunchtijd. We gaan om 1 uur weer open.","pl":"Otwarcie o godzinie 13.00.","tr":"Saat 1'de tekrar açılıyor.","uk":"Час обідати.","ro":"Este ora prânzului.","cs":"Je čas na oběd.","el":"Ώρα για φαγητό. Ανοίγουμε πάλι στη μία.","sv":"Vi öppnar igen klockan ett.","ar":"حان وقت الغداء.","fa":"ساعت يک باز ميشه.","he":"אנחנו נפתחים שוב בשעה אחת.","ms":"Masa makan tengahari.","uz":"Кечки овқат вақти.","mn":"Өглөөний цайны цаг.","ne":"यो खानाको समय हो । एक बजे फेरि खोल्नुहोस् ।","kk":"Таңғы ас уақыты. 1-де қайта ашылады.","ur":"دوپہر کا وقت ہے.","bn":"দুপুরের খাবার সময়, একটায় আবার খোলা হবে।","km":"ពេល​អាហារ​ពេល​ល្ងាច​ហើយ & # 160; ។ បើក​ម្ដង​ទៀត​នៅ​ម៉ោង ១ & # 160; ។","my":"ညနေစာအချိန်၊ တစ်နာရီမှာ ပြန်ဖွင့်ပါမယ်။","ta":"காலை உணவு நேரம். 1 மணிக்கு மீண்டும் திறக்கப்படும்.","si":"දවල් කෑම වෙලාව.","약함":["pl","fa","uz"]},{"묶음":"때","ko":"지금은 사람이 많습니다. 조금 뒤에 오시면 빠릅니다.","en":"It's crowded now, so come a little later.","zh":"现在人很多,请稍后再来。","ja":"今は人が多いので 少し後に来て下さい","vi":"Có nhiều người ở đây, nên hãy đến sớm hơn.","id":"Ada banyak orang sekarang, jadi datanglah lebih cepat.","th":"ตอนนี้มีคนเยอะมาก ถ้าคุณมาเร็วกว่านี้หน่อย","tl":"Marami ang tao ngayon.","hi":"अब बहुत से लोग हैं. आप थोड़ा पीछे आ सकते हैं.","ru":"Сейчас здесь много людей. Приходите немного позже.","fr":"Il y a beaucoup de monde maintenant, alors venez un peu plus tard.","de":"Es sind jetzt viele Leute da. Kommen Sie ein wenig später.","es":"Ahora hay mucha gente, venga un poco más tarde, será más rápido.","pt":"É muito cheio agora, por favor venha um pouco mais tarde.","it":"Adesso c’è molta gente, venga un po’ più tardi.","nl":"Het is nu druk. Komt u wat later, dan gaat het sneller.","pl":"Jest tu teraz dużo ludzi, proszę przyjść trochę później.","tr":"Arkasından gelseniz daha hızlı olur.","uk":"Зараз тут багато людей. Приходьте пізніше.","ro":"Acum sunt mulţi oameni. Veniţi puţin mai târziu.","cs":"Teď je tu hodně lidí.","el":"Είναι πολύς κόσμος τώρα. Ελάτε λίγο αργότερα.","sv":"Det är mycket folk nu, kom lite senare så går det snabbare.","ar":"هناك الكثير من الناس الآن، لذا تأخروا قليلاً.","fa":"الان آدم زيادي اينجا هستن، لطفا زودتر بياين","he":"יש הרבה אנשים עכשיו.","ms":"Ada ramai orang sekarang, jadi datang lebih awal.","uz":"Ҳозир кўп одам бор. Кейинроқ келсангиз тезроқ бўларди.","mn":"Одоо хүмүүс их байна. Хэдхэн минутын дараа ирвэл илүү хурдан болно.","ne":"अहिले धेरै मानिसहरू छन् । कृपया पछि आउनुहोस् ।","kk":"Қазір көп адам бар. Кейін келсеңіз тезірек болады.","ur":"اب بہت سے لوگ ہیں، ایک چھوٹا سا پیچھے آنا بہتر ہے.","bn":"এখন অনেক লোক আছে, আপনি যদি একটু পিছিয়ে আসেন, তাহলে তাড়াতাড়ি আসতে পারবেন।","km":"ឥឡូវ​នេះ​មាន​មនុស្ស​ច្រើន​ណាស់ & # 160; ។ សូម​រង់ចាំ​បន្តិច​សិន & # 160; ។","my":"အခု လူတွေ အများကြီးပါ ။ နောက်ကျရင်မြန်ပါတယ်။","ta":"இப்பொழுது நிறைய பேர் இருக்கிறார்கள். நீங்கள் கொஞ்சம் தாமதமாக வந்தால் விரைவாக இருக்கலாம்.","si":"දැන් ගොඩක් මිනිස්සු ඉන්නවා, ඔයාලා ටිකක් පස්සේ ආවොත් ඉක්මන් වෙයි.","약함":["vi","id","hi","it","tr","uk","ro","el","ms","ta"]},{"묶음":"때","ko":"이 날짜까지 꼭 내셔야 합니다.","en":"You must pay by this date.","zh":"您必须在此日期之前付款。","ja":"この日までに支払わなければなりません。","vi":"Vì vậy, ông phải chờ đợi đến ngày đó.","id":"Anda harus membayarnya pada tanggal itu.","th":"คุณต้องทำตามกำหนดเวลา","tl":"Kailangan mong bayaran ito bago ang petsa na ito.","hi":"इस दिन को व्रत का रूप दिया जाता है।","ru":"Вы должны заплатить к этой дате.","fr":"Vous devez payer avant cette date.","de":"Sie müssen bis zu diesem Zeitpunkt bezahlen.","es":"Debes pagar antes de esa fecha.","pt":"Você deve pagar até essa data.","it":"Devi pagare entro questa data.","nl":"U moet het voor deze datum betalen.","pl":"Musisz dokonać wpłaty do tego terminu.","tr":"Bu tarihe kadar ödeme yapmanız gerekiyor.","uk":"Ви повинні заплатити до цього терміну.","ro":"Trebuie să plătiţi până la această dată.","cs":"Musíte zaplatit do tohoto data.","el":"Πρέπει να πληρώσετε μέχρι αυτή την ημερομηνία.","sv":"Du måste betala före detta datum.","ar":"يجب عليك أن تدفع في هذا التاريخ.","fa":"تا اين تاريخ بايد پول رو بدهي.","he":"תאריך זה נקבע ליום זה.","ms":"Anda mesti datang pada tarikh ini.","uz":"Сиз бу санагача юборишингиз керак.","mn":"Та энэ өдрийг хүлээх хэрэгтэй.","ne":"तपाईँले यो मितिमा पठाउनु पर्दछ ।","kk":"Бұл күнге дейін тапсыру керек.","ur":"آپ کو اس تاریخ تک پہنچنا ہوگا.","bn":"আপনি এই তারিখের মধ্যে এটি করতে হবে.","km":"អ្នក​ត្រូវ​តែ​ផ្ញើ​វា​នៅ​ថ្ងៃ​នេះ & # 160; ។","my":"ဒီနေ့အထိ ပေးပို့ဖို့ လိုအပ်ပါတယ်။","ta":"இந்நாளில் திருவிழாவாக நடைபெறுகிறது.","si":"ඔයා මේ දිනය වෙනකන් ඉන්න ඕනේ.","약함":["vi","th","hi","uk","ms","mn","ta","si"]},{"묶음":"곤란","ko":"죄송합니다. 제가 잘 못 알아들었습니다.","en":"I'm sorry, I didn't understand.","zh":"对不起,我不理解。","ja":"ごめんなさい 誤解したの","vi":"Xin lỗi, tôi không hiểu.","id":"Maaf, aku tidak mengerti.","th":"ขอโทษ ฉันเข้าใจผิด","tl":"Hindi ko maintindihan.","hi":"मैं माफी चाहता हूँ, मैंने गलत समझा.","ru":"Простите, я не понял.","fr":"Je suis désolé, j'ai mal compris.","de":"Entschuldigung, ich habe Sie nicht richtig verstanden.","es":"Lo siento, no lo he entendido.","pt":"Desculpe, eu não entendi.","it":"Mi dispiace, non ho capito bene.","nl":"Het spijt me, ik begrijp het niet.","pl":"Przepraszam, nie zrozumiałem.","tr":"Özür dilerim, yanlış anladım.","uk":"Вибачте, я не зрозумів.","ro":"Îmi pare rău, am înţeles greşit.","cs":"Promiňte, nerozuměl jsem vám.","el":"Συγγνώμη, δεν κατάλαβα.","sv":"Förlåt, jag förstod inte riktigt.","ar":"آسف، لم أفهمك جيداً.","fa":"ببخشيد، من اشتباه فهميدم.","he":"אני מצטער, לא הבנתי אותך.","ms":"Maaf, saya tak faham.","uz":"Сизни тушунмадим.","mn":"Намайг уучлаарай. Би ойлгоогүй.","ne":"माफ गर्नुहोस्, मैले तपाईँलाई बुझ्न सकिन ।","kk":"Кешіріңіз, түсінбедім.","ur":"مجھے معاف کیجئے گا.","bn":"দুঃখিত, আমি ভুল বুঝেছি।","km":"សូម​អភ័យទោស ខ្ញុំ​មិន​យល់​ពី​អ្នក​ទេ & # 160; ។","my":"တောင်းပန်ပါတယ်၊ ကျွန်တော်နားမလည်ဘူး ။","ta":"மன்னிக்கவும், நான் புரிந்து கொள்ளவில்லை.","si":"මට සමාවෙන්න, මට වැරදිලා."},{"묶음":"곤란","ko":"천천히 다시 한 번 말씀해 주시겠어요?","en":"Would you slow down and say it again?","zh":"你能慢慢地重复一遍吗?","ja":"ゆっくり言ってくれる？","vi":"Anh có thể nói lại chậm lại không?","id":"Bisakah kau perlahan-lahan mengatakannya lagi?","th":"พูดอีกทีได้มั้ย","tl":"Maaari mo bang sabihin ito nang paunti-unti?","hi":"क्या आप मुझे धीरे से दोबारा बता सकते हैं?","ru":"Можешь еще раз, не торопясь?","fr":"Pouvez-vous le répéter lentement?","de":"Können Sie es mir noch einmal langsam sagen?","es":"¿Puedes repetirlo lentamente?","pt":"Pode repetir lentamente?","it":"Puoi ripeterlo lentamente?","nl":"Kun je het nog eens rustig zeggen?","pl":"Możesz powtórzyć to powoli?","tr":"Yavaşça tekrarlayabilir misin?","uk":"Можеш сказати мені це ще раз?","ro":"Poţi să-mi spui din nou încet?","cs":"Můžeš to znovu říct pomalu?","el":"Μπορείς να το επαναλάβεις πιο αργά;","sv":"Kan du säga det långsamt igen?","ar":"هلا أخبرتني ببطء مرة أخرى؟","fa":"ميشه يه بار ديگه آروم بگي؟","he":"אתה יכול להגיד את זה לאט?","ms":"Perlahan-lahan.","uz":"Уни яна такрорлайсизми?","mn":"Залуусаа, дахин хэлчих үү?","ne":"म यो फेरि भन्न चाहन्छु ।","kk":"Қалай ойлайсыз?","ur":"کیا آپ مجھے ہلکے سے دوبارہ کہنا چاہتے ہیں؟","bn":"আস্তে আবার বলবে?","km":"តើ​អ្នក​អាច​និយាយ​វា​ម្ដង​ទៀត​បាន​ទេ & # 160;?","my":"အေးဆေးပဲ ပြန်ပြောပါဦး။","ta":"மெதுவாக மீண்டும் சொல்ல முடியுமா?","si":"ඔයාට පුළුවන්ද ඒක හෙමින් නැවත කියන්න?","약함":["th","tl","uk","fa","mn","ne","kk","km"]},{"묶음":"곤란","ko":"글로 적어 주시겠어요?","en":"Would you write it down?","zh":"请写下来。","ja":"書いてくれる？","vi":"Anh có thể viết nó ra không?","id":"Dapatkah Anda menulisnya?","th":"เขียนมันลงไปได้มั้ย?","tl":"Gusto mo bang isulat ito?","hi":"क्या आप इसे लिख सकते हैं?","ru":"Может, напишите?","fr":"Pouvez-vous écrire?","de":"Bitte schreiben Sie es uns.","es":"¿Puede escribirlo?","pt":"Por favor, escreva-o.","it":"Puoi scriverlo?","nl":"Kunt u het opschrijven?","pl":"Czy możesz to zapisać?","tr":"Yazabilir misin?","uk":"Запишете, будь ласка.","ro":"Ai vrea să scrii?","cs":"Můžete to napsat?","el":"Μπορείτε να το γράψετε;","sv":"Kan du skriva ner det?","ar":"هلا كتبتها؟","fa":"ميشه يه چيزي بنويسي؟","he":"תכתוב את זה, בבקשה.","ms":"Boleh awak tuliskannya?","uz":"Сиз ёза оласизми?","mn":"Та бичиж өгнө үү?","ne":"तपाईँ यसलाई लेख्न चाहनुहुन्छ?","kk":"Сіз оны жазып бере аласыз ба?","ur":"کیا آپ اسے لکھ سکتے ہیں؟","bn":"আপনি কি এটা লিখতে পারবেন?","km":"តើ​អ្នក​ចង់​សរសេរ​អ្វី​ខ្លះ & # 160;?","my":"ရေးပေးပါလား။","ta":"நீங்கள் அதை எழுத முடியும்?","si":"ඔයාට ඒක ලියන්න පුලුවන්ද?"},{"묶음":"곤란","ko":"그것은 제가 도와드릴 수 없습니다.","en":"I can't help it.","zh":"我无法帮助你。","ja":"私はあなたを助けることはできません。","vi":"Tôi không thể giúp được gì.","id":"Aku tak bisa membantumu.","th":"ฉันช่วยอะไรไม่ได้","tl":"Ito ay hindi ko matulungan.","hi":"मैं आपकी मदद नहीं कर सकता.","ru":"Я не могу помочь.","fr":"Je ne peux pas vous aider.","de":"Da kann ich nicht helfen.","es":"No puedo ayudarle.","pt":"Eu não posso ajudar.","it":"Non posso farci niente.","nl":"Daar kan ik je niet bij helpen.","pl":"Nie mogę ci pomóc.","tr":"Yardım edemem.","uk":"Я не можу тобі допомогти.","ro":"Nu te pot ajuta.","cs":"Nemohu vám pomoci.","el":"Δεν μπορώ να σας βοηθήσω.","sv":"Det kan jag inte hjälpa.","ar":"لا أستطيع مساعدتك في ذلك","fa":"نميتونم کمکت کنم","he":"אני לא יכול לעזור.","ms":"Saya tak boleh bantu awak.","uz":"Мен сизга ёрдам бера олмайман.","mn":"Би чамд тусалж чадахгүй.","ne":"यो म तपाईंलाई मदत गर्न सक्दैन.","kk":"Мен көмектесе алмаймын.","ur":"میں تمہاری مدد نہیں کر سکتا.","bn":"আমি তোমাকে সাহায্য করতে পারবো না।","km":"ខ្ញុំ​មិន​អាច​ជួយ​អ្នក​បាន​ទេ ។","my":"ဒါကိုငါကူညီနိုင်မလား။","ta":"நான் உதவி செய்ய முடியாது.","si":"මට ඒකට උදව් කරන්න බෑ."},{"묶음":"곤란","ko":"규정이라서 어쩔 수 없습니다. 죄송합니다.","en":"I'm sorry.","zh":"我们不得不这样做，对不起。","ja":"規則のせいだ","vi":"Tôi xin lỗi.","id":"Itu adalah peraturan.","th":"มันเป็นกฎที่เราทำไม่ได้","tl":"Hindi namin magagawa ito dahil sa mga patakaran.","hi":"मैं माफी चाहता हूँ.","ru":"Извините.","fr":"Je suis désolé.","de":"Es tut uns leid.","es":"Lo siento, no puedo hacerlo.","pt":"Não podemos fazer nada, devido às regras.","it":"Non possiamo farne a meno, sono spiacente.","nl":"Het is een regelszaak.","pl":"Przepraszamy, nie mamy wyboru.","tr":"- Kural bu.","uk":"Вибачте.","ro":"Reglementările ne obligă să facem asta.","cs":"Je to nařízení.","el":"Λυπάμαι, δεν μπορώ να το κάνω.","sv":"Jag är ledsen.","ar":"أنا آسف.","fa":"متاسفم.","he":"אני מצטערת.","ms":"Maafkan saya.","uz":"Афсусланаман.","mn":"- Тийм ээ. - Тийм ээ.","ne":"यो नियम हो । म माफी चाहन्छु ।","kk":"Өкінішке орай, бұл біздің ережеміз.","ur":"میں معاف کرنا چاہتا ہوں.","bn":"আমি দুঃখিত.","km":"យើង​មិន​អាច​ធ្វើ​អ្វី​ផ្សេង​ទៀត​បាន​ទេ & # 160; ។ សូម​អភ័យទោស & # 160; ។","my":"ဒါက စည်းမျဉ်းတွေပါ ။","ta":"நான் வருந்துகிறேன்.","si":"මට සමාවෙන්න."},{"묶음":"곤란","ko":"도와드리지 못해 죄송합니다.","en":"Sorry I couldn't help you.","zh":"对不起,我们无法帮助您。","ja":"助けられなかったのは残念だ","vi":"Tôi xin lỗi vì đã không giúp được anh.","id":"Maaf tak bisa membantu.","th":"ขอโทษที่ช่วยคุณไม่ได้","tl":"Mangyaring huwag mag-atubiling makipag-ugnayan sa amin.","hi":"मैं आपकी मदद नहीं कर सकता के लिए खेद है.","ru":"Извини, что не могу помочь.","fr":"Désolé de ne pas pouvoir vous aider.","de":"Es tut mir leid, dass ich Ihnen nicht helfen konnte.","es":"Lo siento por no poder ayudarte.","pt":"Lamento não poder ajudar.","it":"Mi dispiace non poterti aiutare.","nl":"Het spijt me dat ik je niet kan helpen.","pl":"Przepraszam, że nie mogę pomóc.","tr":"Yardım edemediğim için üzgünüm.","uk":"Вибачте, що не можу допомогти.","ro":"Îmi pare rău că nu te-am putut ajuta.","cs":"Omlouvám se, že vám nemohu pomoci.","el":"Λυπάμαι που δεν μπορώ να σας βοηθήσω.","sv":"Jag är ledsen att jag inte kunde hjälpa dig.","ar":"أنا آسف لأنني لم أستطع مساعدتك","fa":"متاسفم که نتونستم کمکت کنم","he":"אני מצטער שלא יכולתי לעזור.","ms":"Maaf tak dapat bantu awak.","uz":"Сизга ёрдам беролмаганим учун афсусланаман.","mn":"Та нарт тусалж чадахгүйдээ харамсаж байна.","ne":"म माफी चाहन्छु म तपाईँलाई मद्दत गर्न सकिन ।","kk":"Көмектеспегеніме өкінемін.","ur":"میں مدد نہیں کر سکتا کے لئے معاف.","bn":"আমি দুঃখিত আমি সাহায্য করতে পারিনি.","km":"សូម​ទោស​ដែល​មិន​អាច​ជួយ​អ្នក​បាន​ទេ & # 160; ។","my":"ကူညီနိုင်ခြင်းမရှိခြင်းအတွက် တောင်းပန်ပါတယ်။","ta":"உதவி செய்ய முடியவில்லை.","si":"මට සමාවෙන්න උදව් කරන්න බැරි වුනාට.","약함":["tl","pt","it","nl","el","mn"]},{"묶음":"곤란","ko":"이해해 주셔서 고맙습니다.","en":"Thank you for your understanding.","zh":"感谢您的理解。","ja":"理解してくれてありがとう","vi":"Cảm ơn vì đã hiểu.","id":"Terima kasih atas pengertianmu.","th":"ขอบคุณที่เข้าใจ","tl":"Salamat sa iyong pag-unawa.","hi":"समझने के लिए धन्यवाद.","ru":"Спасибо за понимание.","fr":"Merci de votre compréhension.","de":"Vielen Dank für Ihr Verständnis.","es":"Gracias por su comprensión.","pt":"Agradecemos a sua compreensão.","it":"Grazie per la comprensione.","nl":"Bedankt voor uw begrip.","pl":"Dziękujemy za zrozumienie.","tr":"Anladığınız için teşekkür ederim.","uk":"Дякую за розуміння.","ro":"Vă mulțumim pentru înțelegere.","cs":"Děkujeme za pochopení.","el":"Ευχαριστούμε για την κατανόησή σας.","sv":"Tack för din förståelse.","ar":"شكراً لتفهمك.","fa":"ممنون از فهميدنت","he":"תודה על ההבנה.","ms":"Terima kasih kerana memahami.","uz":"Тасаввур қилганингиз учун раҳмат.","mn":"Анхаарсанд баярлалаа.","ne":"बुझ्नको लागि धन्यवाद।","kk":"Сізге түсінгеніңіз үшін рахмет.","ur":"سمجھنے کے لئے شکریہ.","bn":"বুঝার জন্য ধন্যবাদ।","km":"សូម អរគុណ ចំពោះ ការ យល់ ដឹង ។","my":"နားလည်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။","ta":"புரிந்து கொண்டதற்கு நன்றி.","si":"තේරුම් ගත්තට ස්තුතියි."}],"손님말":[{"ko":"네, 맞습니다.","en":"Yeah, that's right.","zh":"是的,这是正确的。","ja":"ああ　そうだ","vi":"Ừ, đúng vậy.","id":"Ya, benar.","th":"ใช่ มันเป็นอย่างนั้น","tl":"Oo, iyon ang tama.","hi":"हाँ, यह सही है.","ru":"Да, это так.","fr":"Oui, c'est vrai.","de":"Ja, das stimmt.","es":"Sí, es cierto.","pt":"Sim, é verdade.","it":"Sì, è vero.","nl":"Ja, dat klopt.","pl":"Tak, to prawda.","tr":"Evet, doğru.","uk":"Да, это так.","ro":"Da, aşa este.","cs":"Ano, to je pravda.","el":"Ναι, αυτό είναι σωστό.","sv":"Ja, det är det.","ar":"نعم، هذا صحيح.","fa":"آره، درسته.","he":"כן, זה נכון.","ms":"Ya, betul.","uz":"Йўқ!","mn":"Тийм ээ, тийм ээ.","ne":"हो, यो सही छ ।","kk":"Иә, солай.","ur":"جی ہاں، یہ ٹھیک ہے.","bn":"হ্যাঁ, ঠিক বলেছ.","km":"បាទ/ ចាស ត្រឹមត្រូវ & # 160; ។","my":"ဟုတ်ကဲ့၊ မှန်ပါတယ်။","ta":"ஆமாம், அது சரி.","si":"ඔව්, ඒක හරි.","약함":["ja","vi","id","tl","hi","tr","ms","uz","mn","kk","ta"]},{"ko":"아니요, 그렇지 않습니다.","en":"No, it's not.","zh":"不,不是的。","ja":"いや　違う","vi":"Không phải vậy.","id":"Tidak, aku tidak.","th":"เปล่า มันไม่จริง","tl":"Hindi ito.","hi":"नहीं, यह नहीं है.","ru":"Нет, это не так.","fr":"Non, ce n'est pas le cas.","de":"Nein, das ist es nicht.","es":"No lo es.","pt":"Não é.","it":"No, non è così.","nl":"Nee, dat is het niet.","pl":"Nie jest.","tr":"Hayır, değil.","uk":"Нет, это не так.","ro":"Nu este.","cs":"Ne, není.","el":"Όχι, δεν είναι.","sv":"Nej, det är det inte.","ar":"لا، لم أفعل.","fa":"نه، اينطور نيست.","he":"לא, זה לא.","ms":"Tidak.","uz":"Йўқ!","mn":"Үгүй ээ, тийм биш.","ne":"होइन, यो होइन ।","kk":"Жоқ, олай емес.","ur":"نہیں، یہ نہیں ہے.","bn":"না, আমি না.","km":"មិន​មែន​ទេ","my":"မဟုတ်ဘူး၊ မဖြစ်နိုင်ပါဘူး၊","ta":"இல்லை, நான் இல்லை.","si":"නෑ, එහෙම නෑ.","약함":["id","th","pt","pl","ro","cs","sv","ar","ms","bn","km","my"]},{"ko":"잘 모르겠습니다.","en":"I don't know.","zh":"我不知道。","ja":"わからない","vi":"Tôi không biết nữa.","id":"Aku tidak tahu.","th":"ฉันไม่แน่ใจ","tl":"Hindi ko alam.","hi":"मैं नहीं जानता.","ru":"Я не знаю.","fr":"Je ne sais pas.","de":"Ich weiß es nicht.","es":"No estoy seguro.","pt":"Eu não sei.","it":"Non lo so.","nl":"Ik weet het niet.","pl":"- Nie wiem.","tr":"Bilmiyorum.","uk":"Я не знаю.","ro":"Nu sunt sigur.","cs":"- Nevím.","el":"Δεν ξέρω.","sv":"Jag vet inte riktigt.","ar":"أنا لا أعرف","fa":"من نميدونم","he":"אני לא בטוח.","ms":"Saya tak tahu.","uz":"Билмайман.","mn":"Би мэдэхгүй байна.","ne":"म निश्चित छैन ।","kk":"Мен білмеймін.","ur":"میں نہیں جانتا.","bn":"আমি জানি না।","km":"ខ្ញុំ​មិន​ប្រាកដ​ទេ & # 160; ។","my":"ကျွန်မ မသိပါဘူး ။","ta":"எனக்குத் தெரியாது.","si":"මම දන්නෙ නෑ.","약함":["zh","hi","pt","sv"]},{"ko":"다시 한 번 보여 주세요.","en":"Show me again.","zh":"再来一次。","ja":"もう一度見せて","vi":"Hãy cho tôi xem lần nữa.","id":"Tunjukkan lagi.","th":"แสดงให้ฉันดูอีกครั้ง","tl":"Ipakita mo sa akin muli.","hi":"मुझे फिर से दिखाओ.","ru":"Покажите мне ещё раз.","fr":"Je veux voir ça encore une fois.","de":"Bitte zeigen Sie es mir noch einmal.","es":"Muéstrame otra vez.","pt":"Mostra-me outra vez.","it":"Fatemi vedere di nuovo.","nl":"Laat het me nog eens zien.","pl":"Pokaż mi to jeszcze raz.","tr":"Tekrar göster.","uk":"Покажи мені ще раз.","ro":"Arată-mi din nou.","cs":"Ukaž mi to znovu.","el":"Δείξε μου ξανά.","sv":"Visa mig det igen.","ar":"أرني مرة أخرى.","fa":"دوباره نشونم بده","he":"תראה לי שוב.","ms":"Tunjukkan lagi.","uz":"Яна кўрсатинг-чи.","mn":"Надад дахин харуул.","ne":"कृपया फेरि प्रयास गर्नुहोस् ।","kk":"Қайта көрсетіңіз.","ur":"مجھے دوبارہ دکھاؤ.","bn":"আমাকে আবার দেখাও.","km":"សូម​បង្ហាញ​ខ្ញុំ​ម្ដង​ទៀត & # 160; ។","my":"ထပ်ပြပါဦး ။","ta":"மீண்டும் காட்டு.","si":"මට ආපහු පෙන්නන්න."},{"ko":"조금 더 천천히요.","en":"A little slower.","zh":"慢点","ja":"ゆっくり","vi":"Chậm lại đi.","id":"Pelan-pelan.","th":"ช้าลงหน่อย","tl":"Mas mabagal.","hi":"थोड़ा और धीरे.","ru":"Немного медленнее.","fr":"Un peu plus lentement.","de":"Ein bisschen langsamer.","es":"Un poco más despacio.","pt":"Um pouco mais devagar.","it":"Un po' più lentamente.","nl":"Langzamer.","pl":"Nieco wolniej.","tr":"Biraz daha yavaş.","uk":"Повільніше.","ro":"Mai încet.","cs":"Trochu pomaleji.","el":"Λίγο πιο αργά.","sv":"Lite långsammare.","ar":"أبطأ قليلاً","fa":"آروم تر","he":"קצת יותר לאט.","ms":"Perlahan-lahan.","uz":"Яқинроқ кел.","mn":"Хэдхэн секунд.","ne":"यो अलि ढिलो हुन्छ ।","kk":"Жайлап.","ur":"ایک چھوٹا سا سست.","bn":"আস্তে.","km":"យឺត​បន្តិច & # 160; ។","my":"နည်းနည်းလေး ပိုနှေးပါ ။","ta":"மெதுவாக.","si":"ටිකක් හෙමින්.","약함":["uz","mn","ne","kk","km"]},{"ko":"지금 가지고 있지 않습니다.","en":"I don't have it right now.","zh":"我现在没有。","ja":"今は持っていない。","vi":"Tôi không có nó.","id":"Aku tidak punya sekarang.","th":"ตอนนี้ฉันไม่มี","tl":"Hindi ko na ito ngayon.","hi":"अब यह नहीं है।","ru":"Сейчас нет.","fr":"Je n'en ai pas maintenant.","de":"Ich habe es jetzt nicht.","es":"Ahora no lo tengo.","pt":"Não tenho agora.","it":"Ora non ce l'ho.","nl":"Ik heb het nu niet.","pl":"Teraz nie mam.","tr":"Şu anda yok.","uk":"У мене їх немає.","ro":"Acum nu am.","cs":"Teď nemám.","el":"Δεν το έχω τώρα.","sv":"Jag har det inte nu.","ar":"ليس لدي الآن.","fa":"الان ندارم.","he":"אין לי כרגע.","ms":"Saya tak ada sekarang.","uz":"Ҳозирча йўқ.","mn":"Одоогоор байхгүй.","ne":"तपाईँसँग अहिले छैन ।","kk":"Қазір жоқ.","ur":"میں نے اب نہیں ہے.","bn":"আমার কাছে এখন নেই।","km":"ខ្ញុំ​មិន​មាន​វា​នៅ​ពេល​នេះ​ទេ & # 160; ។","my":"ကျွန်ုပ်တွင်မရှိပါ ။","ta":"இப்போது இல்லை.","si":"මට දැන් ඒක නෑ."},{"ko":"내일 가져오겠습니다.","en":"I'll get it tomorrow.","zh":"明天我会把它带回来的。","ja":"明日持ってくる","vi":"Ngày mai tôi sẽ mang nó về.","id":"Aku akan membawanya besok.","th":"พรุ่งนี้ฉันจะเอามาให้","tl":"Ito ay idinagdag sa kinabukasan.","hi":"मैं उसे कल लाऊंगा.","ru":"Завтра принесу.","fr":"Je l'apporterai demain.","de":"Ich bringe es morgen.","es":"Lo traeré mañana.","pt":"Vou trazê-lo amanhã.","it":"Lo prenderò domani.","nl":"Ik haal het morgen.","pl":"Przyniosę je jutro.","tr":"Yarın getireceğim.","uk":"Завтра принесу.","ro":"Îl aduc mâine.","cs":"Přinesu ji zítra.","el":"Θα τα φέρω αύριο.","sv":"Jag hämtar den i morgon.","ar":"سأحضرها غدا","fa":"فردا ميام","he":"אני אביא אותו מחר.","ms":"Saya akan dapatkannya esok.","uz":"Эртага.","mn":"Би маргааш авчирна.","ne":"भोलि पुन: प्राप्त गर्नुहोस् ।","kk":"Ертең алып келемін.","ur":"میں کل لے آؤں گا.","bn":"আমি কালকে নিয়ে আসবো।","km":"យក​ថ្ងៃ​ស្អែក & # 160; ។","my":"မနက်ဖြန်ယူပါမယ်။","ta":"நான் நாளை அதை கொண்டு வருகிறேன்.","si":"මම ඒක හෙට ගන්නම්.","약함":["zh","hi","it","nl","fa","uz","mn","ne","bn"]},{"ko":"도와주세요.","en":"Please help me.","zh":"请帮我。","ja":"助けて","vi":"Cứu tôi với.","id":"Tolong aku.","th":"ช่วยฉันด้วย","tl":"Tulungan mo ako.","hi":"कृपया मेरी मदद करो.","ru":"Помогите мне.","fr":"Aidez-moi.","de":"Bitte helfen Sie mir.","es":"Por favor, ayúdame.","pt":"Por favor, ajudem-me.","it":"Aiutami, per favore.","nl":"Help me alsjeblieft.","pl":"Pomóż mi.","tr":"Yardım edin lütfen.","uk":"Допоможіть мені.","ro":"Ajută-mă.","cs":"Prosím, pomozte mi.","el":"Βοήθεια.","sv":"Hjälp mig.","ar":"ساعدوني","fa":"لطفا کمک کنيد","he":"בבקשה, עזרו לי.","ms":"Tolong saya.","uz":"Ёрдам беринглар!","mn":"Надад туслаач.","ne":"मद्दत गर्नुहोस्","kk":"Маған көмектесіңіз.","ur":"مجھے مدد کرو.","bn":"আমাকে সাহায্য করো.","km":"ជួយ​ខ្ញុំ​ផង & # 160; ។","my":"ကူညီပါဦး ။","ta":"எனக்கு உதவுங்கள்.","si":"මට උදව් කරන්න.","약함":["ja","th","tl","ar","uz","ne"]},{"ko":"고맙습니다.","en":"Thank you.","zh":"谢谢你","ja":"ありがとうございます","vi":"Cảm ơn anh.","id":"Terima kasih, Pak.","th":"ขอบคุณค่ะ","tl":"Salamat sa iyo.","hi":"धन्यवाद.","ru":"Спасибо.","fr":"Merci beaucoup.","de":"Vielen Dank für Ihren Besuch.","es":"Muchas gracias.","pt":"Obrigado, senhor.","it":"Grazie, signore.","nl":"Dank je wel.","pl":"Dziękuję.","tr":"Teşekkür ederim.","uk":"Дякую.","ro":"Mulţumesc.","cs":"Děkuji, pane.","el":"Ευχαριστώ, κύριε.","sv":"- Tack.","ar":"شكراً جزيلاً","fa":"ممنونم","he":"תודה לך.","ms":"Terima kasih, tuan.","uz":"Раҳмат!","mn":"Баярлалаа","ne":"धन्यवाद ।","kk":"Рахмет.","ur":"آپ کا شکریہ.","bn":"- ধন্যবাদ, স্যার।","km":"សូម អរគុណ.","my":"ကျေးဇူးတင်ပါတယ်။","ta":"நன்றி.","si":"ස්තුතියි."},{"ko":"한국말을 조금 할 줄 압니다.","en":"I can speak a little Korean.","zh":"我能说一点韩语。","ja":"韓国語を少し話せる。","vi":"Tôi biết nói một chút tiếng Hàn.","id":"Dia dapat berbicara sedikit bahasa Korea.","th":"ฉันพูดเกาหลีได้นิดหน่อย","tl":"Maaari akong magsalita ng Koreano.","hi":"वे थोड़ी सी हिन्दी बोलते हैं।","ru":"Знает немного корейского языка.","fr":"Je peux parler un peu de coréen.","de":"Ich kann ein wenig Koreanisch sprechen.","es":"Puedo hablar un poco de coreano.","pt":"Eu falo um pouco de coreano.","it":"Parlo un po' di coreano.","nl":"Ik kan een beetje Koreaans spreken.","pl":"Mówię trochę po polsku.","tr":"Biraz Korece biliyorum.","uk":"Знає трохи корейської мови.","ro":"Vorbesc puţină coreeană.","cs":"Umím mluvit trochu korejsky.","el":"Μπορώ να μιλήσω λίγο Κορεάτικα.","sv":"Jag talar lite koreanska.","ar":"يتحدثون اللغة الكورية.","fa":"من کمی کره ای صحبت می کنم.","he":"אני יודע לדבר קצת קוריאנית.","ms":"Saya boleh bercakap sedikit bahasa Korea.","uz":"Мен озгина корейсча биламан.","mn":"Би бага зэрэг Солонгос хэл мэднэ.","ne":"मलाई केही कोरियाली बोल्न थाहा छ।","kk":"Мен корей тілін білемін.","ur":"میں کچھ کورین بول سکتا ہوں.","bn":"আমি কিছুটা কোরীয় বলতে পারি।","km":"ខ្ញុំ​អាច​និយាយ​ភាសា​កូរ៉េ​បាន​បន្តិច​បន្តួច & # 160; ។","my":"ကျွန်တော်က ကိုရီးယားစကား နည်းနည်းပြောတတ်တယ်။","ta":"இவரது மொழி கன்னடம் ஆகும்.","si":"මට කොරියානු ටිකක් කතා කරන්න පුළුවන්.","약함":["ja","id","tl","hi","ru","tr","uk","ar","ms","uz","mn","kk","bn","ta","si"]},{"ko":"통역해 줄 사람을 부르겠습니다.","en":"I'll get you an interpreter.","zh":"我会找一个翻译。","ja":"通訳を呼んでくるわ","vi":"Tôi sẽ gọi một người phiên dịch.","id":"Aku akan mencari penerjemah.","th":"ฉันจะเรียกลำแหน่งของฉัน","tl":"Kailangan ko ng isang interpreter.","hi":"मैं तुम्हारे लिए एक अनुवादक लाऊँगा।","ru":"Я позвоню переводчику.","fr":"Je vais appeler un interprète.","de":"Ich werde einen Dolmetscher rufen.","es":"Voy a llamar a un intérprete.","pt":"Vou chamar um intérprete.","it":"Chiamerò un interprete.","nl":"Ik zal een tolk bellen.","pl":"Zadzwonię po tłumacza.","tr":"Bir tercüman çağırayım.","uk":"Я викликаю перекладача.","ro":"Voi chema un interpret.","cs":"Zavolám tlumočníka.","el":"Θα καλέσω κάποιον διερμηνέα.","sv":"Jag ska ringa efter en tolk.","ar":"سأطلب مترجماً","fa":"من يه مترجم ميخوام.","he":"אני אביא מתרגם.","ms":"Saya akan panggil seorang penterjemah.","uz":"Мен таржимон чақираман.","mn":"Би орчуулагч дуудъя.","ne":"म अनुवादकलाई बोलाउँछु ।","kk":"Мен аудармашыны шақырамын.","ur":"میں ایک مترجم لے آؤں گا.","bn":"আমি একজন অনুবাদক ডাকবো।","km":"ខ្ញុំ​នឹង​រក​អ្នក​បកប្រែ​ម្នាក់​មក​ជំនួស​ខ្ញុំ & # 160; ។","my":"ကျွန်တော်ဘာသာပြန်တစ်ယောက်ခေါ်ပေးပါ့မယ်။","ta":"நான் ஒரு மொழிபெயர்ப்பாளரை அழைப்பேன்.","si":"මම පරිවර්තකයෙක්ව ගන්නම්."},{"ko":"화장실이 어디예요?","en":"Where's the bathroom?","zh":"卫生间在哪里?","ja":"トイレはどこ？","vi":"Nhà vệ sinh ở đâu?","id":"Dimana kamar mandinya?","th":"ห้องน้ำอยู่ไหน?","tl":"Saan ang banyo?","hi":"बाथरूम कहाँ है?","ru":"Где туалет?","fr":"Où sont les toilettes?","de":"Wo ist die Toilette?","es":"¿Dónde está el baño?","pt":"Onde está o banheiro?","it":"Dov'è il bagno?","nl":"Waar is het toilet?","pl":"Gdzie jest toaleta?","tr":"Tuvalet nerede?","uk":"Де туалет?","ro":"Unde este toaleta?","cs":"Kde je toaleta?","el":"Πού είναι η τουαλέτα;","sv":"Var är toaletten?","ar":"أين الحمام؟","fa":"دستشويي کجاست؟","he":"איפה השירותים?","ms":"Di mana bilik mandi?","uz":"Туалетим қаерда?","mn":"Угаалгын өрөө хаана байна?","ne":"बाथरूम कहाँ छ?","kk":"Туалет қайда?","ur":"توجہ ہے کہاں ہے؟","bn":"বাথরুম কোথায়?","km":"តើ​បន្ទប់​ទឹក​នៅ​ណា?","my":"ရေချိုးခန်းက ဘယ်မှာလဲ။","ta":"கழிப்பறை எங்கே?","si":"කොහෙද බාත්රූම් එක?","약함":["vi","ms"]},{"ko":"얼마예요?","en":"How much?","zh":"多少钱？","ja":"いくらだ？","vi":"- Bao nhiêu?","id":"Berapa banyak?","th":"มันเท่าไหร่?","tl":"Gaano katagal?","hi":"कितना है?","ru":"Сколько стоит?","fr":"Combien coûte-t-il?","de":"Wie viel ist das?","es":"- ¿Cuánto es?","pt":"- Quanto custa?","it":"- Quanto costa?","nl":"Hoeveel is het?","pl":"- Ile to kosztuje?","tr":"- Ne kadar?","uk":"Сколько это стоит?","ro":"- Cât costă?","cs":"- Kolik to stojí?","el":"- Πόσο είναι;","sv":"Hur mycket är det?","ar":"كم تكلف؟","fa":"چقدر ميشه؟","he":"כמה זה עולה?","ms":"Berapa banyak?","uz":"Қанча?","mn":"Хэдэн төгрөг вэ?","ne":"यो कति हो?","kk":"Қанша?","ur":"یہ کتنا ہے؟","bn":"কত দাম?","km":"តើ​វា​មាន​តម្លៃ​ប៉ុន្មាន​?","my":"ဘယ်လောက်လဲ ။","ta":"அது எவ்வளவு?","si":"- කොච්චරද?"},{"ko":"언제까지예요?","en":"How long is it?","zh":"多久?","ja":"いつまで？","vi":"Thế còn bao lâu nữa?","id":"Berapa lama?","th":"มันจะใช้เวลานานแค่ไหน","tl":"Hanggang kailan?","hi":"कितना समय है?","ru":"Как долго?","fr":"Jusqu'à quand?","de":"Wie lange dauert das?","es":"¿Hasta cuándo?","pt":"Até quando?","it":"Fino a quando?","nl":"Hoe lang duurt het?","pl":"- Jak długo?","tr":"Ne kadar sürecek?","uk":"До якого часу?","ro":"- Cât timp?","cs":"Jak dlouho to trvá?","el":"Πόσο καιρό είναι αυτό;","sv":"Hur länge är det?","ar":"إلى متى؟","fa":"تا کي؟","he":"עד מתי?","ms":"Berapa lama lagi?","uz":"Қачонгача кечиктирилажак?","mn":"Хэзээ хүртэл?","ne":"यो कति लामो छ?","kk":"Қашанға дейін?","ur":"یہ کتنا عرصہ ہے؟","bn":"কতক্ষণ?","km":"តើ​វា​មាន​រយៈពេល​ប៉ុន្មាន & # 160;?","my":"ဘယ်လောက်ကြာမလဲ ။","ta":"எவ்வளவு நேரம்?","si":"කොච්චර කල්ද?"},{"ko":"여기에 적어 주세요.","en":"Write it here.","zh":"请在这里输入。","ja":"ここに書いて","vi":"Hãy viết nó ở đây.","id":"Silahkan tulis di sini.","th":"เขียนไว้ที่นี่","tl":"Isulat ito dito.","hi":"इसे यहाँ लिखें.","ru":"Пожалуйста, напишите его здесь.","fr":"Veuillez écrire ici.","de":"Bitte schreiben Sie es hier.","es":"Escriba aquí.","pt":"Escreva aqui.","it":"Scrivi qui il tuo messaggio","nl":"Schrijf het hier.","pl":"Proszę wpisać tutaj.","tr":"Buraya yazın.","uk":"Запишіть його тут.","ro":"Scrie-l aici.","cs":"Napište to sem.","el":"Γράψτε το εδώ.","sv":"Ange din e-postadress här.","ar":"أكتبها هنا","fa":"اينجا بنويس","he":"כתוב את זה כאן.","ms":"Sila tulis di sini.","uz":"Унда ёзинг.","mn":"Энд бич.","ne":"कृपया यहाँ टाइप गर्नुहोस् ।","kk":"Мұнда жазыңыз.","ur":"یہاں لکھو.","bn":"এখানে লিখুন.","km":"សូម​បញ្ចូល​វា​នៅ​ទីនេះ & # 160; ។","my":"ဒီမှာ ရိုက်ထည့်ပါ","ta":"இங்கு எழுதவும்.","si":"ඒක මෙතන ලියන්න.","약함":["it"]}],"성적":{"en":{"평균닮음":30.2,"약한문장수":30,"가운뎃값":27.3,"약한수":0},"zh":{"평균닮음":29.6,"약한문장수":31,"가운뎃값":28.6,"약한수":6},"ja":{"평균닮음":25.9,"약한문장수":35,"가운뎃값":18.2,"약한수":8},"vi":{"평균닮음":20.3,"약한문장수":40,"가운뎃값":13.3,"약한수":11},"id":{"평균닮음":19.6,"약한문장수":39,"가운뎃값":11.8,"약한수":12},"th":{"평균닮음":16.5,"약한문장수":42,"가운뎃값":11.1,"약한수":12},"tl":{"평균닮음":26.0,"약한문장수":35,"가운뎃값":22.2,"약한수":9},"hi":{"평균닮음":19.6,"약한문장수":37,"가운뎃값":11.1,"약한수":12},"ru":{"평균닮음":23.9,"약한문장수":35,"가운뎃값":21.1,"약한수":10},"fr":{"평균닮음":31.3,"약한문장수":28,"가운뎃값":30.8,"약한수":3},"de":{"평균닮음":33.9,"약한문장수":24,"가운뎃값":30.8,"약한수":0},"es":{"평균닮음":29.9,"약한문장수":28,"가운뎃값":26.1,"약한수":3},"pt":{"평균닮음":28.9,"약한문장수":32,"가운뎃값":22.2,"약한수":3},"it":{"평균닮음":28.0,"약한문장수":28,"가운뎃값":30.0,"약한수":9},"nl":{"평균닮음":27.1,"약한문장수":31,"가운뎃값":25.0,"약한수":7},"pl":{"평균닮음":27.9,"약한문장수":35,"가운뎃값":20.0,"약한수":5},"tr":{"평균닮음":19.0,"약한문장수":40,"가운뎃값":14.3,"약한수":11},"uk":{"평균닮음":24.6,"약한문장수":32,"가운뎃값":25.0,"약한수":12},"ro":{"평균닮음":26.3,"약한문장수":34,"가운뎃값":22.2,"약한수":7},"cs":{"평균닮음":28.9,"약한문장수":32,"가운뎃값":23.5,"약한수":3},"el":{"평균닮음":28.5,"약한문장수":32,"가운뎃값":24.0,"약한수":5},"sv":{"평균닮음":25.4,"약한문장수":34,"가운뎃값":20.0,"약한수":7},"ar":{"평균닮음":20.8,"약한문장수":39,"가운뎃값":17.6,"약한수":13},"fa":{"평균닮음":20.3,"약한문장수":38,"가운뎃값":15.4,"약한수":9},"he":{"평균닮음":18.3,"약한문장수":39,"가운뎃값":10.0,"약한수":10},"ms":{"평균닮음":25.0,"약한문장수":31,"가운뎃값":26.7,"약한수":11},"uz":{"평균닮음":19.7,"약한문장수":39,"가운뎃값":11.8,"약한수":17},"mn":{"평균닮음":22.6,"약한문장수":36,"가운뎃값":17.4,"약한수":13},"ne":{"평균닮음":25.5,"약한문장수":27,"가운뎃값":26.7,"약한수":10},"kk":{"평균닮음":22.1,"약한문장수":34,"가운뎃값":18.2,"약한수":14},"ur":{"평균닮음":14.9,"약한문장수":43,"가운뎃값":0.0,"약한수":0},"bn":{"평균닮음":17.0,"약한문장수":42,"가운뎃값":11.8,"약한수":12},"km":{"평균닮음":27.1,"약한문장수":30,"가운뎃값":26.7,"약한수":11},"my":{"평균닮음":33.7,"약한문장수":31,"가운뎃값":25.0,"약한수":5},"ta":{"평균닮음":14.5,"약한문장수":46,"가운뎃값":11.1,"약한수":16},"si":{"평균닮음":20.2,"약한문장수":39,"가운뎃값":18.2,"약한수":10}}}</script>
+<script>
+(function(){
+"use strict";
+var 자료 = JSON.parse(document.getElementById('말모음').textContent);
+
+/* ── 기억해 두기 (안 되는 폰에서도 앱은 돌아가야 한다) ── */
+function 읽기(열쇠, 기본){
+  try{ var v = localStorage.getItem('손말_'+열쇠); return v===null?기본:JSON.parse(v); }
+  catch(e){ return 기본; }
+}
+function 쓰기(열쇠, 값){
+  try{ localStorage.setItem('손말_'+열쇠, JSON.stringify(값)); }catch(e){}
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   화면 말(껍데기 말) — 한국어 / English
+   ─────────────────────────────────────────────────────────────────────
+   컴퓨터판 세 도구(vt_i18n.py)와 «같은 모양»으로 적는다: {ko:{...}, en:{...}}
+   🚨 여기 담는 것은 «화면 껍데기»뿐이다. 창구에서 손님에게 보여 주는 «문장»은
+      물건 그 자체이므로 손대지 않는다 (옮기지도, 차례를 바꾸지도, 담긴 말
+      서른여섯 가지를 늘리거나 줄이지도 않는다).
+   ═══════════════════════════════════════════════════════════════════════ */
+var 말글 = {
+ ko: {
+  앱이름:'밸류스 손말',
+  앱설명:'창구에서 외국인 손님과 말이 통하게 해 주는 폰 앱. 인터넷이 없어도 됩니다.',
+  말고르기:'손님 말 고르기',
+  숫자보기:'숫자 보여 주기',
+  밝기:'밝게/어둡게',
+  닫기:'닫기',
+  화면말바꾸기:'한국어 / English',
+  건너편:'English',            /* 이 단추를 누르면 갈 말 */
+  찾기안내:'찾기 — 우리말로 치세요 (예: 서명)',
+  앞:'◀ 앞', 뒤:'뒤 ▶',
+  즐겨찾기:'즐겨찾기', 손님답:'손님이 답하기',
+  즐겨빔:'아직 즐겨찾기가 없습니다. 문장 오른쪽의 ☆ 을 눌러 담아 두세요.',
+  못찾음:'찾는 말이 없습니다.',
+  건네주기:'손님에게 폰을 건네주고, 맞는 것을 누르시라고 하세요.',
+  영어딱지:'영어: ', 없음:'(없음)', 지움:'지움',
+  묶음:{},                    /* 비우면 자료에 적힌 이름 그대로 (한국어) */
+  말이름:{}                   /* 비우면 자료에 적힌 우리이름 그대로 */
+ },
+ en: {
+  앱이름:'VALUES Counter Talk',
+  앱설명:'A phone app that lets counter staff and foreign visitors understand each other. Works without internet.',
+  말고르기:"Choose the visitor's language",
+  숫자보기:'Show numbers',
+  밝기:'Light / dark',
+  닫기:'Close',
+  화면말바꾸기:'한국어 / English',
+  건너편:'한국어',
+  찾기안내:'Search — type in English (e.g. sign)',
+  앞:'◀ Prev', 뒤:'Next ▶',
+  즐겨찾기:'Favourites', 손님답:'Visitor replies',
+  즐겨빔:'No favourites yet. Tap the ☆ beside a phrase to keep it here.',
+  못찾음:'Nothing found.',
+  건네주기:'Hand the phone to the visitor and ask them to tap the right one.',
+  영어딱지:'English: ', 없음:'(none)', 지움:'Clear',
+  묶음:{맞이:'Greeting the visitor', 서류:'Taking & giving papers',
+        등록:'Enrolment & payment', 길:'Giving directions',
+        때:'Dates & times', 곤란:'When it gets difficult'},
+  /* 서른여섯 가지 말의 «영어 이름». 담긴 말을 늘리거나 줄이는 것이 아니라,
+     이름표만 읽는 이의 말로 붙이는 것이다. 없으면 제이름이 그대로 나온다. */
+  말이름:{en:'English', zh:'Chinese', ja:'Japanese', vi:'Vietnamese',
+   id:'Indonesian', th:'Thai', tl:'Filipino', hi:'Hindi', ru:'Russian',
+   fr:'French', de:'German', es:'Spanish', pt:'Portuguese', it:'Italian',
+   nl:'Dutch', pl:'Polish', tr:'Turkish', uk:'Ukrainian', ro:'Romanian',
+   cs:'Czech', el:'Greek', sv:'Swedish', ar:'Arabic', fa:'Persian',
+   he:'Hebrew', ms:'Malay', uz:'Uzbek', mn:'Mongolian', ne:'Nepali',
+   kk:'Kazakh', ur:'Urdu', bn:'Bengali', km:'Khmer', my:'Burmese',
+   ta:'Tamil', si:'Sinhala'}
+ }
+};
+
+/* 폰이 쓰는 말을 보고 처음 한 번만 고른다 (한국어면 한국어, 그 밖에는 영어). */
+function 폰의말(){
+  try{
+    var 들 = (navigator.languages && navigator.languages.length)
+             ? navigator.languages : [navigator.language || ''];
+    for(var i=0;i<들.length;i++){
+      if(String(들[i]||'').toLowerCase().indexOf('ko')===0) return 'ko';
+    }
+  }catch(e){}
+  return 'en';
+}
+var 화면말 = 읽기('화면말', null);
+if(화면말!=='ko' && 화면말!=='en') 화면말 = 폰의말();
+
+/* 껍데기 글 한 마디 꺼내기. 없으면 한국어 원문으로 되돌아간다 (안전한 되돌림). */
+function ㄱ(열쇠){
+  var 방 = 말글[화면말] || 말글.ko;
+  var v = 방[열쇠];
+  return (v===undefined || v===null || v==='') ? (말글.ko[열쇠]===undefined?열쇠:말글.ko[열쇠]) : v;
+}
+/* 묶음(탭) 이름과 말 이름표 — 영어판에 없으면 자료에 적힌 한국어 그대로 */
+function 묶음이름(묶){ return (ㄱ('묶음')||{})[묶.열쇠] || 묶.이름; }
+function 말이름표(m){ return (ㄱ('말이름')||{})[m.코드] || m.우리이름; }
+
+var 지금말 = 읽기('말','en');
+if(!자료.말들.some(function(m){return m.코드===지금말;})) 지금말='en';
+var 지금탭 = 읽기('탭', 자료.묶음들[0].열쇠);
+var 즐겨 = 읽기('즐겨', []);
+var 테마 = 읽기('테마', null);
+if(테마) document.documentElement.setAttribute('data-theme', 테마);
+
+/* ── 문장을 한 줄로 다룬다 ── */
+var 줄들 = [];
+자료.직원말.forEach(function(p,i){
+  줄들.push({id:'ㅈ'+i, 묶음:p.묶음, ko:p.ko, 글:p, 누구:'직원'});
+});
+자료.손님말.forEach(function(p,i){
+  줄들.push({id:'ㅅ'+i, 묶음:'손님', ko:p.ko, 글:p, 누구:'손님'});
+});
+
+function 저쪽말(줄){ return 줄.글[지금말] || ''; }
+/* 「이 문장이 미덥지 않은가」 — 구울 때 이미 가려내 두었다.
+   (말마다·문장마다 바탕이 달라서, 두 쪽 다 낮을 때만 표시한다) */
+function 미덥지않나(줄){
+  if(지금말==='en') return false;
+  var 목 = 줄.글.약함;
+  return !!(목 && 목.indexOf(지금말) >= 0);
+}
+
+/* ── 머리: 말 이름 ── */
+function 말이름그리기(){
+  var m = 자료.말들.filter(function(x){return x.코드===지금말;})[0];
+  document.getElementById('말이름').textContent = m.제이름;
+  document.getElementById('말우리이름').textContent = 말이름표(m) + ' ▾';
+}
+
+/* ── 화면 껍데기를 지금 화면말로 다시 써 넣기 ── */
+function 글놓기(id, 글){ var e = document.getElementById(id); if(e) e.textContent = 글; }
+function 속성놓기(id, 이름, 글){ var e = document.getElementById(id); if(e) e.setAttribute(이름, 글); }
+function 껍데기그리기(){
+  document.documentElement.setAttribute('lang', 화면말);
+  document.title = ㄱ('앱이름');
+  var 설명 = document.querySelector('meta[name="description"]');
+  if(설명) 설명.setAttribute('content', ㄱ('앱설명'));
+  글놓기('말판제목', ㄱ('말고르기'));
+  글놓기('숫자판제목', ㄱ('숫자보기'));
+  글놓기('앞으로', ㄱ('앞'));
+  글놓기('뒤로', ㄱ('뒤'));
+  속성놓기('말단추', 'aria-label', ㄱ('말고르기'));
+  속성놓기('숫자단추', 'title', ㄱ('숫자보기'));
+  속성놓기('밤낮단추', 'title', ㄱ('밝기'));
+  속성놓기('찾기', 'placeholder', ㄱ('찾기안내'));
+  ['닫기','말판닫기','숫자닫기'].forEach(function(id){
+    속성놓기(id, 'title', ㄱ('닫기'));
+    속성놓기(id, 'aria-label', ㄱ('닫기'));
+  });
+  var 바꿈 = document.getElementById('화면말단추');
+  if(바꿈){
+    바꿈.textContent = ㄱ('건너편');
+    바꿈.setAttribute('title', ㄱ('화면말바꾸기'));
+    바꿈.setAttribute('aria-label', ㄱ('화면말바꾸기'));
+  }
+  숫자키그리기();
+}
+
+/* [English]/[한국어] 를 누르면 화면 껍데기만 갈아 끼운다.
+   손님에게 보여 주는 문장·담긴 말 서른여섯 가지는 그대로다. */
+function 화면말바꾸기(){
+  화면말 = (화면말==='ko') ? 'en' : 'ko';
+  쓰기('화면말', 화면말);
+  껍데기그리기(); 말이름그리기(); 탭그리기(); 목록그리기(); 큰그리기(); 자리맞추기();
+}
+
+/* ── 탭 ── */
+function 탭그리기(){
+  var 통 = document.getElementById('탭들');
+  통.innerHTML = '';
+  var 목 = [{열쇠:'즐겨', 이름:ㄱ('즐겨찾기'), 그림:'⭐'}]
+      .concat(자료.묶음들)
+      .concat([{열쇠:'손님', 이름:ㄱ('손님답'), 그림:'🙋'}]);
+  목.forEach(function(t){
+    var b = document.createElement('button');
+    b.className = '탭' + (t.열쇠===지금탭 ? ' 켬' : '');
+    b.textContent = t.그림 + ' ' + 묶음이름(t);
+    b.onclick = function(){ 지금탭=t.열쇠; 쓰기('탭',지금탭); 탭그리기(); 목록그리기(); };
+    통.appendChild(b);
+  });
+  자리맞추기();
+}
+
+/* 머리 높이가 바뀌므로 목록 시작 위치를 맞춰 준다 */
+function 자리맞추기(){
+  var h = document.getElementById('머리').offsetHeight;
+  document.getElementById('몸').style.top = h + 'px';
+}
+
+/* ── 목록 ── */
+function 보일줄들(){
+  var 찾는말 = document.getElementById('찾기').value.trim();
+  if(찾는말){
+    var ㄴ = 찾는말.toLowerCase();
+    return 줄들.filter(function(r){
+      return r.ko.toLowerCase().indexOf(ㄴ)>=0 ||
+             (저쪽말(r)||'').toLowerCase().indexOf(ㄴ)>=0 ||
+             /* 영어 화면에서는 영어로도 찾을 수 있어야 한다.
+                (담긴 문장을 바꾸는 것이 아니라, 찾는 자리만 넓히는 것) */
+             (화면말==='en' && (r.글.en||'').toLowerCase().indexOf(ㄴ)>=0);
+    });
+  }
+  if(지금탭==='즐겨') return 줄들.filter(function(r){return 즐겨.indexOf(r.id)>=0;});
+  return 줄들.filter(function(r){return r.묶음===지금탭;});
+}
+
+function 목록그리기(){
+  var 통 = document.getElementById('목록');
+  통.innerHTML = '';
+  var 보임 = 보일줄들();
+  if(!보임.length){
+    var 빔 = document.createElement('div');
+    빔.className='빔';
+    빔.textContent = (지금탭==='즐겨') ? ㄱ('즐겨빔') : ㄱ('못찾음');
+    통.appendChild(빔); return;
+  }
+  if(지금탭==='손님' && !document.getElementById('찾기').value.trim()){
+    var ㅁ = document.createElement('div');
+    ㅁ.className='머리글';
+    ㅁ.textContent = ㄱ('건네주기');
+    통.appendChild(ㅁ);
+  }
+  보임.forEach(function(r){
+    var 칸 = document.createElement('div');
+    칸.className = '칸';
+    var 속 = document.createElement('div');
+    속.className='속';
+    var a = document.createElement('div'); a.className='우리말'; a.textContent = r.ko;
+    var b = document.createElement('div'); b.className='저쪽말'; b.textContent = 저쪽말(r) || ㄱ('없음');
+    속.appendChild(r.누구==='손님' ? b : a);
+    속.appendChild(r.누구==='손님' ? a : b);
+    if(미덥지않나(r)){
+      var c = document.createElement('div'); c.className='덧';
+      c.textContent = ㄱ('영어딱지') + (r.글.en||'');
+      속.appendChild(c);
+    }
+    속.onclick = function(){ 크게보이기(보임, 보임.indexOf(r)); };
+    var 별 = document.createElement('button');
+    별.className = '별' + (즐겨.indexOf(r.id)>=0 ? ' 켬' : '');
+    별.textContent = 즐겨.indexOf(r.id)>=0 ? '★' : '☆';
+    별.onclick = function(e){ e.stopPropagation(); 별누름(r.id); 목록그리기(); };
+    칸.appendChild(속); 칸.appendChild(별);
+    통.appendChild(칸);
+  });
+}
+
+function 별누름(id){
+  var i = 즐겨.indexOf(id);
+  if(i>=0) 즐겨.splice(i,1); else 즐겨.push(id);
+  쓰기('즐겨', 즐겨);
+}
+
+/* ── 크게 보여 주기 ── */
+var 큰목록 = [], 큰자리 = 0;
+function 크게보이기(목, 자리){
+  큰목록 = 목; 큰자리 = 자리;
+  큰그리기();
+  document.getElementById('크게').classList.add('켬');
+}
+function 큰그리기(){
+  var r = 큰목록[큰자리];
+  if(!r) return;
+  /* 손님이 누른 대답은 **직원이 읽어야** 하므로 우리말을 크게,
+     직원이 보여 주는 말은 **손님이 읽어야** 하므로 저쪽 말을 크게. */
+  if(r.누구==='손님'){
+    document.getElementById('큰글').textContent = r.ko;
+    document.getElementById('큰우리말').textContent = 저쪽말(r) || '';
+  }else{
+    document.getElementById('큰글').textContent = 저쪽말(r) || r.ko;
+    document.getElementById('큰우리말').textContent = r.ko;
+  }
+  document.getElementById('큰자리표').textContent =
+    (큰목록.length>1) ? ((큰자리+1) + ' / ' + 큰목록.length) : '';
+  var 영 = document.getElementById('큰영어');
+  영.textContent = 미덥지않나(r) ? (ㄱ('영어딱지') + (r.글.en||'')) : '';
+  var 별 = document.getElementById('큰별');
+  var 켬 = 즐겨.indexOf(r.id)>=0;
+  별.textContent = 켬 ? '★' : '☆';
+  별.style.color = 켬 ? 'var(--노랑)' : '';
+}
+document.getElementById('닫기').onclick = function(){
+  document.getElementById('크게').classList.remove('켬'); 목록그리기();
+};
+document.getElementById('앞으로').onclick = function(){
+  if(큰자리>0){ 큰자리--; 큰그리기(); }
+};
+document.getElementById('뒤로').onclick = function(){
+  if(큰자리<큰목록.length-1){ 큰자리++; 큰그리기(); }
+};
+document.getElementById('큰별').onclick = function(){
+  별누름(큰목록[큰자리].id); 큰그리기();
+};
+
+/* ── 말 고르기 ── */
+function 말판그리기(){
+  var 통 = document.getElementById('말목록');
+  통.innerHTML='';
+  자료.말들.forEach(function(m){
+    var b = document.createElement('button');
+    b.className='말칸' + (m.코드===지금말?' 켬':'');
+    var n = document.createElement('b'); n.textContent = m.제이름;
+    var k = document.createElement('span'); k.textContent = 말이름표(m);
+    b.appendChild(n); b.appendChild(k);
+    b.onclick = function(){
+      지금말 = m.코드; 쓰기('말', 지금말);
+      document.getElementById('말판').classList.remove('켬');
+      말이름그리기(); 목록그리기(); 큰그리기();
+    };
+    통.appendChild(b);
+  });
+}
+document.getElementById('말단추').onclick = function(){
+  말판그리기(); document.getElementById('말판').classList.add('켬');
+};
+document.getElementById('말판닫기').onclick = function(){
+  document.getElementById('말판').classList.remove('켬');
+};
+
+/* ── 숫자 보여 주기 ── */
+var 숫자글 = '';
+function 숫자그리기(){
+  document.getElementById('숫자값').textContent =
+    숫자글 ? 숫자글.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0';
+}
+function 숫자키그리기(){
+  var 통 = document.getElementById('숫자키');
+  if(!통) return;
+  통.innerHTML = '';
+  ['1','2','3','4','5','6','7','8','9','←','0','지움'].forEach(function(k){
+    var b=document.createElement('button');
+    b.textContent = (k==='지움') ? ㄱ('지움') : k;
+    b.onclick=function(){
+      if(k==='←') 숫자글 = 숫자글.slice(0,-1);
+      else if(k==='지움') 숫자글='';
+      else if(숫자글.length<12) 숫자글 += k;
+      숫자그리기();
+    };
+    통.appendChild(b);
+  });
+}
+document.getElementById('숫자단추').onclick = function(){
+  숫자그리기(); document.getElementById('숫자판').classList.add('켬');
+};
+document.getElementById('숫자닫기').onclick = function(){
+  document.getElementById('숫자판').classList.remove('켬');
+};
+
+/* ── 밝게/어둡게 ── */
+document.getElementById('밤낮단추').onclick = function(){
+  var 지금 = document.documentElement.getAttribute('data-theme');
+  var 다음 = (지금==='dark') ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', 다음);
+  쓰기('테마', 다음);
+};
+
+document.getElementById('화면말단추').onclick = 화면말바꾸기;
+document.getElementById('찾기').addEventListener('input', 목록그리기);
+window.addEventListener('resize', 자리맞추기);
+
+껍데기그리기(); 말이름그리기(); 탭그리기(); 목록그리기(); 자리맞추기();
+
+
+})();
+</script>
+</body>
+</html>
