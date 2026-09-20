@@ -241,7 +241,9 @@
       .then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
       .then(function (것) {
         if (!것.r.ok || !것.j.됐다) {
-          throw new Error(것.j && 것.j.잘못 ? 것.j.잘못 : 'Could not send.');
+          var 탈것 = new Error(것.j && 것.j.잘못 ? 것.j.잘못 : 'Could not send.');
+          탈것.우리말 = true;
+          throw 탈것;
         }
         판.style.display = 'none';
         됐다.style.display = 'block';
@@ -250,7 +252,10 @@
       .catch(function (e) {
         단추.disabled = false;
         알림('');
-        못함(e.message + ' Please try once more in a moment.');
+        못함(e && e.우리말
+          ? e.message + ' Please try once more in a moment.'
+          : 'It will not send right now. Either the connection dropped or our side is '
+            + 'resting. Please try once more in a moment.');
       });
   };
 

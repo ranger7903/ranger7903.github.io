@@ -241,7 +241,11 @@
       .then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
       .then(function (것) {
         if (!것.r.ok || !것.j.됐다) {
-          throw new Error(것.j && 것.j.잘못 ? 것.j.잘못 : '보내지 못했습니다.');
+          // 우리가 지어서 던지는 말에는 표를 달아 둔다.
+          // 표가 없는 것은 «기계가 낸 영어 말»이므로 손님에게 보이지 않는다.
+          var 탈것 = new Error(것.j && 것.j.잘못 ? 것.j.잘못 : '보내지 못했습니다.');
+          탈것.우리말 = true;
+          throw 탈것;
         }
         판.style.display = 'none';
         됐다.style.display = 'block';
@@ -250,7 +254,11 @@
       .catch(function (e) {
         단추.disabled = false;
         알림('');
-        못함(e.message + ' 잠시 뒤에 한 번 더 눌러 주세요.');
+        // 🚨 기계가 낸 영어(Failed to fetch 같은 것)를 손님에게 보이지 않는다.
+        못함(e && e.우리말
+          ? e.message + ' 잠시 뒤에 한 번 더 눌러 주세요.'
+          : '지금은 보내지지 않습니다. 인터넷이 잠깐 끊겼거나 저희 쪽이 쉬는 중입니다. '
+            + '잠시 뒤에 한 번 더 눌러 주세요.');
       });
   };
 
