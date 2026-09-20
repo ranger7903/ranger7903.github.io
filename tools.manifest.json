@@ -297,6 +297,13 @@
     }
    ]
   },
+  "garifile": {
+   "saveAs": "밸류스 가려서 보내기 파일판 설치.exe",
+   "version": "",
+   "totalSize": 0,
+   "sha256": "",
+   "parts": []
+  },
   "translator": {
    "saveAs": "밸류스 통역책상 설치.exe",
    "version": "2026-09-20",
