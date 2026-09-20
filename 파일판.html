@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가려서 보내기 — 파일판 · 밸류스</title>
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.75}
+  .wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);margin:0 0 22px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:20px;margin:0 0 16px}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-top:12px}
+  .bar > i{display:block;height:100%;width:0;background:var(--deep);transition:width .2s}
+  #say{margin-top:10px;font-size:15px;min-height:1.7em}
+  .free{display:inline-block;background:var(--okbg);color:var(--ok);
+    font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+  h2{font-size:18px;margin:0 0 8px}
+  ul,ol{padding-left:1.2em;margin:6px 0}
+  li{margin:6px 0}
+  .quiet{font-size:14px;color:var(--ink2)}
+  .안심{background:var(--okbg);border:1px solid #CBDCC6}
+  a{color:var(--deep)}
+  .miss{background:#FBECE9;color:var(--warn);border-radius:8px;padding:11px 13px;
+    margin-top:12px;font-size:15px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="free">체험판 · 그냥 받아 보세요</span>
+  <h1>가려서 보내기 — 파일판</h1>
+  <p class="sub">엑셀·워드·한글 파일 «속» 주민등록번호를 가려서 새 파일로 내줍니다.
+    윈도우 컴퓨터용입니다.</p>
+
+  <div class="card 안심">
+    <h2>파일은 이 컴퓨터 밖으로 나가지 않습니다</h2>
+    <ul class="quiet" style="margin:0">
+      <li>찾는 것도 가리는 것도 전부 이 컴퓨터 안에서 끝납니다. 인터넷을 안 씁니다.</li>
+      <li><b>원본은 절대 안 바뀝니다.</b> 가린 것은 「이름(가림).확장자」 새 파일로 나옵니다.</li>
+      <li>가린 뒤 <b>스스로 다시 읽어</b> 정말 안 보이는지 확인합니다. 남으면 그대로 알려 드립니다.</li>
+      <li>회원가입도, 서버도, 광고도 없습니다.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <button class="big" id="go">체험판 받기</button>
+    <div class="bar"><i id="bar"></i></div>
+    <div id="say">준비하는 중…</div>
+    <div class="miss" id="err"></div>
+    <p class="quiet" style="margin:10px 0 0">
+      <b>체험판은 한 번에 3장까지</b> 가릴 수 있습니다.
+      가리는 방식도 다시 읽어 확인하는 것도 <b>정품과 똑같습니다</b> — 장수만 막습니다.</p>
+  </div>
+
+  <div class="card">
+    <h2>받은 뒤에는</h2>
+    <ol>
+      <li>받은 파일(<b>밸류스 가려서 보내기 파일판 설치.exe</b>)을 두 번 누릅니다.</li>
+      <li>설치가 끝나면 바탕화면 아이콘을 두 번 누릅니다.</li>
+      <li>가릴 파일을 고르고 <b>[가리기]</b> 를 누르면 끝입니다.</li>
+    </ol>
+    <p class="quiet">지울 때는 「설정 → 앱」에서 깨끗하게 지워집니다.</p>
+  </div>
+
+  <div class="card">
+    <h2>이런 때 씁니다</h2>
+    <ul>
+      <li>명단 엑셀을 메일로 보낼 때 — 주민등록번호 뒷자리를 덮습니다.</li>
+      <li>공문(워드·한글)을 밖으로 보낼 때 — 계좌번호·전화번호를 덮습니다.</li>
+      <li>여러 파일을 한꺼번에 — 폴더를 통째로 골라도 됩니다.</li>
+    </ul>
+    <p class="quiet"><b>표·글꼴·조건부 서식·자료 유효성·틀 고정은 그대로 둡니다.</b>
+      파일을 열었다 저장하지 않고 속 글자만 바꾸기 때문입니다.
+      글자 수도 안 바꿔서(880101-1******) 칸 너비와 줄바꿈이 틀어지지 않습니다.</p>
+    <p class="quiet">못 하는 것도 적어 둡니다 — <b>옛 한글(.hwp)</b> 은 못 읽습니다.
+      한글에서 «.hwpx» 로 저장해 주세요. 그리고 가린 것은 되돌릴 수 없으니
+      원본을 꼭 남겨 두세요(원본은 저희가 건드리지 않습니다).</p>
+  </div>
+
+  <div class="card">
+    <h2>정품은 29,900원입니다</h2>
+    <p class="quiet">한 번 사면 평생 쓰고, 달마다 내는 돈이 없습니다.
+      정품 이름표를 넣으면 <b>장수 제한이 풀립니다</b>.
+      구입은 <a href="./#p-garifile">가게</a>에서 안내해 드립니다.</p>
+  </div>
+
+  <p class="quiet"><a href="./">← 가게로 돌아가기</a></p>
+
+</div>
+
+<script>
+(function () {
+  var 바 = document.getElementById('bar');
+  var 말 = document.getElementById('say');
+  var 단추 = document.getElementById('go');
+  var 탈 = document.getElementById('err');
+  var 짐 = null;
+
+  function 크기(n) { return (n / 1048576).toFixed(0) + ' MB'; }
+  function 알림(s) { 말.textContent = s; }
+  function 못함(s) { 탈.textContent = s; 탈.style.display = 'block'; }
+
+  function 지문(buf) {
+    return crypto.subtle.digest('SHA-256', buf).then(function (h) {
+      return Array.prototype.map.call(new Uint8Array(h), function (x) {
+        return ('0' + x.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
+
+  fetch('tools.manifest.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (m) {
+      var f = m.files && m.files.garifile;
+      if (!f || !f.parts || !f.parts.length) {
+        단추.disabled = true;
+        알림('아직 준비 중입니다. 곧 올려 두겠습니다.');
+        return;
+      }
+      짐 = { base: m.base, f: f };
+      알림('크기 ' + 크기(f.totalSize) + ' · 판 ' + (f.version || ''));
+      단추.onclick = 받기;
+    })
+    .catch(function () { 단추.disabled = true; 알림('잠시 뒤 새로 고쳐 주세요.'); });
+
+  function 받기() {
+    단추.disabled = true;
+    탈.style.display = 'none';
+    var f = 짐.f, 모음 = [], 받은양 = 0;
+    var 차례 = Promise.resolve();
+    f.parts.forEach(function (조각) {
+      차례 = 차례.then(function () {
+        return fetch(짐.base + 조각.name, { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('조각을 못 받았습니다 (' + r.status + ')');
+            return r.arrayBuffer();
+          })
+          .then(function (buf) {
+            if (buf.byteLength !== 조각.size) throw new Error('조각 크기가 다릅니다');
+            return 지문(buf).then(function (h) {
+              if (조각.sha256 && h !== 조각.sha256) throw new Error('조각이 깨졌습니다');
+              모음.push(new Uint8Array(buf));
+              받은양 += buf.byteLength;
+              바.style.width = (받은양 / f.totalSize * 100) + '%';
+              알림('받는 중 ' + Math.round(받은양 / f.totalSize * 100) + '%');
+            });
+          });
+      });
+    });
+    차례.then(function () {
+      var 통 = new Uint8Array(f.totalSize), o = 0;
+      모음.forEach(function (b) { 통.set(b, o); o += b.length; });
+      알림('확인하는 중…');
+      return 지문(통.buffer).then(function (h) {
+        if (f.sha256 && h !== f.sha256) throw new Error('붙여 보니 원본과 다릅니다');
+        // 윈도우 프로그램은 «MZ» 로 시작합니다. (안드로이드 앱의 PK 와 다릅니다)
+        if (통[0] !== 0x4D || 통[1] !== 0x5A) throw new Error('프로그램 파일 모양이 아닙니다');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([통],
+          { type: 'application/octet-stream' }));
+        a.download = f.saveAs || '밸류스 가려서 보내기 파일판 설치.exe';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
+        바.style.width = '100%';
+        알림('받았습니다. 받은 파일을 두 번 눌러 설치해 주세요.');
+        단추.textContent = '다시 받기';
+        단추.disabled = false;
+      });
+    }).catch(function (e) {
+      단추.disabled = false;
+      단추.textContent = '다시 받기';
+      못함('받다가 멈췄습니다 (' + e.message + '). 단추를 한 번 더 눌러 주세요.');
+    });
+  }
+})();
+</script>
+</body>
+</html>
