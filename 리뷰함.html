@@ -143,14 +143,29 @@
 
   function 부르기(길, 어떻게) {
     어떻게 = 어떻게 || {};
-    어떻게.headers = Object.assign({ 'x-owner-key': 열쇠 }, 어떻게.headers || {});
+    // 🚨 편지 머리(header)에는 «영문·숫자»만 실을 수 있습니다.
+    //    열쇠에 한글이 들어 있으면 그대로는 못 보냅니다(ISO-8859-1).
+    //    그래서 보낼 때 한 번 싸고, 일꾼 쪽에서 풉니다.
+    어떻게.headers = Object.assign(
+      { 'x-owner-key': encodeURIComponent(열쇠) }, 어떻게.headers || {});
     어떻게.cache = 'no-store';
     return fetch(받개 + 길, 어떻게).then(function (r) {
       return r.json().then(function (j) {
-        if (!r.ok) throw new Error(j && j.잘못 ? j.잘못 : ('안 됐습니다 (' + r.status + ')'));
+        if (!r.ok) {
+          var 탈것 = new Error(j && j.잘못 ? j.잘못 : ('안 됐습니다 (' + r.status + ')'));
+          탈것.우리말 = true;
+          throw 탈것;
+        }
         return j;
       });
     });
+  }
+
+  /* 🚨 기계가 낸 영어 말을 그대로 보여 주지 않는다. */
+  function 쉬운말(e) {
+    if (e && e.우리말) return e.message;
+    return '리뷰 받는 자리에 닿지 못했습니다. 아직 일꾼을 안 만드셨거나, '
+      + '인터넷이 잠깐 끊긴 것입니다.';
   }
 
   function 열기() {
@@ -173,7 +188,7 @@
       .catch(function (e) {
         $('열기').disabled = false;
         $('열기').textContent = '열기';
-        못함(e.message);
+        못함(쉬운말(e));
       });
   }
 
@@ -295,7 +310,7 @@
       body: JSON.stringify({ 번호: r.번호, 정함: 정함 }),
     })
       .then(function () { r.상태 = 정함; 다시그리기(); })
-      .catch(function (e) { 단추.disabled = false; alert(e.message); });
+      .catch(function (e) { 단추.disabled = false; alert(쉬운말(e)); });
   }
 
   /* ── 고칠 거리 한 장 ────────────────────────────────── */
