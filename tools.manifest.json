@@ -541,6 +541,92 @@
      "sha256": "fb60eb9f91986e3d4b9ee158a13c3d9356f97020af8503c8048c6c472fc2b0ef"
     }
    ]
+  },
+  "meter": {
+   "saveAs": "밸류스 우리집 계량기.apk",
+   "version": "2026-09-20",
+   "totalSize": 35277693,
+   "sha256": "4eb60e168ba9e56c577297a92589eb73c2aefada85f520ec990490564f3363f4",
+   "parts": [
+    {
+     "name": "dist/meter.part000",
+     "size": 9437184,
+     "sha256": "271b293cda96388393394afaf96cce69c42a5010dd267fe7841c4799565672c2"
+    },
+    {
+     "name": "dist/meter.part001",
+     "size": 9437184,
+     "sha256": "86b000da1e50075560ec321881b04e2d60d29f1f596c6abf3994dfb1182a4e1a"
+    },
+    {
+     "name": "dist/meter.part002",
+     "size": 9437184,
+     "sha256": "aa227a3e81c6f09ac868bf61f2c69c6a34dfdbfae256409acdf9358623ba671b"
+    },
+    {
+     "name": "dist/meter.part003",
+     "size": 6966141,
+     "sha256": "51cfa4a25fb689f868d72690fa064e0afd91fae82599f41fdd13072293ae17d3"
+    }
+   ]
+  },
+  "meter_any": {
+   "saveAs": "밸류스 우리집 계량기 (아무 전화기나).apk",
+   "version": "2026-09-20",
+   "totalSize": 88088491,
+   "sha256": "6e5a24464e4eb8b3660af2bf1018ac890d4d66b20fea4e82ca01ed8be8e9d513",
+   "parts": [
+    {
+     "name": "dist/meter_any.part000",
+     "size": 9437184,
+     "sha256": "271b293cda96388393394afaf96cce69c42a5010dd267fe7841c4799565672c2"
+    },
+    {
+     "name": "dist/meter_any.part001",
+     "size": 9437184,
+     "sha256": "86b000da1e50075560ec321881b04e2d60d29f1f596c6abf3994dfb1182a4e1a"
+    },
+    {
+     "name": "dist/meter_any.part002",
+     "size": 9437184,
+     "sha256": "aa227a3e81c6f09ac868bf61f2c69c6a34dfdbfae256409acdf9358623ba671b"
+    },
+    {
+     "name": "dist/meter_any.part003",
+     "size": 9437184,
+     "sha256": "261110491afb4c2ab6f27b0de35e0a846cf462070b2440506c8dbe95edc12898"
+    },
+    {
+     "name": "dist/meter_any.part004",
+     "size": 9437184,
+     "sha256": "f94a9915d1ce134835b35f57f8f5f7016ca1fc11f4c09b2540850c3737ed4e27"
+    },
+    {
+     "name": "dist/meter_any.part005",
+     "size": 9437184,
+     "sha256": "006f5a62a28f79aaad3d8dfc610908734cac6980edd3251454adae6a38370add"
+    },
+    {
+     "name": "dist/meter_any.part006",
+     "size": 9437184,
+     "sha256": "3a7de54eed62f6eff36df386c08863d55ab019c37a69a2ec4f97cd0e42c4b2f8"
+    },
+    {
+     "name": "dist/meter_any.part007",
+     "size": 9437184,
+     "sha256": "3862adc5da1ddc17b3372545fd1f97939972fc1c2a2dd772f6bd927f82288c40"
+    },
+    {
+     "name": "dist/meter_any.part008",
+     "size": 9437184,
+     "sha256": "30d5ff774df537a5bb6a87f2009caab0da41c6715a61694fddaf45e2ecacd659"
+    },
+    {
+     "name": "dist/meter_any.part009",
+     "size": 3153835,
+     "sha256": "6175d672d4f4e674e0c25d78fbd0e4dc2d6841781d2dd09566ebc661349fccc8"
+    }
+   ]
   }
  }
 }
