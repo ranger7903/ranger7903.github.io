@@ -1,0 +1,125 @@
+{
+ "_이것은": "리뷰 쓰는 자리와 리뷰함이 「어떤 것을 쓰셨나요」 목록을 여기서 읽습니다.",
+ "_고치는_법": "새 프로그램이나 앱이 나오면 여기에 한 줄만 더 넣으면 됩니다.",
+ "갱신일": "2026-09-20",
+ "무리": [
+  {
+   "이름": "컴퓨터 프로그램",
+   "것들": [
+    {
+     "열쇠": "merger",
+     "이름": "스마트 자료취합기",
+     "영문": "Smart Data Merger"
+    },
+    {
+     "열쇠": "formfiller",
+     "이름": "스마트 서식채우기",
+     "영문": "Smart Form Filler"
+    },
+    {
+     "열쇠": "listcompare",
+     "이름": "스마트 명단대조기",
+     "영문": "Smart List Compare"
+    },
+    {
+     "열쇠": "quick",
+     "이름": "빠른입력기",
+     "영문": "Quick Typer"
+    },
+    {
+     "열쇠": "keeper",
+     "이름": "폴더지킴이",
+     "영문": "Folder Keeper"
+    },
+    {
+     "열쇠": "garden",
+     "이름": "책상 위 정원",
+     "영문": "Desk Garden"
+    },
+    {
+     "열쇠": "handwrite",
+     "이름": "마음 서랍",
+     "영문": "Heart Drawer"
+    },
+    {
+     "열쇠": "pdfkit",
+     "이름": "PDF 반짇고리",
+     "영문": "PDF Sewing Kit"
+    },
+    {
+     "열쇠": "crayon",
+     "이름": "캡처 색연필",
+     "영문": "Capture Crayon"
+    },
+    {
+     "열쇠": "counter",
+     "이름": "밸류스 계산대",
+     "영문": "Valuestools Counter"
+    },
+    {
+     "열쇠": "booking",
+     "이름": "밸류스 예약수첩",
+     "영문": "Valuestools Booking Book"
+    },
+    {
+     "열쇠": "button",
+     "이름": "밸류스 단추",
+     "영문": "Valuestools Button"
+    },
+    {
+     "열쇠": "garifile",
+     "이름": "가려서 보내기 — 파일판",
+     "영문": "Hide-and-Send — Files"
+    },
+    {
+     "열쇠": "translator",
+     "이름": "밸류스 통역책상",
+     "영문": "Valuestools Interpreter Desk"
+    },
+    {
+     "열쇠": "office",
+     "이름": "밸류스 AI 사무직원",
+     "영문": "Valuestools AI Office Clerk"
+    }
+   ],
+   "영문": "Windows programs"
+  },
+  {
+   "이름": "휴대전화 앱",
+   "것들": [
+    {
+     "열쇠": "receipt",
+     "이름": "영수증 지갑",
+     "영문": "Receipt Wallet"
+    },
+    {
+     "열쇠": "sonmal",
+     "이름": "밸류스 손말",
+     "영문": "Valuestools Hand Talk"
+    },
+    {
+     "열쇠": "garisend",
+     "이름": "가려서 보내기",
+     "영문": "Hide-and-Send"
+    },
+    {
+     "열쇠": "meter",
+     "이름": "우리집 계량기",
+     "영문": "Home Meter"
+    }
+   ],
+   "영문": "Phone apps"
+  },
+  {
+   "이름": "책",
+   "것들": [
+    {
+     "열쇠": "book",
+     "이름": "밸류스에서 낸 책",
+     "영문": "A Valuestools book"
+    }
+   ],
+   "영문": "Books"
+  }
+ ]
+}

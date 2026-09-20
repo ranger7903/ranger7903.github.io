@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tell us how it went · Valuestools</title>
+<meta name="description" content="Tell us how our programs and apps worked for you. We never ask your name or your number.">
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.75}
+  .wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);margin:0 0 22px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:20px;margin:0 0 16px}
+  .안심{background:var(--okbg);border:1px solid #CBDCC6}
+  h2{font-size:18px;margin:0 0 10px}
+  label{display:block;font-weight:700;margin:0 0 8px}
+  select,textarea{width:100%;font-family:inherit;font-size:17px;
+    border:1px solid var(--line);border-radius:10px;padding:13px;
+    background:var(--surface);color:var(--ink)}
+  select{height:52px}
+  textarea{min-height:92px;resize:vertical;line-height:1.7}
+  .별칸{display:flex;gap:8px;flex-wrap:wrap}
+  .별{flex:1 1 0;min-width:58px;padding:14px 4px;border:1px solid var(--line);
+    border-radius:10px;background:var(--surface);cursor:pointer;
+    font-family:inherit;font-size:15px;color:var(--ink2);text-align:center}
+  .별 b{display:block;font-size:20px;line-height:1.3;color:var(--accent)}
+  .별[aria-pressed="true"]{border-color:var(--deep);background:#EDF3F8;
+    color:var(--deep);font-weight:700;box-shadow:inset 0 0 0 1px var(--deep)}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit;margin-top:4px}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .quiet{font-size:14px;color:var(--ink2)}
+  ul{padding-left:1.2em;margin:6px 0}
+  li{margin:6px 0}
+  a{color:var(--deep)}
+  .말{margin-top:12px;font-size:15px;min-height:1.7em}
+  .탈{background:#FBECE9;color:var(--warn);border-radius:8px;padding:11px 13px;
+    margin-top:12px;font-size:15px;display:none}
+  .됐다{display:none;text-align:center;padding:22px 16px}
+  .됐다 .크게{font-size:21px;font-weight:700;color:var(--ok);margin-bottom:8px}
+  .띠{display:inline-block;background:#F3E6DF;color:var(--accent);
+    font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="띠">One customer is our whole design brief</span>
+  <h1>Tell us how it went</h1>
+  <p class="sub">Whatever you find awkward here gets fixed in the next version.
+    What we changed is written down on the <a href="updates.html">Updates page</a>.</p>
+
+  <div class="card 안심">
+    <h2>We ask you for nothing</h2>
+    <ul class="quiet" style="margin:0">
+      <li><b>There is no box for your name, your phone, or your email.</b> No account either.</li>
+      <li>We don't know who wrote this. Your IP address is not stored.</li>
+      <li>The owner reads every line himself. Nothing goes to an ad company.</li>
+      <li>We decide whether a review is shown on the site, but <b>we never edit the words.</b>
+        A harsh one goes up as written, or not at all. Never rewritten.</li>
+    </ul>
+  </div>
+
+  <form id="판" class="card">
+    <div style="margin-bottom:20px">
+      <label for="제품">Which one did you use?</label>
+      <select id="제품"><option value="">— choose —</option></select>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label>How did you like it?</label>
+      <div class="별칸" id="별칸"></div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="좋은점">What was good <span class="quiet" style="font-weight:400">(you may skip this)</span></label>
+      <textarea id="좋은점" placeholder="e.g. Best part was that it works with no internet."></textarea>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="불편한점">What was awkward <span class="quiet" style="font-weight:400">(this helps us most)</span></label>
+      <textarea id="불편한점" placeholder="e.g. The button text was too small to read."></textarea>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="바람">What you wish it had</label>
+      <textarea id="바람" placeholder="e.g. I wish I could print the result straight away."></textarea>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="기계">What did you run it on? <span class="quiet" style="font-weight:400">(leave it if unsure)</span></label>
+      <select id="기계">
+        <option value="">— not saying —</option>
+        <option>Windows 11</option>
+        <option>Windows 10</option>
+        <option>Another Windows</option>
+        <option>Android phone</option>
+        <option>iPhone</option>
+        <option>Mac</option>
+      </select>
+    </div>
+
+    <button type="submit" class="big" id="보내기">Send</button>
+    <div class="말" id="말"></div>
+    <div class="탈" id="탈"></div>
+  </form>
+
+  <div class="card 됐다" id="됐다">
+    <div class="크게">Thank you.</div>
+    <p style="margin:0 0 14px">Got it. The owner reads it, and what needs fixing goes into the next version.</p>
+    <p class="quiet" style="margin:0 0 16px">What changed is written on the <a href="updates.html">Updates page</a>, with the date.</p>
+    <button class="big" id="또" style="background:var(--sunk);color:var(--ink)">Write another</button>
+  </div>
+
+  <div class="card">
+    <h2>What we do with your review</h2>
+    <ol class="quiet" style="margin:0">
+      <li>When the same thing comes up more than once, that is the real problem. It goes first.</li>
+      <li>We gather the fixes onto one page.</li>
+      <li><b>Nothing is built until the owner presses "go ahead".</b> It never happens on its own.</li>
+      <li>When the new version is out we write it on the <a href="updates.html">Updates page</a>. The upgrade is free.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>There are no ads in our things</h2>
+    <p class="quiet" style="margin:0">
+      Even in the apps we give away, <b>there is not one line of anybody else's advertising.</b>
+      Nothing covers the screen. Nothing makes you wait five seconds.
+      At the very bottom there is one line, "Made by Valuestools" — that is all of our advertising.
+      Which is why we have no reason to track what you tapped, either.</p>
+  </div>
+
+  <p class="quiet"><a href="en.html">← back to the shop</a></p>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var 받개 = '', 고른별 = 0;
+  var 말 = document.getElementById('말');
+  var 탈 = document.getElementById('탈');
+  var 단추 = document.getElementById('보내기');
+  var 판 = document.getElementById('판');
+  var 됐다 = document.getElementById('됐다');
+
+  function 알림(s) { 말.textContent = s || ''; }
+  function 못함(s) { 탈.textContent = s; 탈.style.display = 'block'; }
+  function 지움() { 탈.style.display = 'none'; }
+
+  /* ── 별 다섯 개 ──────────────────────────────────────── */
+  var 별말 = ['Poor', 'Not great', 'Okay', 'Good', 'Very good'];
+  var 별칸 = document.getElementById('별칸');
+  별말.forEach(function (글, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = '별';
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = '<b>' + '★'.repeat(i + 1) + '</b>' + 글;
+    b.onclick = function () {
+      고른별 = i + 1;
+      Array.prototype.forEach.call(별칸.children, function (c, j) {
+        c.setAttribute('aria-pressed', j === i ? 'true' : 'false');
+      });
+      지움();
+    };
+    별칸.appendChild(b);
+  });
+
+  /* ── 고를 수 있는 것 채우기 ───────────────────────────── */
+  var 고르개 = document.getElementById('제품');
+  fetch('제품목록.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      (j.무리 || []).forEach(function (무리) {
+        var g = document.createElement('optgroup');
+        g.label = 무리.영문 || 무리.이름;
+        (무리.것들 || []).forEach(function (것) {
+          var o = document.createElement('option');
+          o.value = 것.열쇠;
+          o.textContent = 것.영문 || 것.이름;
+          g.appendChild(o);
+        });
+        고르개.appendChild(g);
+      });
+      // 주소에 ?제품=garifile 이 붙어 오면 미리 골라 둔다
+      var 온것 = new URLSearchParams(location.search).get('it');
+      if (온것) 고르개.value = 온것;
+    })
+    .catch(function () { });
+
+  fetch('리뷰설정.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j && j.켜짐 && j.받개) { 받개 = j.받개.replace(/\/+$/, ''); }
+      else { 단추.disabled = true; 알림('The review box is being set up.'); }
+    })
+    .catch(function () { 단추.disabled = true; 알림('The review box is being set up.'); });
+
+  /* ── 보내기 ─────────────────────────────────────────── */
+  판.onsubmit = function (e) {
+    e.preventDefault();
+    지움();
+    var 제품 = 고르개.value;
+    var 좋은점 = document.getElementById('좋은점').value.trim();
+    var 불편한점 = document.getElementById('불편한점').value.trim();
+    var 바람 = document.getElementById('바람').value.trim();
+
+    if (!제품) { 못함('Please choose which one you used.'); return; }
+    if (!고른별) { 못함('Please tap one of the stars.'); return; }
+    if (!좋은점 && !불편한점 && !바람) {
+      못함('Please fill in at least one of the three boxes so we have something to fix.'); return;
+    }
+    if (!받개) { 못함('The review box is not ready yet.'); return; }
+
+    단추.disabled = true;
+    알림('Sending\u2026');
+
+    fetch(받개 + '/review', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        제품: 제품, 별: 고른별,
+        좋은점: 좋은점, 불편한점: 불편한점, 바람: 바람,
+        기계: document.getElementById('기계').value,
+        판: '',
+      }),
+    })
+      .then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
+      .then(function (것) {
+        if (!것.r.ok || !것.j.됐다) {
+          throw new Error(것.j && 것.j.잘못 ? 것.j.잘못 : 'Could not send.');
+        }
+        판.style.display = 'none';
+        됐다.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function (e) {
+        단추.disabled = false;
+        알림('');
+        못함(e.message + ' Please try once more in a moment.');
+      });
+  };
+
+  document.getElementById('또').onclick = function () {
+    ['좋은점', '불편한점', '바람'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+    고른별 = 0;
+    Array.prototype.forEach.call(별칸.children, function (c) {
+      c.setAttribute('aria-pressed', 'false');
+    });
+    단추.disabled = false;
+    알림('');
+    됐다.style.display = 'none';
+    판.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>쓰신 느낌을 알려 주세요 · 밸류스</title>
+<meta name="description" content="밸류스 프로그램과 앱을 쓰신 느낌을 남겨 주세요. 이름도 전화번호도 묻지 않습니다.">
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.75}
+  .wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);margin:0 0 22px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:20px;margin:0 0 16px}
+  .안심{background:var(--okbg);border:1px solid #CBDCC6}
+  h2{font-size:18px;margin:0 0 10px}
+  label{display:block;font-weight:700;margin:0 0 8px}
+  select,textarea{width:100%;font-family:inherit;font-size:17px;
+    border:1px solid var(--line);border-radius:10px;padding:13px;
+    background:var(--surface);color:var(--ink)}
+  select{height:52px}
+  textarea{min-height:92px;resize:vertical;line-height:1.7}
+  .별칸{display:flex;gap:8px;flex-wrap:wrap}
+  .별{flex:1 1 0;min-width:58px;padding:14px 4px;border:1px solid var(--line);
+    border-radius:10px;background:var(--surface);cursor:pointer;
+    font-family:inherit;font-size:15px;color:var(--ink2);text-align:center}
+  .별 b{display:block;font-size:20px;line-height:1.3;color:var(--accent)}
+  .별[aria-pressed="true"]{border-color:var(--deep);background:#EDF3F8;
+    color:var(--deep);font-weight:700;box-shadow:inset 0 0 0 1px var(--deep)}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit;margin-top:4px}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .quiet{font-size:14px;color:var(--ink2)}
+  ul{padding-left:1.2em;margin:6px 0}
+  li{margin:6px 0}
+  a{color:var(--deep)}
+  .말{margin-top:12px;font-size:15px;min-height:1.7em}
+  .탈{background:#FBECE9;color:var(--warn);border-radius:8px;padding:11px 13px;
+    margin-top:12px;font-size:15px;display:none}
+  .됐다{display:none;text-align:center;padding:22px 16px}
+  .됐다 .크게{font-size:21px;font-weight:700;color:var(--ok);margin-bottom:8px}
+  .띠{display:inline-block;background:#F3E6DF;color:var(--accent);
+    font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="띠">손님 한 분이 저희 설계도입니다</span>
+  <h1>쓰신 느낌을 알려 주세요</h1>
+  <p class="sub">여기 적어 주신 불편은 다음 판에서 고칩니다.
+    무엇을 고쳤는지는 <a href="소식.html">소식</a>에 그대로 적어 둡니다.</p>
+
+  <div class="card 안심">
+    <h2>아무것도 묻지 않습니다</h2>
+    <ul class="quiet" style="margin:0">
+      <li><b>이름·전화번호·메일 주소를 적는 칸이 없습니다.</b> 회원가입도 없습니다.</li>
+      <li>누가 보냈는지 저희도 모릅니다. 손님 주소(IP)를 저장하지 않습니다.</li>
+      <li>적어 주신 글은 <b>사장이 직접 읽습니다.</b> 광고 회사에 넘기지 않습니다.</li>
+      <li>홈페이지에 보일지 말지는 저희가 정하지만, <b>글을 고쳐서 싣지는 않습니다.</b>
+        나쁜 말도 그대로 싣거나, 아예 안 싣거나 둘 중 하나입니다.</li>
+    </ul>
+  </div>
+
+  <form id="판" class="card">
+    <div style="margin-bottom:20px">
+      <label for="제품">어떤 것을 쓰셨나요</label>
+      <select id="제품"><option value="">— 고르기 —</option></select>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label>얼마나 마음에 드셨나요</label>
+      <div class="별칸" id="별칸"></div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="좋은점">좋았던 점 <span class="quiet" style="font-weight:400">(안 적으셔도 됩니다)</span></label>
+      <textarea id="좋은점" placeholder="예) 인터넷이 없어도 되는 게 제일 좋았습니다."></textarea>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="불편한점">불편했던 점 <span class="quiet" style="font-weight:400">(이게 제일 도움이 됩니다)</span></label>
+      <textarea id="불편한점" placeholder="예) 단추 글씨가 작아서 잘 안 보였습니다."></textarea>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="바람">이런 게 있으면 좋겠다</label>
+      <textarea id="바람" placeholder="예) 결과를 바로 인쇄할 수 있으면 좋겠습니다."></textarea>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label for="기계">무엇으로 쓰셨나요 <span class="quiet" style="font-weight:400">(모르시면 그냥 두세요)</span></label>
+      <select id="기계">
+        <option value="">— 안 고름 —</option>
+        <option>윈도우 11</option>
+        <option>윈도우 10</option>
+        <option>그 밖의 윈도우</option>
+        <option>안드로이드 전화기</option>
+        <option>아이폰</option>
+        <option>맥</option>
+      </select>
+    </div>
+
+    <button type="submit" class="big" id="보내기">보내기</button>
+    <div class="말" id="말"></div>
+    <div class="탈" id="탈"></div>
+  </form>
+
+  <div class="card 됐다" id="됐다">
+    <div class="크게">고맙습니다.</div>
+    <p style="margin:0 0 14px">잘 받았습니다. 사장이 읽고, 고칠 것은 다음 판에 고칩니다.</p>
+    <p class="quiet" style="margin:0 0 16px">무엇을 고쳤는지는 <a href="소식.html">소식</a>에 날짜와 함께 적어 둡니다.</p>
+    <button class="big" id="또" style="background:var(--sunk);color:var(--ink)">하나 더 쓰기</button>
+  </div>
+
+  <div class="card">
+    <h2>저희가 리뷰를 이렇게 씁니다</h2>
+    <ol class="quiet" style="margin:0">
+      <li>같은 말이 여러 번 나오면 그게 «진짜 불편»입니다. 그것부터 고칩니다.</li>
+      <li>고칠 거리를 모아 한 장으로 만듭니다.</li>
+      <li><b>사장이 「이대로 고쳐라」 를 눌러야</b> 새 판을 굽습니다. 저절로 바뀌는 일은 없습니다.</li>
+      <li>새 판이 나오면 <a href="소식.html">소식</a>에 적고, 무료로 바꿔 드립니다.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>저희 것에는 광고가 없습니다</h2>
+    <p class="quiet" style="margin:0">
+      공짜로 드리는 앱에도 <b>다른 회사 광고가 한 줄도 없습니다.</b>
+      화면을 가로막는 것도, 몇 초 기다리게 하는 것도 없습니다.
+      맨 아래에 「밸류스가 만들었습니다」 한 줄만 있습니다 — 그게 저희 광고 전부입니다.
+      그래서 손님이 무엇을 눌렀는지 캐낼 까닭도 없습니다.</p>
+  </div>
+
+  <p class="quiet"><a href="./">← 가게로 돌아가기</a></p>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var 받개 = '', 고른별 = 0;
+  var 말 = document.getElementById('말');
+  var 탈 = document.getElementById('탈');
+  var 단추 = document.getElementById('보내기');
+  var 판 = document.getElementById('판');
+  var 됐다 = document.getElementById('됐다');
+
+  function 알림(s) { 말.textContent = s || ''; }
+  function 못함(s) { 탈.textContent = s; 탈.style.display = 'block'; }
+  function 지움() { 탈.style.display = 'none'; }
+
+  /* ── 별 다섯 개 ──────────────────────────────────────── */
+  var 별말 = ['많이 아쉬움', '아쉬움', '보통', '좋음', '아주 좋음'];
+  var 별칸 = document.getElementById('별칸');
+  별말.forEach(function (글, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = '별';
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = '<b>' + '★'.repeat(i + 1) + '</b>' + 글;
+    b.onclick = function () {
+      고른별 = i + 1;
+      Array.prototype.forEach.call(별칸.children, function (c, j) {
+        c.setAttribute('aria-pressed', j === i ? 'true' : 'false');
+      });
+      지움();
+    };
+    별칸.appendChild(b);
+  });
+
+  /* ── 고를 수 있는 것 채우기 ───────────────────────────── */
+  var 고르개 = document.getElementById('제품');
+  fetch('제품목록.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      (j.무리 || []).forEach(function (무리) {
+        var g = document.createElement('optgroup');
+        g.label = 무리.이름;
+        (무리.것들 || []).forEach(function (것) {
+          var o = document.createElement('option');
+          o.value = 것.열쇠;
+          o.textContent = 것.이름;
+          g.appendChild(o);
+        });
+        고르개.appendChild(g);
+      });
+      // 주소에 ?제품=garifile 이 붙어 오면 미리 골라 둔다
+      var 온것 = new URLSearchParams(location.search).get('제품');
+      if (온것) 고르개.value = 온것;
+    })
+    .catch(function () { });
+
+  fetch('리뷰설정.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j && j.켜짐 && j.받개) { 받개 = j.받개.replace(/\/+$/, ''); }
+      else { 단추.disabled = true; 알림('리뷰 받는 자리를 준비하는 중입니다.'); }
+    })
+    .catch(function () { 단추.disabled = true; 알림('리뷰 받는 자리를 준비하는 중입니다.'); });
+
+  /* ── 보내기 ─────────────────────────────────────────── */
+  판.onsubmit = function (e) {
+    e.preventDefault();
+    지움();
+    var 제품 = 고르개.value;
+    var 좋은점 = document.getElementById('좋은점').value.trim();
+    var 불편한점 = document.getElementById('불편한점').value.trim();
+    var 바람 = document.getElementById('바람').value.trim();
+
+    if (!제품) { 못함('어떤 것을 쓰셨는지 먼저 골라 주세요.'); return; }
+    if (!고른별) { 못함('별을 하나 눌러 주세요.'); return; }
+    if (!좋은점 && !불편한점 && !바람) {
+      못함('세 칸 가운데 한 칸이라도 적어 주셔야 저희가 고칠 수 있습니다.'); return;
+    }
+    if (!받개) { 못함('리뷰 받는 자리가 아직 준비되지 않았습니다.'); return; }
+
+    단추.disabled = true;
+    알림('보내는 중…');
+
+    fetch(받개 + '/review', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        제품: 제품, 별: 고른별,
+        좋은점: 좋은점, 불편한점: 불편한점, 바람: 바람,
+        기계: document.getElementById('기계').value,
+        판: '',
+      }),
+    })
+      .then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
+      .then(function (것) {
+        if (!것.r.ok || !것.j.됐다) {
+          throw new Error(것.j && 것.j.잘못 ? 것.j.잘못 : '보내지 못했습니다.');
+        }
+        판.style.display = 'none';
+        됐다.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function (e) {
+        단추.disabled = false;
+        알림('');
+        못함(e.message + ' 잠시 뒤에 한 번 더 눌러 주세요.');
+      });
+  };
+
+  document.getElementById('또').onclick = function () {
+    ['좋은점', '불편한점', '바람'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+    고른별 = 0;
+    Array.prototype.forEach.call(별칸.children, function (c) {
+      c.setAttribute('aria-pressed', 'false');
+    });
+    단추.disabled = false;
+    알림('');
+    됐다.style.display = 'none';
+    판.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+})();
+</script>
+</body>
+</html>

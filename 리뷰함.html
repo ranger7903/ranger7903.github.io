@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>리뷰함 · 밸류스</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.7}
+  .wrap{max-width:860px;margin:0 auto;padding:26px 18px 80px}
+  h1{font-size:26px;margin:0 0 6px}
+  .sub{color:var(--ink2);margin:0 0 20px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:18px;margin:0 0 14px}
+  h2{font-size:18px;margin:0 0 10px}
+  .quiet{font-size:14px;color:var(--ink2)}
+  a{color:var(--deep)}
+  input[type=password],input[type=text]{width:100%;font-family:inherit;font-size:17px;
+    border:1px solid var(--line);border-radius:10px;padding:13px;background:#fff;color:var(--ink)}
+  .big{display:block;width:100%;padding:16px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:18px;font-weight:700;
+    cursor:pointer;font-family:inherit;margin-top:10px}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .작은단추{border:1px solid var(--line);background:#fff;border-radius:9px;
+    padding:8px 13px;font-family:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+  .작은단추:hover{background:var(--sunk)}
+  .작은단추.켜짐{border-color:var(--deep);background:#EDF3F8;color:var(--deep);font-weight:700}
+  .줄{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line)}
+  th{color:var(--ink2);font-weight:700;font-size:14px}
+  .리뷰{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;background:#fff}
+  .리뷰 .머리{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    font-size:14px;color:var(--ink2);margin-bottom:8px}
+  .별글{color:var(--accent);font-size:16px}
+  .칸{margin:6px 0}
+  .칸 b{color:var(--ink2);font-weight:700;font-size:14px;margin-right:6px}
+  .딱지{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
+  .새것{background:#F3E6DF;color:var(--accent)}
+  .보임{background:var(--okbg);color:var(--ok)}
+  .숨김{background:var(--sunk);color:var(--ink2)}
+  .고칠거리{background:#EDF3F8;color:var(--deep)}
+  .탈{background:#FBECE9;color:var(--warn);border-radius:8px;padding:11px 13px;
+    margin-top:10px;font-size:15px;display:none}
+  textarea{width:100%;min-height:200px;font-family:"Consolas",monospace;font-size:13px;
+    border:1px solid var(--line);border-radius:10px;padding:12px;line-height:1.6}
+  .허락{border-left:4px solid var(--accent)}
+  .숨은것{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>리뷰함</h1>
+  <p class="sub">사장님만 보는 자리입니다. 손님이 남긴 것을 모아 두고,
+    무엇을 고칠지 여기서 정합니다.</p>
+
+  <!-- ① 열쇠 ------------------------------------------------- -->
+  <div class="card" id="열쇠칸">
+    <h2>열쇠를 넣어 주세요</h2>
+    <p class="quiet" style="margin:0 0 10px">
+      이 열쇠는 <b>사장님 브라우저 안에만</b> 남습니다.
+      저희 쪽으로도, 다른 어디로도 보내지지 않습니다.
+      (클라우드플레어 일꾼에 넣어 두신 <b>OWNER_KEY</b> 와 같은 글자입니다.)</p>
+    <input type="password" id="열쇠" placeholder="열쇠" autocomplete="off">
+    <button class="big" id="열기">열기</button>
+    <div class="탈" id="탈"></div>
+  </div>
+
+  <!-- ② 한 장 요약 -------------------------------------------- -->
+  <div class="card 숨은것" id="요약칸">
+    <h2>한 장으로 보기</h2>
+    <div id="요약"></div>
+  </div>
+
+  <!-- ③ 허락 기다리는 고침 ------------------------------------ -->
+  <div class="card 허락 숨은것" id="허락칸">
+    <h2>허락을 기다리는 고침</h2>
+    <p class="quiet" style="margin:0 0 12px">
+      리뷰에서 뽑아낸 «고칠 거리»입니다.
+      <b>사장님이 굽기 단추를 누르셔야만</b> 새 판이 만들어집니다.
+      제가 혼자 굽는 일은 없습니다.</p>
+    <div id="허락목록"></div>
+  </div>
+
+  <!-- ④ 리뷰 목록 --------------------------------------------- -->
+  <div class="card 숨은것" id="목록칸">
+    <h2>손님이 남긴 것 <span class="quiet" id="세기"></span></h2>
+    <div class="줄" id="거르개"></div>
+    <div id="목록" style="margin-top:14px"></div>
+  </div>
+
+  <!-- ⑤ 고칠 거리 한 장 --------------------------------------- -->
+  <div class="card 숨은것" id="뽑기칸">
+    <h2>고칠 거리 한 장 (저에게 그대로 붙여 넣으세요)</h2>
+    <p class="quiet" style="margin:0 0 10px">
+      「고칠 거리」로 표시하신 것만 모아 한 장으로 만듭니다.
+      이 글을 저에게 붙여 넣으시면 제가 고침 제안서를 만들어 드립니다.</p>
+    <textarea id="뽑은글" readonly></textarea>
+    <button class="big" id="복사" style="background:var(--sunk);color:var(--ink)">글 복사하기</button>
+  </div>
+
+  <p class="quiet"><a href="./">← 가게로 돌아가기</a></p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var 받개 = '', 열쇠 = '', 모두 = [], 거름 = '전부';
+  var 굽는곳바탕 = 'https://github.com/ranger7903/valuestools-apps/actions/workflows/';
+
+  var $ = function (id) { return document.getElementById(id); };
+  function 보이기(id) { $(id).classList.remove('숨은것'); }
+  function 못함(s) { $('탈').textContent = s; $('탈').style.display = 'block'; }
+  function 지움() { $('탈').style.display = 'none'; }
+  function 글막기(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  fetch('리뷰설정.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) { 받개 = (j.받개 || '').replace(/\/+$/, ''); })
+    .catch(function () { });
+
+  /* 지난번 열쇠가 이 브라우저에 있으면 미리 채워 둔다 */
+  try {
+    var 지난것 = localStorage.getItem('밸류스_리뷰함_열쇠');
+    if (지난것) $('열쇠').value = 지난것;
+  } catch (e) { }
+
+  $('열기').onclick = 열기;
+  $('열쇠').addEventListener('keydown', function (e) { if (e.key === 'Enter') 열기(); });
+
+  function 부르기(길, 어떻게) {
+    어떻게 = 어떻게 || {};
+    어떻게.headers = Object.assign({ 'x-owner-key': 열쇠 }, 어떻게.headers || {});
+    어떻게.cache = 'no-store';
+    return fetch(받개 + 길, 어떻게).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok) throw new Error(j && j.잘못 ? j.잘못 : ('안 됐습니다 (' + r.status + ')'));
+        return j;
+      });
+    });
+  }
+
+  function 열기() {
+    지움();
+    열쇠 = $('열쇠').value.trim();
+    if (!열쇠) { 못함('열쇠를 넣어 주세요.'); return; }
+    if (!받개) { 못함('리뷰 받는 자리 주소를 아직 못 읽었습니다.'); return; }
+    $('열기').disabled = true;
+    $('열기').textContent = '여는 중…';
+    부르기('/review/all')
+      .then(function (j) {
+        try { localStorage.setItem('밸류스_리뷰함_열쇠', 열쇠); } catch (e) { }
+        모두 = j.리뷰 || [];
+        $('열쇠칸').classList.add('숨은것');
+        보이기('요약칸'); 보이기('허락칸'); 보이기('목록칸'); 보이기('뽑기칸');
+        거르개그리기();
+        다시그리기();
+        허락읽기();
+      })
+      .catch(function (e) {
+        $('열기').disabled = false;
+        $('열기').textContent = '열기';
+        못함(e.message);
+      });
+  }
+
+  /* ── 이름표 (열쇠 → 사람이 읽는 이름) ───────────────────── */
+  var 이름표 = {};
+  fetch('제품목록.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      (j.무리 || []).forEach(function (무리) {
+        (무리.것들 || []).forEach(function (것) { 이름표[것.열쇠] = 것.이름; });
+      });
+      if (모두.length) 다시그리기();
+    })
+    .catch(function () { });
+  function 이름(열쇠) { return 이름표[열쇠] || 열쇠; }
+
+  /* ── 한 장 요약 ─────────────────────────────────────── */
+  function 요약그리기() {
+    if (!모두.length) { $('요약').innerHTML = '<p class="quiet">아직 리뷰가 없습니다.</p>'; return; }
+    var 통 = {};
+    모두.forEach(function (r) {
+      var k = r.제품;
+      if (!통[k]) 통[k] = { 수: 0, 별합: 0, 불편: 0, 바람: 0, 새것: 0 };
+      통[k].수++; 통[k].별합 += (r.별 || 0);
+      if (r.불편한점) 통[k].불편++;
+      if (r.바람) 통[k].바람++;
+      if (r.상태 === '새것') 통[k].새것++;
+    });
+    var 줄들 = Object.keys(통).map(function (k) {
+      var t = 통[k];
+      return { 열쇠: k, 이름: 이름(k), 수: t.수, 별: (t.별합 / t.수), 불편: t.불편, 바람: t.바람, 새것: t.새것 };
+    }).sort(function (a, b) { return b.수 - a.수; });
+
+    var 별평균전체 = 모두.reduce(function (s, r) { return s + (r.별 || 0); }, 0) / 모두.length;
+    var 안읽은것 = 모두.filter(function (r) { return r.상태 === '새것'; }).length;
+
+    var h = '<p style="margin:0 0 12px">모두 <b>' + 모두.length + '개</b>'
+      + ' · 아직 안 본 것 <b>' + 안읽은것 + '개</b>'
+      + ' · 별 평균 <b>' + 별평균전체.toFixed(1) + '</b></p>'
+      + '<table><tr><th>무엇</th><th>수</th><th>별</th><th>불편 적음</th><th>바람</th><th>새 것</th></tr>';
+    줄들.forEach(function (s) {
+      h += '<tr><td>' + 글막기(s.이름) + '</td><td>' + s.수 + '</td><td>'
+        + s.별.toFixed(1) + '</td><td>' + s.불편 + '</td><td>' + s.바람
+        + '</td><td>' + (s.새것 ? '<b>' + s.새것 + '</b>' : '0') + '</td></tr>';
+    });
+    h += '</table>';
+
+    /* 여러 번 나온 말 — 같은 말이 겹치면 그게 진짜 불편입니다 */
+    var 셈 = {};
+    var 흔한말 = ['그리고', '하지만', '그런데', '너무', '조금', '정말', '아주', '있습니다', '합니다',
+      '있어요', '해요', '같아요', '좋아요', '입니다', '합니다만', '것을', '것이', '수가', '때문에'];
+    모두.forEach(function (r) {
+      (r.불편한점 + ' ' + r.바람).split(/[^가-힣A-Za-z]+/).forEach(function (말) {
+        if (말.length < 2) return;
+        if (흔한말.indexOf(말) >= 0) return;
+        셈[말] = (셈[말] || 0) + 1;
+      });
+    });
+    var 자주 = Object.keys(셈).filter(function (w) { return 셈[w] >= 2; })
+      .sort(function (a, b) { return 셈[b] - 셈[a]; }).slice(0, 12);
+    if (자주.length) {
+      h += '<p style="margin:14px 0 0" class="quiet">여러 번 나온 말: '
+        + 자주.map(function (w) { return 글막기(w) + '(' + 셈[w] + ')'; }).join(' · ') + '</p>';
+    }
+    $('요약').innerHTML = h;
+  }
+
+  /* ── 거르개 ─────────────────────────────────────────── */
+  function 거르개그리기() {
+    var 것들 = ['전부', '새것', '고칠거리', '보임', '숨김'];
+    $('거르개').innerHTML = '';
+    것들.forEach(function (t) {
+      var b = document.createElement('button');
+      b.className = '작은단추' + (거름 === t ? ' 켜짐' : '');
+      b.textContent = t;
+      b.onclick = function () { 거름 = t; 거르개그리기(); 다시그리기(); };
+      $('거르개').appendChild(b);
+    });
+  }
+
+  /* ── 리뷰 한 줄 ─────────────────────────────────────── */
+  function 리뷰그리기() {
+    var 볼것 = 모두.filter(function (r) { return 거름 === '전부' || r.상태 === 거름; });
+    $('세기').textContent = '(' + 볼것.length + '개)';
+    if (!볼것.length) { $('목록').innerHTML = '<p class="quiet">여기에 해당하는 것이 없습니다.</p>'; return; }
+    $('목록').innerHTML = '';
+    볼것.forEach(function (r) {
+      var d = document.createElement('div');
+      d.className = '리뷰';
+      var h = '<div class="머리">'
+        + '<span><b style="color:var(--ink)">' + 글막기(이름(r.제품)) + '</b>'
+        + ' <span class="별글">' + '★'.repeat(r.별 || 0) + '</span></span>'
+        + '<span>' + 글막기((r.때 || '').slice(0, 10))
+        + (r.기계 ? ' · ' + 글막기(r.기계) : '')
+        + ' <span class="딱지 ' + 글막기(r.상태) + '">' + 글막기(r.상태) + '</span></span></div>';
+      if (r.좋은점) h += '<div class="칸"><b>좋았던 점</b>' + 글막기(r.좋은점) + '</div>';
+      if (r.불편한점) h += '<div class="칸"><b>불편했던 점</b>' + 글막기(r.불편한점) + '</div>';
+      if (r.바람) h += '<div class="칸"><b>바람</b>' + 글막기(r.바람) + '</div>';
+      h += '<div class="줄"></div>';
+      d.innerHTML = h;
+      var 줄 = d.querySelector('.줄');
+      [['홈페이지에 보이기', '보임'], ['숨기기', '숨김'], ['고칠 거리로', '고칠거리']]
+        .forEach(function (짝) {
+          var b = document.createElement('button');
+          b.className = '작은단추' + (r.상태 === 짝[1] ? ' 켜짐' : '');
+          b.textContent = 짝[0];
+          b.onclick = function () { 정하기(r, 짝[1], b); };
+          줄.appendChild(b);
+        });
+      $('목록').appendChild(d);
+    });
+  }
+
+  function 정하기(r, 정함, 단추) {
+    단추.disabled = true;
+    부르기('/review/judge', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ 번호: r.번호, 정함: 정함 }),
+    })
+      .then(function () { r.상태 = 정함; 다시그리기(); })
+      .catch(function (e) { 단추.disabled = false; alert(e.message); });
+  }
+
+  /* ── 고칠 거리 한 장 ────────────────────────────────── */
+  function 뽑기그리기() {
+    var 것들 = 모두.filter(function (r) { return r.상태 === '고칠거리'; });
+    if (!것들.length) {
+      $('뽑은글').value = '「고칠 거리로」 를 눌러 표시하신 리뷰가 아직 없습니다.';
+      return;
+    }
+    var 무리 = {};
+    것들.forEach(function (r) { (무리[r.제품] = 무리[r.제품] || []).push(r); });
+    var 글 = '밸류스 고칠 거리 (' + new Date().toISOString().slice(0, 10) + ')\n';
+    글 += '리뷰 ' + 것들.length + '개에서 뽑았습니다.\n';
+    Object.keys(무리).forEach(function (k) {
+      글 += '\n■ ' + 이름(k) + ' (' + 무리[k].length + '개)\n';
+      무리[k].forEach(function (r, i) {
+        글 += '  ' + (i + 1) + ') 별 ' + r.별 + ' · ' + (r.때 || '').slice(0, 10)
+          + (r.기계 ? ' · ' + r.기계 : '') + '\n';
+        if (r.불편한점) 글 += '     불편: ' + r.불편한점.replace(/\n/g, ' ') + '\n';
+        if (r.바람) 글 += '     바람: ' + r.바람.replace(/\n/g, ' ') + '\n';
+        if (r.좋은점) 글 += '     좋음: ' + r.좋은점.replace(/\n/g, ' ') + '\n';
+      });
+    });
+    $('뽑은글').value = 글;
+  }
+
+  $('복사').onclick = function () {
+    $('뽑은글').select();
+    try { document.execCommand('copy'); $('복사').textContent = '복사했습니다'; } catch (e) { }
+    setTimeout(function () { $('복사').textContent = '글 복사하기'; }, 2000);
+  };
+
+  /* ── 허락 기다리는 고침 ─────────────────────────────── */
+  function 허락읽기() {
+    fetch('고침대기.json', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        var 것들 = (j.대기 || []).filter(function (x) { return !x.끝남; });
+        if (!것들.length) {
+          $('허락목록').innerHTML = '<p class="quiet">지금 허락을 기다리는 고침이 없습니다.</p>';
+          return;
+        }
+        var h = '';
+        것들.forEach(function (x) {
+          h += '<div class="리뷰">'
+            + '<div class="머리"><b style="color:var(--ink)">' + 글막기(x.무엇) + '</b>'
+            + '<span>' + 글막기(x.올린날 || '') + ' · 손보는 크기 ' + 글막기(x.크기 || '?') + '</span></div>'
+            + '<div class="칸"><b>고칠 것</b>' + 글막기(x.고칠것) + '</div>'
+            + '<div class="칸"><b>왜</b>' + 글막기(x.왜) + '</div>';
+          if (x.굽는곳) {
+            h += '<div class="줄"><a class="작은단추" target="_blank" rel="noopener" href="'
+              + 굽는곳바탕 + encodeURIComponent(x.굽는곳) + '">'
+              + '이대로 고쳐도 좋다 → 굽기 화면 열기</a></div>'
+              + '<p class="quiet" style="margin:8px 0 0">굽기 화면에서 '
+              + '「Run workflow」 를 누르시고, 「허락」 칸을 <b>예</b> 로 바꾸셔야 만들어집니다. '
+              + '아니오이면 그 자리에서 멈춥니다.</p>';
+          }
+          h += '</div>';
+        });
+        $('허락목록').innerHTML = h;
+      })
+      .catch(function () {
+        $('허락목록').innerHTML = '<p class="quiet">고침대기 목록을 아직 못 읽었습니다.</p>';
+      });
+  }
+
+  function 다시그리기() { 요약그리기(); 리뷰그리기(); 뽑기그리기(); }
+})();
+</script>
+</body>
+</html>
