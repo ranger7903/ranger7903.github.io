@@ -600,14 +600,14 @@
   },
   "meter": {
    "saveAs": "밸류스 우리집 계량기.apk",
-   "version": "2026-09-20",
-   "totalSize": 35277693,
-   "sha256": "4eb60e168ba9e56c577297a92589eb73c2aefada85f520ec990490564f3363f4",
+   "version": "2026-09-21",
+   "totalSize": 35278073,
+   "sha256": "c1839992021c639ba0a241d6068de9e4ddf0b4d8cc4ab9f94441d2ce6e165880",
    "parts": [
     {
      "name": "dist/meter.part000",
      "size": 9437184,
-     "sha256": "271b293cda96388393394afaf96cce69c42a5010dd267fe7841c4799565672c2"
+     "sha256": "94e6670ed80fbb6e7ebdafd03701bb9aa9eec550d1c20b17097eaf14f209a88d"
     },
     {
      "name": "dist/meter.part001",
@@ -621,21 +621,21 @@
     },
     {
      "name": "dist/meter.part003",
-     "size": 6966141,
-     "sha256": "51cfa4a25fb689f868d72690fa064e0afd91fae82599f41fdd13072293ae17d3"
+     "size": 6966521,
+     "sha256": "c911d4459aa64c0281f52d4419edb3e5c4df4e3455c2acc55271bbdf4b44bf6d"
     }
    ]
   },
   "meter_any": {
    "saveAs": "밸류스 우리집 계량기 (아무 전화기나).apk",
-   "version": "2026-09-20",
-   "totalSize": 88088491,
-   "sha256": "6e5a24464e4eb8b3660af2bf1018ac890d4d66b20fea4e82ca01ed8be8e9d513",
+   "version": "2026-09-21",
+   "totalSize": 88088871,
+   "sha256": "2ecca561ac1362e55bb0735c983ca6aebf25422e5ed20382ae0871236031acbf",
    "parts": [
     {
      "name": "dist/meter_any.part000",
      "size": 9437184,
-     "sha256": "271b293cda96388393394afaf96cce69c42a5010dd267fe7841c4799565672c2"
+     "sha256": "94e6670ed80fbb6e7ebdafd03701bb9aa9eec550d1c20b17097eaf14f209a88d"
     },
     {
      "name": "dist/meter_any.part001",
@@ -679,8 +679,8 @@
     },
     {
      "name": "dist/meter_any.part009",
-     "size": 3153835,
-     "sha256": "6175d672d4f4e674e0c25d78fbd0e4dc2d6841781d2dd09566ebc661349fccc8"
+     "size": 3154215,
+     "sha256": "55a980984fb05e305c8bc8a199032626cdb125c6a328ec982c40eee3e25deaaf"
     }
    ]
   },
