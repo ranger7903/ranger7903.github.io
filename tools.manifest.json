@@ -749,17 +749,17 @@
    "saveAs": "밸류스 약봉지 시간표.apk",
    "version": "2026-09-21",
    "totalSize": 37065689,
-   "sha256": "ff3a4e301c0e9a339d74de93d3083d830df66fc66bed6aad0c9cbdb89bf54f2b",
+   "sha256": "5b055b4634c325a3b608d8cfe30cd9901455793082ac517d4c155d0dd8dee7aa",
    "parts": [
     {
      "name": "dist/yakbong.part000",
      "size": 9437184,
-     "sha256": "8af6b53e7d098c82e3650780f2e9efc3132700a65c162d9716c6fe8511728d23"
+     "sha256": "b2415fff09a6bda784854cace6806038321594c1dfd3e51578741dfdb5b4cfab"
     },
     {
      "name": "dist/yakbong.part001",
      "size": 9437184,
-     "sha256": "0ab0f09ee24da9d2d3dd7bf1a0a0423c78261d497f26b5c023d06cf05d253d9b"
+     "sha256": "366a118611ce76e20862f7fd7ad618937d3f21f423d98d6ff3aeafdf1555806c"
     },
     {
      "name": "dist/yakbong.part002",
@@ -769,7 +769,7 @@
     {
      "name": "dist/yakbong.part003",
      "size": 8754137,
-     "sha256": "e7864d93832b49b972f6e115ea7ff6bb36996b8a1fde02a2757b7aa66ab5ab0e"
+     "sha256": "8cb1b204b5b78d7edb572596f376ae9f6d9e7ba26184978d7b618d40936f407f"
     }
    ]
   },
@@ -777,17 +777,17 @@
    "saveAs": "밸류스 약봉지 시간표 (아무 전화기나).apk",
    "version": "2026-09-21",
    "totalSize": 91793419,
-   "sha256": "09c8f4ee6d66a41035c44861c76d820ebd9e14c361872a51daaf2aa16d19e9b9",
+   "sha256": "885d3070433a3d0f4b800c2b9c5b91dc3668d9968ed729e5ded3fc4fefb1d21d",
    "parts": [
     {
      "name": "dist/yakbong_any.part000",
      "size": 9437184,
-     "sha256": "8af6b53e7d098c82e3650780f2e9efc3132700a65c162d9716c6fe8511728d23"
+     "sha256": "b2415fff09a6bda784854cace6806038321594c1dfd3e51578741dfdb5b4cfab"
     },
     {
      "name": "dist/yakbong_any.part001",
      "size": 9437184,
-     "sha256": "0ab0f09ee24da9d2d3dd7bf1a0a0423c78261d497f26b5c023d06cf05d253d9b"
+     "sha256": "366a118611ce76e20862f7fd7ad618937d3f21f423d98d6ff3aeafdf1555806c"
     },
     {
      "name": "dist/yakbong_any.part002",
@@ -797,12 +797,12 @@
     {
      "name": "dist/yakbong_any.part003",
      "size": 9437184,
-     "sha256": "269a2c7a09eacab1ac27e8581106ce75c852f7356824c87b5792c9b559996f82"
+     "sha256": "0dc0a921f910ce3e3d14e974cb7eb94f95ed29d90e3bf8f398dc913279d84563"
     },
     {
      "name": "dist/yakbong_any.part004",
      "size": 9437184,
-     "sha256": "58d5db4249c587f15e08fbbf3d2817bc9278264ddb4468135d1b0864c03925ad"
+     "sha256": "a59760515b07834ab17a89651f30e51ec7c123e6e97c745c7770fc43af02d0a2"
     },
     {
      "name": "dist/yakbong_any.part005",
@@ -812,7 +812,7 @@
     {
      "name": "dist/yakbong_any.part006",
      "size": 9437184,
-     "sha256": "c70f1a8c6b5f1598ad6c970eae0e85a13a52c16b6802de833c7e5d311ffcef85"
+     "sha256": "520d1d5fec1941484bd00d0c940a01029359540a7cc72a95d35c4fb2241bdda9"
     },
     {
      "name": "dist/yakbong_any.part007",
@@ -827,7 +827,7 @@
     {
      "name": "dist/yakbong_any.part009",
      "size": 6858763,
-     "sha256": "14322b23ab0e9b1382d8fe49b3c8ed3f49a892f2dff416851c9862f5cb907694"
+     "sha256": "42fe42d15de92c9c0e9418ded391ad87bd947cbad1f6eb329ade89ab997340c3"
     }
    ]
   }
