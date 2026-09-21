@@ -115,6 +115,62 @@
     }
    ]
   },
+  "settle": {
+   "saveAs": "밸류스 정산 대조기.zip",
+   "version": "2026-09-21",
+   "totalSize": 34904954,
+   "sha256": "6d3a4a07c85ba725204515f1a781d111fdd3225b19a6e525ef7ec5c13d4b9dca",
+   "parts": [
+    {
+     "name": "dist/settle.part000",
+     "size": 9437184,
+     "sha256": "1f16b63239f4c30b5d10673b93f3e9759c72863310963d7d778e5a87f764afe6"
+    },
+    {
+     "name": "dist/settle.part001",
+     "size": 9437184,
+     "sha256": "91aaffb38e81c077650b8e60300795a885a682f0c8080ee7f7c143e91d6775e2"
+    },
+    {
+     "name": "dist/settle.part002",
+     "size": 9437184,
+     "sha256": "0f063a52978fda2703a2642041d4c329e42c566f42430277d2f99cdc984ebd4c"
+    },
+    {
+     "name": "dist/settle.part003",
+     "size": 6593402,
+     "sha256": "7d19e4ad43ce61a812f01c56ee70022ef96988d889db8b193f07052ae79502db"
+    }
+   ]
+  },
+  "money": {
+   "saveAs": "밸류스 돈 맞추개.zip",
+   "version": "2026-09-21",
+   "totalSize": 34897696,
+   "sha256": "268206fdb9e187819a841f8f55bc60b3aaa714d5c5be5f6a61ae81abdc0bf610",
+   "parts": [
+    {
+     "name": "dist/money.part000",
+     "size": 9437184,
+     "sha256": "726ebda6aebb0b96b1eb8b51757ab3b8c0d46f1d326b0fac374b0ba4c40f4f2c"
+    },
+    {
+     "name": "dist/money.part001",
+     "size": 9437184,
+     "sha256": "cc6c8f5a7b4a09b81fd3eb14217bcff695527f3bc44605bade8286f43a4867b8"
+    },
+    {
+     "name": "dist/money.part002",
+     "size": 9437184,
+     "sha256": "49eae697ac11fbd973e74f53755f7a8ca73c140b87f8f3e2803c3fb95d1ca6db"
+    },
+    {
+     "name": "dist/money.part003",
+     "size": 6586144,
+     "sha256": "c9501b1bca7cbdab32585b5f07329dc94c18eb8687dbbb376d304e3b2686c038"
+    }
+   ]
+  },
   "quick": {
    "saveAs": "밸류스 빠른입력기 설치.exe",
    "version": "2026-09-20",
