@@ -683,6 +683,67 @@
      "sha256": "6175d672d4f4e674e0c25d78fbd0e4dc2d6841781d2dd09566ebc661349fccc8"
     }
    ]
+  },
+  "dolbom": {
+   "saveAs": "밸류스 부모님 돌봄 일지.apk",
+   "version": "2026-09-21",
+   "totalSize": 22000593,
+   "sha256": "e608e7b27f2311c1f2661981fa7632e7696d9e278cf98c0da4f3e42ff902cf24",
+   "parts": [
+    {
+     "name": "dist/dolbom.part000",
+     "size": 9437184,
+     "sha256": "f7fa261e3aa896511414893e424c631e390298eb5d29048165e33892c0b21961"
+    },
+    {
+     "name": "dist/dolbom.part001",
+     "size": 9437184,
+     "sha256": "06063d4d8fc344727639dbeff9010db305a7bf56bd690c34ea9b6bddccfebe67"
+    },
+    {
+     "name": "dist/dolbom.part002",
+     "size": 3126225,
+     "sha256": "c55c9086d8851f82a0ad7d756da76daa6644ef57eb084ee453c008b33a00b1a6"
+    }
+   ]
+  },
+  "dolbom_any": {
+   "saveAs": "밸류스 부모님 돌봄 일지 (아무 전화기나).apk",
+   "version": "2026-09-21",
+   "totalSize": 56252838,
+   "sha256": "9cb5c564bc00dd8879123564460c2914a96811fc37b2d3349750e1440a1751e1",
+   "parts": [
+    {
+     "name": "dist/dolbom_any.part000",
+     "size": 9437184,
+     "sha256": "f7fa261e3aa896511414893e424c631e390298eb5d29048165e33892c0b21961"
+    },
+    {
+     "name": "dist/dolbom_any.part001",
+     "size": 9437184,
+     "sha256": "06063d4d8fc344727639dbeff9010db305a7bf56bd690c34ea9b6bddccfebe67"
+    },
+    {
+     "name": "dist/dolbom_any.part002",
+     "size": 9437184,
+     "sha256": "7a57923f6b786611d365ae89aa97ecb7dd2eb018e31fb9c91a1c3657c79601bc"
+    },
+    {
+     "name": "dist/dolbom_any.part003",
+     "size": 9437184,
+     "sha256": "cad5b0da3eb5cce0899f83d142037d4b5ea9e559b26203dc2c761e740ce2910b"
+    },
+    {
+     "name": "dist/dolbom_any.part004",
+     "size": 9437184,
+     "sha256": "503a90e9defa98faad829b2f1209d180b911fd59fdae12ff84410ac36229b6e5"
+    },
+    {
+     "name": "dist/dolbom_any.part005",
+     "size": 9066918,
+     "sha256": "c225e46511ddcaea2958c4d424c1dbbfe4b29c7f961983d6b9b81c40995e1add"
+    }
+   ]
   }
  }
 }
