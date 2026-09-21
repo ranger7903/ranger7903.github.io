@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>우리집 계량기 — 밸류스</title>
-<meta name="description" content="수도·전기·가스 계량기를 찍어 달마다 쌓습니다. 가입도 광고도 구독도 없습니다. 안드로이드 전화기용, 무료.">
+<title>Pill Pouch Timetable — Valuestools</title>
+<meta name="description" content="Photograph the pharmacy pouch; it reads how many times a day and how many days, builds a timetable and the phone reminds you. Free Android app. No account, no ads, no internet permission.">
 <style>
   :root{
     --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
@@ -48,84 +48,68 @@
 <body>
 <div class="wrap">
 
-  <span class="free">그냥 드립니다 · 광고 없음</span>
-  <h1>우리집 계량기</h1>
-  <p class="sub">수도·전기·가스 계량기를 찍으면 숫자를 읽어, 달마다 쌓아 드립니다.
-    안드로이드 전화기용입니다.</p>
+  <span class="free">Free · no ads</span>
+  <h1>Pill Pouch Timetable</h1>
+  <p class="sub">Photograph the pouch or bag your medicine came in. It reads
+    “times a day · how many days” and builds a timetable, and the phone reminds you when it is time. For Android phones.</p>
 
   <div class="card 안심">
-    <h2>다른 회사 광고가 한 줄도 없습니다</h2>
+    <h2>Not one line of anybody else’s advertising</h2>
     <ul class="quiet" style="margin:0">
-      <li>화면을 가로막는 것도, 몇 초 기다리게 하는 것도 없습니다.
-        맨 아래에 「밸류스가 만들었습니다」 한 줄뿐입니다.</li>
-      <li><b>광고를 안 붙이니 손님이 무엇을 눌렀는지 캐낼 까닭도 없습니다.</b> 이 둘은 한 몸입니다.</li>
-      <li>회원가입도, 서버도, 다달이 내는 돈도 없습니다. 적은 것은 전화기 안에만 있습니다.</li>
-      <li><b>인터넷 권한조차 쓰지 않습니다.</b> 적은 것은 보낼 길이 없습니다.</li>
-      <li><b>사진은 읽고 나서 바로 버립니다.</b> 전화기 안에도 남지 않습니다.</li>
+      <li>Nothing covers the screen. Nothing makes you wait. At the very bottom there is one line: “Made by Valuestools”.</li>
+      <li><b>It does not even ask for internet permission.</b> What you take stays on this phone.</li>
+      <li><b>The photo is deleted right after reading.</b> It never leaves the phone.</li>
+      <li>No account, no server, no monthly fee.</li>
     </ul>
   </div>
 
   <div class="card">
-    <button class="big" id="go">앱 받기</button>
-    <button class="작게" id="go2">이걸 넣었는데 「설치할 수 없음」이 나오면 → 아무 전화기나 판</button>
+    <button class="big" id="go">Get the app</button>
+    <button class="작게" id="go2">If that one says "can’t install" → get the any-phone build</button>
     <div class="bar"><i id="bar"></i></div>
-    <div id="say">준비하는 중…</div>
+    <div id="say">Getting ready…</div>
     <div class="miss" id="err"></div>
     <p class="quiet" style="margin:10px 0 0">
-      <b>전화기에서</b> 이 쪽을 열고 단추를 눌러 주세요.
-      컴퓨터에서 받으시면 파일을 전화기로 옮기셔야 합니다.</p>
+      Open this page <b>on the phone</b> and press the button.
+      If you download it on a computer you will have to move the file across.</p>
   </div>
 
   <div class="card">
-    <h2>받은 뒤에는</h2>
+    <h2>Once you have it</h2>
     <ol>
-      <li>받은 파일(<b>밸류스 우리집 계량기.apk</b>)을 누릅니다.</li>
-      <li>“출처를 알 수 없는 앱” 을 물어보면 <b>허용</b>해 주세요.
-        <span class="quiet">— 아직 구글 스토어에 올리기 전이라 그렇습니다.</span></li>
-      <li>열어서 <b>자리 더하기</b> 로 「우리집 · 수도」를 만들고, 계량기를 찍으면 됩니다.</li>
+      <li>Tap the downloaded file (<b>Valuestools Pill Pouch Timetable.apk</b>).</li>
+      <li>If it asks about "apps from unknown sources", choose <b>allow</b>.
+        <span class="quiet">— that is because it is not on the Play Store yet.</span></li>
+      <li>Go to <b>Medicines</b> → <b>Add medicine</b> → <b>Fill in from a photo of the pouch</b>.</li>
+      <li>Check what it read and press <b>Save</b>. The first time, allow notifications when asked.
+        <span class="quiet">— reminders then switch on by themselves. You can turn them off in <b>Settings</b>.</span></li>
     </ol>
-  </div>
-
-  <div class="card">
-    <h2>이런 때 씁니다</h2>
-    <ul>
-      <li>관리비 고지서가 맞는지 보고 싶을 때 — 내가 적어 둔 것과 견줘 봅니다.</li>
-      <li>가게와 집을 따로 볼 때 — 자리를 나눠 쌓습니다.</li>
-      <li>부모님 집 계량기를 대신 봐 드릴 때 — 자리를 하나 더 만들면 됩니다.</li>
-      <li>이사 들어가고 나갈 때 — 그날 숫자를 사진과 함께 남겨 둡니다.</li>
-    </ul>
-    <p class="quiet">두 번 적으면 <b>「이번에 34m³ 썼어요. 지난달보다 15m³ 더 썼어요」</b> 처럼
-      말로 알려 드립니다. 작년 같은 달과도 견줍니다.</p>
+    <p class="quiet" style="margin:6px 0 0">Reading from a photo is tuned for Korean pharmacy pouches. In English you can simply type the times in.</p>
   </div>
 
   <div class="card 못함칸">
-    <h2>못 하는 것도 적어 둡니다</h2>
-    <p style="margin:0"><b>요금은 계산하지 않습니다.</b>
-      요금표(누진 구간·기본요금·부가세)가 자주 바뀝니다.
-      한 번 틀리면 손님이 돈으로 손해를 봅니다. 그래서 「얼마 나올까」는 안 합니다 —
-      <b>「지난달보다 얼마나 썼나」까지만</b> 합니다.</p>
+    <h2>What it does not do — written down plainly</h2>
+    <p style="margin:0"><b>It never tells you what a medicine does or how much to take.</b>
+      Follow your pharmacist and doctor. This app only keeps track of <b>when</b>.</p>
     <p class="quiet" style="margin:10px 0 0">
-      그리고 <b>전화기가 스스로 띄우는 알림은 아직 안 됩니다.</b>
-      검침일을 정해 두시면 <b>앱을 여실 때</b> 맨 위에 알려 드립니다.
-      되지 않는 것을 된다고 적지 않으려고 그대로 적어 둡니다.</p>
+      <b>If it cannot read the photo it does not guess.</b> It says so and lets you type it in.</p>
     <p class="quiet" style="margin:10px 0 0">
-      <b>못 읽으면 0이라고 하지 않습니다.</b> 칸을 비워 두고 「손으로 넣어 주세요」라고 말합니다.
-      손으로 넣어도 앱은 다 됩니다 — 찍어서 읽는 것은 시간을 아껴 주는 것뿐입니다.</p>
+      When the phone is saving battery a reminder may ring <b>a few minutes late</b>.
+      Each time you open the app it sets up the next 7 days again.</p>
   </div>
 
   <div class="card">
-    <h2>한국어와 영어, 둘 다 됩니다</h2>
-    <p class="quiet" style="margin:0">전화기가 쓰는 말을 따라갑니다.
-      앱 오른쪽 위 <b>⋯</b> 에서 바꾸실 수도 있습니다.
-      <a href="meter.html">English page</a></p>
+    <h2>Korean and English, both</h2>
+    <p class="quiet" style="margin:0">It follows the language your phone is set to, and you can change it in Settings.
+      <a href="약봉지.html">한국어 페이지</a></p>
   </div>
 
   <div class="card">
-    <h2>쓰신 분들 이야기</h2>
-    <div data-리뷰="meter"></div>
+    <h2>What people said</h2>
+    <div data-리뷰="yakbong"></div>
   </div>
 
-  <p class="quiet"><a href="./">← 가게로 돌아가기</a></p>
+  <p class="quiet"><a href="en.html">← back to the shop</a></p>
 
 </div>
 
@@ -153,18 +137,18 @@
   fetch('tools.manifest.json', { cache: 'no-store' })
     .then(function (r) { return r.json(); })
     .then(function (m) {
-      var a = m.files && m.files.meter;
-      var b = m.files && m.files.meter_any;
+      var a = m.files && m.files.yakbong;
+      var b = m.files && m.files.yakbong_any;
       if (!a || !a.parts || !a.parts.length) {
         단추.disabled = true; 단추2.disabled = true;
-        알림('아직 준비 중입니다. 곧 올려 두겠습니다.');
+        알림('Not ready yet. It will be here shortly.');
         return;
       }
       짐 = { base: m.base, a: a, b: b };
-      알림('크기 ' + 크기(a.totalSize) + ' · 판 ' + (a.version || ''));
+      알림(크기(a.totalSize) + ' \u00b7 build ' + (a.version || ''));
       단추.onclick = function () { 받기(a); };
       if (b && b.parts && b.parts.length) {
-        단추2.textContent = '이걸 넣었는데 「설치할 수 없음」이 나오면 → 아무 전화기나 판 ('
+        단추2.textContent = 'If that one says "can\u2019t install" \u2192 any-phone build ('
           + 크기(b.totalSize) + ')';
         단추2.onclick = function () { 받기(b); };
       } else {
@@ -173,7 +157,7 @@
     })
     .catch(function () {
       단추.disabled = true; 단추2.disabled = true;
-      알림('잠시 뒤 새로 고쳐 주세요.');
+      알림('Please refresh in a moment.');
     });
 
   function 받기(f) {
@@ -185,17 +169,17 @@
       차례 = 차례.then(function () {
         return fetch(짐.base + 조각.name, { cache: 'no-store' })
           .then(function (r) {
-            if (!r.ok) throw new Error('조각을 못 받았습니다 (' + r.status + ')');
+            if (!r.ok) throw new Error('a piece did not arrive (' + r.status + ')');
             return r.arrayBuffer();
           })
           .then(function (buf) {
-            if (buf.byteLength !== 조각.size) throw new Error('조각 크기가 다릅니다');
+            if (buf.byteLength !== 조각.size) throw new Error('a piece is the wrong size');
             return 지문(buf).then(function (h) {
-              if (조각.sha256 && h !== 조각.sha256) throw new Error('조각이 깨졌습니다');
+              if (조각.sha256 && h !== 조각.sha256) throw new Error('a piece was damaged');
               모음.push(new Uint8Array(buf));
               받은양 += buf.byteLength;
               바.style.width = (받은양 / f.totalSize * 100) + '%';
-              알림('받는 중 ' + Math.round(받은양 / f.totalSize * 100) + '%');
+              알림('Downloading ' + Math.round(받은양 / f.totalSize * 100) + '%');
             });
           });
       });
@@ -203,27 +187,27 @@
     차례.then(function () {
       var 통 = new Uint8Array(f.totalSize), o = 0;
       모음.forEach(function (b) { 통.set(b, o); o += b.length; });
-      알림('확인하는 중…');
+      알림('Checking\u2026');
       return 지문(통.buffer).then(function (h) {
-        if (f.sha256 && h !== f.sha256) throw new Error('붙여 보니 원본과 다릅니다');
+        if (f.sha256 && h !== f.sha256) throw new Error('the joined file does not match the original');
         // 안드로이드 앱은 압축파일 모양(PK)으로 시작합니다.
-        if (통[0] !== 0x50 || 통[1] !== 0x4B) throw new Error('앱 파일 모양이 아닙니다');
+        if (통[0] !== 0x50 || 통[1] !== 0x4B) throw new Error('this is not an app file');
         var a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([통],
           { type: 'application/vnd.android.package-archive' }));
-        a.download = f.saveAs || '밸류스 우리집 계량기.apk';
+        a.download = 'Valuestools Pill Pouch Timetable.apk';
         document.body.appendChild(a);
         a.click();
         setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
         바.style.width = '100%';
-        알림('받았습니다. 받은 파일을 눌러 설치해 주세요.');
-        단추.textContent = '다시 받기';
+        알림('Done. Tap the downloaded file to install it.');
+        단추.textContent = 'Download again';
         단추.disabled = false; 단추2.disabled = false;
       });
     }).catch(function (e) {
       단추.disabled = false; 단추2.disabled = false;
-      단추.textContent = '다시 받기';
-      못함('받다가 멈췄습니다 (' + e.message + '). 단추를 한 번 더 눌러 주세요.');
+      단추.textContent = 'Download again';
+      못함('The download stopped (' + e.message + '). Please press the button once more.');
     });
   }
 })();
