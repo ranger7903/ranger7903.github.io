@@ -1,0 +1,23 @@
+{
+ "name": "현장 사진 보고서",
+ "file": "현장 사진 보고서.apk",
+ "bytes": 17565453,
+ "sha256": "27f969e37d7a3eb2c22f9f529e1b7e7995d8c9caca46cd003477874bbf7ea47a",
+ "parts": [
+  {
+   "name": "hyunjang.apk.part000",
+   "bytes": 8388608,
+   "sha256": "6a866bebac8e77cb1829c5809f579b7d91183c591338ffb5795d9893f4f31c66"
+  },
+  {
+   "name": "hyunjang.apk.part001",
+   "bytes": 8388608,
+   "sha256": "2731ace066ae1eb1a9b52165169a27336f4d56df98f35d4957ab86fa74e46950"
+  },
+  {
+   "name": "hyunjang.apk.part002",
+   "bytes": 788237,
+   "sha256": "6ad0317d2113e7bdf41c4224918e885333ddb3fbb68635586742433f3e42fa7c"
+  }
+ ]
+}
