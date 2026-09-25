@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>우리말 가로세로 — 폰에 넣기</title>
+<meta name="robots" content="noindex">
+<style>
+ :root{--terra:#C0623A;--cream:#FDF8F1;--ink:#2b2622;--mut:#8a7f74}
+ *{box-sizing:border-box}
+ body{font-family:"Malgun Gothic","맑은 고딕","Noto Sans KR",sans-serif;
+      margin:0 auto;padding:22px 18px 70px;background:var(--cream);color:var(--ink);
+      line-height:1.8;word-break:keep-all;max-width:560px}
+ h1{font-size:23px;margin:6px 0 2px}
+ .sub{color:var(--mut);font-size:14px;margin-bottom:20px}
+ .icon{width:78px;height:78px;border-radius:18px;background:var(--terra);
+       display:grid;place-items:center;margin-bottom:12px}
+ .icon table{border-collapse:collapse}
+ .icon td{width:12px;height:12px;padding:0}
+ .icon td.on{background:#fff;border:1px solid #d9d2c8}
+ .card{background:#fff;border:1px solid #EBD9B4;border-radius:12px;
+       padding:16px 18px;margin:14px 0}
+ button{width:100%;border:0;border-radius:11px;background:var(--terra);color:#fff;
+        font-size:17px;font-weight:700;padding:16px;cursor:pointer;font-family:inherit}
+ button:disabled{background:#c9bfb4}
+ .bar{height:8px;background:#eee4d6;border-radius:5px;overflow:hidden;margin-top:10px;display:none}
+ .bar i{display:block;height:100%;width:0;background:var(--terra);transition:width .2s}
+ .msg{font-size:14px;color:var(--mut);margin-top:9px;min-height:20px}
+ .ok{color:#2f6b3d;font-weight:600}
+ .no{color:#9a5030;font-weight:600}
+ ol,ul{margin:6px 0 0 18px;padding:0}
+ li{margin:7px 0}
+ code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+ .small{font-size:13px;color:var(--mut)}
+ a{color:var(--terra)}
+ b.hl{color:#9a5030}
+</style></head><body>
+
+<div class="icon">
+  <table>
+    <tr><td></td><td class="on"></td><td></td><td class="on"></td><td></td></tr>
+    <tr><td></td><td class="on"></td><td></td><td class="on"></td><td></td></tr>
+    <tr><td class="on"></td><td class="on"></td><td class="on"></td><td class="on"></td><td class="on"></td></tr>
+    <tr><td></td><td class="on"></td><td></td><td class="on"></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td class="on"></td><td></td></tr>
+  </table>
+</div>
+<h1>우리말 가로세로</h1>
+<div class="sub">낱말 퍼즐을 <b>기계가 만들고 기계가 검사합니다.</b><br>
+광고 없음 · 인터넷 안 씀 · 아무것도 모으지 않음</div>
+
+<div class="card">
+  <b>폰에서 이 쪽을 열고 계신다면</b> 아래 단추를 누르세요.
+  <div class="small" style="margin-top:4px">파일 크기 16.4MB · 받는 데 10초쯤 걸립니다</div>
+  <div style="margin-top:12px">
+    <button id="go">앱 내려받기</button>
+    <div class="bar" id="bar"><i id="fill"></i></div>
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+
+<div class="card">
+  <b>받은 뒤에</b>
+  <ol>
+    <li>폰 아래에 뜬 알림이나 <code>내 파일 › 다운로드</code> 에서 받은 파일을 누릅니다</li>
+    <li>「출처를 알 수 없는 앱」 을 물으면 <b>허용</b> 을 누릅니다
+        <div class="small">구글 스토어를 거치지 않고 바로 넣는 것이라 폰이 한 번 물어봅니다</div></li>
+    <li><b>설치</b> 를 누르면 끝입니다</li>
+  </ol>
+</div>
+
+<div class="card">
+  <b>노는 법</b>
+  <ol>
+    <li>판에서 <b>칸 하나를 누릅니다</b> → 그 낱말이 골라지고 아래에 힌트가 뜹니다</li>
+    <li>같은 칸을 <b>다시 누르면</b> 가로 ↔ 세로 가 바뀝니다</li>
+    <li>아래 칸에 <b>답을 씁니다</b> → 판에 바로 비칩니다. 맞으면 초록 표가 붙습니다</li>
+    <li>막히면 <b>「한 글자만」</b> 으로 한 자만 열어 보세요</li>
+    <li>맨 위에서 <b>판 크기</b> 를 고릅니다 — 쉬움 · 보통 · 어려움</li>
+    <li>오른쪽 위 <b>↻</b> 를 누르면 <b>새 판</b> 이 나옵니다</li>
+  </ol>
+</div>
+
+<div class="card">
+  <b>다른 낱말 퍼즐과 무엇이 다른가</b>
+  <ul>
+    <li><b class="hl">틀린 낱말이 없습니다</b> — 사람이 손으로 만들면 「거두절미」를 「어두절미」로 적는 일이
+        생깁니다. 이 앱은 판에 생긴 <b>모든 줄</b>을 사전과 맞춰 보고, 하나라도 없는 말이면 그 판을 버립니다</li>
+    <li><b class="hl">광고가 없습니다</b> — 띠광고도, 열 때 뜨는 광고도 없습니다</li>
+    <li><b class="hl">나갔다 들어와도 그대로</b> — 풀던 것이 날아가지 않습니다</li>
+    <li>인터넷을 쓰지 않습니다. 회원가입이 없습니다. 아무것도 모으지 않습니다</li>
+  </ul>
+</div>
+
+<p class="small">밸류스가 만들었습니다 · <a href="https://valuestools.kr">valuestools.kr</a></p>
+
+<script>
+const M = './dist/malpan.manifest.json';
+const go=document.getElementById('go'), bar=document.getElementById('bar'),
+      fill=document.getElementById('fill'), msg=document.getElementById('msg');
+
+async function sha256(buf){
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+go.onclick = async () => {
+  go.disabled = true; bar.style.display='block';
+  msg.textContent = '받는 중…'; msg.className='msg';
+  try{
+    const man = await (await fetch(M, {cache:'no-store'})).json();
+    const chunks = [];
+    for (let i=0;i<man.parts.length;i++){
+      const p = man.parts[i];
+      const r = await fetch('./dist/'+p.name, {cache:'no-store'});
+      if(!r.ok) throw new Error(p.name+' 를 못 받았습니다 ('+r.status+')');
+      const b = await r.arrayBuffer();
+      if (b.byteLength !== p.bytes) throw new Error(p.name+' 크기가 다릅니다');
+      if (await sha256(b) !== p.sha256) throw new Error(p.name+' 내용이 다릅니다');
+      chunks.push(b);
+      fill.style.width = Math.round((i+1)/man.parts.length*100)+'%';
+      msg.textContent = '받는 중… '+(i+1)+' / '+man.parts.length;
+    }
+    const total = chunks.reduce((s,c)=>s+c.byteLength,0);
+    const all = new Uint8Array(total);
+    let off=0; for(const c of chunks){ all.set(new Uint8Array(c), off); off+=c.byteLength; }
+    if (total !== man.bytes) throw new Error('크기가 다릅니다');
+    if (await sha256(all.buffer) !== man.sha256) throw new Error('지문이 다릅니다');
+
+    const url = URL.createObjectURL(
+      new Blob([all], {type:'application/vnd.android.package-archive'}));
+    const a = document.createElement('a');
+    a.href = url; a.download = man.file; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 4000);
+    msg.textContent = '다 받았습니다 — 파일을 눌러 설치하세요'; msg.className='msg ok';
+  }catch(e){
+    msg.textContent = '받지 못했습니다 : ' + e.message; msg.className='msg no';
+    go.disabled = false;
+  }
+};
+</script>
+</body></html>
