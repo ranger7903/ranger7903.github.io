@@ -2,12 +2,12 @@
  "name": "우리말 가로세로",
  "file": "우리말 가로세로.apk",
  "bytes": 17155481,
- "sha256": "2c7a14bb26d20e9de57dcaa7204ae1e9d8ff62a289576ea39dcc9e9227c3c420",
+ "sha256": "89c2e13afa77ff7f4411a785ff5ec86f74167594bceedef33eeb93218364c746",
  "parts": [
   {
    "name": "malpan.apk.part000",
    "bytes": 8388608,
-   "sha256": "8a2ac3387d1a095a5018939b3496356bb6ac9439f811f0dce2e0895934dd574e"
+   "sha256": "9260fe9169a605e263bca8d4bc97354275a6102bcf22f1a9fb43eb29a90ffac5"
   },
   {
    "name": "malpan.apk.part001",
@@ -17,7 +17,7 @@
   {
    "name": "malpan.apk.part002",
    "bytes": 378265,
-   "sha256": "263b8c27ebb50a306dfa5212ae4733623f348070d12a51107716fd437aa344d5"
+   "sha256": "4481e19411f3f6b7802c8651d2cabb66e1130b5fea93c6b79a116987d84bc929"
   }
  ]
 }
