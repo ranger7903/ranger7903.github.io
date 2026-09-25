@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>타일 서바이브 — 밸류스</title>
+<meta name="description" content="안개를 걷고, 자원을 캐고, 전기를 대어 송신탑을 세우는 작은 생존 게임. 한 판 5분.">
+<style>
+:root{
+  --bg:#12161A; --panel:#1B2127; --line:#2C343C; --ink:#E8E3DC; --dim:#93A0AC;
+  --food:#7FB069; --wood:#C08C55; --power:#E7C14B; --scrap:#8E9AA6;
+  --hot:#C0623A; --ok:#4E8C6A; --hidden:#232A31; --sel:#E7C14B;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);
+  font-family:"Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  display:flex;flex-direction:column;overflow:hidden;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);flex:0 0 auto}
+h1{font-size:15px;margin:0;letter-spacing:-.3px;white-space:nowrap}
+.sub{font-size:11px;color:var(--dim);margin-left:2px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+@media(max-width:430px){ .sub{display:none} }
+.spacer{flex:1}
+/* 🚨 사진을 찍어 보고 잡은 흠 : 「한국어」가 두 줄로 갈라졌다. 단추 글은 안 접는다. */
+button{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);
+  border-radius:9px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+#lang{min-width:66px;text-align:center}
+button:hover:not(:disabled){border-color:#3E4954}
+button:disabled{opacity:.42;cursor:default}
+.res{display:flex;gap:6px;padding:8px 14px;border-bottom:1px solid var(--line);flex:0 0 auto;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);
+  border-radius:9px;padding:6px 10px;font-size:13px;font-variant-numeric:tabular-nums}
+.chip b{font-weight:600}
+.chip .rate{font-size:11px;color:var(--dim)}
+.dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:10px;min-height:0}
+#board{display:grid;gap:3px;touch-action:manipulation}
+.t{border-radius:6px;border:1px solid var(--line);background:var(--hidden);
+  display:flex;align-items:center;justify-content:center;font-size:17px;cursor:default;
+  transition:transform .08s,background .12s;position:relative;user-select:none}
+.t.open{background:#222A31;border-color:#333D46}
+.t.can{cursor:pointer;border-color:#4A5661;box-shadow:inset 0 0 0 1px #3A4550}
+.t.can:active{transform:scale(.94)}
+.t.sel{border-color:var(--sel);box-shadow:0 0 0 2px rgba(231,193,75,.35)}
+.t.blocked{background:#1A1E22;color:#4A545E}
+.t .lv{position:absolute;right:2px;bottom:1px;font-size:9px;color:var(--dim)}
+footer{flex:0 0 auto;border-top:1px solid var(--line);padding:10px 14px;min-height:96px}
+.msg{font-size:13px;color:var(--dim);min-height:18px;margin-bottom:8px;line-height:1.45}
+.row{display:flex;gap:7px;flex-wrap:wrap}
+.b{display:flex;flex-direction:column;gap:2px;align-items:flex-start;padding:7px 11px;font-size:12px}
+.b small{color:var(--dim);font-size:10.5px}
+.over{position:fixed;inset:0;background:rgba(10,13,16,.9);display:none;
+  align-items:center;justify-content:center;padding:22px;z-index:9}
+.over.on{display:flex}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;
+  max-width:380px;width:100%}
+.card h2{margin:0 0 8px;font-size:19px}
+.card p{margin:6px 0;font-size:13.5px;color:var(--dim);line-height:1.6}
+.card .big{font-size:30px;color:var(--ink);margin:12px 0 4px;font-variant-numeric:tabular-nums}
+.card button{width:100%;margin-top:14px;padding:11px;background:var(--hot);border-color:var(--hot)}
+kbd{background:#252D35;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:11px}
+</style></head>
+<body>
+
+<header>
+  <h1 id="ttl">타일 서바이브</h1><span class="sub" id="sub">한 판 5분</span>
+  <span class="spacer"></span>
+  <button id="lang">EN</button>
+  <button id="again">다시</button>
+</header>
+
+<div class="res">
+  <div class="chip"><span class="dot" style="background:var(--food)"></span>
+    <span id="l1">식량</span> <b id="food">0</b> <span class="rate" id="rfood"></span></div>
+  <div class="chip"><span class="dot" style="background:var(--wood)"></span>
+    <span id="l2">목재</span> <b id="wood">0</b> <span class="rate" id="rwood"></span></div>
+  <div class="chip"><span class="dot" style="background:var(--power)"></span>
+    <span id="l3">전력</span> <b id="power">0</b> <span class="rate" id="rpower"></span></div>
+  <div class="chip"><span class="dot" style="background:var(--scrap)"></span>
+    <span id="l4">고철</span> <b id="scrap">0</b></div>
+  <div class="chip"><span id="l5">날</span> <b id="day">1</b></div>
+</div>
+
+<main><div id="board"></div></main>
+
+<footer>
+  <div class="msg" id="msg"></div>
+  <div class="row" id="acts"></div>
+</footer>
+
+<div class="over" id="over"><div class="card">
+  <h2 id="ovt"></h2><div class="big" id="ovs"></div><p id="ovp"></p>
+  <button id="ovb"></button>
+</div></div>
+
+<script>
+"use strict";
+/* 타일 서바이브 — 싱글 웹판
+   🚨 만들 때 정한 것
+   ① 기다리게 하지 않는다. 오프라인 타이머도, 에너지도 없다. 한 판이 5분 안에 끝난다.
+   ② 한 번 누르면 한 가지가 일어난다. 메뉴를 파고들지 않는다.
+   ③ 한글·영어 두 벌. 글은 전부 W 에만 있고 게임 속엔 한 글자도 없다.  */
+
+/* 「밭을·밭를」처럼 두 개를 다 적으면 읽기에 거칠다.
+   한글은 받침이 있으면 을/이/은, 없으면 를/가/는 이다. 끝 글자로 가려낸다. */
+function josa(word, withBatchim, without){
+  const last = (word || "").charCodeAt((word || "x").length - 1);
+  const hasBatchim = last >= 0xAC00 && last <= 0xD7A3 && (last - 0xAC00) % 28 !== 0;
+  return word + (hasBatchim ? withBatchim : without);
+}
+const eul = w => josa(w, "을", "를");
+const iga = w => josa(w, "이", "가");
+
+const W = {
+  ko:{
+    title:"타일 서바이브", sub:"한 판 5분",
+    food:"식량", wood:"목재", power:"전력", scrap:"고철", day:"날",
+    hint:"안개 낀 칸을 눌러 여십시오. 여는 데 식량이 듭니다.",
+    pick:"칸을 하나 고르십시오.",
+    opened:t=>`${t} 칸이 열렸습니다.`,
+    need:(n,r)=>`${r}${iga(r)} ${n}만큼 모자랍니다.`,
+    built:b=>`${eul(b)} 지었습니다.`,
+    upgraded:(b,l)=>`${eul(b)} ${l}단계로 올렸습니다.`,
+    nopower:"전력이 모자라 몇몇 건물이 멈췄습니다.",
+    starve:"식량이 바닥났습니다. 사람이 줄고 있습니다.",
+    dayend:d=>`${d}일째 아침입니다.`,
+    win:"구조 신호를 보냈습니다",
+    lose:"버티지 못했습니다",
+    winp:"송신탑이 하늘로 신호를 쏘아 올렸습니다. 누군가 듣고 있을 겁니다.",
+    losep:"식량이 사흘째 바닥이었습니다. 다음 판엔 밭을 먼저 지어 보십시오.",
+    score:d=>`${d}일 버팀`,
+    retry:"다시 하기", again:"다시",
+    tiles:{empty:"빈 땅",forest:"숲",farm:"묵은 밭",ruin:"폐허",water:"물가",rubble:"무너진 더미"},
+    b:{farm:"밭",saw:"벌목소",gen:"발전기",well:"우물",tower:"송신탑"},
+    bd:{farm:"식량 +2",saw:"목재 +2",gen:"전력 +5",well:"식량 +1 · 전력 1",tower:"이기는 건물"},
+    open:"열기", build:"짓기", up:"올리기", clear:"치우기",
+    cost:c=>"값 "+c, lv:l=>l+"단계",
+    towerNeed:"송신탑: 목재 40 · 고철 25 · 전력 10 이 남아 있어야 합니다.",
+    canthere:"여기에는 지을 수 없습니다.",
+    tip:"열 수 있는 칸은 테두리가 밝습니다."
+  },
+  en:{
+    title:"Tile Survive", sub:"One run, five minutes",
+    food:"Food", wood:"Wood", power:"Power", scrap:"Scrap", day:"Day",
+    hint:"Tap a tile in the fog to open it. Opening costs food.",
+    pick:"Pick a tile.",
+    opened:t=>`You opened ${t}.`,
+    need:(n,r)=>`Short of ${n} ${r}.`,
+    built:b=>`${b} built.`,
+    upgraded:(b,l)=>`${b} raised to level ${l}.`,
+    nopower:"Not enough power — some buildings have stopped.",
+    starve:"Food has run out. People are leaving.",
+    dayend:d=>`Morning of day ${d}.`,
+    win:"The signal is out",
+    lose:"You did not last",
+    winp:"The tower has thrown a signal at the sky. Somebody is listening.",
+    losep:"Food was empty three days running. Try building a field first next time.",
+    score:d=>`Lasted ${d} days`,
+    retry:"Play again", again:"Restart",
+    tiles:{empty:"bare ground",forest:"woodland",farm:"an old field",ruin:"ruins",water:"a waterside",rubble:"a collapsed heap"},
+    b:{farm:"Field",saw:"Sawmill",gen:"Generator",well:"Well",tower:"Signal tower"},
+    bd:{farm:"Food +2",saw:"Wood +2",gen:"Power +5",well:"Food +1 · Power 1",tower:"The winning build"},
+    open:"Open", build:"Build", up:"Upgrade", clear:"Clear",
+    cost:c=>"Cost "+c, lv:l=>"level "+l,
+    towerNeed:"Signal tower: 40 wood, 25 scrap, and 10 spare power.",
+    canthere:"You cannot build here.",
+    tip:"Tiles you can open have a brighter edge."
+  }
+};
+
+const SIZE = 9, DAY_MS = 9000;
+const KINDS = ["empty","forest","farm","ruin","water","rubble"];
+const ICON = {empty:"",forest:"🌲",farm:"🌾",ruin:"🏚",water:"💧",rubble:"⛰"};
+const BUILD = {
+  farm : {on:["farm","empty"],  cost:{wood:6},              food:2, power:-1, icon:"🌱"},
+  saw  : {on:["forest"],        cost:{wood:4},              wood:2, power:-1, icon:"🪓"},
+  gen  : {on:["ruin","empty"],  cost:{wood:10,scrap:6},     power:5,          icon:"⚡"},
+  well : {on:["water"],         cost:{wood:8},              food:1, power:-1, icon:"🚰"},
+  tower: {on:["empty","ruin"],  cost:{wood:40,scrap:25},    power:-10,        icon:"📡"}
+};
+
+let L = "ko", S = null, timer = null, sel = null;
+const $ = id => document.getElementById(id);
+
+function make(){
+  const g = [];
+  for (let y=0;y<SIZE;y++) for (let x=0;x<SIZE;x++){
+    let k = "empty", r = Math.random();
+    if (r<.20) k="forest"; else if (r<.32) k="farm"; else if (r<.44) k="ruin";
+    else if (r<.52) k="water"; else if (r<.62) k="rubble";
+    g.push({x,y,kind:k,open:false,b:null,lv:1});
+  }
+  const mid = Math.floor(SIZE/2)*SIZE + Math.floor(SIZE/2);
+  g[mid].kind = "empty"; g[mid].open = true;
+  for (const n of around(g, g[mid])) { n.open = true; if (n.kind==="rubble") n.kind="empty"; }
+  return g;
+}
+const at = (g,x,y) => (x<0||y<0||x>=SIZE||y>=SIZE) ? null : g[y*SIZE+x];
+const around = (g,t) => [at(g,t.x+1,t.y),at(g,t.x-1,t.y),at(g,t.x,t.y+1),at(g,t.x,t.y-1)].filter(Boolean);
+const canOpen = t => !t.open && around(S.g,t).some(n=>n.open);
+
+function reset(){
+  S = {g:make(), food:14, wood:12, power:0, scrap:4, day:1, hungry:0, over:null, msg:""};
+  sel = null;
+  $("over").classList.remove("on");
+  say(() => W[L].hint);
+  draw();
+  clearInterval(timer);
+  timer = setInterval(tick, DAY_MS);
+}
+
+function rates(){
+  let food=0, wood=0, gen=0, use=0;
+  for (const t of S.g) if (t.b){
+    const d = BUILD[t.b];
+    if (d.power>0) gen += d.power*t.lv; else use += -d.power;
+  }
+  const powered = gen >= use;
+  for (const t of S.g) if (t.b){
+    const d = BUILD[t.b];
+    if (d.power<0 && !powered) continue;
+    if (d.food) food += d.food*t.lv;
+    if (d.wood) wood += d.wood*t.lv;
+  }
+  return {food, wood, gen, use, spare:gen-use, powered};
+}
+
+function tick(){
+  if (S.over) return;
+  const r = rates();
+  S.food += r.food; S.wood += r.wood; S.scrap += 1;
+  S.power = r.spare;
+  S.food -= 2;                                  // 사람들이 먹는 몫
+  if (S.food < 0){ S.food = 0; S.hungry++; } else S.hungry = 0;
+  S.day++;
+  if (S.hungry >= 3) return finish(false);
+  const d = S.day;
+  say(() => !r.powered ? W[L].nopower : S.hungry ? W[L].starve : W[L].dayend(d));
+  draw();
+}
+
+function finish(win){
+  S.over = win ? "win" : "lose";
+  clearInterval(timer);
+  $("ovt").textContent = win ? W[L].win : W[L].lose;
+  $("ovs").textContent = W[L].score(S.day);
+  $("ovp").textContent = win ? W[L].winp : W[L].losep;
+  $("ovb").textContent = W[L].retry;
+  $("over").classList.add("on");
+  draw();
+}
+
+function pay(cost){
+  for (const k in cost) if (S[k] < cost[k]){
+    const short = cost[k]-S[k], res = k; say(() => W[L].need(short, W[L][res]));
+    return false;
+  }
+  for (const k in cost) S[k] -= cost[k];
+  return true;
+}
+const costText = c => Object.keys(c).map(k=>`${W[L][k]} ${c[k]}`).join(" · ");
+
+function openTile(t){
+  if (!canOpen(t)) return;
+  if (!pay({food:3})) return;
+  t.open = true; sel = t;
+  const k = t.kind; say(() => W[L].opened(W[L].tiles[k]));
+  draw();
+}
+
+function build(key){
+  const t = sel, d = BUILD[key];
+  if (!t || !t.open) return say(() => W[L].pick);
+  if (t.b) return say(() => W[L].canthere);
+  if (!d.on.includes(t.kind)) return say(() => W[L].canthere);
+  if (key === "tower" && rates().spare < 10) return say(() => W[L].towerNeed);
+  if (!pay(d.cost)) return;
+  t.b = key;
+  say(() => W[L].built(W[L].b[key]));
+  if (key === "tower") return finish(true);
+  draw();
+}
+
+function upgrade(){
+  const t = sel;
+  if (!t || !t.b || t.b === "tower" || t.lv >= 3) return;
+  const c = {wood: 6*t.lv, scrap: 3*t.lv};
+  if (!pay(c)) return;
+  t.lv++;
+  const bk = t.b, lv = t.lv; say(() => W[L].upgraded(W[L].b[bk], lv));
+  draw();
+}
+
+function clearRubble(){
+  const t = sel;
+  if (!t || t.kind !== "rubble") return;
+  if (!pay({wood:3})) return;
+  t.kind = "empty";
+  draw();
+}
+
+/* 🚨 사진을 찍어 보고 잡은 흠 : 말을 바꿔도 아래 안내문만 옛 나라말로 남았다.
+   글자를 담아 두지 말고 «글자를 만드는 법»을 담아 두면 다시 그릴 때 저절로 바뀐다. */
+function say(fn){ S.msg = fn; $("msg").textContent = typeof fn === "function" ? fn() : fn; }
+
+function draw(){
+  const b = $("board");
+  const cell = Math.max(30, Math.min(52,
+    Math.floor((Math.min(window.innerWidth-28, window.innerHeight-300)) / SIZE) - 3));
+  b.style.gridTemplateColumns = `repeat(${SIZE}, ${cell}px)`;
+  b.innerHTML = "";
+  for (const t of S.g){
+    const d = document.createElement("div");
+    d.className = "t" + (t.open ? " open" : "")
+      + (!t.open && canOpen(t) ? " can" : "")
+      + (t.open && t.kind === "rubble" ? " blocked" : "")
+      + (sel === t ? " sel" : "");
+    d.style.width = d.style.height = cell + "px";
+    d.textContent = t.open ? (t.b ? BUILD[t.b].icon : ICON[t.kind]) : "";
+    if (t.b && t.lv > 1){
+      const s = document.createElement("span");
+      s.className = "lv"; s.textContent = t.lv; d.appendChild(s);
+    }
+    d.onclick = () => {
+      if (S.over) return;
+      if (!t.open) openTile(t); else { sel = t; draw(); }
+    };
+    b.appendChild(d);
+  }
+  const r = rates();
+  $("food").textContent  = S.food;
+  $("wood").textContent  = S.wood;
+  $("power").textContent = r.spare;
+  $("scrap").textContent = S.scrap;
+  $("day").textContent   = S.day;
+  $("rfood").textContent  = (r.food-2>=0?"+":"") + (r.food-2);
+  $("rwood").textContent  = "+" + r.wood;
+  $("rpower").textContent = r.gen + "/" + r.use;
+  acts();
+}
+
+function acts(){
+  const box = $("acts");
+  box.innerHTML = "";
+  const t = sel;
+  const add = (label, sub, fn, ok) => {
+    const el = document.createElement("button");
+    el.className = "b";
+    el.innerHTML = `<span>${label}</span><small>${sub}</small>`;
+    el.disabled = !ok; el.onclick = fn;
+    box.appendChild(el);
+  };
+  if (!t || !t.open){
+    const el = document.createElement("div");
+    el.style.cssText = "font-size:12px;color:var(--dim)";
+    el.textContent = W[L].tip;
+    box.appendChild(el);
+    return;
+  }
+  if (t.kind === "rubble" && !t.b)
+    add(W[L].clear, costText({wood:3}), clearRubble, S.wood >= 3);
+  for (const key in BUILD){
+    const d = BUILD[key];
+    if (t.b || !d.on.includes(t.kind)) continue;
+    add(W[L].build + " · " + W[L].b[key],
+        W[L].bd[key] + " · " + costText(d.cost), () => build(key), true);
+  }
+  if (t.b && t.b !== "tower" && t.lv < 3)
+    add(W[L].up + " · " + W[L].b[t.b],
+        W[L].lv(t.lv+1) + " · " + costText({wood:6*t.lv, scrap:3*t.lv}), upgrade, true);
+}
+
+function relabel(){
+  document.documentElement.lang = L;
+  $("ttl").textContent = W[L].title;
+  $("sub").textContent = W[L].sub;
+  $("lang").textContent = L === "ko" ? "EN" : "한국어";
+  $("again").textContent = W[L].again;
+  ["food","wood","power","scrap","day"].forEach((k,i) => {
+    $("l"+(i+1)).textContent = W[L][k];
+  });
+  if (S) { say(S.msg || (() => W[L].hint)); draw(); }
+}
+
+$("lang").onclick = () => { L = L === "ko" ? "en" : "ko";
+  try { localStorage.setItem("tile.lang", L); } catch(e){} relabel(); };
+$("again").onclick = reset;
+$("ovb").onclick = reset;
+window.addEventListener("resize", () => S && draw());
+
+try { const s = localStorage.getItem("tile.lang"); if (s === "ko" || s === "en") L = s; } catch(e){}
+if (L === "ko" && !/^ko/i.test(navigator.language || "")) L = "en";
+reset(); relabel();
+</script>
+</body></html>
