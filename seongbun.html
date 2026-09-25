@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>성분 풀이 — 폰에 넣기</title>
+<meta name="robots" content="noindex">
+<style>
+ :root{--terra:#C0623A;--cream:#FDF8F1;--ink:#2b2622;--mut:#8a7f74}
+ *{box-sizing:border-box}
+ body{font-family:"Malgun Gothic","맑은 고딕","Noto Sans KR",sans-serif;
+      margin:0 auto;padding:22px 18px 70px;background:var(--cream);color:var(--ink);
+      line-height:1.8;word-break:keep-all;max-width:560px}
+ h1{font-size:23px;margin:6px 0 2px}
+ .sub{color:var(--mut);font-size:14px;margin-bottom:20px}
+ .icon{width:78px;height:78px;border-radius:18px;background:var(--terra);
+       display:flex;flex-direction:column;justify-content:center;gap:5px;
+       padding:0 12px;margin-bottom:12px;position:relative}
+ .icon i{display:block;height:5px;background:#fff;border-radius:3px}
+ .icon i:nth-child(1){width:100%}
+ .icon i:nth-child(2){width:80%}
+ .icon i:nth-child(3){width:92%}
+ .icon i:nth-child(4){width:64%}
+ .icon i:nth-child(5){width:74%}
+ .icon b{position:absolute;left:8px;right:8px;top:50%;height:2px;
+         background:repeating-linear-gradient(90deg,#fff 0 7px,transparent 7px 12px)}
+ .card{background:#fff;border:1px solid #EBD9B4;border-radius:12px;
+       padding:16px 18px;margin:14px 0}
+ button{width:100%;border:0;border-radius:11px;background:var(--terra);color:#fff;
+        font-size:17px;font-weight:700;padding:16px;cursor:pointer;font-family:inherit}
+ button:disabled{background:#c9bfb4}
+ .bar{height:8px;background:#eee4d6;border-radius:5px;overflow:hidden;margin-top:10px;display:none}
+ .bar i{display:block;height:100%;width:0;background:var(--terra);transition:width .2s}
+ .msg{font-size:14px;color:var(--mut);margin-top:9px;min-height:20px}
+ .ok{color:#2f6b3d;font-weight:600}
+ .no{color:#9a5030;font-weight:600}
+ ol,ul{margin:6px 0 0 18px;padding:0}
+ li{margin:7px 0}
+ code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+ .small{font-size:13px;color:var(--mut)}
+ a{color:var(--terra)}
+ b.hl{color:#9a5030}
+ table{border-collapse:collapse;width:100%;margin:8px 0;font-size:13.5px}
+ th,td{border:1px solid #ecd9b8;padding:6px 9px;text-align:left;vertical-align:top}
+ th{background:#FBF3E4;font-weight:600}
+ .ex{background:#FFF8EC;border:1px solid #EBD9B4;border-radius:9px;
+     padding:11px 13px;font-size:13.5px;margin:9px 0;line-height:1.75}
+</style></head><body>
+
+<div class="icon"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+<h1>성분 풀이</h1>
+<div class="sub">화장품 뒷면을 <b>등급 대신 근거</b>로 읽어 줍니다.<br>
+광고 없음 · 인터넷 안 씀 · 아무것도 모으지 않음</div>
+
+<div class="card">
+  <b>폰에서 이 쪽을 열고 계신다면</b> 아래 단추를 누르세요.
+  <div class="small" id="size" style="margin-top:4px">파일 크기를 확인하는 중…</div>
+  <div style="margin-top:12px">
+    <button id="go">앱 내려받기</button>
+    <div class="bar" id="bar"><i id="fill"></i></div>
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+
+<div class="card">
+  <b>받은 뒤에</b>
+  <ol>
+    <li>폰 아래에 뜬 알림이나 <code>내 파일 › 다운로드</code> 에서 받은 파일을 누릅니다</li>
+    <li>「출처를 알 수 없는 앱」 을 물으면 <b>허용</b> 을 누릅니다
+        <div class="small">구글 스토어를 거치지 않고 바로 넣는 것이라 폰이 한 번 물어봅니다</div></li>
+    <li><b>설치</b> 를 누르면 끝입니다</li>
+  </ol>
+</div>
+
+<div class="card">
+  <b>쓰는 법 — 세 걸음</b>
+  <ol>
+    <li>화장품 뒷면이나 쇼핑몰 상세페이지의 <b>전성분을 복사</b>합니다</li>
+    <li>앱을 열고 네모 칸에 <b>붙여 넣습니다</b></li>
+    <li><b>「읽기」</b>를 누릅니다. 끝입니다</li>
+  </ol>
+  <div class="small" style="margin-top:6px">처음이시면 <b>「보기글 넣기」</b>를 눌러 보세요 — 예시가 바로 들어갑니다.</div>
+</div>
+
+<div class="card">
+  <b>무엇이 나오는가</b>
+  <table>
+    <tr><th style="width:34%">칸</th><th>보여 주는 것</th></tr>
+    <tr><td><b>1% 경계선</b></td>
+        <td>「몇 번째부터는 1% 이하로 보입니다」 — <b>법으로</b> 좁혀 줍니다</td></tr>
+    <tr><td><b>펩타이드</b></td>
+        <td>목록에서 펩타이드만 골라, 자리와 근거를 보여 줍니다</td></tr>
+    <tr><td><b>앞 다섯</b></td>
+        <td>법이 많이 든 것부터 적게 했으니, 앞 다섯이 이 화장품의 몸통입니다</td></tr>
+    <tr><td><b>하는 일별로</b></td>
+        <td>바탕 · 물기 잡기 · 기름 · 썩지 않게 · 향 · 색 으로 갈라 줍니다</td></tr>
+    <tr><td><b>제가 모르는 것</b></td>
+        <td>사전에 없는 이름은 <b>모른다고 적습니다</b></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <b class="hl">「1% 경계선」이 무엇인가</b>
+  <p style="margin:6px 0 0">화장품 회사가 가장 감추고 싶어 하는 것은 <b>「얼마나 넣었느냐」</b>입니다.
+  앞면에는 「펩타이드 함유!」라고 크게 적고, 실제로는 눈물 한 방울만 넣는 일이 흔합니다.</p>
+  <p style="margin:8px 0 0">그런데 법이 이렇게 정해 두었습니다 —</p>
+  <ul>
+    <li><b>많이 든 것부터</b> 적어야 합니다</li>
+    <li><b>1% 이하로 쓴 것과 향료·색소</b>는 순서를 안 지켜도 됩니다</li>
+    <li>그리고 <b>페녹시에탄올은 최대 1%</b>까지만 넣을 수 있습니다</li>
+  </ul>
+  <div class="ex">
+    <b>그래서 이렇게 말할 수 있습니다 —</b><br>
+    페녹시에탄올이 보이면 <b>그건 반드시 1% 이하</b>이고,<br>
+    많은 것부터 적었으니 <b>그 뒤는 전부 1% 이하</b>입니다.<br>
+    <b class="hl">짐작이 아니라 법입니다.</b>
+  </div>
+  <div class="small">한도가 1% 이하인 성분을 <b>열네 개</b> 넣어 두었습니다.</div>
+</div>
+
+<div class="card">
+  <b>다른 성분 앱과 무엇이 다른가</b>
+  <ul>
+    <li><b class="hl">색깔 등급을 매기지 않습니다</b> — 등급을 매기려면 «얼마나 들었는지»를 알아야 하는데,
+        뒷면 목록만으로는 알 수 없습니다. 화장품 화학자들이 한결같이 지적하는 지점이 바로 그것입니다</li>
+    <li><b class="hl">근거를 섞지 않습니다</b> — <b>사람</b>(사람에게 발라 본 시험 있음) ·
+        <b>접시</b>(접시 실험까지만) · <b>없음</b>(공개된 시험 못 찾음) 셋으로 나눠서만 말합니다.
+        세 표 모두 <b>같은 회색</b>입니다 — 색으로 좋고 나쁨을 넌지시 말하지 않으려고요</li>
+    <li><b class="hl">「없음」을 「안전」으로 보이게 하지 않습니다</b> — 자료가 없는 것과 안전한 것은 다릅니다</li>
+    <li><b class="hl">「이렇게 쓰세요」를 말하지 않습니다</b> — 무엇인가와 근거가 어느 정도인가까지만 씁니다</li>
+    <li>성분 사전 <b>202칸</b>, 찾는 이름 <b>580개</b>(딴 이름·영문명 포함)를 앱 안에 담았습니다.
+        인터넷을 쓰지 않습니다</li>
+  </ul>
+</div>
+
+<div class="card" style="background:#FDF1EC;border-color:#E9C6B4">
+  <b>이 앱은 약이나 진단이 아닙니다.</b><br>
+  <span class="small" style="color:#6b6259">피부에 생긴 일은 의사·약사와 이야기하십시오.</span>
+</div>
+
+<p class="small">밸류스가 만들었습니다 · <a href="https://valuestools.kr">valuestools.kr</a></p>
+
+<script>
+const M = './dist/seongbun.manifest.json';
+const go=document.getElementById('go'), bar=document.getElementById('bar'),
+      fill=document.getElementById('fill'), msg=document.getElementById('msg'),
+      sizeEl=document.getElementById('size');
+
+fetch(M,{cache:'no-store'}).then(r=>r.json()).then(m=>{
+  sizeEl.textContent = '파일 크기 ' + (m.bytes/1048576).toFixed(1) + 'MB · 받는 데 10초쯤 걸립니다';
+}).catch(()=>{ sizeEl.textContent=''; });
+
+async function sha256(buf){
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+go.onclick = async () => {
+  go.disabled = true; bar.style.display='block';
+  msg.textContent = '받는 중…'; msg.className='msg';
+  try{
+    const man = await (await fetch(M, {cache:'no-store'})).json();
+    const chunks = [];
+    for (let i=0;i<man.parts.length;i++){
+      const p = man.parts[i];
+      const r = await fetch('./dist/'+p.name, {cache:'no-store'});
+      if(!r.ok) throw new Error(p.name+' 를 못 받았습니다 ('+r.status+')');
+      const b = await r.arrayBuffer();
+      if (b.byteLength !== p.bytes) throw new Error(p.name+' 크기가 다릅니다');
+      if (await sha256(b) !== p.sha256) throw new Error(p.name+' 내용이 다릅니다');
+      chunks.push(b);
+      fill.style.width = Math.round((i+1)/man.parts.length*100)+'%';
+      msg.textContent = '받는 중… '+(i+1)+' / '+man.parts.length;
+    }
+    const total = chunks.reduce((s,c)=>s+c.byteLength,0);
+    const all = new Uint8Array(total);
+    let off=0; for(const c of chunks){ all.set(new Uint8Array(c), off); off+=c.byteLength; }
+    if (total !== man.bytes) throw new Error('크기가 다릅니다');
+    if (await sha256(all.buffer) !== man.sha256) throw new Error('지문이 다릅니다');
+
+    const url = URL.createObjectURL(
+      new Blob([all], {type:'application/vnd.android.package-archive'}));
+    const a = document.createElement('a');
+    a.href = url; a.download = man.file; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 4000);
+    msg.textContent = '다 받았습니다 — 파일을 눌러 설치하세요'; msg.className='msg ok';
+  }catch(e){
+    msg.textContent = '받지 못했습니다 : ' + e.message; msg.className='msg no';
+    go.disabled = false;
+  }
+};
+</script>
+</body></html>
