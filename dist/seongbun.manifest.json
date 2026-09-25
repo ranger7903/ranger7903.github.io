@@ -1,0 +1,22 @@
+{
+ "file": "성분 풀이.apk",
+ "bytes": 17155915,
+ "sha256": "fd045033e216a2f28f4291ca15da108b76eda4441563edd5db4b05dac964afd3",
+ "parts": [
+  {
+   "name": "seongbun.apk.part000",
+   "bytes": 6291456,
+   "sha256": "1d8b9e974b758ca7c3d2572cb3ad7cabfe857b85f9edfc4c3cd006ea6f9765e7"
+  },
+  {
+   "name": "seongbun.apk.part001",
+   "bytes": 6291456,
+   "sha256": "1e18b2e37d78a1225234e3794fc6dbd4d2bbbe66d7c88b1129402dec9ef55f7e"
+  },
+  {
+   "name": "seongbun.apk.part002",
+   "bytes": 4573003,
+   "sha256": "d5c006b6f11065ebdfe9fb0c5b9e8af8c91bb1ecd202cfbf8f1c94436bf3889e"
+  }
+ ]
+}
