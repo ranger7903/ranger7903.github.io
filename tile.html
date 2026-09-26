@@ -43,7 +43,8 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:10px;
 .t.can{cursor:pointer;border-color:#4A5661;box-shadow:inset 0 0 0 1px #3A4550}
 .t.can:active{transform:scale(.94)}
 .t.sel{border-color:var(--sel);box-shadow:0 0 0 2px rgba(231,193,75,.35)}
-.t.blocked{background:#1A1E22;color:#4A545E}
+.t.off{opacity:.45;filter:grayscale(1)}
+    .t.blocked{background:#1A1E22;color:#4A545E}
 .t .lv{position:absolute;right:2px;bottom:1px;font-size:9px;color:var(--dim)}
 footer{flex:0 0 auto;border-top:1px solid var(--line);padding:10px 14px;min-height:96px}
 .msg{font-size:13px;color:var(--dim);min-height:18px;margin-bottom:8px;line-height:1.45}
@@ -78,7 +79,7 @@ kbd{background:#252D35;border:1px solid var(--line);border-radius:5px;padding:1p
   <div class="chip"><span class="dot" style="background:var(--power)"></span>
     <span id="l3">전력</span> <b id="power">0</b> <span class="rate" id="rpower"></span></div>
   <div class="chip"><span class="dot" style="background:var(--scrap)"></span>
-    <span id="l4">고철</span> <b id="scrap">0</b></div>
+    <span id="l4">고철</span> <b id="scrap">0</b> <span class="rate" id="rscrap"></span></div>
   <div class="chip"><span id="l5">날</span> <b id="day">1</b></div>
 </div>
 
@@ -116,9 +117,10 @@ const W = {
   ko:{
     title:"타일 서바이브", sub:"한 판 5분",
     food:"식량", wood:"목재", power:"전력", scrap:"고철", day:"날",
-    hint:"안개 낀 칸을 눌러 여십시오. 여는 데 식량이 듭니다.",
+    hint:"안개 낀 칸을 눌러 여십시오. 식량 1이 들고, 그 땅에서 나오는 것을 한 번 받습니다.",
     pick:"칸을 하나 고르십시오.",
     opened:t=>`${t} 칸이 열렸습니다.`,
+    openedGot:(t,g)=>`${t} 칸이 열렸습니다. ${g}`,
     need:(n,r)=>`${iga(r)} ${n}만큼 모자랍니다.`,
     built:b=>`${eul(b)} 지었습니다.`,
     upgraded:(b,l)=>`${eul(b)} ${l}단계로 올렸습니다.`,
@@ -132,9 +134,12 @@ const W = {
     score:d=>`${d}일 버팀`,
     retry:"다시 하기", again:"다시",
     tiles:{empty:"빈 땅",forest:"숲",farm:"묵은 밭",ruin:"폐허",water:"물가",rubble:"무너진 더미"},
-    b:{farm:"밭",saw:"벌목소",gen:"발전기",well:"우물",tower:"송신탑"},
-    bd:{farm:"식량 +2",saw:"목재 +2",gen:"전력 +5",well:"식량 +1 · 전력 1",tower:"이기는 건물"},
-    open:"열기", build:"짓기", up:"올리기", clear:"치우기",
+    b:{farm:"밭",saw:"벌목소",gen:"발전기",well:"우물",yard:"고물터",tower:"송신탑"},
+    bd:{farm:"식량 +2",saw:"목재 +2",gen:"전력 +5",well:"식량 +1 · 전력 1",
+        yard:"고철 +2",tower:"이기는 건물"},
+    salvaged:(n,r)=>`더미를 치우고 ${iga(r)} ${n}개 나왔습니다.`,
+    pulled:(b,n,r)=>`${eul(b)} 헐었습니다. ${iga(r)} ${n} 돌아왔습니다.`,
+    open:"열기", build:"짓기", up:"올리기", clear:"치우기", pull:"헐기",
     cost:c=>"값 "+c, lv:l=>l+"단계",
     towerNeed:"송신탑: 목재 40 · 고철 25 · 전력 10 이 남아 있어야 합니다.",
     canthere:"여기에는 지을 수 없습니다.",
@@ -143,9 +148,10 @@ const W = {
   en:{
     title:"Tile Survive", sub:"One run, five minutes",
     food:"Food", wood:"Wood", power:"Power", scrap:"Scrap", day:"Day",
-    hint:"Tap a tile in the fog to open it. Opening costs food.",
+    hint:"Tap a tile in the fog to open it. It costs one food, and the land gives you something once.",
     pick:"Pick a tile.",
     opened:t=>`You opened ${t}.`,
+    openedGot:(t,g)=>`You opened ${t}. ${g}`,
     need:(n,r)=>`Short of ${n} ${r}.`,
     built:b=>`${b} built.`,
     upgraded:(b,l)=>`${b} raised to level ${l}.`,
@@ -159,9 +165,13 @@ const W = {
     score:d=>`Lasted ${d} days`,
     retry:"Play again", again:"Restart",
     tiles:{empty:"bare ground",forest:"woodland",farm:"an old field",ruin:"ruins",water:"a waterside",rubble:"a collapsed heap"},
-    b:{farm:"Field",saw:"Sawmill",gen:"Generator",well:"Well",tower:"Signal tower"},
-    bd:{farm:"Food +2",saw:"Wood +2",gen:"Power +5",well:"Food +1 · Power 1",tower:"The winning build"},
-    open:"Open", build:"Build", up:"Upgrade", clear:"Clear",
+    b:{farm:"Field",saw:"Sawmill",gen:"Generator",well:"Well",yard:"Scrap yard",
+       tower:"Signal tower"},
+    bd:{farm:"Food +2",saw:"Wood +2",gen:"Power +5",well:"Food +1 · Power 1",
+        yard:"Scrap +2",tower:"The winning build"},
+    salvaged:(n,r)=>`You cleared the heap and pulled out ${n} ${r.toLowerCase()}.`,
+    pulled:(b,n,r)=>`${b} pulled down. ${n} ${r.toLowerCase()} came back.`,
+    open:"Open", build:"Build", up:"Upgrade", clear:"Clear", pull:"Demolish",
     cost:c=>"Cost "+c, lv:l=>"level "+l,
     towerNeed:"Signal tower: 40 wood, 25 scrap, and 10 spare power.",
     canthere:"You cannot build here.",
@@ -177,6 +187,12 @@ const BUILD = {
   saw  : {on:["forest"],        cost:{wood:4},              wood:2, power:-1, icon:"🪓"},
   gen  : {on:["ruin","empty"],  cost:{wood:10,scrap:6},     power:5,          icon:"⚡"},
   well : {on:["water"],         cost:{wood:8},              food:1, power:-1, icon:"🚰"},
+  /* 🚨 눌러 보고 잡은 흠 그 둘 : 2일부터 29일까지 «누를 것이 하나도 없었다».
+     고철이 하루 1개씩만 저절로 늘어서, 송신탑에 드는 고철 25를 채우려면
+     손님이 4분 넘게 «구경만» 해야 했다. 손님이 손을 쓸 자리가 없으면 그것은 게임이 아니다.
+     그래서 「무너진 더미」에 «고물터»를 두었다. 이제 더미는 걸리적거리는 것이 아니라
+     찾아낼 값어치가 있는 칸이 되고, 손님이 고철 속도를 스스로 올릴 수 있다. */
+  yard : {on:["rubble"],        cost:{wood:5},              scrap:2, power:-1, icon:"♻"},
   tower: {on:["empty","ruin"],  cost:{wood:40,scrap:25},    power:-10,        icon:"📡"}
 };
 
@@ -215,26 +231,36 @@ function reset(){
   timer = setInterval(tick, DAY_MS);
 }
 
+/* 🚨 눌러 보고 잡은 흠 그 다섯 — 이 게임에서 가장 나빴던 것.
+   전력이 «1만 모자라도» 건물이 «전부» 멈췄다. 그러면 목재도 식량도 0이 되고,
+   발전기를 세울 목재 10을 벌 길이 영영 없어 그대로 굶어 죽는다. 손님 잘못이 아닌데 끝난다.
+   게다가 화면 안내문은 원래부터 「몇몇 건물이 멈췄습니다」라고 적고 있었다 —
+   말과 속이 달랐던 것이다.
+   → 전기를 «지은 차례대로» 나눠 준다. 모자라면 뒤에 지은 것부터 멈춘다.
+     앞에 지은 벌목소는 계속 돌아가니, 손님은 언제든 다시 일어설 수 있다. */
 function rates(){
-  let food=0, wood=0, gen=0, use=0;
+  let food=0, wood=0, scrap=0, gen=0, use=0, left=0;
+  const off = new Set();
+  for (const t of S.g) if (t.b && BUILD[t.b].power > 0) gen += BUILD[t.b].power * t.lv;
+  left = gen;
   for (const t of S.g) if (t.b){
     const d = BUILD[t.b];
-    if (d.power>0) gen += d.power*t.lv; else use += -d.power;
+    if (d.power >= 0) continue;
+    const need = -d.power;
+    use += need;
+    if (left >= need){ left -= need; } else { off.add(t); continue; }
+    if (d.food)  food  += d.food  * t.lv;
+    if (d.wood)  wood  += d.wood  * t.lv;
+    if (d.scrap) scrap += d.scrap * t.lv;
   }
-  const powered = gen >= use;
-  for (const t of S.g) if (t.b){
-    const d = BUILD[t.b];
-    if (d.power<0 && !powered) continue;
-    if (d.food) food += d.food*t.lv;
-    if (d.wood) wood += d.wood*t.lv;
-  }
-  return {food, wood, gen, use, spare:gen-use, powered};
+  return {food, wood, scrap, gen, use, spare:gen-use, powered:off.size===0, off};
 }
 
 function tick(){
   if (S.over) return;
   const r = rates();
-  S.food += r.food; S.wood += r.wood; S.scrap += 1;
+  // 고물터를 하나도 안 지은 사람도 아주 천천히는 나아가도록 하루 1개는 그냥 준다.
+  S.food += r.food; S.wood += r.wood; S.scrap += r.scrap + 1;
   S.power = r.spare;
   S.food -= 2;                                  // 사람들이 먹는 몫
   if (S.food < 0){ S.food = 0; S.hungry++; } else S.hungry = 0;
@@ -272,11 +298,24 @@ function pay(cost){
 }
 const costText = c => Object.keys(c).map(k=>`${W[L][k]} ${c[k]}`).join(" · ");
 
+/* 🚨 눌러 보고 잡은 흠 그 셋 : 칸 하나 여는 데 식량 3이 들었다.
+   밭 하나로는 버는 것과 먹는 것이 똑같아(+2 −2) 식량이 «영영 안 쌓인다».
+   그래서 손님은 칸을 더 열지 못하고, 열지 못하니 지을 자리도 못 찾고, 그대로 굶어 죽었다.
+   게임에서 가장 재미있는 일(안개를 걷는 일)에 벌을 주고 있었던 셈이다.
+   → 여는 값을 1로 낮추고, 칸을 열면 그 땅에서 «한 번 나오는 것»을 준다.
+     이제 여는 일이 손해가 아니라 이득이고, 어디를 먼저 열까가 고르는 재미가 된다. */
+const OPEN_COST = 1;
+const FIND = {forest:{wood:3}, farm:{food:3}, ruin:{scrap:2},
+              water:{food:2}, rubble:{scrap:1}, empty:{}};
+
 function openTile(t){
   if (!canOpen(t)) return;
-  if (!pay({food:3})) return;
+  if (!pay({food:OPEN_COST})) return;
   t.open = true; sel = t;
-  const k = t.kind; say(() => W[L].opened(W[L].tiles[k]));
+  const k = t.kind, got = FIND[k] || {};
+  for (const r in got) S[r] += got[r];
+  const gotText = Object.keys(got).map(r => `${W[L][r]} +${got[r]}`).join(" · ");
+  say(() => gotText ? W[L].openedGot(W[L].tiles[k], gotText) : W[L].opened(W[L].tiles[k]));
   draw();
 }
 
@@ -303,11 +342,33 @@ function upgrade(){
   draw();
 }
 
+/* 더미를 치우면 «고철 4개»가 한 번에 나온다.
+   그래서 더미 칸마다 고르는 재미가 생긴다 — 지금 4개를 받을 것인가,
+   고물터를 지어 하루 2개씩 계속 받을 것인가. */
+const SALVAGE = 4;
+
+/* 🚨 눌러 보고 잡은 흠 그 넷 : 열린 칸마다 건물을 세우고 나면
+   «송신탑 세울 자리가 없어» 아무리 모아도 못 이기는 막다른 길이 생겼다.
+   무른 데가 없는 게임은 손님을 가둔다. 잘못 지은 건물을 헐 수 있게 한다.
+   목재는 절반만 돌려준다 — 되돌릴 수는 있되 공짜는 아니게. */
+function demolish(){
+  const t = sel;
+  if (!t || !t.b || t.b === "tower") return;
+  const back = Math.floor((BUILD[t.b].cost.wood || 0) * t.lv / 2);
+  const name = W[L].b[t.b];
+  t.b = null; t.lv = 1;
+  S.wood += back;
+  say(() => W[L].pulled(name, back, W[L].wood));
+  draw();
+}
+
 function clearRubble(){
   const t = sel;
   if (!t || t.kind !== "rubble") return;
   if (!pay({wood:3})) return;
   t.kind = "empty";
+  S.scrap += SALVAGE;
+  say(() => W[L].salvaged(SALVAGE, W[L].scrap));
   draw();
 }
 
@@ -321,11 +382,13 @@ function draw(){
     Math.floor((Math.min(window.innerWidth-28, window.innerHeight-300)) / SIZE) - 3));
   b.style.gridTemplateColumns = `repeat(${SIZE}, ${cell}px)`;
   b.innerHTML = "";
+  const rOff = rates().off;
   for (const t of S.g){
     const d = document.createElement("div");
     d.className = "t" + (t.open ? " open" : "")
       + (!t.open && canOpen(t) ? " can" : "")
       + (t.open && t.kind === "rubble" ? " blocked" : "")
+      + (rOff.has(t) ? " off" : "")
       + (sel === t ? " sel" : "");
     d.style.width = d.style.height = cell + "px";
     d.textContent = t.open ? (t.b ? BUILD[t.b].icon : ICON[t.kind]) : "";
@@ -339,15 +402,16 @@ function draw(){
     };
     b.appendChild(d);
   }
-  const r = rates();
+  const rr = rates();
   $("food").textContent  = S.food;
   $("wood").textContent  = S.wood;
-  $("power").textContent = r.spare;
+  $("power").textContent = rr.spare;
   $("scrap").textContent = S.scrap;
   $("day").textContent   = S.day;
-  $("rfood").textContent  = (r.food-2>=0?"+":"") + (r.food-2);
-  $("rwood").textContent  = "+" + r.wood;
-  $("rpower").textContent = r.gen + "/" + r.use;
+  $("rfood").textContent  = (rr.food-2>=0?"+":"") + (rr.food-2);
+  $("rwood").textContent  = "+" + rr.wood;
+  $("rpower").textContent = rr.gen + "/" + rr.use;
+  $("rscrap").textContent = "+" + (rr.scrap + 1);
   acts();
 }
 
@@ -372,7 +436,8 @@ function acts(){
   /* 🚨 「목재 +2 · 목재 4」처럼 버는 것과 드는 것이 똑같이 보였다.
      드는 쪽에는 W 에 이미 있던 「값」을 붙여 준다. */
   if (t.kind === "rubble" && !t.b)
-    add(W[L].clear, W[L].cost(costText({wood:3})), clearRubble, S.wood >= 3);
+    add(W[L].clear, W[L].scrap + " +" + SALVAGE + " · " + W[L].cost(costText({wood:3})),
+        clearRubble, S.wood >= 3);
   for (const key in BUILD){
     const d = BUILD[key];
     if (t.b || !d.on.includes(t.kind)) continue;
@@ -382,6 +447,9 @@ function acts(){
   if (t.b && t.b !== "tower" && t.lv < 3)
     add(W[L].up + " · " + W[L].b[t.b],
         W[L].lv(t.lv+1) + " · " + W[L].cost(costText({wood:6*t.lv, scrap:3*t.lv})), upgrade, true);
+  if (t.b && t.b !== "tower")
+    add(W[L].pull + " · " + W[L].b[t.b],
+        W[L].wood + " +" + Math.floor((BUILD[t.b].cost.wood||0)*t.lv/2), demolish, true);
 }
 
 function relabel(){
