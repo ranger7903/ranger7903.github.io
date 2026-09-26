@@ -119,7 +119,7 @@ const W = {
     hint:"안개 낀 칸을 눌러 여십시오. 여는 데 식량이 듭니다.",
     pick:"칸을 하나 고르십시오.",
     opened:t=>`${t} 칸이 열렸습니다.`,
-    need:(n,r)=>`${r}${iga(r)} ${n}만큼 모자랍니다.`,
+    need:(n,r)=>`${iga(r)} ${n}만큼 모자랍니다.`,
     built:b=>`${eul(b)} 지었습니다.`,
     upgraded:(b,l)=>`${eul(b)} ${l}단계로 올렸습니다.`,
     nopower:"전력이 모자라 몇몇 건물이 멈췄습니다.",
@@ -128,7 +128,7 @@ const W = {
     win:"구조 신호를 보냈습니다",
     lose:"버티지 못했습니다",
     winp:"송신탑이 하늘로 신호를 쏘아 올렸습니다. 누군가 듣고 있을 겁니다.",
-    losep:"식량이 사흘째 바닥이었습니다. 다음 판엔 밭을 먼저 지어 보십시오.",
+    losep:"식량이 사흘째 바닥이었습니다. 밭은 전기가 와야 곡식을 냅니다. 다음 판엔 발전기를 먼저 세우고 밭을 지어 보십시오.",
     score:d=>`${d}일 버팀`,
     retry:"다시 하기", again:"다시",
     tiles:{empty:"빈 땅",forest:"숲",farm:"묵은 밭",ruin:"폐허",water:"물가",rubble:"무너진 더미"},
@@ -155,7 +155,7 @@ const W = {
     win:"The signal is out",
     lose:"You did not last",
     winp:"The tower has thrown a signal at the sky. Somebody is listening.",
-    losep:"Food was empty three days running. Try building a field first next time.",
+    losep:"Food was empty three days running. A field only grows when power reaches it — next time raise a generator first, then the field.",
     score:d=>`Lasted ${d} days`,
     retry:"Play again", again:"Restart",
     tiles:{empty:"bare ground",forest:"woodland",farm:"an old field",ruin:"ruins",water:"a waterside",rubble:"a collapsed heap"},
@@ -200,8 +200,13 @@ const at = (g,x,y) => (x<0||y<0||x>=SIZE||y>=SIZE) ? null : g[y*SIZE+x];
 const around = (g,t) => [at(g,t.x+1,t.y),at(g,t.x-1,t.y),at(g,t.x,t.y+1),at(g,t.x,t.y-1)].filter(Boolean);
 const canOpen = t => !t.open && around(S.g,t).some(n=>n.open);
 
+/* 🚨 눌러 보고 잡은 흠 : 목재 12 · 고철 4 로 시작하면 «어떻게 해도 못 이긴다».
+   건물은 전기가 와야 돌고(gen >= use), 전기는 발전기(목재 10·고철 6)만 낸다.
+   목재를 버는 벌목소는 목재 4. 그러니 처음에 목재 14·고철 6 이 없으면
+   발전기와 벌목소를 함께 세울 수 없고, 목재 버는 길이 영영 열리지 않는다.
+   시작 밑천을 목재 20 · 고철 6 으로 올려 첫날에 발전기+벌목소+밭이 서게 한다. */
 function reset(){
-  S = {g:make(), food:14, wood:12, power:0, scrap:4, day:1, hungry:0, over:null, msg:""};
+  S = {g:make(), food:14, wood:20, power:0, scrap:6, day:1, hungry:0, over:null, msg:""};
   sel = null;
   $("over").classList.remove("on");
   say(() => W[L].hint);
@@ -240,13 +245,19 @@ function tick(){
   draw();
 }
 
-function finish(win){
-  S.over = win ? "win" : "lose";
-  clearInterval(timer);
+/* 끝 딱지의 글도 «그때그때 다시 만든다». 그래야 말을 바꾸면 같이 바뀐다. */
+function endcard(){
+  const win = S.over === "win";
   $("ovt").textContent = win ? W[L].win : W[L].lose;
   $("ovs").textContent = W[L].score(S.day);
   $("ovp").textContent = win ? W[L].winp : W[L].losep;
   $("ovb").textContent = W[L].retry;
+}
+
+function finish(win){
+  S.over = win ? "win" : "lose";
+  clearInterval(timer);
+  endcard();
   $("over").classList.add("on");
   draw();
 }
@@ -358,17 +369,19 @@ function acts(){
     box.appendChild(el);
     return;
   }
+  /* 🚨 「목재 +2 · 목재 4」처럼 버는 것과 드는 것이 똑같이 보였다.
+     드는 쪽에는 W 에 이미 있던 「값」을 붙여 준다. */
   if (t.kind === "rubble" && !t.b)
-    add(W[L].clear, costText({wood:3}), clearRubble, S.wood >= 3);
+    add(W[L].clear, W[L].cost(costText({wood:3})), clearRubble, S.wood >= 3);
   for (const key in BUILD){
     const d = BUILD[key];
     if (t.b || !d.on.includes(t.kind)) continue;
     add(W[L].build + " · " + W[L].b[key],
-        W[L].bd[key] + " · " + costText(d.cost), () => build(key), true);
+        W[L].bd[key] + " · " + W[L].cost(costText(d.cost)), () => build(key), true);
   }
   if (t.b && t.b !== "tower" && t.lv < 3)
     add(W[L].up + " · " + W[L].b[t.b],
-        W[L].lv(t.lv+1) + " · " + costText({wood:6*t.lv, scrap:3*t.lv}), upgrade, true);
+        W[L].lv(t.lv+1) + " · " + W[L].cost(costText({wood:6*t.lv, scrap:3*t.lv})), upgrade, true);
 }
 
 function relabel(){
@@ -380,7 +393,7 @@ function relabel(){
   ["food","wood","power","scrap","day"].forEach((k,i) => {
     $("l"+(i+1)).textContent = W[L][k];
   });
-  if (S) { say(S.msg || (() => W[L].hint)); draw(); }
+  if (S) { say(S.msg || (() => W[L].hint)); draw(); if (S.over) endcard(); }
 }
 
 $("lang").onclick = () => { L = L === "ko" ? "en" : "ko";
