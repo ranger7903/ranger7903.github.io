@@ -838,17 +838,17 @@
    "sha256": "182ab70022b8cef86fe8ca2b50911eb38f99ca76d7ed1b3660d4782ef93ee765",
    "parts": [
     {
-     "name": "dist/pdfgrab.part000",
+     "name": "dist/dist/pdfgrab.part000",
      "size": 9437184,
      "sha256": "9878a3271828a98de12a74eb97684a12f2a911013881d62b9e66c19cf1ab64bc"
     },
     {
-     "name": "dist/pdfgrab.part001",
+     "name": "dist/dist/pdfgrab.part001",
      "size": 9437184,
      "sha256": "46f3646c339a7c8718623504f328a77161997f927eb503b791e0ef3e84836d2c"
     },
     {
-     "name": "dist/pdfgrab.part002",
+     "name": "dist/dist/pdfgrab.part002",
      "size": 5328703,
      "sha256": "8375de610c22b14a1430d8a7ff503c8bfb04fd1ebc0098542bbf7a40a0e8bc08"
     }
@@ -861,17 +861,17 @@
    "sha256": "3822a9addbbffd51c28a4c3eb5623cf9a4733ec91771c7cf943d9ed81594268d",
    "parts": [
     {
-     "name": "dist/moahwp.part000",
+     "name": "dist/dist/moahwp.part000",
      "size": 9437184,
      "sha256": "6e50f70cf94c1ad18baa53324525aa0d08af4d3ea243991e9108406c3cb72ad4"
     },
     {
-     "name": "dist/moahwp.part001",
+     "name": "dist/dist/moahwp.part001",
      "size": 9437184,
      "sha256": "f8ef544cddc70d0787b2ff67c3201b108aa3bfafed7e0073ab0e710ed5aa7be5"
     },
     {
-     "name": "dist/moahwp.part002",
+     "name": "dist/dist/moahwp.part002",
      "size": 3455313,
      "sha256": "ed45d2572e18d1243c4caf81fae050b5b3cf3f52f18619d422943f3f2a811e80"
     }
@@ -884,17 +884,17 @@
    "sha256": "32d8a0a4a09f611ab193c02cca686dbf501f267471a4c22f04dcd79e553bf826",
    "parts": [
     {
-     "name": "dist/gongmun.part000",
+     "name": "dist/dist/gongmun.part000",
      "size": 9437184,
      "sha256": "9f29378a571b999de9c33d8f0043d0ddcd3a7eaf8f75bf9fb156f9937bb25ff6"
     },
     {
-     "name": "dist/gongmun.part001",
+     "name": "dist/dist/gongmun.part001",
      "size": 9437184,
      "sha256": "33cae7275a77b97f9a43b6d952cf20def36624268d784e4f51c4da7905cf2b00"
     },
     {
-     "name": "dist/gongmun.part002",
+     "name": "dist/dist/gongmun.part002",
      "size": 3927344,
      "sha256": "eb8c380147d7d0ff74345f987b83860dae530b2a1d4d26b0f26a9589190e2025"
     }
