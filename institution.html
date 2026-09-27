@@ -93,7 +93,9 @@ footer{margin:50px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
 
 <h1>Buying for a school or organization</h1>
 <p class="lede">For buyers who cannot put a purchase on a personal card.<br>
-<b>Generate your quote right here — no need to email us and wait.</b></p>
+<b>Generate your quote right here — no need to email us and wait.</b><br>
+<span style="font-size:15px">Note: VALUES is a <b>simplified taxpayer</b>, so
+<b>no Korean tax invoice can be issued</b> — told up front, before you choose. (<a href="#proof">details</a>)</span></p>
 
 <div class="card warm noprint">
 <b>Why this page exists</b>
@@ -147,11 +149,19 @@ So we send it by reply only. <b>Our mail always comes from
 <span style="white-space:nowrap">ranger7903@nate.com</span></b> — anything else is not us.</p>
 </div>
 
-<h2>4 · Tax documents</h2>
-<div class="card">
-<p>Write in your email <b>which document you need</b> (Korean tax invoice / cash receipt for expense proof / statement of account).</p>
-<p style="margin-bottom:0"><b>We confirm what we can issue before you pay</b>, so nobody discovers a problem
-after the request has already been approved.</p>
+<h2 id="proof">4 · Tax documents — please read first</h2>
+<div class="card warm">
+<p style="font-size:17px;margin-top:0"><b>We cannot issue a Korean tax invoice (세금계산서).</b></p>
+<p>VALUES is registered as a <b>simplified taxpayer (간이과세자)</b>, and Korean law does not allow
+a simplified taxpayer to issue one. We say so here, before you file anything, rather than after your
+purchase request has been approved.</p>
+<p><b>What we can give you instead:</b></p>
+<ul>
+<li><b>Statement of account (거래명세서)</b> — stamped, sent straight away.</li>
+<li><b>Cash receipt for expense proof (지출증빙용 현금영수증)</b> — issued for the amount transferred.</li>
+</ul>
+<p style="margin-bottom:0">Tell us in your email which you need. If your accounting office requires a
+tax invoice specifically, please check with them first whether an expense-proof cash receipt is accepted.</p>
 </div>
 
 <h2>5 · Questions we get</h2>
@@ -280,7 +290,10 @@ document.getElementById('make').addEventListener('click', function(){
   h += '<tr class="sum"><td colspan="5" style="text-align:right">Total (VAT included)</td>' +
        '<td class="num">'+won(t)+'</td></tr></tbody></table>' +
        '<div style="margin-top:12px;font-size:12.5px;line-height:1.75">' +
-       '· Amounts are in Korean won and include VAT.<br>' +
+       '· Amounts are in Korean won, VAT included as a single total ' +
+       '(the supplier is a simplified taxpayer, so VAT is not itemised).<br>' +
+       '· <b>The supplier is a simplified taxpayer; no Korean tax invoice is issued.</b> ' +
+       'A statement of account or an expense-proof cash receipt is provided instead.<br>' +
        '· Quantity is the number of computers; one licence key per computer.<br>' +
        '· One payment, no subscription. Updates within the same version line (v1.x) are free.<br>' +
        '· Once approved, email ranger7903@nate.com for bank details and tax documents.</div>';
@@ -300,7 +313,8 @@ function mail(){
   if(L.length){ L.forEach(function(x){ body += ' - ' + x.name + ' x ' + x.qty + ' = ' + won(x.amt) + '\n'; });
     body += '\nTotal (VAT included): ' + won(t) + '\n'; }
   else body += ' (you may also send this without picking anything)\n';
-  body += '\nTax document needed: (tax invoice / cash receipt / statement)\n' +
+  body += '\nDocument needed: (statement of account / expense-proof cash receipt)\n' +
+          ' Note: we understand no Korean tax invoice can be issued by a simplified taxpayer.\n' +
           'Please send the bank details and we will transfer after approval.\n';
   document.getElementById('mailbtn').setAttribute('href',
     'mailto:ranger7903@nate.com?subject=' + encodeURIComponent('[Organization] ' + (org||'VALUES purchase enquiry')) +
