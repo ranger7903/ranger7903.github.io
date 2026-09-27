@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF 속 표를 엑셀로 옮기는 법 — 세 가지 방법 · 밸류스</title>
+<meta name="description" content="PDF에 있는 표를 엑셀로 가져오는 세 가지 방법. 엑셀의 PDF 가져오기, 복사 후 텍스트 나누기, 한글·워드 거치기. 스캔본일 때 무엇이 다른지까지.">
+<link rel="canonical" href="https://valuestools.kr/pdf-table-guide.html">
+<meta property="og:title" content="PDF 속 표를 엑셀로 옮기는 법">
+<meta property="og:description" content="PDF에 있는 표를 엑셀로 가져오는 세 가지 방법. 엑셀의 PDF 가져오기, 복사 후 텍스트 나누기, 한글·워드 거치기. 스캔본일 때 무엇이 다른지까지.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/pdf-table-guide.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.85;word-break:keep-all}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+</head><body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="index.html"><span class="stamp">値</span>밸류스</a>
+  <nav style="margin-left:auto">
+    <a href="index.html">도구 선반</a>
+    <a href="free.html">공짜로 드리는 것</a>
+    <a href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">학교·기관 구매</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>PDF 속 표를 엑셀로 옮기는 법</h1>
+<p class="lede">PDF에 있는 표를 손으로 다시 치고 계신다면 — 그러지 않으셔도 됩니다.
+<b>돈 안 드는 방법 세 가지</b>를 먼저 적습니다. 대개 이 중 하나로 됩니다.</p>
+
+<h2>먼저 — 내 PDF가 어느 쪽인지부터 봅니다</h2>
+<p>이걸 모르고 시작하면 한참 헤맵니다. <b>10초면 확인됩니다.</b></p>
+<div class="card warm">
+<b>PDF를 열고 표의 글자를 마우스로 드래그해 보십시오.</b>
+<ul style="margin-bottom:0">
+<li>글자가 <b>파랗게 잡히면</b> → <b>글자 PDF</b>입니다. 아래 세 방법이 다 됩니다.</li>
+<li>아무것도 안 잡히고 <b>사진처럼 네모만</b> 잡히면 → <b>그림 PDF(스캔본)</b>입니다.
+컴퓨터에게는 글자가 아니라 <b>사진</b>입니다. 복사해도 아무것도 안 나옵니다.
+이때는 맨 아래 「스캔본일 때」를 보십시오.</li>
+</ul>
+</div>
+
+<h2>방법 ① 엑셀이 직접 읽어 오게 하기 — 가장 깔끔합니다</h2>
+<div class="ex">엑셀에서
+[데이터] → [데이터 가져오기] → [파일에서] → [PDF에서]</div>
+<p>PDF를 고르면 엑셀이 <b>쪽마다 표를 찾아 목록으로 보여 줍니다.</b>
+원하는 표를 골라 [로드]를 누르면 끝입니다. 칸이 알아서 나뉩니다.</p>
+<div class="card">
+<b>이 메뉴가 안 보이신다면</b>
+<p style="margin-bottom:0">엑셀 판(버전)이 낮은 것입니다. 이 기능은
+<b>마이크로소프트 365와 엑셀 2021부터</b> 들어 있습니다.
+엑셀 2016·2019에는 없습니다. 그러면 아래 ②번으로 하십시오.</p>
+</div>
+
+<h2>방법 ② 복사해서 붙이고, 칸을 나누기</h2>
+<ol>
+<li>PDF에서 표 부분을 <b>드래그해서 복사</b>(Ctrl+C)합니다.</li>
+<li>엑셀에 <b>붙여넣습니다</b>(Ctrl+V). 이때 한 칸에 다 들어가 버리는 경우가 많습니다.</li>
+<li>그 줄을 고른 뒤 <b>[데이터] → [텍스트 나누기]</b>를 누릅니다.</li>
+<li><b>「구분 기호로 분리됨」</b>을 고르고 → <b>공백</b>이나 <b>쉼표</b>에 체크 → [마침].</li>
+</ol>
+<p class="small">숫자 앞의 0이 사라지거나 날짜로 바뀌는 것이 싫으시면,
+마지막 단계에서 그 열을 <b>「텍스트」</b>로 지정하십시오.</p>
+
+<h2>방법 ③ 한글이나 워드로 한 번 거쳐 가기</h2>
+<p>한글이나 워드는 PDF를 열어 <b>표를 표 모양 그대로</b> 살려 주는 일이 많습니다.
+거기서 표를 복사해 엑셀에 붙이면 칸이 그대로 옵니다.</p>
+<div class="ex">한글  :  [파일] → [불러오기] 에서 PDF 고르기
+워드  :  PDF를 마우스 오른쪽 → [연결 프로그램] → Word</div>
+<p class="small">칸이 많이 합쳐진 복잡한 표는 이 방법에서 자주 틀어집니다. 붙인 뒤 눈으로 한 번 보셔야 합니다.</p>
+
+<h2>세 방법 모두 잘 틀어지는 자리</h2>
+<table>
+<tr><th style="width:34%">이런 표</th><th>무엇이 생기나</th></tr>
+<tr><td><b>칸을 합쳐 놓은 표</b></td><td>합친 칸이 풀리면서 아래쪽이 한 줄씩 밀립니다</td></tr>
+<tr><td><b>쪽이 넘어가는 긴 표</b></td><td>쪽마다 제목 줄이 다시 들어옵니다. 지워야 합니다</td></tr>
+<tr><td><b>숫자에 쉼표가 있는 표</b></td><td>1,234 가 글자로 들어와 계산이 안 됩니다</td></tr>
+<tr><td><b>줄이 두 줄인 칸</b></td><td>한 칸이 두 줄로 쪼개집니다</td></tr>
+</table>
+<p>표 두세 개면 눈으로 고치면 됩니다. <b>서른 개, 백 개면 그때부터 일이 됩니다.</b></p>
+
+<h2>스캔본(그림 PDF)일 때</h2>
+<p>복사해도 아무것도 안 나오는 PDF입니다.
+이때는 <b>그림에서 글자를 읽어 내는 일(OCR)</b>이 먼저 필요합니다.
+읽어 낸 글자는 <b>100%가 아닙니다</b> — 특히 숫자 0과 O, 1과 l을 자주 헷갈립니다.
+<b>금액이나 인원수라면 반드시 원본과 맞춰 보셔야 합니다.</b></p>
+
+<div class="tool">
+<b>표가 많아서 매번 고치고 계신다면</b>
+<p>PDF 여러 개를 한꺼번에 넣으면 <b>표만 찾아 엑셀로 뽑아 주는 작은 윈도우 프로그램</b>을
+만들어 팔고 있습니다. 위에 적은 <b>잘 틀어지는 자리</b>들을 붙잡는 데 공을 들였습니다 —
+쪽이 넘어가며 되풀이되는 제목 줄을 <b>하나로 합치고</b>,
+쉼표 붙은 숫자를 <b>계산되는 숫자로</b> 돌려놓습니다.</p>
+<p class="small">인터넷을 쓰지 않습니다. 파일이 밖으로 나가지 않습니다.
+한 번 사면 계속 쓰시고, 구독이 아닙니다.</p>
+<a class="btn" href="index.html#p-pdfgrab">📊 표 뽑개 보기 — 39,000원</a>
+<p class="small" style="margin-top:10px">사시기 전에 <a href="free.html">공짜로 드리는 도구</a>로
+저희가 어떻게 만드는지 먼저 보셔도 됩니다.
+PDF를 합치고 나누는 <b>PDF 반짇고리</b>는 값을 받지 않습니다.</p>
+</div>
+
+<p class="small" style="margin-top:26px">학교·기관에서 여러 대에 쓰실 때는
+<a href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">학교·기관 구매 쪽</a>에서 견적서를 바로 뽑으실 수 있습니다.</p>
+
+<p class="small" style="margin-top:34px">
+밸류스는 경주에서 혼자 도구를 만드는 작은 상점입니다 ·
+<a href="index.html">도구 선반 보기</a> ·
+<a href="free.html">공짜로 드리는 것</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">사업자정보</a>
+</p>
+
+</main>
+<footer>© 밸류스 · valuestools.kr</footer>
+<script src="세기.js" defer></script>
+</body></html>

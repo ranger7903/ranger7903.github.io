@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>한글 파일 여러 개를 하나로 붙이는 법 — hwp 합치기 · 밸류스</title>
+<meta name="description" content="한글(HWP) 파일 여러 개를 하나로 합치는 법. 「문서 끼워 넣기」 쓰는 법과, 쪽 번호·머리말·스타일이 틀어질 때 보는 곳까지.">
+<link rel="canonical" href="https://valuestools.kr/hwp-merge-guide.html">
+<meta property="og:title" content="한글 파일 여러 개를 하나로 붙이는 법">
+<meta property="og:description" content="한글(HWP) 파일 여러 개를 하나로 합치는 법. 「문서 끼워 넣기」 쓰는 법과, 쪽 번호·머리말·스타일이 틀어질 때 보는 곳까지.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/hwp-merge-guide.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.85;word-break:keep-all}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+</head><body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="index.html"><span class="stamp">値</span>밸류스</a>
+  <nav style="margin-left:auto">
+    <a href="index.html">도구 선반</a>
+    <a href="free.html">공짜로 드리는 것</a>
+    <a href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">학교·기관 구매</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>한글 파일 여러 개를 하나로 붙이는 법</h1>
+<p class="lede">반별로 받은 파일, 부서별로 받은 파일 — 스무 개, 서른 개를 하나로 합쳐야 할 때가 있습니다.
+<b>한글에 이미 들어 있는 기능</b>으로 하는 법을 먼저 적습니다. 아무것도 사지 않으셔도 됩니다.</p>
+
+<h2>① 한글에 있는 「문서 끼워 넣기」</h2>
+<p>파일을 열어 놓고 <b>커서를 붙일 자리에 둔 다음</b> 이렇게 합니다.</p>
+<div class="ex">[입력] 메뉴  →  [문서 끼워 넣기]</div>
+<p>파일을 고르면 커서 자리에 <b>그 문서가 통째로 들어옵니다.</b>
+여러 개를 고르면 고른 순서대로 들어옵니다.</p>
+
+<div class="card">
+<b>창에 뜨는 두 개의 네모, 이게 중요합니다</b>
+<ul style="margin-bottom:0">
+<li><b>「글자 모양 유지」</b> — 켜면 가져온 문서의 <b>글꼴·크기가 그대로</b> 옵니다.
+끄면 지금 문서의 모양을 따릅니다.<br>
+<span class="small">→ 서식이 제각각인 파일을 모을 때는 <b>끄는 쪽</b>이 깔끔합니다.
+원래 모양을 살려야 하면 <b>켜십시오.</b></span></li>
+<li><b>「쪽 번호 유지」</b> — 켜면 가져온 문서의 쪽 번호가 따라옵니다.
+합친 문서에 <b>1쪽이 여러 번</b> 나오는 것은 대개 이것 때문입니다.</li>
+</ul>
+</div>
+
+<h2>② 붙이고 나면 꼭 확인할 세 가지</h2>
+<table>
+<tr><th style="width:30%">무엇이 틀어지나</th><th>어떻게 보나</th></tr>
+<tr><td><b>쪽 번호</b></td>
+    <td>1쪽이 여러 번 나오는지 봅니다. 그러면 [쪽] → [쪽 번호 매기기]로 다시 매깁니다.</td></tr>
+<tr><td><b>머리말·꼬리말</b></td>
+    <td>가져온 문서의 머리말이 따라와 섞일 수 있습니다.
+    구역이 나뉘어 있으면 구역마다 따로 붙어 있으니 하나씩 봐야 합니다.</td></tr>
+<tr><td><b>스타일 이름</b></td>
+    <td>양쪽에 같은 이름의 스타일이 있으면 <b>지금 문서 쪽이 이깁니다.</b>
+    글자 크기가 갑자기 달라 보이면 이것입니다.</td></tr>
+</table>
+
+<h2>③ 파일이 스무 개 넘으면 — 여기서부터 힘듭니다</h2>
+<p>기능 자체는 멀쩡한데, 손이 많이 가는 곳은 따로 있습니다.</p>
+<ul>
+<li><b>순서</b> — 「1반, 10반, 2반」처럼 이름순으로 섞입니다. 사람이 한 번 훑어야 합니다.</li>
+<li><b>빠진 파일</b> — 서른 개 중 스물아홉 개만 붙었는데 <b>아무 말도 안 나옵니다.</b>
+붙인 뒤에 개수를 세어 봐야 압니다.</li>
+<li><b>사이사이 쪽 나누기</b> — 문서마다 새 쪽에서 시작하게 하려면
+붙이기 전에 <b>Ctrl+Enter</b>로 쪽을 나눠 두어야 합니다.</li>
+<li><b>섞인 확장자</b> — .hwp와 .hwpx가 섞여 있으면 한 번에 고르기가 번거롭습니다.</li>
+</ul>
+
+<h2>④ 다른 방법 — PDF로 합치기</h2>
+<p>합친 뒤에 <b>고칠 일이 없다면</b>, 각각을 PDF로 저장해서 PDF끼리 합치는 편이 더 깔끔합니다.
+서식이 절대 틀어지지 않기 때문입니다.</p>
+<div class="ex">한글에서  [파일] → [PDF로 저장하기]  →  PDF들을 하나로 합치기</div>
+<p class="small">PDF를 합치고 쪽을 빼고 돌리는 일은
+저희가 <b>공짜로 드리는 「PDF 반짇고리」</b>로도 하실 수 있습니다 —
+<a href="free.html">공짜로 드리는 것</a>에 있습니다. 값을 받지 않습니다.</p>
+
+<div class="tool">
+<b>매번 이 일을 하신다면</b>
+<p>폴더를 통째로 골라 <b>한글 파일을 한 번에 이어 붙이는 작은 윈도우 프로그램</b>을
+만들어 팔고 있습니다. 위에서 손이 가는 자리들을 대신합니다 —
+<b>숫자 순서대로 정렬</b>하고, 문서 사이에 <b>쪽 나누기를 자동으로</b> 넣고,
+다 붙인 뒤 <b>「몇 개를 붙였고 무엇이 빠졌는지」</b>를 알려 줍니다.
+.hwp와 .hwpx가 섞여 있어도 됩니다.</p>
+<p class="small">인터넷을 쓰지 않습니다. 파일이 밖으로 나가지 않습니다.
+한 번 사면 계속 쓰시고, 구독이 아닙니다.</p>
+<a class="btn" href="index.html#p-moahwp">📥 한글 모아담기 보기 — 29,900원</a>
+<p class="small" style="margin-top:10px">사시기 전에 <a href="free.html">공짜로 드리는 도구</a>로
+저희가 어떻게 만드는지 먼저 보셔도 됩니다.</p>
+</div>
+
+<h2 style="font-size:18px">한마디 덧붙이면</h2>
+<p class="small">한글 판(버전)에 따라 메뉴 이름이 조금씩 다릅니다.
+[입력]에서 안 보이면 <b>[파일] → [끼워 넣기]</b> 쪽을 보십시오.
+학교·기관에서 여러 대에 쓰실 때는 <a href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">학교·기관 구매 쪽</a>에서
+견적서를 바로 뽑으실 수 있습니다.</p>
+
+<p class="small" style="margin-top:34px">
+밸류스는 경주에서 혼자 도구를 만드는 작은 상점입니다 ·
+<a href="index.html">도구 선반 보기</a> ·
+<a href="free.html">공짜로 드리는 것</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">사업자정보</a>
+</p>
+
+</main>
+<footer>© 밸류스 · valuestools.kr</footer>
+<script src="세기.js" defer></script>
+</body></html>

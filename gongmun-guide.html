@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공문서, 이대로만 쓰면 안 틀립니다 — 끝 표시·붙임·날짜 쓰는 법 · 밸류스</title>
+<meta name="description" content="공문서의 「끝.」 표시, 붙임 표시, 날짜 표기, 항목 번호, 금액 표기를 예시와 함께 한자리에 정리했습니다. 가장 많이 틀리는 다섯 가지도 함께.">
+<link rel="canonical" href="https://valuestools.kr/gongmun-guide.html">
+<meta property="og:title" content="공문서, 이대로만 쓰면 안 틀립니다">
+<meta property="og:description" content="공문서의 「끝.」 표시, 붙임 표시, 날짜 표기, 항목 번호, 금액 표기를 예시와 함께 한자리에 정리했습니다. 가장 많이 틀리는 다섯 가지도 함께.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/gongmun-guide.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.85;word-break:keep-all}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+</head><body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="index.html"><span class="stamp">値</span>밸류스</a>
+  <nav style="margin-left:auto">
+    <a href="index.html">도구 선반</a>
+    <a href="free.html">공짜로 드리는 것</a>
+    <a href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">학교·기관 구매</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>공문서, 이대로만 쓰면 안 틀립니다</h1>
+<p class="lede">「끝.」은 어디에 찍는지, 붙임은 몇 칸 띄우는지, 날짜 뒤에 점을 찍는지 —
+규정에는 다 적혀 있는데 찾아 읽기가 어렵습니다. 그래서 <b>자주 쓰는 것만 모아</b> 여기 적어 둡니다.
+가져다 쓰셔도 됩니다.</p>
+
+<div class="card">
+<b>여기 적은 것은 제가 지어낸 것이 아닙니다.</b>
+<p style="margin-bottom:0" class="small">「행정업무의 운영 및 혁신에 관한 규정 시행규칙」과
+경기도교육청이 펴낸 「한 곳에 정리한 공문서 작성법」에 있는 내용을 쉬운 말로 옮긴 것입니다.
+맨 아래에 어디서 가져왔는지 적어 두었습니다.</p>
+</div>
+
+<h2>① 「끝.」 — 세 가지 경우뿐입니다</h2>
+<p class="small" style="margin-top:6px">아래 예시에서 <b style="color:var(--terra)">␣</b> 표시는 <b>「한 칸 띄우기」</b>라는 뜻입니다. <b style="color:var(--terra)">␣␣</b> 는 두 칸입니다.</p>
+<p>「끝.」은 <b>더 쓸 말이 없다</b>는 표시입니다. 이게 빠지면 뒤에 뭔가 잘린 것처럼 보입니다.
+<b>앞에 두 칸을 띄우는 것</b>이 핵심입니다.</p>
+
+<h3>본문으로 끝날 때 — 마지막 글자에서 두 칸</h3>
+<div class="ex">…협조하여 주시기 바랍니다.<b>␣␣</b>끝.</div>
+
+<h3>붙임이 있을 때 — 붙임 줄 맨 뒤에</h3>
+<p>본문 뒤가 아니라 <b>붙임 줄 끝</b>에 찍습니다. 여기를 가장 많이 틀립니다.</p>
+<div class="ex">…협조하여 주시기 바랍니다.
+
+붙임<b>␣␣</b>서식승인 목록 1부.<b>␣␣</b>끝.</div>
+
+<h3>표로 끝날 때</h3>
+<ul>
+<li>표의 <b>마지막 칸까지 다 채웠으면</b> — 표 아래 왼쪽 기준선에서 두 칸 띄우고 「끝.」</li>
+<li>표 중간에서 끝났으면 — 다음 칸에 <b>「이하 빈칸」</b>이라고 적습니다</li>
+</ul>
+
+<h2>② 붙임 — 하나면 번호를 쓰지 않습니다</h2>
+<div class="ex">붙임<b>␣␣</b>○○○계획서 1부.<b>␣␣</b>끝.</div>
+<p>두 개 이상일 때만 번호를 붙입니다.</p>
+<div class="ex">붙임<b>␣␣</b>1.<b>␣</b>○○계획서 1부.
+<b>␣␣␣␣␣␣</b>2.<b>␣</b>○○서류 1부.<b>␣␣</b>끝.</div>
+<p class="small">「붙임」 뒤는 <b>두 칸</b>, 번호 뒤는 <b>한 칸</b>입니다.
+그리고 <b>수량 뒤에 마침표</b>를 찍습니다 — 「1부.」이지 「1부」가 아닙니다.</p>
+
+<h2>③ 날짜 — 점을 세 번 찍습니다</h2>
+<p>연·월·일 글자를 빼고 <b>마침표</b>로 대신합니다. <b>맨 뒤의 점을 빠뜨리는 실수가 가장 많습니다.</b></p>
+<table>
+<tr><th style="width:52%">이렇게</th><th>이러면 틀립니다</th></tr>
+<tr><td class="yes">2026. 9. 27.</td><td class="no">2026. 9. 27 &nbsp;(끝 점 없음)</td></tr>
+<tr><td class="yes">2026. 9. 27.(일)</td><td class="no">2026. 09. 27. &nbsp;(앞의 0)</td></tr>
+<tr><td class="yes">2026. 9. 1. ~ 2026. 9. 30.</td><td class="no">2026/9/1 ~ 9/30</td></tr>
+</table>
+<p>시각은 24시간으로 적고 쌍점을 찍습니다 — <span class="yes">15:20</span>, <span class="yes">08:09</span>.</p>
+
+<h2>④ 항목 번호 — 순서가 정해져 있습니다</h2>
+<div class="ex">1.  →  가.  →  1)  →  가)  →  (1)  →  (가)  →  ①  →  ㉮</div>
+<p>아래 단계로 갈 때마다 <b>두 칸씩 안으로</b> 들여씁니다.
+한 항목이 두 줄이 되면, 둘째 줄은 <b>첫 글자에 맞춰</b> 정렬합니다(한글에서 <b>Ctrl+Tab</b>).</p>
+<div class="ex">1.␣추진 배경
+␣␣가.␣작년 운영 결과
+␣␣␣␣1)␣참여 인원
+␣␣␣␣2)␣만족도 조사</div>
+
+<h2>⑤ 금액 — 숫자 뒤에 한글을 괄호로</h2>
+<div class="ex">금113,560원(금일십일만삼천오백육십원)</div>
+<p class="small">「345천원」처럼 적지 않습니다. 「345,000원」 또는 「34만 5천 원」으로 적습니다.</p>
+
+<h2>⑥ 수신·경유·제목, 그리고 쌍점</h2>
+<div class="ex">수신<b>␣␣</b>○○○학교장
+(경유)
+제목<b>␣␣</b>○○○○ 협조 요청</div>
+<p><b>쌍점(:)은 앞을 붙이고 뒤를 한 칸 띄웁니다</b> — <span class="yes">원장: 김갑동</span>,
+<span class="no">원장 : 김갑동</span>이 아닙니다.</p>
+
+<h2>가장 많이 틀리는 다섯 가지</h2>
+<div class="card warm">
+<ol style="margin-bottom:0">
+<li><b>붙임이 있는데 「끝.」을 본문 뒤에 찍은 것</b> — 붙임 줄 맨 뒤가 맞습니다</li>
+<li><b>날짜 맨 뒤의 점을 빠뜨린 것</b> — 2026. 9. 27<span class="no">.</span> 이 빠집니다</li>
+<li><b>붙임 번호가 1, 3처럼 건너뛴 것</b> — 중간 붙임을 지우고 번호를 안 고친 경우입니다</li>
+<li><b>( ) 나 「소속:」 처럼 안 채운 자리가 남은 것</b> — 서식을 그대로 복사해 쓸 때 생깁니다</li>
+<li><b>한 공문 안에 날짜 꼴이 섞인 것</b> — 앞은 2026. 9. 27., 뒤는 2026-09-27</li>
+</ol>
+</div>
+
+<h2>보내기 전에 한 번만 더</h2>
+<p>다 쓰신 뒤 <b>수신자 칸이 비어 있지 않은지</b>, <b>제목이 비어 있지 않은지</b>,
+<b>「총 15명」이라고 적어 놓고 명단은 14줄이 아닌지</b> — 이 세 가지만 눈으로 다시 보시면
+되돌아오는 공문의 대부분을 막습니다.</p>
+
+<div class="tool">
+<b>매번 눈으로 보기가 힘드시면</b>
+<p>위의 것들을 <b>대신 훑어 주는 작은 윈도우 프로그램</b>을 만들어 팔고 있습니다.
+한글 파일을 넣으면 「끝. 표시가 빠졌다 · 붙임 번호가 1, 3으로 건너뛴다 ·
+날짜 꼴이 섞였다 · 총 N명과 명단 줄 수가 다르다」를 찾아 줍니다.
+기관마다 규칙이 다르니 검사를 하나씩 켜고 끌 수 있습니다.</p>
+<p class="small">인터넷을 쓰지 않습니다. 공문이 밖으로 나가지 않습니다.
+한 번 사면 계속 쓰시고, 구독이 아닙니다.</p>
+<a class="btn" href="index.html#p-gongmun">🔎 공문 검사개 보기 — 19,900원</a>
+<p class="small" style="margin-top:10px">사시기 전에 <a href="free.html">공짜로 드리는 도구</a>로
+저희가 어떻게 만드는지 먼저 보셔도 됩니다.</p>
+</div>
+
+<h2 style="font-size:18px">어디서 가져왔나</h2>
+<p class="small">
+· 행정안전부 「행정업무의 운영 및 혁신에 관한 규정 시행규칙」 (국가법령정보센터)<br>
+· 경기도교육청 「한 곳에 정리한 공문서 작성법」<br>
+기관마다 따로 정한 규칙이 있을 수 있습니다. 다툼이 있으면 소속 기관의 문서 규정이 먼저입니다.
+</p>
+
+<p class="small" style="margin-top:34px">
+밸류스는 경주에서 혼자 도구를 만드는 작은 상점입니다 ·
+<a href="index.html">도구 선반 보기</a> ·
+<a href="free.html">공짜로 드리는 것</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">사업자정보</a>
+</p>
+
+</main>
+<footer>© 밸류스 · valuestools.kr</footer>
+<script src="세기.js" defer></script>
+</body></html>
