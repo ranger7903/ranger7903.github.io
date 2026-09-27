@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>엑셀 명단 두 개 맞춰 보는 법 — 이름이 조금 달라도 찾기 · 밸류스</title>
+<meta name="description" content="엑셀에서 명단 두 개를 비교해 빠진 사람·겹치는 사람을 찾는 법. 이름에 띄어쓰기나 괄호가 섞여 안 맞을 때 무엇을 봐야 하는지까지.">
+<link rel="canonical" href="https://valuestools.kr/namelist-guide.html">
+<meta property="og:title" content="엑셀 명단 두 개 맞춰 보는 법">
+<meta property="og:description" content="엑셀에서 명단 두 개를 비교해 빠진 사람·겹치는 사람을 찾는 법. 이름에 띄어쓰기나 괄호가 섞여 안 맞을 때 무엇을 봐야 하는지까지.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/namelist-guide.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.85;word-break:keep-all}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+</head><body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="index.html"><span class="stamp">値</span>밸류스</a>
+  <nav style="margin-left:auto">
+    <a href="index.html">도구 선반</a>
+    <a href="free.html">공짜로 드리는 것</a>
+    <a href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">학교·기관 구매</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>엑셀 명단 두 개 맞춰 보는 법</h1>
+<p class="lede">신청자 명단과 입금자 명단, 작년 명단과 올해 명단 —
+<b>누가 빠졌고 누가 겹치는지</b> 찾는 일입니다. 엑셀만으로 하는 법을 먼저 적습니다.</p>
+
+<h2>① 가장 빠른 길 — COUNTIF 한 줄</h2>
+<p>A 명단 옆 빈 칸에 이 한 줄을 넣고 아래로 끌어내립니다.</p>
+<div class="ex">=IF(COUNTIF(B:B, A2)&gt;0, "있음", "없음")</div>
+<p><b>A2</b>는 맞춰 볼 이름 칸, <b>B:B</b>는 상대 명단이 있는 열입니다.
+「없음」이 뜨는 줄이 <b>상대 명단에 빠진 사람</b>입니다.</p>
+<p class="small">반대쪽에서도 한 번 해 보셔야 합니다. <b>한쪽만 보면 반쪽만 압니다</b> —
+A에는 있고 B에 없는 사람과, B에는 있고 A에 없는 사람은 서로 다른 사람들입니다.</p>
+
+<h3>표시된 것만 모아 보기</h3>
+<p>그 열을 고르고 <b>[데이터] → [필터]</b> 를 켠 뒤, 「없음」만 체크하시면 그 줄만 남습니다.</p>
+
+<h2>② 눈으로 색만 보고 싶으시면</h2>
+<div class="ex">두 명단을 한 시트에 나란히 붙입니다
+→ 이름 열 두 개를 함께 고릅니다
+→ [홈] → [조건부 서식] → [셀 강조 규칙] → [중복 값]</div>
+<p>겹치는 이름에 색이 칠해집니다. <b>빠르지만 «몇 명인지»는 안 세어 줍니다.</b></p>
+
+<h2>③ 그런데 대개는 «안 맞는다»고 나옵니다 — 진짜 까닭</h2>
+<p>사람 눈에는 같은 이름인데 엑셀은 다르다고 합니다. 거의 이 넷 중 하나입니다.</p>
+<table>
+<tr><th style="width:40%">이런 것</th><th>보기</th></tr>
+<tr><td><b>눈에 안 보이는 빈칸</b></td><td><code>홍길동&nbsp;</code> 뒤에 공백 한 칸 — 가장 흔합니다</td></tr>
+<tr><td><b>이름 안의 띄어쓰기</b></td><td><code>남궁 민수</code> ↔ <code>남궁민수</code></td></tr>
+<tr><td><b>괄호·직함이 붙음</b></td><td><code>홍길동(3학년)</code> ↔ <code>홍길동</code></td></tr>
+<tr><td><b>숫자가 글자로 들어감</b></td><td>학번 <code>20250001</code> 이 한쪽은 숫자, 한쪽은 글자</td></tr>
+</table>
+
+<h3>먼저 씻어 내기</h3>
+<div class="ex">=TRIM(A2)                      앞뒤 빈칸을 없앱니다
+=SUBSTITUTE(TRIM(A2), " ", "")  가운데 띄어쓰기까지 없앱니다</div>
+<p>이렇게 만든 «씻은 이름» 열끼리 맞춰 보시면 훨씬 잘 맞습니다.
+<b>씻은 결과는 값으로 바꿔 두십시오</b>(Ctrl+C → 붙여넣기 옵션 → 「값」). 안 그러면 정렬할 때 어긋납니다.</p>
+
+<h2>④ 그래도 남는 것 — 사람만 알 수 있는 것</h2>
+<p>씻어 내도 안 맞는 것이 남습니다.</p>
+<ul>
+<li><b>동명이인</b> — 같은 반에 홍길동이 둘. 이름만으로는 못 가립니다</li>
+<li><b>한 글자가 다름</b> — <code>최민준</code> ↔ <code>최민조</code>. 오타인지 다른 사람인지 <b>기계는 못 정합니다</b></li>
+<li><b>성이 바뀜</b> — 결혼·개명</li>
+</ul>
+<p><b>여기서부터는 사람이 봐야 합니다.</b> 그래서 좋은 도구는 「자동으로 합쳐 버리는」 것이 아니라
+<b>「비슷한 것들을 나란히 놓아 사람이 고르게」</b> 해 주는 것입니다.</p>
+
+<div class="tool">
+<b>명단이 크거나 자주 맞춰 보신다면</b>
+<p>명단 두 개를 넣으면 <b>빠진 사람·겹치는 사람을 갈라 주는 작은 윈도우 프로그램</b>을
+만들어 팔고 있습니다. 위에 적은 씻어 내기를 <b>알아서 하고</b>,
+그러고도 안 맞는 것은 <b>「이 둘이 같은 사람일까요?」 하고 나란히 보여 줍니다.</b>
+사람이 고르면 그대로 반영합니다 — <b>기계가 혼자 합쳐 버리지 않습니다.</b></p>
+<p class="small">인터넷을 쓰지 않습니다. 명단이 밖으로 나가지 않습니다. 한 번 사면 계속 쓰시고, 구독이 아닙니다.</p>
+<a class="btn" href="index.html#p-compare">📋 스마트 명단대조기 보기 — 29,900원</a>
+<p class="small" style="margin-top:10px">사시기 전에 <a href="free.html">공짜로 드리는 도구</a>로 저희가 어떻게 만드는지 먼저 보셔도 됩니다.</p>
+</div>
+
+<p class="small" style="margin-top:26px">명단에 주민등록번호가 들어 있다면
+<a href="mask-guide.html">가리고 보내는 법</a>도 같이 읽어 보십시오.
+학교·기관에서 여러 대에 쓰실 때는 <a href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">학교·기관 구매 쪽</a>에서 견적서를 바로 뽑으실 수 있습니다.</p>
+
+<p class="small" style="margin-top:34px">
+밸류스는 경주에서 혼자 도구를 만드는 작은 상점입니다 ·
+<a href="index.html">도구 선반 보기</a> ·
+<a href="free.html">공짜로 드리는 것</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">사업자정보</a>
+</p>
+
+</main>
+<footer>© 밸류스 · valuestools.kr</footer>
+<script src="세기.js" defer></script>
+</body></html>
