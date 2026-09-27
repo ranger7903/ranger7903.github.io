@@ -32,9 +32,10 @@ a.line{display:inline-block;border:1.5px solid var(--line);color:var(--ink2);tex
 <div class="shell"><div class="card"><span class="tape"></span>
 <div class="big">🧵</div>
 <h1>결제가 되지 않았어요</h1>
-<p>괜찮아요, 흔한 일이에요. 잠시 후 다시 해보시거나, 메일 주문을 이용해 주세요.</p>
+<p>괜찮아요, 흔한 일이에요. 잠시 후 다시 해보시거나, 아래 길을 이용해 주세요. 학교·관공서라면 견적서를 바로 뽑으실 수 있어요.</p>
 <div class="box" id="detail"></div>
-<a class="btn" id="retry" href="buy.html">다시 해보기</a>
+<a class="btn" id="retry" href="index.html#products">다시 해보기</a>
+<a class="line" href="%EA%B8%B0%EA%B4%80%EA%B5%AC%EB%A7%A4.html">🏫 학교·기관이시면 이쪽</a>
 <a class="line" href="mailto:ranger7903@nate.com">📮 메일로 주문하기</a>
 <br><a class="line" href="./" style="border:none">← 가게로 돌아가기</a>
 </div></div>
@@ -45,5 +46,6 @@ document.getElementById('detail').textContent =
 const item = q.get('item');
 if (item) document.getElementById('retry').href = 'buy.html?item=' + item;
 </script>
+<script src="세기.js" defer></script>
 </body>
 </html>

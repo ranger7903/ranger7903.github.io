@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buying for a school or organization — print your own quote · VALUES</title>
+<meta name="description" content="How schools, public offices and companies buy VALUES tools. Generate a formal quote right here, then pay by bank transfer.">
+<link rel="canonical" href="https://valuestools.kr/institution.html">
+<meta property="og:title" content="Buying for a school or organization — VALUES">
+<meta property="og:description" content="Generate a formal quote on the spot, attach it to your purchase request, pay by bank transfer.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/institution.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52;
+  --terra:#D97757; --terra-soft:#FBE4D3;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F;
+  --terra:#E89574; --terra-soft:#3A2721;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1",system-ui,sans-serif;line-height:1.7}
+.shell{max-width:900px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 16px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:30px;margin:30px 0 6px}
+h2{font-family:"Gowun Batang",serif;font-size:21px;margin:32px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:16px;margin:16px 0 4px}
+.lede{font-size:17px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:var(--cream-3)}
+td.num,th.num{text-align:right;white-space:nowrap}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--cream);color:var(--ink);font-size:16px;cursor:pointer;line-height:1}
+.qty input{width:56px;height:30px;text-align:center;border-radius:8px;border:1px solid var(--line);
+  background:var(--cream-2);color:var(--ink);font-family:inherit}
+input[type=text]{width:100%;height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--line);
+  background:var(--cream-2);color:var(--ink);font-family:inherit;font-size:15px}
+label{display:block;font-size:14px;color:var(--ink-2);margin:10px 0 3px}
+.btn{display:inline-block;padding:12px 22px;border-radius:12px;border:1px solid var(--terra);
+  background:var(--terra);color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--terra)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.small{font-size:13.5px;color:var(--ink-2)}
+.total{font-size:20px;font-weight:700}
+footer{margin:50px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+#paper{display:none;margin-top:18px}
+#paper.on{display:block}
+.quote{background:#fff;color:#111;border:1px solid #ccc;border-radius:4px;padding:26px 28px;
+  font-family:system-ui,sans-serif;font-size:13.5px;line-height:1.6}
+.quote h4{font-size:24px;letter-spacing:6px;text-align:center;margin:0 0 16px;color:#111}
+.quote th,.quote td{border:1px solid #999;color:#111;padding:6px 8px}
+.quote th{background:#f1ece2}
+.quote .sum td{background:#f7f3ec;font-weight:700}
+@media print{
+  body{background:#fff}
+  header.top,.noprint,footer{display:none !important}
+  #paper{display:block !important}
+  .quote{border:none;padding:0}
+  @page{size:A4;margin:14mm}
+}
+</style>
+</head><body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="en.html"><span class="stamp">値</span>VALUES</a>
+  <nav style="margin-left:auto">
+    <a href="en.html">Tools</a>
+    <a href="download.html">Downloads</a>
+    <a href="기관구매.html">한국어</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>Buying for a school or organization</h1>
+<p class="lede">For buyers who cannot put a purchase on a personal card.<br>
+<b>Generate your quote right here — no need to email us and wait.</b></p>
+
+<div class="card warm noprint">
+<b>Why this page exists</b>
+<p style="margin-bottom:0">Administrative offices cannot pay by personal card. They buy in one order:
+get a quote → file a purchase request → pay by bank transfer → receive a tax document.
+If getting the quote costs a day of waiting, the request cannot be filed that day.
+<b>So we let you print the quote yourself</b> — at night, on a weekend, whenever.</p>
+</div>
+
+<h2>1 · Choose what you need</h2>
+<p class="small noprint">Quantity means <b>the number of computers</b> — one licence per computer.</p>
+<div id="picker" class="noprint"><p class="small">Loading prices…</p></div>
+
+<div class="card noprint" id="sumbox" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div><span class="small">Selected</span><br><span id="count">0</span></div>
+    <div style="text-align:right"><span class="small">Total (VAT included)</span><br>
+      <span class="total" id="total">₩0</span></div>
+  </div>
+</div>
+
+<h2>2 · Who is it for</h2>
+<div class="card noprint">
+  <label for="org">Organization <span style="color:var(--terra)">*</span></label>
+  <input type="text" id="org" placeholder="e.g. Seoul Central High School">
+  <label for="person">Contact person (optional)</label>
+  <input type="text" id="person" placeholder="e.g. Ms. Kim">
+  <p class="small" style="margin-top:12px">What you type stays <b>inside your own browser</b>.
+  It is not sent to us — it is only printed onto the quote.</p>
+  <p style="margin-top:14px">
+    <button class="btn" id="make" disabled>Create quote</button>
+    <button class="btn ghost" id="print" style="display:none">Print / Save as PDF</button>
+  </p>
+</div>
+
+<div id="paper"><div class="quote" id="quotebody"></div></div>
+
+<h2>3 · Four steps</h2>
+<div class="card">
+<p><b>One.</b> Print the quote above and attach it to your purchase request.</p>
+<p><b>Two.</b> Get it approved inside your organization. Nothing needed from us.</p>
+<p><b>Three.</b> Email us one line once approved — <b>we reply with the bank details and the tax document options.</b></p>
+<p style="margin-bottom:0"><b>Four.</b> Once payment lands we send the licence keys <b>within one business day</b>.
+Use them on the <a href="download.html">download page</a>.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">Why isn't the bank account printed here?</h3>
+<p style="margin-bottom:0">A bank number sitting on a public page lets somebody impersonate us and collect the money.
+So we send it by reply only. <b>Our mail always comes from
+<span style="white-space:nowrap">ranger7903@nate.com</span></b> — anything else is not us.</p>
+</div>
+
+<h2>4 · Tax documents</h2>
+<div class="card">
+<p>Write in your email <b>which document you need</b> (Korean tax invoice / cash receipt for expense proof / statement of account).</p>
+<p style="margin-bottom:0"><b>We confirm what we can issue before you pay</b>, so nobody discovers a problem
+after the request has already been approved.</p>
+</div>
+
+<h2>5 · Questions we get</h2>
+<div class="card">
+<h3 style="margin-top:0">More than twenty computers?</h3>
+<p>Then we stop counting machines and quote the organization as a whole. Just tell us roughly how many.</p>
+<h3>Our forms are unusual — will it work?</h3>
+<p>Send <b>one</b> file by email. We run it for real and tell you. If it fails we fix it. Check before you buy.</p>
+<h3>What if it doesn't fit after all?</h3>
+<p>Full refund within <b>7 days</b> if the licence key has not been activated; and any time at all if it will not
+install or does not match the description. See the <a href="refund.html">refund policy</a>.</p>
+<h3>Our network is closed — no internet.</h3>
+<p>That is fine. VALUES tools run entirely on the machine and send nothing out.</p>
+</div>
+
+<h2>6 · Send the request</h2>
+<div class="card warm">
+<p><b>To: <a href="mailto:ranger7903@nate.com">ranger7903@nate.com</a></b></p>
+<p class="small">Pick your items above and the button below writes the email for you. Edit it before sending.</p>
+<p style="margin-bottom:0"><a class="btn" id="mailbtn" href="mailto:ranger7903@nate.com">Write the request email</a></p>
+</div>
+
+<p class="small" style="margin-top:22px">
+VALUES · Registered name 사재기 · Owner Lee Seongbin · Business registration 858-15-02513 ·
+61 Bukseong-ro, Gyeongju-si, Gyeongsangbuk-do 38141, Republic of Korea · +82 10-3401-6153<br>
+<a href="사업자정보.html">Business information</a> · <a href="terms.html">Terms</a> ·
+<a href="privacy.html">Privacy</a> · <a href="refund.html">Refunds</a>
+</p>
+
+</main>
+<footer>© VALUES · valuestools.kr</footer>
+
+<script>
+(function(){
+'use strict';
+var skip = { office:1 };
+var items = [], picked = {};
+function won(n){ return '₩' + n.toLocaleString('en-US'); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function until(){ var d=new Date(); d.setDate(d.getDate()+30); return d.toISOString().slice(0,10); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+fetch('prices.json', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
+  var m = j['상품'] || {};
+  Object.keys(m).forEach(function(k){
+    var v = m[k];
+    if (v['무료'] || !v['원'] || skip[k]) return;
+    items.push({ key:k, name:v['이름'], won:v['원'] });
+  });
+  items.sort(function(a,b){ return b.won - a.won; });
+  draw();
+}).catch(function(){
+  document.getElementById('picker').innerHTML =
+    '<p class="small">Could not load prices. Please refresh, or ' +
+    '<a href="mailto:ranger7903@nate.com">email us</a> and we will send a quote.</p>';
+});
+
+function draw(){
+  var h = '<table><thead><tr><th>Item</th><th class="num" style="width:110px">Per computer</th>' +
+          '<th style="width:150px">Computers</th><th class="num" style="width:120px">Amount</th></tr></thead><tbody>';
+  items.forEach(function(p){
+    h += '<tr><td>' + esc(p.name) + '</td><td class="num">' + won(p.won) + '</td>' +
+         '<td><div class="qty">' +
+         '<button type="button" data-minus="' + p.key + '" aria-label="one less">&minus;</button>' +
+         '<input type="text" inputmode="numeric" value="0" data-box="' + p.key + '" aria-label="' + esc(p.name) + ' quantity">' +
+         '<button type="button" data-plus="' + p.key + '" aria-label="one more">+</button>' +
+         '</div></td><td class="num" data-amt="' + p.key + '">' + won(0) + '</td></tr>';
+  });
+  h += '</tbody></table><p class="small">VALUES AI Office Worker is billed monthly, so it is not in this table. ' +
+       'Email us if you need it.</p>';
+  document.getElementById('picker').innerHTML = h;
+  document.getElementById('picker').addEventListener('click', function(e){
+    var t=e.target, p=t.getAttribute&&t.getAttribute('data-plus'), m=t.getAttribute&&t.getAttribute('data-minus');
+    if(p) set(p,(picked[p]||0)+1);
+    if(m) set(m,(picked[m]||0)-1);
+  });
+  document.getElementById('picker').addEventListener('input', function(e){
+    var k=e.target.getAttribute&&e.target.getAttribute('data-box'); if(!k) return;
+    var n=parseInt(String(e.target.value).replace(/[^0-9]/g,''),10); set(k, isNaN(n)?0:n);
+  });
+  ['org','person'].forEach(function(id){ document.getElementById(id).addEventListener('input', state); });
+}
+function set(key,n){
+  n = Math.max(0, Math.min(999, n|0)); picked[key]=n;
+  var b=document.querySelector('[data-box="'+key+'"]'); if(b && String(b.value)!==String(n)) b.value=n;
+  var p=find(key), a=document.querySelector('[data-amt="'+key+'"]'); if(a) a.textContent=won(p.won*n);
+  sum();
+}
+function find(key){ for(var i=0;i<items.length;i++) if(items[i].key===key) return items[i]; return {won:0,name:''}; }
+function lines(){ return items.filter(function(p){return (picked[p.key]||0)>0;})
+  .map(function(p){ return {name:p.name, unit:p.won, qty:picked[p.key], amt:p.won*picked[p.key]}; }); }
+function sum(){
+  var L=lines(), t=L.reduce(function(s,x){return s+x.amt;},0);
+  document.getElementById('sumbox').style.display = L.length?'block':'none';
+  document.getElementById('count').textContent = L.length + ' item(s) · ' +
+    L.reduce(function(s,x){return s+x.qty;},0) + ' computer(s)';
+  document.getElementById('total').textContent = won(t);
+  state();
+}
+function state(){
+  var ok = lines().length>0 && document.getElementById('org').value.trim().length>0;
+  document.getElementById('make').disabled = !ok;
+  mail();
+}
+document.getElementById('make').addEventListener('click', function(){
+  var L=lines(); if(!L.length) return;
+  var org=document.getElementById('org').value.trim(), who=document.getElementById('person').value.trim();
+  var t=L.reduce(function(s,x){return s+x.amt;},0);
+  var h='<h4>QUOTATION</h4><table><tr>' +
+    '<td style="width:52%;vertical-align:top"><b>' + esc(org) + '</b>' +
+    (who?'<br>Attn: ' + esc(who):'') +
+    '<div style="margin-top:10px">Date: ' + today() + '</div>' +
+    '<div>Valid until: ' + until() + '</div></td>' +
+    '<td style="vertical-align:top"><b>VALUES (사재기)</b><br>Owner: Lee Seongbin<br>' +
+    'Business reg. 858-15-02513<br>61 Bukseong-ro, Gyeongju-si,<br>Gyeongsangbuk-do 38141, Korea<br>' +
+    '+82 10-3401-6153<br>ranger7903@nate.com</td></tr></table>' +
+    '<table style="margin-top:12px"><thead><tr><th style="width:34px">#</th><th>Item</th>' +
+    '<th style="width:96px">Unit</th><th class="num" style="width:44px">Qty</th>' +
+    '<th class="num" style="width:90px">Price</th><th class="num" style="width:104px">Amount</th>' +
+    '</tr></thead><tbody>';
+  L.forEach(function(x,i){
+    h += '<tr><td style="text-align:center">'+(i+1)+'</td><td>'+esc(x.name)+'</td>' +
+         '<td>1 computer</td><td class="num">'+x.qty+'</td>' +
+         '<td class="num">'+won(x.unit)+'</td><td class="num">'+won(x.amt)+'</td></tr>';
+  });
+  h += '<tr class="sum"><td colspan="5" style="text-align:right">Total (VAT included)</td>' +
+       '<td class="num">'+won(t)+'</td></tr></tbody></table>' +
+       '<div style="margin-top:12px;font-size:12.5px;line-height:1.75">' +
+       '· Amounts are in Korean won and include VAT.<br>' +
+       '· Quantity is the number of computers; one licence key per computer.<br>' +
+       '· One payment, no subscription. Updates within the same version line (v1.x) are free.<br>' +
+       '· Once approved, email ranger7903@nate.com for bank details and tax documents.</div>';
+  document.getElementById('quotebody').innerHTML = h;
+  document.getElementById('paper').classList.add('on');
+  document.getElementById('print').style.display='inline-block';
+  document.getElementById('paper').scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.getElementById('print').addEventListener('click', function(){ window.print(); });
+function mail(){
+  var L=lines(), org=document.getElementById('org').value.trim(),
+      who=document.getElementById('person').value.trim(),
+      t=L.reduce(function(s,x){return s+x.amt;},0);
+  var body='We would like to purchase VALUES tools for our organization.\n\n' +
+    'Organization: ' + (org||'(please fill in)') + '\n' +
+    'Contact: ' + (who||'(please fill in)') + '\n\nItems\n';
+  if(L.length){ L.forEach(function(x){ body += ' - ' + x.name + ' x ' + x.qty + ' = ' + won(x.amt) + '\n'; });
+    body += '\nTotal (VAT included): ' + won(t) + '\n'; }
+  else body += ' (you may also send this without picking anything)\n';
+  body += '\nTax document needed: (tax invoice / cash receipt / statement)\n' +
+          'Please send the bank details and we will transfer after approval.\n';
+  document.getElementById('mailbtn').setAttribute('href',
+    'mailto:ranger7903@nate.com?subject=' + encodeURIComponent('[Organization] ' + (org||'VALUES purchase enquiry')) +
+    '&body=' + encodeURIComponent(body));
+}
+mail();
+})();
+</script>
+<script src="세기.js" defer></script>
+</body></html>

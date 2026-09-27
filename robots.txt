@@ -3,5 +3,7 @@ Allow: /
 Disallow: /buy.html
 Disallow: /success.html
 Disallow: /fail.html
+Disallow: /report_automation.html
+Disallow: /%EB%A6%AC%EB%B7%B0%ED%95%A8.html
 
 Sitemap: https://valuestools.kr/sitemap.xml

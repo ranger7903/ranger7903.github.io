@@ -31,7 +31,11 @@
     '.밸류스리뷰 .별{color:var(--accent,#C0603C);font-size:15px}' +
     '.밸류스리뷰 .날{color:var(--ink2,#6B6259);font-size:13px;margin-left:8px}' +
     '.밸류스리뷰 p{margin:5px 0 0;font-size:15px;line-height:1.7}' +
-    '.밸류스리뷰 .꼬리{color:var(--ink2,#6B6259);font-size:13px;margin-top:12px}';
+    '.밸류스리뷰 .꼬리{display:block;color:var(--ink2,#6B6259);font-size:13px;margin-top:10px}' +
+    '.밸류스리뷰 .약속{border:1px solid var(--line,#EAD9BE);border-radius:10px;' +
+      'padding:12px 14px;font-size:14px;line-height:1.7}' +
+    '.밸류스리뷰 .약속 ul{margin:8px 0 0;padding-left:18px}' +
+    '.밸류스리뷰 .약속 li{margin:3px 0}';
   document.head.appendChild(꾸밈);
 
   fetch('리뷰설정.json', { cache: 'no-store' })
@@ -57,10 +61,23 @@
     return '리뷰.html' + (제품 ? '?제품=' + encodeURIComponent(제품) : '');
   }
 
+  /* 2026-09-28 고침 — 손님 눈으로 다시 봄.
+   * 전에는 카드마다 «아직 리뷰가 없습니다»가 열여덟 번 떴다.
+   * 사지도 않은 손님에게 리뷰를 조르는 꼴이었고, 「아무도 안 쓰나 보다」로만 읽혔다.
+   * 그래서 없을 때는 «조르는 말» 대신 «우리가 실제로 지키는 약속»을 적는다.
+   * 여기 적는 것은 전부 환불 정책(refund.html)에 이미 적혀 있는 것뿐이다. 부풀리지 않는다. */
   function 없음(자리, 제품) {
-    자리.innerHTML = '<div class="밸류스리뷰"><p class="꼬리">' +
-      '아직 남겨 주신 리뷰가 없습니다. ' +
-      '<a href="' + 쓰는곳(제품) + '">처음으로 한 줄 남겨 주시겠어요?</a></p></div>';
+    자리.innerHTML =
+      '<div class="밸류스리뷰"><div class="약속">' +
+      '<b>아직 후기가 없습니다.</b> 그래서 이렇게 해 두었습니다.' +
+      '<ul>' +
+      '<li>사기 전에 <a href="free.html">공짜 도구</a>로 저희 솜씨를 먼저 보실 수 있습니다.</li>' +
+      '<li>사신 뒤 <b>7일 안</b>에, 정품 키를 아직 넣지 않으셨다면 <b>그냥 물러 드립니다.</b></li>' +
+      '<li>설치가 안 되거나 설명과 다르면 <b>기간과 상관없이</b> 돌려드립니다.</li>' +
+      '</ul>' +
+      '<span class="꼬리">자세한 것은 <a href="refund.html">환불 정책</a>에 적어 두었습니다. ' +
+      '이미 쓰고 계신 분이라면 <a href="' + 쓰는곳(제품) + '">한 줄 남겨 주세요</a> — 다음 판에서 고칩니다.</span>' +
+      '</div></div>';
   }
 
   function 그리기(자리, 리뷰들, 제품) {
