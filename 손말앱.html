@@ -171,6 +171,29 @@
   <p class="quiet"><a href="./">← 가게로 돌아가기</a></p>
 
 </div>
+
+
+<div class="card" style="margin-top:18px">
+  <b>쓰신 분들 이야기</b>
+  <div data-리뷰="sonmal"></div>
+</div>
+<style id="한줄꾸밈">
+#한줄부탁{display:none;border:1px solid #D97757;border-radius:12px;
+  padding:14px 16px;margin:16px 0;font-size:15px;line-height:1.75}
+#한줄부탁 b{color:#D97757}
+#한줄부탁 a.단추{display:inline-block;margin-top:8px;padding:10px 18px;border-radius:10px;
+  background:#D97757;color:#fff;text-decoration:none;font-weight:600}
+#한줄부탁 .작게{display:block;margin-top:8px;font-size:13px;opacity:.75}
+</style>
+
+<div id="한줄부탁">
+  <b>잘 받으셨나요? 한 줄만 남겨 주시겠어요?</b><br>
+  써 보시다가 <b>불편한 곳</b>을 적어 주시면 다음 판에서 고칩니다.
+  이름도 메일 주소도 묻지 않습니다. 별이 낮아도 그대로 싣습니다.
+  <a class="단추" href="%EB%A6%AC%EB%B7%B0.html?%EC%A0%9C%ED%92%88=sonmal">💬 한 줄 남기기</a>
+  <span class="작게">값을 받지 않는 앱입니다. 광고도 없습니다. 저희가 받는 것은 이 한 줄뿐입니다.</span>
+</div>
+
 <script>
 (function () {
   var 바 = document.getElementById('bar');
@@ -247,6 +270,8 @@
         setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
         바.style.width = '100%';
         알림('받았습니다. 받은 파일을 눌러 설치해 주세요.');
+    try{var ㅂ=document.getElementById('한줄부탁'); if(ㅂ) ㅂ.style.display='block';}catch(e){}
+
         단추.textContent = '다시 받기';
         단추.disabled = false;
       });
@@ -259,5 +284,6 @@
 })();
 </script>
 <script src="세기.js" defer></script>
+<script src="%EB%A6%AC%EB%B7%B0%EB%B3%B4%EA%B8%B0.js" defer></script>
 </body>
 </html>
