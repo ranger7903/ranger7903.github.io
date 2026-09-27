@@ -98,10 +98,13 @@ footer{margin:50px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
   border-radius:50%;color:#b5482f;font-family:"Gowun Batang",serif;font-size:13px;
   line-height:1.15;text-align:center;transform:rotate(-8deg)}
 @media print{
+  /* 🚨 2026-09-28 — 인쇄해 보니 쪽 제목("① 필요한 것을 고르세요" 같은 것)까지 같이 찍혔다.
+     품의에 붙일 종이에 그런 글이 섞이면 안 된다. 견적서 «그것만» 남긴다. */
   body{background:#fff}
-  header.top, .noprint, footer{display:none !important}
-  #종이{display:block !important;margin:0}
-  .견적{border:none;padding:0}
+  header.top, footer{display:none !important}
+  main > *{display:none !important}
+  main > #종이{display:block !important;margin:0}
+  .견적{border:none;padding:0;border-radius:0}
   @page{size:A4;margin:14mm}
 }
 </style>

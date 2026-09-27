@@ -71,9 +71,10 @@ footer{margin:50px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
 .quote .sum td{background:#f7f3ec;font-weight:700}
 @media print{
   body{background:#fff}
-  header.top,.noprint,footer{display:none !important}
-  #paper{display:block !important}
-  .quote{border:none;padding:0}
+  header.top, footer{display:none !important}
+  main > *{display:none !important}
+  main > #paper{display:block !important;margin:0}
+  .quote{border:none;padding:0;border-radius:0}
   @page{size:A4;margin:14mm}
 }
 </style>
