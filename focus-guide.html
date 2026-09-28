@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>하고 싶은 게 너무 많을 때 — 25개에서 5개만 남기는 법 · 밸류스</title>
+<meta name="description" content="바쁜데 남는 게 없다면 시간이 아니라 손에 쥔 것이 너무 많은 것입니다. 스물다섯 개를 적고 다섯 개만 남기고, 나머지를 «안 할 목록»으로 옮기는 법을 예시와 함께 적었습니다.">
+<link rel="canonical" href="https://valuestools.kr/focus-guide.html">
+<meta property="og:title" content="하고 싶은 게 너무 많을 때">
+<meta property="og:description" content="바쁜데 남는 게 없다면 시간이 아니라 손에 쥔 것이 너무 많은 것입니다. 스물다섯 개를 적고 다섯 개만 남기고, 나머지를 «안 할 목록»으로 옮기는 법을 예시와 함께 적었습니다.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/focus-guide.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.85;word-break:keep-all}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+<body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="index.html"><span class="stamp">値</span>밸류스</a>
+  <nav style="margin-left:auto">
+    <a href="index.html">도구 선반</a>
+    <a href="%EC%B1%85%EB%B0%A9.html">책방</a>
+    <a href="free.html">공짜로 드리는 것</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>하고 싶은 게 너무 많을 때</h1>
+<p class="lede">바쁜데 남는 게 없는 까닭은 <b>시간이 부족해서가 아닙니다.</b> 손에 쥔 것이 너무 많은 것입니다. 스물다섯 개를 적고 다섯 개만 남기고, <b>나머지 스무 개를 「나중에」가 아니라 「안 함」으로 옮기는 법</b>을 적어 둡니다.</p>
+
+<div class="card">
+<b>이 글만 읽으셔도 됩니다.</b>
+<p style="margin-bottom:0" class="small">하고 싶은 일을 스물다섯 개 적고, 다섯 개만 남기고,
+나머지 스무 개를 <b>「나중에 할 것」이 아니라 「안 할 것」</b>으로 옮기는 방법입니다.
+종이 한 장과 30분이면 됩니다.</p>
+</div>
+
+<h2>먼저, 무엇이 문제인가</h2>
+<p>바쁜데 남는 게 없는 날이 이어질 때, 우리는 보통 <b>「시간 관리를 더 잘해야겠다」</b>고 생각합니다.
+그래서 일정표를 새로 사고, 앱을 깔고, 아침에 더 일찍 일어나 봅니다.</p>
+<p>그런데 대개 진짜 문제는 시간이 아닙니다. <b>손에 쥔 것이 너무 많은 것</b>입니다.
+열다섯 가지를 조금씩 하면, 열다섯 가지가 모두 조금씩만 됩니다.</p>
+
+<h2>널리 퍼진 이야기 하나 — 「25개에서 5개」</h2>
+<p>투자가 워런 버핏이 자기 비행기 조종사에게 이렇게 시켰다는 이야기가 있습니다.
+하고 싶은 일 스물다섯 개를 적어라, 그중 중요한 다섯 개에 동그라미를 쳐라,
+그리고 나머지 스무 개는 <b>「다섯 개를 다 이루기 전까지 절대 손대지 않는 목록」</b>으로 두어라.</p>
+<div class="card warm">
+<b>먼저 솔직히 적어 둡니다</b>
+<p style="margin-bottom:0">이 이야기는 <b>버핏 본인이 그렇게 말했다는 기록을 찾기 어렵습니다.</b>
+한 조종사의 일화 형태로 퍼진 이야기입니다.
+그래도 <b>방법 자체는 오늘 저녁에 해 보시면 바로 효과가 보입니다</b> —
+그래서 「누가 말했다」보다 「어떻게 하는지」를 아래에 적습니다.</p>
+</div>
+<p>핵심은 다섯 개를 고르는 데 있지 않습니다.
+<b>나머지 스무 개를 「나중에」가 아니라 「안 함」으로 옮기는 데</b> 있습니다.
+「나중에 할 것」은 마음속에서 계속 자리를 차지합니다. 그게 힘을 빼앗습니다.</p>
+
+<h2>오늘 저녁에 하는 법 — 다섯 걸음</h2>
+
+<h3>① 스물다섯 개를 다 적습니다 (줄이지 말고)</h3>
+<p>큰 것, 작은 것, 부끄러운 것 다 적습니다. 「운동」처럼 뭉뚱그리지 말고
+<b>「일주일에 두 번 걷기」</b>처럼 눈에 보이게 적습니다.</p>
+<div class="ex">1. 자격증 따기            10. 부모님 여행 보내드리기
+2. 유튜브 채널 만들기      11. 영어 다시 시작
+3. 집 정리                12. 텃밭
+...                       25. 블로그 쓰기</div>
+<p>스물다섯 개가 안 나오면 열다섯 개여도 됩니다. <b>다 적어야 고를 수 있습니다.</b>
+머릿속에 있는 것은 셀 수가 없습니다.</p>
+
+<h3>② 하룻밤 재웁니다</h3>
+<p>적은 날 바로 고르지 마세요. <b>그날 기분이 고릅니다.</b>
+하루 지나서 다시 보면 대여섯 개는 저절로 시들해집니다.</p>
+
+<h3>③ 다섯 개에 동그라미를 칩니다 — 「중요한 것」이 아니라 「올해 안 하면 아까운 것」</h3>
+<p>「중요한 것」을 고르라고 하면 다 중요해 보입니다. 이렇게 물으면 쉬워집니다.</p>
+<ul>
+<li><b>올해 안 하면 내년엔 못 하게 되는 것인가?</b> (아이 나이, 부모님 건강, 마감이 있는 것)</li>
+<li><b>이걸 하면 다른 네 개가 쉬워지는가?</b> (돈·체력·기술처럼 밑에 깔리는 것)</li>
+<li><b>한 해 뒤에 「해 두어서 다행」일 것인가, 「해 봤자」일 것인가?</b></li>
+</ul>
+
+<h3>④ 나머지를 종이 <b>다른 장</b>에 옮겨 적습니다</h3>
+<p>여기가 이 방법의 전부입니다. 같은 종이에 두면 계속 눈에 들어옵니다.
+<b>다른 종이에 옮겨 적고, 맨 위에 이렇게 적습니다.</b></p>
+<div class="ex">━━━ 다섯 개를 끝내기 전까지 <b>손대지 않을 목록</b> ━━━
+(버리는 게 아닙니다. 지금은 아니라는 뜻입니다)</div>
+<p>버리라는 말이 아닙니다. <b>「지금은 아니다」를 눈에 보이게 해 두는 것</b>입니다.
+마음이 편해집니다 — 잊은 게 아니라 <b>적어 두었으니까</b>요.</p>
+
+<h3>⑤ 다섯 개 앞에 「이번 주에 할 한 가지」를 붙입니다</h3>
+<p>다섯 개는 대개 큽니다. 큰 것 옆에 <b>이번 주에 할 작은 한 가지</b>를 적어야 움직입니다.</p>
+<div class="ex">자격증 따기        → 이번 주 : <b>시험 날짜 찾아보고 달력에 적기</b> (20분)
+부모님 여행        → 이번 주 : <b>어머니께 어디 가고 싶은지 여쭤보기</b> (전화 한 통)
+집 정리            → 이번 주 : <b>신발장 한 칸만</b></div>
+
+<h2>고르기 어려울 때 — 두 개씩 붙여 보기</h2>
+<p>다섯 개로 줄이는 게 제일 어렵습니다. 이럴 때는 <b>둘씩만 견주십니다.</b></p>
+<table>
+<tr><th style="width:44%">이렇게 물으면 어렵습니다</th><th>이렇게 물으면 쉽습니다</th></tr>
+<tr><td>스물다섯 개 중에 뭐가 제일 중요한가</td><td><b>1번과 2번, 하나만 된다면 어느 쪽</b></td></tr>
+<tr><td>다 하고 싶은데 어떡하나</td><td><b>둘 중 하나를 버려야 한다면 어느 쪽</b></td></tr>
+<tr><td>이걸 빼도 될까</td><td><b>내년 이맘때 이걸 안 했다고 아쉬울까</b></td></tr>
+</table>
+<p>이긴 것끼리 또 붙입니다. 스물다섯 개면 스물네 번만 비교하면 순서가 나옵니다.
+한 번에 두 개만 보니까 머리가 안 아픕니다.</p>
+
+<h2>자주 하는 세 가지 실수</h2>
+<div class="card warm">
+<ol style="margin-bottom:0">
+<li><b>다섯 개를 다섯 「분야」로 고르는 것</b> — 일·건강·가족·돈·취미 하나씩 골라 놓으면
+다섯 개가 아니라 <b>인생 전체</b>를 고른 셈이 됩니다. 한쪽으로 쏠려도 괜찮습니다</li>
+<li><b>스무 개를 「틈나면 하기」로 두는 것</b> — 틈은 안 납니다.
+<b>안 한다</b>고 적어 두셔야 다섯 개가 됩니다</li>
+<li><b>한 번 고르고 끝내는 것</b> — 석 달에 한 번씩 다시 보십니다.
+다 이루셨으면 <b>그때 스무 개 목록을 꺼내십니다</b></li>
+</ol>
+</div>
+
+<h2>가게를 하시거나 일을 맡으신 분께</h2>
+<p>이건 개인 계획보다 <b>일에서 더 잘 듣습니다.</b>
+「할 일」이 서른 개인 부서는 서른 개를 다 조금씩 합니다.</p>
+<table>
+<tr><th style="width:38%">늘 이렇게 하던 것</th><th>다섯 개로 줄인 것</th></tr>
+<tr><td>올해 목표 12가지</td><td><b>세 가지</b> · 나머지는 「올해 안 함」 종이에</td></tr>
+<tr><td>신제품 다섯 개 준비</td><td><b>하나</b>를 제대로 · 넷은 대기</td></tr>
+<tr><td>모든 문의에 당일 답장</td><td>급한 것만 당일 · <b>나머지는 이틀에 한 번</b>이라고 미리 알려 두기</td></tr>
+</table>
+
+<div class="tool">
+<b>솔직히 말씀드립니다</b>
+<p>이걸 대신해 주는 <b>저희 도구는 아직 없습니다.</b>
+목록을 적고 둘씩 견주게 해 주는 작은 프로그램을 만들까 재고 있는데,
+아직 만들지 않았으니 <b>있다고 말씀드리지 않겠습니다.</b></p>
+<p class="small">지금은 종이 두 장이면 충분합니다.
+「이런 게 있으면 쓰겠다」 싶으시면 <a href="mailto:ranger7903@nate.com?subject=25%EB%8C%805%20%EA%B3%A8%EB%9D%BC%EC%A3%BC%EB%8A%94%20%EB%8F%84%EA%B5%AC">한 줄 보내 주세요</a> —
+찾는 분이 있으면 만들고, 없으면 안 만듭니다.</p>
+<a class="btn" href="%EC%B1%85%EB%B0%A9.html">📖 밸류스 책방 보기 — 맛보기는 거저</a>
+</div>
+
+<h2 style="font-size:18px">어디서 가져왔나</h2>
+<p class="small">
+· 「25개에서 5개」 방법 — 워런 버핏과 그의 조종사 이야기 형태로 널리 퍼진 일화.
+<b>버핏 본인의 발언으로 확인된 기록은 찾지 못했습니다.</b> 출처보다 방법을 보시는 것이 맞습니다<br>
+· 둘씩 견주는 방법은 오래된 정리 기술로, 특별한 출처가 있는 것이 아닙니다<br>
+사람마다 사정이 다릅니다. 여기 적은 본보기는 그대로 쓰시기보다 <b>본인 것으로 바꿔 쓰시는 것</b>이 맞습니다.
+</p>
+
+<p class="small" style="margin-top:34px">
+밸류스는 혼자 도구를 만드는 작은 상점입니다 ·
+<a href="index.html">도구 선반 보기</a> ·
+<a href="%EC%B1%85%EB%B0%A9.html">책방</a> ·
+<a href="free.html">공짜로 드리는 것</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">사업자정보</a>
+</p>
+
+</main>
+<footer>© 밸류스 · valuestools.kr</footer>
+<script src="세기.js" defer></script>
+</body></html>
