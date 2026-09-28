@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>같은 실수를 또 하지 않는 법 — 실패를 「다음에 쓸 한 줄」로 바꾸기 · 밸류스</title>
+<meta name="description" content="잘못된 일을 덮지도, 누굴 탓하지도 않고 «다음에 쓸 수 있는 한 줄»로 바꾸는 다섯 칸 적기. 혼자서도, 팀에서도 그대로 쓸 수 있게 예시까지 적었습니다.">
+<link rel="canonical" href="https://valuestools.kr/failure-guide.html">
+<meta property="og:title" content="같은 실수를 또 하지 않는 법">
+<meta property="og:description" content="잘못된 일을 덮지도, 누굴 탓하지도 않고 «다음에 쓸 수 있는 한 줄»로 바꾸는 다섯 칸 적기. 혼자서도, 팀에서도 그대로 쓸 수 있게 예시까지 적었습니다.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/failure-guide.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.85;word-break:keep-all}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+<body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="index.html"><span class="stamp">値</span>밸류스</a>
+  <nav style="margin-left:auto">
+    <a href="index.html">도구 선반</a>
+    <a href="%EC%B1%85%EB%B0%A9.html">책방</a>
+    <a href="free.html">공짜로 드리는 것</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>같은 실수를 또 하지 않는 법</h1>
+<p class="lede">반년 뒤에 <b>똑같은 자리에서 똑같이 넘어지는</b> 까닭은, 배운 것이 남는 자리가 없어서입니다. 여기서는 잘못된 일을 <b>다섯 칸</b>에 적어 「다음에 쓸 수 있는 한 줄」로 바꾸는 법을 적어 둡니다. 15분이면 됩니다.</p>
+
+<div class="card">
+<b>이 글만 읽으셔도 됩니다.</b>
+<p style="margin-bottom:0" class="small">혼자 쓰셔도 되고, 팀에서 쓰셔도 됩니다.
+적는 칸과 말투까지 그대로 가져다 쓰시면 됩니다.</p>
+</div>
+
+<h2>같은 실수를 또 하는 까닭</h2>
+<p>일이 잘못되면 대개 두 가지 중 하나를 합니다.
+<b>덮거나</b>, <b>누가 잘못했는지 따지거나.</b>
+둘 다 다음번에 아무 도움이 안 됩니다. 덮으면 잊어버리고, 따지면 다들 숨깁니다.</p>
+<p>그래서 반년 뒤에 <b>똑같은 자리에서 똑같이 넘어집니다.</b>
+사람이 나빠서가 아니라, <b>배운 것이 남는 자리가 없어서</b>입니다.</p>
+
+<h2>레이 달리오의 한 줄</h2>
+<p>세계에서 가장 큰 헤지펀드를 만든 레이 달리오는 《원칙》에서 이렇게 적었습니다.</p>
+<div class="card warm">
+<p style="margin:0"><b>고통 + 성찰 = 발전</b></p>
+<p style="margin:6px 0 0" class="small">아픈 일 자체가 사람을 키우는 것이 아닙니다.
+아픈 일을 <b>들여다본 것</b>이 키웁니다. 들여다보지 않으면 아프기만 하고 끝납니다.</p>
+</div>
+<p>그가 실제로 한 일은 거창하지 않습니다. 잘못될 때마다 <b>적어 두고</b>,
+그것을 <b>다음에 쓸 수 있는 한 줄</b>로 바꿔 모았습니다. 그 모음이 나중에 책이 되었습니다.</p>
+
+<h2>적는 법 — 다섯 칸, 15분</h2>
+<p>일이 끝난 <b>바로 다음 날</b>이 가장 좋습니다. 일주일 지나면 기억이 편한 쪽으로 바뀝니다.</p>
+
+<h3>① 무슨 일이 있었나 — 사실만</h3>
+<p>판단을 섞지 않습니다. <b>누가 봐도 다툼이 없는 것</b>만 적습니다.</p>
+<div class="ex"><span class="no">나쁜 예</span>  담당자가 일을 대충 해서 납품이 늦었다
+<span class="yes">좋은 예</span>  9/12 에 자료를 받기로 했는데 9/19 에 받았다. 납품은 9/20 → 9/27 로 미뤄졌다</div>
+
+<h3>② 나는 그때 무엇을 알고 있었나</h3>
+<p>지금 아는 것 말고, <b>그때 내 손에 있던 정보</b>만 적습니다.
+이 칸을 빼먹으면 「그때 왜 그것도 몰랐지」라는 쓸모없는 자책만 남습니다.</p>
+<div class="ex">그때 알던 것 :  담당자가 바쁘다는 말은 들었다. 얼마나 바쁜지는 안 물어봤다</div>
+
+<h3>③ 어디서 갈렸나 — 딱 한 곳</h3>
+<p>여러 곳을 적지 마세요. <b>「여기서 달랐으면 결과가 달랐다」 싶은 한 곳</b>만 고릅니다.</p>
+<div class="ex">갈린 곳 :  <b>9/5 에 「언제 주실 수 있나요」를 안 물어본 것</b></div>
+
+<h3>④ 다음에 쓸 한 줄 — 「~할 때는 ~한다」</h3>
+<p>여기가 이 표의 전부입니다. <b>감상이 아니라 규칙</b>으로 적습니다.</p>
+<div class="ex"><span class="no">나쁜 예</span>  다음엔 더 잘 챙기자
+<span class="yes">좋은 예</span>  <b>남에게 자료를 맡길 때는, 맡기는 날 「언제까지 가능한가」를 상대에게 말하게 한다</b></div>
+<p class="small">「더 잘하자」는 다음에 아무것도 바꾸지 못합니다.
+<b>언제 · 무엇을 · 어떻게</b>가 들어가야 규칙입니다.</p>
+
+<h3>⑤ 이 규칙을 어디에 붙여 둘 것인가</h3>
+<p>적어만 두면 안 봅니다. <b>그 일이 다시 일어나는 자리</b>에 붙여야 합니다.</p>
+<ul>
+<li>메일 서식에 한 줄 넣기</li>
+<li>일 시작할 때 보는 확인표에 넣기</li>
+<li>달력에 미리 알림 걸어 두기</li>
+</ul>
+
+<h2>다 적으면 이런 모양이 됩니다</h2>
+<div class="ex">날짜      2026-09-28
+무슨 일   9/12 받기로 한 자료를 9/19 에 받음. 납품 일주일 밀림
+그때 알던 것  바쁘다는 말만 들음. 언제까지 되는지는 안 물음
+갈린 곳   9/5 에 기한을 <b>상대 입으로</b> 말하게 하지 않은 것
+다음 규칙  <b>자료를 남에게 맡길 때는 맡기는 그 자리에서
+          「언제까지 가능하신가요」를 물어 상대가 날짜를 말하게 한다</b>
+붙일 곳   자료 요청 메일 서식 맨 위</div>
+
+<h2>팀에서 쓸 때 — 딱 두 가지만 지키면 됩니다</h2>
+<div class="card warm">
+<ol style="margin-bottom:0">
+<li><b>사람 이름을 규칙에 넣지 않습니다.</b> 「○○씨가 늦지 않게 한다」가 아니라
+「자료를 맡길 때는 기한을 상대가 말하게 한다」입니다. 이름이 들어가는 순간 다들 숨깁니다</li>
+<li><b>규칙이 늘어나면 지워야 합니다.</b> 서른 개가 넘으면 아무도 안 봅니다.
+반년에 한 번, <b>안 쓰는 규칙은 지우세요.</b> 살아 있는 규칙만 남깁니다</li>
+</ol>
+</div>
+
+<h2>혼자 하실 때 — 한 달에 한 번이면 충분합니다</h2>
+<p>매번 적으면 지칩니다. <b>「어, 이거 저번에도 이랬는데」 싶은 순간에만</b> 적으세요.
+그 느낌이 왔다는 것 자체가 되풀이되고 있다는 뜻입니다.</p>
+<p>한 해에 열 줄만 모여도 큽니다. <b>내 실수의 모양은 생각보다 몇 가지 안 됩니다.</b></p>
+
+<div class="tool">
+<b>솔직히 말씀드립니다</b>
+<p>이걸 대신 모아 주는 <b>저희 도구는 아직 없습니다.</b>
+메모장이나 공책으로 충분히 되고, 그래서 지금은 도구를 팔 생각이 없습니다.
+필요가 보이면 그때 만들겠습니다.</p>
+<p class="small">저희가 파는 것은 <b>인터넷 없이 내 컴퓨터 안에서만 일하는 작은 도구들</b>입니다.
+어떤 식으로 만드는지 궁금하시면 <a href="free.html">값을 안 받는 것부터</a> 써 보셔도 됩니다.</p>
+<a class="btn" href="%EC%B1%85%EB%B0%A9.html">📖 밸류스 책방 보기 — 맛보기는 거저</a>
+</div>
+
+<h2 style="font-size:18px">어디서 가져왔나</h2>
+<p class="small">
+· 레이 달리오 «Principles»(원칙) — 「고통 + 성찰 = 발전」과 실수를 원칙으로 바꾸는 방식<br>
+· 사실만 먼저 적고 사람을 탓하지 않는 방식은 항공·의료 분야에서 오래 써 온 사고 검토 방법과 같은 생각입니다<br>
+여기 적은 칸은 본보기입니다. <b>본인 일에 맞게 줄이거나 늘려 쓰시는 것</b>이 맞습니다.
+</p>
+
+<p class="small" style="margin-top:34px">
+밸류스는 혼자 도구를 만드는 작은 상점입니다 ·
+<a href="index.html">도구 선반 보기</a> ·
+<a href="%EC%B1%85%EB%B0%A9.html">책방</a> ·
+<a href="free.html">공짜로 드리는 것</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">사업자정보</a>
+</p>
+
+</main>
+<footer>© 밸류스 · valuestools.kr</footer>
+<script src="세기.js" defer></script>
+</body></html>
