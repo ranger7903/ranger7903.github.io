@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>출석 모아 — 밸류스</title>
+<meta name="description" content="교수님이 폰에서 결석한 학생만 누르면 학과 사무실 한 장으로 저절로 모이는 출결 장부. 앱을 깔 필요가 없고, 자료는 학교 구글 계정 안에만 있습니다. 학과당 한 학기 50,000원.">
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.75}
+  .wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);margin:0 0 22px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:20px;margin:0 0 16px}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit;text-align:center;text-decoration:none}
+  .값{display:inline-block;background:#F1E7DA;color:var(--accent);
+    font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+  h2{font-size:18px;margin:0 0 8px}
+  ul,ol{padding-left:1.2em;margin:6px 0}
+  li{margin:6px 0}
+  .quiet{font-size:14px;color:var(--ink2)}
+  .안심{background:var(--okbg);border:1px solid #CBDCC6}
+  .못함칸{background:#F8F1DC;border:1px solid #E4D5A8}
+  a{color:var(--deep)}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:15px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--sunk);font-weight:700;width:46%}
+  details{margin:8px 0}
+  summary{cursor:pointer;font-weight:700;color:var(--deep)}
+  .step{background:var(--sunk);border-radius:10px;padding:14px 16px;margin:8px 0}
+  .step b{color:var(--deep)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="값">학과당 한 학기 50,000원</span>
+  <h1>출석 모아</h1>
+  <p class="sub">교수님은 폰에서 <b>결석한 학생만</b> 누르면 끝입니다.
+    누른 것은 학과 사무실의 표 한 장으로 저절로 모입니다.</p>
+
+  <div class="card 안심">
+    <h2>앱을 깔지 않습니다</h2>
+    <ul class="quiet" style="margin:0">
+      <li>교수님은 <b>주소 하나</b>만 누르시면 됩니다. 아이폰이든 안드로이드든 상관없습니다.</li>
+      <li>스토어에서 받을 것도, 새로 가입할 것도 없습니다.</li>
+      <li>자료는 <b>학교의 구글 계정 안</b>에만 쌓입니다. 밸류스 서버로 오지 않습니다.</li>
+      <li>달마다 내는 돈이 없습니다. 서버 값도 0원입니다.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>지금 쓰시는 화면과 무엇이 다른가요</h2>
+    <table>
+      <tr><th>지금 (학교 LMS 출석부)</th><td>출석 모아</td></tr>
+      <tr><th>글자가 작아 손가락으로 누르기 힘듦</th><td>단추가 커서 엄지로 눌립니다</td></tr>
+      <tr><th>한 명씩 찾아 들어가야 함</th><td>한 화면에 쭉 — 결석만 누르면 끝</td></tr>
+      <tr><th>인터넷이 끊기면 하던 것이 날아감</th><td>폰에 담아 뒀다가 <b>저절로</b> 다시 보냅니다</td></tr>
+      <tr><th>교수님마다 따로 봐야 함</th><td>사무실에서 <b>한 장</b>으로 다 봅니다</td></tr>
+      <tr><th>「누가 아직 안 했지?」를 알 수 없음</th><td>아직 안 보낸 과목이 바로 뜹니다</td></tr>
+    </table>
+    <div class="card 못함칸" style="margin:14px 0 0">
+      <b>솔직하게 적어 둡니다.</b> 이것은 학교 LMS를 <b>대신하지 않습니다.</b>
+      LMS에는 교수님이 여전히 넣으셔야 합니다.
+      출석 모아는 <b>학과가 미리 챙겨 보는 장부</b>입니다 —
+      「누가 몇 번 빠졌는지」와 「누가 아직 안 올렸는지」를 학기 중에 알기 위한 것입니다.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>어떻게 생겼나요</h2>
+    <ol>
+      <li><b>교수님 화면</b> — 주소를 누르고 접속코드 네 자리를 넣으면 담당 과목이 뜹니다.
+        과목을 고르면 학생이 쭉 나오고, <b>전원 출석이 기본</b>입니다.
+        빠진 학생만 ✕ 를 누르고 「보내기」.</li>
+      <li><b>사무실 화면</b> — 오늘 누가 보냈고 누가 안 보냈는지, 학생별로 몇 번 빠졌는지가
+        한 장에 나옵니다. 학생 명단은 엑셀이나 학교 출석부 파일(TXT)을 그대로 올리면 됩니다.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>값</h2>
+    <p><b>학과당 한 학기 50,000원</b> (부가세 포함 총액)</p>
+    <ul class="quiet">
+      <li>교수님이 몇 분이든, 과목이 몇 개든 학과 단위로 값이 같습니다.</li>
+      <li>설치는 밸류스가 도와 드립니다. 학교 쪽에서 준비하실 것은
+        <b>구글 계정 하나</b>와 <b>학생 명단 파일</b>뿐입니다.</li>
+      <li>먼저 <b>한 학과만</b> 한 학기 써 보시고 정하셔도 됩니다.</li>
+    </ul>
+    <div class="card 못함칸" style="margin:12px 0 0">
+      밸류스는 <b>간이과세자</b>라 <b>세금계산서를 발급할 수 없습니다.</b>
+      드릴 수 있는 것은 <b>거래명세서</b>와 <b>지출증빙용 현금영수증</b>입니다.
+      결재를 올리시기 전에 이 점을 먼저 확인해 주세요.
+    </div>
+    <a class="big" style="margin-top:14px"
+       href="mailto:ranger7903@nate.com?subject=%5B%EC%B6%9C%EC%84%9D%20%EB%AA%A8%EC%95%84%5D%20%EB%AC%B8%EC%9D%98&body=%EA%B8%B0%EA%B4%80%EB%AA%85%20%3A%0A%ED%95%99%EA%B3%BC%20%EC%88%98%20%3A%0A%EA%B5%90%EC%88%98%EB%8B%98%20%EC%88%98%20%3A%0A%EC%97%B0%EB%9D%BD%EC%B2%98%20%3A%0A%0A%28%EB%AC%B8%EC%9D%98%20%EB%82%B4%EC%9A%A9%EC%9D%84%20%EC%A0%81%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94%29">
+      ✉ 메일로 문의하기</a>
+    <p class="quiet" style="margin-top:10px">입금 계좌는 도용을 막기 위해 홈페이지에 적지 않습니다.
+      메일로 여쭤 주시면 알려 드립니다. (ranger7903@nate.com)</p>
+  </div>
+
+  <div class="card">
+    <h2>설치는 이렇게 됩니다 <span class="quiet">— 20분이면 끝납니다</span></h2>
+    <details>
+      <summary>차례 보기</summary>
+      <div class="step"><b>1.</b> 학교(또는 학과)의 구글 계정으로 표 한 장을 만듭니다.</div>
+      <div class="step"><b>2.</b> 밸류스가 드리는 글을 그 표에 붙여 넣습니다.</div>
+      <div class="step"><b>3.</b> 「배포」를 눌러 <b>주소</b>를 하나 만듭니다.
+        들어올 수 있는 사람을 <b>학교 계정을 가진 사람</b>으로 잠가 둡니다.</div>
+      <div class="step"><b>4.</b> 학생 명단 파일을 올립니다. (엑셀·학교 출석부 TXT 그대로)</div>
+      <div class="step"><b>5.</b> 교수님마다 <b>접속코드 네 자리</b>가 나옵니다.
+        그 코드와 주소를 교수님께 알려 드리면 끝입니다.</div>
+      <p class="quiet">자료가 밸류스로 오지 않는 까닭이 여기에 있습니다 —
+        표도 주소도 <b>학교 계정 안</b>에 만들기 때문입니다.</p>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>써 보신 분들</h2>
+    <div data-리뷰="attend"></div>
+  </div>
+
+  <p class="quiet"><a href="./">← 가게로 돌아가기</a> ·
+    <a href="기관구매.html">기관 구매 안내</a> ·
+    <a href="privacy.html">개인정보처리방침</a></p>
+</div>
+<script src="리뷰보기.js"></script>
+<script src="세기.js" defer></script>
+</body>
+</html>

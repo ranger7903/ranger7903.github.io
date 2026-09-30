@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2b3a4a">
+<title>결재요망! — 공문 결재 놀이 · 밸류스</title>
+<meta name="description" content="결재판에 올라온 공문을 도장 찍거나 반려하는 작은 놀이. 붙임 빠짐·날짜 거꾸로·결재선 잘못 같은 흠을 찾아내세요. 받을 것도 가입할 것도 없이 웹에서 바로.">
+<style>
+  :root{
+    --바탕:#e9e4d9; --책상:#3c3226; --종이:#fffdf6; --글:#1d1b16; --흐림:#7b7466;
+    --줄:#d6cfbf; --도장:#c0392b; --반려:#5a6b7a; --파랑:#2b5d8a; --초록:#1a7f45;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%}
+  body{
+    background:var(--책상); color:var(--글);
+    font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",
+                "Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    font-size:15px; line-height:1.5;
+    display:flex; flex-direction:column; align-items:center;
+    overflow:hidden;
+  }
+  .판{
+    width:100%; max-width:640px; height:100%; display:flex; flex-direction:column;
+    background:var(--바탕); box-shadow:0 0 40px rgba(0,0,0,.5);
+  }
+  .가림{display:none !important}
+
+  /* 위 띠 */
+  header{
+    background:var(--책상); color:#f1ece0; flex:0 0 auto;
+    padding:calc(6px + env(safe-area-inset-top)) 12px 6px;
+    display:flex; gap:10px; align-items:center; font-size:13px;
+  }
+  header .날{font-weight:800; font-size:15px}
+  header .참{flex:1}
+  header .칸{background:rgba(255,255,255,.12); border-radius:6px; padding:2px 8px; white-space:nowrap}
+  header .칸 b{font-size:15px}
+  .모래{flex:0 0 auto; height:5px; background:#2a231a}
+  .모래 i{display:block; height:100%; background:var(--초록); width:100%; transition:width .25s linear}
+  .모래 i.급함{background:#d08c1a}
+  .모래 i.끝남{background:var(--도장)}
+
+  /* 공문 */
+  main{flex:1 1 auto; overflow:auto; padding:10px 12px; -webkit-overflow-scrolling:touch}
+  .공문{
+    background:var(--종이); border:1px solid var(--줄); border-radius:3px;
+    box-shadow:0 2px 0 rgba(0,0,0,.12); padding:16px 16px 20px;
+  }
+  .공문 .기관{text-align:center; font-size:18px; font-weight:800; letter-spacing:6px; margin-bottom:2px}
+  .공문 .줄선{border-bottom:2.5px solid var(--글); margin:6px 0 12px}
+  .공문 table{width:100%; border-collapse:collapse; font-size:13px; margin-bottom:10px}
+  .공문 th,.공문 td{border:1px solid var(--줄); padding:5px 7px; text-align:left; vertical-align:top}
+  .공문 th{background:#f2eee2; width:76px; font-weight:700; color:#4a4436; white-space:nowrap}
+  .공문 h2{font-size:16px; margin:12px 0 8px; text-align:center}
+  .공문 .몸{font-size:14px; white-space:pre-line; margin-bottom:12px}
+  .공문 .붙임{font-size:13px; margin-bottom:12px}
+  .공문 .끝인사{text-align:center; font-size:15px; font-weight:700; letter-spacing:2px; margin:14px 0 10px}
+  .공문 .발신{text-align:center; font-size:16px; font-weight:800; letter-spacing:3px; margin:10px 0}
+  .공문 .꼬리{border-top:1px solid var(--줄); padding-top:8px; font-size:11.5px; color:var(--흐림)}
+  .결재칸{display:flex; gap:0; margin:0 0 10px; border:1px solid var(--줄); font-size:11.5px}
+  .결재칸 div{flex:1; border-right:1px solid var(--줄); text-align:center}
+  .결재칸 div:last-child{border-right:0}
+  .결재칸 .머리{background:#f2eee2; padding:3px 0; font-weight:700}
+  .결재칸 .속{height:34px; display:flex; align-items:center; justify-content:center; color:var(--흐림)}
+
+  /* 아래 단추 */
+  footer{flex:0 0 auto; padding:8px 12px calc(8px + env(safe-area-inset-bottom)); background:var(--바탕);
+         border-top:1px solid var(--줄)}
+  .단추줄{display:flex; gap:10px}
+  .큰{flex:1; min-height:58px; border:0; border-radius:10px; font-size:19px; font-weight:800;
+      color:#fff; cursor:pointer}
+  .큰.반려{background:var(--반려)}
+  .큰.결재{background:var(--도장)}
+  .큰:active{transform:translateY(1px)}
+  .작은{min-height:38px; padding:0 12px; border:1px solid var(--줄); border-radius:8px;
+        background:#fff; font-size:13px; font-weight:700; cursor:pointer; color:var(--글)}
+  .알림{margin-bottom:8px; border-radius:8px; padding:8px 10px; font-size:13.5px; font-weight:700}
+  .알림.맞음{background:rgba(26,127,69,.14); color:var(--초록)}
+  .알림.틀림{background:rgba(192,57,43,.14); color:var(--도장)}
+
+  /* 덮개 */
+  .덮개{position:fixed; inset:0; background:rgba(20,16,10,.72); z-index:50;
+        display:flex; align-items:center; justify-content:center; padding:18px; overflow:auto}
+  .쪽지{background:var(--종이); border-radius:10px; padding:22px; max-width:520px; width:100%;
+        max-height:88vh; overflow:auto}
+  .쪽지 h2{margin:0 0 6px; font-size:21px}
+  .쪽지 h3{margin:16px 0 6px; font-size:15px}
+  .쪽지 ul{margin:6px 0; padding-left:20px}
+  .쪽지 li{margin:4px 0; font-size:14px}
+  .쪽지 .새규칙{background:#fff3cd; border-left:4px solid #d08c1a; padding:8px 10px; border-radius:4px}
+  .쪽지 .큰{margin-top:16px; background:var(--파랑)}
+  table.셈{width:100%; border-collapse:collapse; font-size:14px; margin-top:8px}
+  table.셈 td{padding:4px 0; border-bottom:1px solid var(--줄)}
+  table.셈 td:last-child{text-align:right; font-weight:800}
+  .도장자국{
+    position:fixed; left:50%; top:44%; transform:translate(-50%,-50%) rotate(-14deg);
+    border:5px solid var(--도장); color:var(--도장); font-size:44px; font-weight:900;
+    padding:6px 22px; border-radius:8px; opacity:0; pointer-events:none; z-index:40;
+    letter-spacing:6px;
+  }
+  .도장자국.반려{border-color:var(--반려); color:var(--반려)}
+  .도장자국.보임{animation:쾅 .55s ease-out}
+  @keyframes 쾅{
+    0%{opacity:0; transform:translate(-50%,-50%) rotate(-14deg) scale(2.2)}
+    35%{opacity:1; transform:translate(-50%,-50%) rotate(-14deg) scale(.94)}
+    100%{opacity:0; transform:translate(-50%,-50%) rotate(-14deg) scale(1)}
+  }
+  @media (max-height:560px){
+    .큰{min-height:48px; font-size:17px}
+    .공문{padding:12px}
+    header{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<div class="판">
+  <header>
+    <span class="날" id="날">1일차</span>
+    <span class="참"></span>
+    <span class="칸">처리 <b id="처리">0</b></span>
+    <span class="칸">경고 <b id="경고">0</b>/3</span>
+    <span class="칸">일당 <b id="돈">0</b></span>
+  </header>
+  <div class="모래"><i id="모래"></i></div>
+
+  <main id="가운데"></main>
+
+  <footer>
+    <div id="알림칸"></div>
+    <div class="단추줄">
+      <button class="큰 반려" id="반려단추">반려</button>
+      <button class="큰 결재" id="결재단추">결재</button>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:8px">
+      <button class="작은" id="규칙단추" style="flex:1">오늘의 규칙 보기</button>
+      <button class="작은" id="소리단추">소리 끔</button>
+    </div>
+  </footer>
+</div>
+
+<div class="도장자국" id="도장">결재</div>
+<div class="덮개 가림" id="덮개"><div class="쪽지" id="쪽지"></div></div>
+
+<script>
+'use strict';
+/* ═══════════════════════════════════════════════════════════
+   밸류스 「결재요망!」 — 공문 결재 시늉내기
+   인터넷도, 바깥 부품도 쓰지 않습니다. 이 파일 하나면 됩니다.
+   ═══════════════════════════════════════════════════════════ */
+
+var ㄱ = function(i){ return document.getElementById(i); };
+function 뺀글(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+/* ── 씨앗 난수 (같은 씨앗이면 같은 공문이 나온다 — 시험할 때 쓴다) ── */
+var _씨 = 20260929;
+function 씨앗(n){ _씨 = n >>> 0; }
+function 난수(){ _씨 = (_씨 * 1664525 + 1013904223) >>> 0; return _씨 / 4294967296; }
+function 하나(a){ return a[Math.floor(난수() * a.length)]; }
+function 정수(a,b){ return a + Math.floor(난수() * (b - a + 1)); }
+
+/* ── 재료 ── */
+var 기관들 = ['신경주대학교','한빛시청','대한산업단지공단','늘푸른교육지원청','서라벌문화재단'];
+var 부서들 = ['학사지원팀','총무과','기획예산팀','시설관리팀','평생교육과','산학협력단','회계과'];
+var 직위 = ['주무관','팀장','과장','부장','센터장'];
+var 성 = ['김','이','박','최','정','강','조','윤','장','임','한','오','서','신','권','황'];
+var 이름 = ['민서','지후','서연','하준','예은','도윤','수아','시우','지아','준우','하은','건우','유진','채원'];
+function 사람(){ return 하나(성) + 하나(이름); }
+
+var 글감 = [
+  {제목:'2026학년도 교원업적평가 자료 제출 안내',
+   몸:'1. 관련: 교원업적평가규정 제12조\n2. 2026학년도 교원업적평가 자료를 아래와 같이 제출하여 주시기 바랍니다.\n   가. 제출기한: {기한}\n   나. 제출방법: 전자결재 첨부\n   다. 제출대상: 전임교원 전원',
+   붙임:['교원업적평가 자료 서식 1부','평가기간 안내문 1부']},
+  {제목:'하반기 소방시설 정기점검 실시 계획 알림',
+   몸:'1. 관련: 소방시설 설치 및 관리에 관한 법률 제22조\n2. 하반기 소방시설 정기점검을 아래와 같이 실시하고자 하오니 협조하여 주시기 바랍니다.\n   가. 점검기간: {기한}\n   나. 점검대상: 본관 및 별관 전체\n   다. 소요예산: {금액}',
+   붙임:['점검 일정표 1부','점검업체 선정 결과 1부']},
+  {제목:'2026년 상반기 예산 집행실적 제출 요청',
+   몸:'1. 관련: 예산회계규정 제31조\n2. 2026년 상반기 예산 집행실적을 제출하여 주시기 바랍니다.\n   가. 제출기한: {기한}\n   나. 집행총액: {금액}\n   다. 제출서식: 붙임 참조',
+   붙임:['집행실적 보고 서식 1부']},
+  {제목:'외국인 유학생 출입국 관리 실태조사 협조 요청',
+   몸:'1. 관련: 출입국관리법 시행령 제19조의4\n2. 외국인 유학생 출입국 관리 실태조사에 협조하여 주시기 바랍니다.\n   가. 조사기간: {기한}\n   나. 조사대상: 재학 중인 외국인 유학생 전원\n   다. 담당부서: {부서}',
+   붙임:['실태조사표 1부','개인정보 수집·이용 동의서 1부']},
+  {제목:'직장 내 괴롭힘 예방교육 이수 안내',
+   몸:'1. 관련: 근로기준법 제76조의2\n2. 직장 내 괴롭힘 예방교육을 아래와 같이 실시하오니 전 직원이 이수하시기 바랍니다.\n   가. 이수기한: {기한}\n   나. 교육방법: 온라인 교육\n   다. 미이수자는 재교육 대상이 됩니다.',
+   붙임:['교육 안내문 1부']},
+  {제목:'노후 전산장비 교체 사업 추진 계획 보고',
+   몸:'1. 관련: 정보화사업 관리지침\n2. 노후 전산장비 교체 사업을 아래와 같이 추진하고자 합니다.\n   가. 사업기간: {기한}\n   나. 소요예산: {금액}\n   다. 대상장비: 내용연수 경과 PC 48대',
+   붙임:['사업계획서 1부','장비 목록 1부']},
+  {제목:'학생회 행사 장소 사용 승인 요청',
+   몸:'1. 관련: 교내시설 사용에 관한 규정 제7조\n2. 학생회 행사를 위한 교내 시설 사용을 승인하여 주시기 바랍니다.\n   가. 사용일시: {기한}\n   나. 사용장소: 대운동장 및 학생회관 앞\n   다. 예상인원: 300명',
+   붙임:['행사 계획서 1부','안전관리 계획 1부']},
+  {제목:'2026년 정기 종합감사 수감 자료 제출',
+   몸:'1. 관련: 감사규정 제14조\n2. 2026년 정기 종합감사 수감 자료를 제출하여 주시기 바랍니다.\n   가. 제출기한: {기한}\n   나. 제출범위: 최근 3년간 집행 서류 일체\n   다. 담당자: {담당}',
+   붙임:['수감자료 목록 1부']}
+];
+
+/* ── 날짜 ── */
+function 날짜글(d){
+  return d.getFullYear() + '. ' + (d.getMonth()+1) + '. ' + d.getDate() + '.';
+}
+function 더한날(d, n){ var x = new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+
+/* ── 규칙 (날마다 하나씩 늘어난다) ── */
+var 규칙들 = [
+  {열쇠:'붙임', 이름:'붙임이 빠졌으면 반려',
+   설명:'본문 끝에 「붙임」이라고 적어 놓고 실제 붙임 목록이 없으면 반려한다.'},
+  {열쇠:'날짜', 이름:'시행일이 발신일보다 앞서면 반려',
+   설명:'시행일자가 발신일자보다 빠른 공문은 되돌린다. 아직 보내지도 않은 문서를 시행할 수는 없다.'},
+  {열쇠:'결재선', 이름:'결재선이 비었으면 반려',
+   설명:'결재란의 담당·팀장·과장 가운데 한 자리라도 비어 있으면 반려한다.'},
+  {열쇠:'수신', 이름:'수신처가 없으면 반려',
+   설명:'수신이 「(없음)」이거나 비어 있으면 반려한다.'},
+  {열쇠:'금액', 이름:'금액의 숫자와 한글이 다르면 반려',
+   설명:'「금 오백만원(₩5,000,000)」처럼 한글과 숫자가 함께 적힌다. 둘이 다르면 반려한다.'},
+  {열쇠:'담당', 이름:'담당자 연락처가 없으면 반려',
+   설명:'맨 아래 꼬리말에 담당자 이름과 전화번호가 모두 있어야 한다.'},
+  {열쇠:'문서번호', 이름:'문서번호가 형식에 안 맞으면 반려',
+   설명:'문서번호는 「부서이름-숫자」 꼴이어야 한다. 숫자가 없거나 부서가 비면 반려한다.'},
+  {열쇠:'기관', 이름:'수신 기관과 발신 기관이 같으면 반려',
+   설명:'제 기관에 제가 보내는 공문은 없다. 같으면 반려한다.'}
+];
+
+/* ── 공문 한 장 만들기 ── */
+function 공문만들기(오늘날, 켜진규칙){
+  var g = 하나(글감);
+  var 발신기관 = 하나(기관들);
+  var 수신기관 = 하나(기관들.filter(function(x){ return x !== 발신기관; }));
+  var 부서 = 하나(부서들);
+  var 담당 = 사람();
+  var 발신일 = 더한날(오늘날, -정수(0,2));
+  var 시행일 = 더한날(발신일, 정수(0,3));
+  var 기한 = 날짜글(더한날(오늘날, 정수(5,20))) + ' 17:00';
+  var 만 = 정수(1,9), 금액숫자 = 만 * 1000000;
+  var 한글수 = ['','일','이','삼','사','오','육','칠','팔','구'][만];
+  var 금액 = '금 ' + 한글수 + '백만원(₩' + 금액숫자.toLocaleString() + ')';
+
+  var 문서 = {
+    발신기관: 발신기관, 수신기관: 수신기관, 부서: 부서, 담당: 담당,
+    직위: 하나(직위), 전화: '0' + 정수(31,64) + '-' + 정수(200,999) + '-' + 정수(1000,9999),
+    문서번호: 부서 + '-' + 정수(100, 3999),
+    제목: g.제목,
+    몸: g.몸.replace('{기한}', 기한).replace('{금액}', 금액)
+             .replace('{부서}', 부서).replace('{담당}', 담당),
+    붙임: g.붙임.slice(),
+    발신일: 발신일, 시행일: 시행일,
+    결재: [{이름:'담당', 값:담당}, {이름:'팀장', 값:사람()}, {이름:'과장', 값:사람()}],
+    금액숫자: 금액숫자, 금액한글: 한글수,
+    흠: []
+  };
+
+  // 켜진 규칙 가운데 골라 흠을 심는다 (절반쯤은 흠 없이 그대로 둔다)
+  if (난수() < 0.55 && 켜진규칙.length){
+    var 몇 = (난수() < 0.22 && 켜진규칙.length > 1) ? 2 : 1;
+    var 섞 = 켜진규칙.slice();
+    for (var i = 섞.length - 1; i > 0; i--){ var j = Math.floor(난수()*(i+1)); var t=섞[i]; 섞[i]=섞[j]; 섞[j]=t; }
+    for (var k = 0; k < 몇; k++) 흠심기(문서, 섞[k].열쇠);
+  }
+  return 문서;
+}
+
+function 흠심기(문, 열쇠){
+  if (문.흠.indexOf(열쇠) >= 0) return;
+  문.흠.push(열쇠);
+  if (열쇠 === '붙임') 문.붙임 = [];
+  else if (열쇠 === '날짜') 문.시행일 = 더한날(문.발신일, -정수(1,4));
+  else if (열쇠 === '결재선') 문.결재[정수(0,2)].값 = '';
+  else if (열쇠 === '수신') 문.수신기관 = '';
+  else if (열쇠 === '금액'){
+    if (문.몸.indexOf('₩') < 0){ 문.흠.pop(); return; }   // 금액이 없는 공문이면 취소
+    var 다른 = (문.금액숫자 === 1000000) ? 7000000 : 문.금액숫자 - 1000000;
+    문.몸 = 문.몸.replace('₩' + 문.금액숫자.toLocaleString(), '₩' + 다른.toLocaleString());
+  }
+  else if (열쇠 === '담당'){ if (난수() < 0.5) 문.담당 = ''; else 문.전화 = ''; }
+  else if (열쇠 === '문서번호') 문.문서번호 = 난수() < 0.5 ? 문.부서 + '-' : '-' + 정수(100,3999);
+  else if (열쇠 === '기관') 문.수신기관 = 문.발신기관;
+}
+
+/* 이 공문을 반려해야 하는가 — 오늘 켜진 규칙만으로 판단 */
+function 반려해야하나(문, 켜진규칙){
+  var 걸린 = [];
+  켜진규칙.forEach(function(r){
+    if (문.흠.indexOf(r.열쇠) >= 0) 걸린.push(r);
+  });
+  return 걸린;
+}
+
+/* ── 놀이 상태 ── */
+var 판 = {날:1, 처리:0, 경고:0, 돈:0, 오늘처리:0, 오늘틀림:0, 남은:0, 문서:null, 끝났나:false, 소리:false};
+var 오늘날 = new Date(2026, 8, 29);
+var 시계 = null;
+var 하루초 = 60;
+
+function 켜진규칙(){ return 규칙들.slice(0, Math.min(판.날 + 1, 규칙들.length)); }
+
+/* ── 그리기 ── */
+function 공문그리기(문){
+  var 결재칸 = '<div class="결재칸">'
+    + '<div><div class="머리">결재</div><div class="속">—</div></div>'
+    + 문.결재.map(function(c){
+        return '<div><div class="머리">'+뺀글(c.이름)+'</div><div class="속">'
+             + (c.값 ? 뺀글(c.값) : '<span style="color:#c0392b">(빈칸)</span>') + '</div></div>';
+      }).join('')
+    + '</div>';
+
+  ㄱ('가운데').innerHTML =
+    '<div class="공문">'
+    + '<div class="기관">' + 뺀글(문.발신기관) + '</div>'
+    + '<div class="줄선"></div>'
+    + 결재칸
+    + '<table>'
+    + '<tr><th>문서번호</th><td>' + 뺀글(문.문서번호) + '</td></tr>'
+    + '<tr><th>수신</th><td>' + (문.수신기관 ? 뺀글(문.수신기관) + ' 귀하' : '<span style="color:#c0392b">(없음)</span>') + '</td></tr>'
+    + '<tr><th>발신일자</th><td>' + 날짜글(문.발신일) + '</td></tr>'
+    + '<tr><th>시행일자</th><td>' + 날짜글(문.시행일) + '</td></tr>'
+    + '</table>'
+    + '<h2>' + 뺀글(문.제목) + '</h2>'
+    + '<div class="몸">' + 뺀글(문.몸) + '</div>'
+    + '<div class="붙임">붙임 &nbsp;'
+    + (문.붙임.length
+        ? 문.붙임.map(function(b,i){ return (i+1) + '. ' + 뺀글(b); }).join('<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+        : '<span style="color:#c0392b">(목록 없음)</span>')
+    + '&nbsp; 끝.</div>'
+    + '<div class="끝인사">위와 같이 시행하고자 하오니 재가하여 주시기 바랍니다.</div>'
+    + '<div class="발신">' + 뺀글(문.발신기관) + '장</div>'
+    + '<div class="꼬리">'
+    + (문.담당 ? '담당 ' + 뺀글(문.부서) + ' ' + 뺀글(문.담당) + ' ' + 뺀글(문.직위)
+              : '<span style="color:#c0392b">담당 (적히지 않음)</span>')
+    + ' &nbsp;·&nbsp; '
+    + (문.전화 ? '전화 ' + 뺀글(문.전화) : '<span style="color:#c0392b">전화 (적히지 않음)</span>')
+    + '</div>'
+    + '</div>';
+  ㄱ('가운데').scrollTop = 0;
+}
+
+function 머리그리기(){
+  ㄱ('날').textContent = 판.날 + '일차';
+  ㄱ('처리').textContent = 판.처리;
+  ㄱ('경고').textContent = 판.경고;
+  ㄱ('돈').textContent = 판.돈.toLocaleString();
+}
+
+function 모래그리기(){
+  var 몫 = Math.max(0, 판.남은) / 하루초;
+  var i = ㄱ('모래');
+  i.style.width = (몫 * 100) + '%';
+  i.className = 몫 < 0.15 ? '끝남' : (몫 < 0.35 ? '급함' : '');
+}
+
+/* ── 소리 (파일 없이 만들어 낸다) ── */
+var 소리통 = null;
+function 삑(높이, 길이, 종류){
+  if (!판.소리) return;
+  try{
+    if (!소리통) 소리통 = new (window.AudioContext || window.webkitAudioContext)();
+    var o = 소리통.createOscillator(), g = 소리통.createGain();
+    o.type = 종류 || 'triangle'; o.frequency.value = 높이;
+    g.gain.setValueAtTime(0.06, 소리통.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, 소리통.currentTime + 길이);
+    o.connect(g); g.connect(소리통.destination);
+    o.start(); o.stop(소리통.currentTime + 길이);
+  }catch(e){}
+}
+
+/* ── 한 장 판정 ── */
+function 누름(결재했나){
+  if (판.끝났나 || !판.문서) return;
+  var 걸린 = 반려해야하나(판.문서, 켜진규칙());
+  var 반려해야 = 걸린.length > 0;
+  var 맞음 = (결재했나 && !반려해야) || (!결재했나 && 반려해야);
+
+  var 자국 = ㄱ('도장');
+  자국.textContent = 결재했나 ? '결재' : '반려';
+  자국.className = '도장자국' + (결재했나 ? '' : ' 반려');
+  void 자국.offsetWidth;
+  자국.className += ' 보임';
+
+  판.처리++; 판.오늘처리++;
+  if (맞음){
+    판.돈 += 500;
+    삑(880, 0.12);
+    알림('맞았습니다. ' + (반려해야 ? '(' + 걸린.map(function(r){return r.이름;}).join(' · ') + ')' : '흠 없는 공문이었습니다.'), true);
+  } else {
+    판.경고++; 판.오늘틀림++;
+    삑(160, 0.25, 'sawtooth');
+    알림(반려해야
+      ? '틀렸습니다 — 이 공문은 반려했어야 합니다. ' + 걸린.map(function(r){return '「'+r.이름+'」';}).join(' ')
+      : '틀렸습니다 — 흠이 없는 공문을 되돌렸습니다.', false);
+  }
+  머리그리기();
+
+  if (판.경고 >= 3){ 끝내기('해고되었습니다'); return; }
+  다음장();
+}
+
+function 알림(글, 좋나){
+  ㄱ('알림칸').innerHTML = '<div class="알림 ' + (좋나 ? '맞음' : '틀림') + '">' + 뺀글(글) + '</div>';
+}
+
+function 다음장(){
+  판.문서 = 공문만들기(오늘날, 켜진규칙());
+  공문그리기(판.문서);
+}
+
+/* ── 하루 ── */
+function 하루시작(){
+  판.오늘처리 = 0; 판.오늘틀림 = 0; 판.남은 = 하루초;
+  머리그리기(); 모래그리기();
+  ㄱ('알림칸').innerHTML = '';
+  다음장();
+  if (시계) clearInterval(시계);
+  시계 = setInterval(function(){
+    판.남은 -= 0.25;
+    모래그리기();
+    if (판.남은 <= 0){ clearInterval(시계); 시계 = null; 하루마감(); }
+  }, 250);
+}
+
+function 하루마감(){
+  var 일당 = 판.오늘처리 * 500;
+  var 벌금 = 판.오늘틀림 * 300;
+  판.돈 -= 벌금;
+  if (판.돈 < 0) 판.돈 = 0;
+  머리그리기();
+  var 다음규칙 = 규칙들[Math.min(판.날 + 1, 규칙들.length - 1)];
+  var 새규칙있나 = (판.날 + 1) < 규칙들.length;
+  쪽지(
+    '<h2>' + 판.날 + '일차 끝</h2>'
+    + '<table class="셈">'
+    + '<tr><td>오늘 처리한 공문</td><td>' + 판.오늘처리 + '건</td></tr>'
+    + '<tr><td>잘못 판단</td><td>' + 판.오늘틀림 + '건</td></tr>'
+    + '<tr><td>일당 (건당 500원)</td><td>' + 일당.toLocaleString() + '원</td></tr>'
+    + '<tr><td>감봉 (실수당 300원)</td><td>-' + 벌금.toLocaleString() + '원</td></tr>'
+    + '<tr><td>지금까지</td><td>' + 판.돈.toLocaleString() + '원</td></tr>'
+    + '</table>'
+    + (새규칙있나
+        ? '<h3>내일부터 규칙이 하나 늘어납니다</h3>'
+          + '<div class="새규칙"><b>' + 뺀글(다음규칙.이름) + '</b><br>' + 뺀글(다음규칙.설명) + '</div>'
+        : '<h3>규칙은 더 늘지 않습니다. 이제 속도 싸움입니다.</h3>')
+    + '<button class="큰" id="다음날단추">' + (판.날 + 1) + '일차 시작</button>',
+    function(){
+      ㄱ('다음날단추').addEventListener('click', function(){
+        덮개닫기(); 판.날++; 하루시작();
+      });
+    });
+}
+
+function 끝내기(까닭){
+  판.끝났나 = true;
+  if (시계){ clearInterval(시계); 시계 = null; }
+  쪽지(
+    '<h2>' + 뺀글(까닭) + '</h2>'
+    + '<p>경고 세 번이면 책상을 비웁니다. 규칙이 늘어날수록 눈이 빨라야 합니다.</p>'
+    + '<table class="셈">'
+    + '<tr><td>버틴 날</td><td>' + 판.날 + '일</td></tr>'
+    + '<tr><td>처리한 공문</td><td>' + 판.처리 + '건</td></tr>'
+    + '<tr><td>받은 돈</td><td>' + 판.돈.toLocaleString() + '원</td></tr>'
+    + '</table>'
+    + '<h3>이 게임을 만든 곳</h3>'
+    + '<p style="font-size:14px">밸류스는 공문을 «진짜로» 검사해 주는 프로그램도 만듭니다. '
+    + '붙임 빠짐, 시행일자 뒤바뀜, 결재선 빈칸을 사람 대신 찾아 줍니다. '
+    + '<b>valuestools.kr</b></p>'
+    + '<button class="큰" id="다시단추">처음부터 다시</button>',
+    function(){
+      ㄱ('다시단추').addEventListener('click', function(){ 덮개닫기(); 처음부터(); });
+    });
+}
+
+/* ── 쪽지 ── */
+function 쪽지(속, 뒤에){
+  ㄱ('쪽지').innerHTML = 속;
+  ㄱ('덮개').classList.remove('가림');
+  if (뒤에) 뒤에();
+}
+function 덮개닫기(){ ㄱ('덮개').classList.add('가림'); }
+
+function 규칙보기(){
+  var 켜 = 켜진규칙();
+  쪽지(
+    '<h2>오늘의 규칙</h2>'
+    + '<p style="font-size:14px;color:#7b7466">아래 가운데 하나라도 걸리면 <b>반려</b>, '
+    + '하나도 안 걸리면 <b>결재</b>입니다.</p>'
+    + '<ul>' + 켜.map(function(r){
+        return '<li><b>' + 뺀글(r.이름) + '</b><br><span style="color:#7b7466">' + 뺀글(r.설명) + '</span></li>';
+      }).join('') + '</ul>'
+    + '<button class="큰" id="닫기단추">닫고 이어 하기</button>',
+    function(){ ㄱ('닫기단추').addEventListener('click', 덮개닫기); });
+}
+
+/* ── 시작 ── */
+function 처음부터(){
+  판 = {날:1, 처리:0, 경고:0, 돈:0, 오늘처리:0, 오늘틀림:0, 남은:0, 문서:null, 끝났나:false, 소리:판.소리};
+  씨앗(Date.now() >>> 0);
+  하루시작();
+}
+
+function 첫화면(){
+  쪽지(
+    '<h2>결재요망!</h2>'
+    + '<p>당신은 오늘 처음 출근한 <b>결재 담당</b>입니다.</p>'
+    + '<p>공문이 한 장씩 올라옵니다. 규칙에 걸리면 <b>반려</b>, 깨끗하면 <b>결재</b>.</p>'
+    + '<ul>'
+    + '<li>하루는 60초입니다. 많이 처리할수록 일당이 늡니다.</li>'
+    + '<li>틀리면 경고 하나. <b>세 번이면 해고</b>입니다.</li>'
+    + '<li>날마다 규칙이 하나씩 늘어납니다.</li>'
+    + '</ul>'
+    + '<h3>첫날 규칙</h3>'
+    + '<div class="새규칙"><b>' + 뺀글(규칙들[0].이름) + '</b><br>' + 뺀글(규칙들[0].설명) + '<br><br>'
+    + '<b>' + 뺀글(규칙들[1].이름) + '</b><br>' + 뺀글(규칙들[1].설명) + '</div>'
+    + '<button class="큰" id="시작단추">출근하기</button>',
+    function(){
+      ㄱ('시작단추').addEventListener('click', function(){ 덮개닫기(); 처음부터(); });
+    });
+}
+
+ㄱ('결재단추').addEventListener('click', function(){ 누름(true); });
+ㄱ('반려단추').addEventListener('click', function(){ 누름(false); });
+ㄱ('규칙단추').addEventListener('click', 규칙보기);
+ㄱ('소리단추').addEventListener('click', function(){
+  판.소리 = !판.소리;
+  this.textContent = 판.소리 ? '소리 켬' : '소리 끔';
+});
+document.addEventListener('keydown', function(e){
+  if (ㄱ('덮개').classList.contains('가림') === false) return;
+  if (e.key === 'ArrowRight' || e.key === 'd') 누름(true);
+  if (e.key === 'ArrowLeft' || e.key === 'a') 누름(false);
+});
+
+/* 시험할 때 밖에서 들여다볼 수 있게 열어 둔다 */
+window.결재요망 = {
+  판: function(){ return 판; },
+  문서: function(){ return 판.문서; },
+  규칙: 켜진규칙,
+  반려해야하나: function(){ return 반려해야하나(판.문서, 켜진규칙()).length > 0; },
+  씨앗: 씨앗,
+  시계멈춤: function(){ if (시계){ clearInterval(시계); 시계 = null; } },
+  하루마감: 하루마감
+};
+
+첫화면();
+</script>
+<script src="세기.js" defer></script>
+</body>
+</html>
