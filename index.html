@@ -188,6 +188,7 @@ footer .hand{font-size:16px;color:var(--terra)}
 <script>
 const PADDLE_CLIENT_TOKEN = "live_945afb1a1e3998081592ff13ef5";
 const PADDLE_PRICES = {
+  bisu:      "pri_01m40d0s3p0xqzp57e5n8dezj9",
   garifile:  "pri_01m3h95rnf2rvjem5xb5s6ww8g",
   pdfgrab:   "pri_01m38evqgk7sk973zxdv3jb2xt",
   moahwp:    "pri_01m3gevfv9ghh1ev9dyr41paz1",
@@ -1352,8 +1353,8 @@ article.goods.hide{display:none !important}
       <div style="flex:0 0 auto;text-align:center;min-width:230px">
         <span class="g-price" style="font-size:34px">99,000<small>원</small></span>
         <div class="g-note" style="margin:6px 0 14px">한 번 결제 · 평생 사용 · 구독 없음<br>윈도우·맥·리눅스 다 드려요</div>
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EC%A3%BC%EB%AC%B8&amp;body=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%EB%A5%BC%20%EC%A3%BC%EB%AC%B8%ED%95%A9%EB%8B%88%EB%8B%A4.%0A%0A%EC%84%B1%ED%95%A8%20%3A%0A%EC%97%B0%EB%9D%BD%EC%B2%98%20%3A%0A%EC%93%B0%EC%8B%A4%20%EC%BB%B4%ED%93%A8%ED%84%B0%20%3A%20%EC%9C%88%EB%8F%84%EC%9A%B0%20%2F%20%EB%A7%A5%20%2F%20%EB%A6%AC%EB%88%85%EC%8A%A4%0A">💌 편지로 주문하기</a>
-        <div class="g-note" style="margin-top:10px;font-size:13px">카드 결제는 준비 중입니다.<br>편지 주시면 입금 방법을 알려 드려요.</div>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('bisu')">결제하기</a>
+        <a class="mbtn" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EB%AC%B8%EC%9D%98" style="margin-top:10px;display:inline-block">💌 먼저 물어보기</a>
       </div>
 
       <details class="g-reviews">

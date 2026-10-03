@@ -899,6 +899,44 @@
      "sha256": "eb8c380147d7d0ff74345f987b83860dae530b2a1d4d26b0f26a9589190e2025"
     }
    ]
+  },
+  "bisu": {
+   "saveAs": "밸류스 자동화 비서.zip",
+   "version": "2026-10-03",
+   "totalSize": 47901730,
+   "sha256": "7ee2d98acad09647beed327b495bc992c20a589b8965ee9d1cf311391423d6a1",
+   "parts": [
+    {
+     "name": "dist/bisu.part000",
+     "size": 9437184,
+     "sha256": "b5b84b2e26bcaf5977fb680e46e0a1b54576bc74ab58768f060df5716bbf2559"
+    },
+    {
+     "name": "dist/bisu.part001",
+     "size": 9437184,
+     "sha256": "6a10319e77165d20abcce2c504625902857aeea280a131de0b5017263fbc8a71"
+    },
+    {
+     "name": "dist/bisu.part002",
+     "size": 9437184,
+     "sha256": "d13e9abb8757cf5450238767b1b73a84007250ab1ccaaf1c44649670ef9757db"
+    },
+    {
+     "name": "dist/bisu.part003",
+     "size": 9437184,
+     "sha256": "175dbdd8ebcd6ab6cfea17ba61b4737b729ae35ce1703d5e6645d2207dca3674"
+    },
+    {
+     "name": "dist/bisu.part004",
+     "size": 9437184,
+     "sha256": "17035df4852bc3edff2dd476b71a5228b36dfcead738ce80635d461708c0f1e2"
+    },
+    {
+     "name": "dist/bisu.part005",
+     "size": 715810,
+     "sha256": "0fdb26b2cbba460cd3c51378bca6f9392dcf5f268909e630a39ca27102107a8a"
+    }
+   ]
   }
  }
 }
