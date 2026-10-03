@@ -16,6 +16,9 @@
 <meta property="og:image" content="https://valuestools.kr/og.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Gothic+A1:wght@300;400;500;700;800&display=swap">
 <style>
 :root{
   --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
@@ -66,7 +69,7 @@ nav .shell{display:flex;align-items:center;justify-content:space-between;height:
 @media (max-width:640px){ .navlinks a:not(.navbuy){display:none} }
 .navbuy{background:var(--terra);color:#FFF8F2 !important;padding:9px 18px !important;border-radius:999px;font-weight:700}
 header.hero{padding:70px 0 44px;text-align:center;position:relative;overflow:hidden}
-.hero .deco{position:absolute;font-size:26px;opacity:.5;user-select:none}
+.hero .deco{position:absolute;font-size:26px;opacity:.5;user-select:none;pointer-events:none}
 h1{font-family:"Gowun Batang",serif;font-weight:700;margin:14px 0 0;
   font-size:clamp(31px,5.4vw,50px);line-height:1.35;letter-spacing:-.01em;text-wrap:balance}
 h1 .warm{color:var(--terra);position:relative}
@@ -154,7 +157,24 @@ article.book > div{display:flex;flex-direction:column}
 </head>
 <body>
 
-<header class="hero"><div class="shell">
+<div class="ribbon">📚 The bookshop is open — <b>every sample is free</b> · buy once and you get <b>EPUB and PDF together</b> · <b>pay by card</b>, delivered by email</div>
+
+<nav><div class="shell">
+  <a class="brand" href="en.html"><span class="stamp">値</span><b>VALUES</b></a>
+  <div class="navlinks">
+    <a href="en.html">🧰 The tool shelf</a>
+    <a href="#books">📚 The thirteen</a>
+    <a href="#sets">🎁 Bundles</a>
+    <a href="#how">What you get</a>
+    <a href="%EC%B1%85%EB%B0%A9.html">🇰🇷 한국어 책방</a>
+    <a class="navbuy" href="#sets">See the bundles</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top"><div class="shell">
+<span class="deco" style="top:30px;left:8%">📖</span>
+<span class="deco" style="top:110px;right:10%">🕯️</span>
+<span class="deco" style="bottom:20px;left:14%">🍂</span>
 <p class="eyebrow">VALUES Bookshop</p>
 <h1>Thirteen ebooks by <span class="warm">Minhae</span></h1>
 <p class="lede"><b>Please read this first: every one of these books is written in Korean.</b>
@@ -450,7 +470,7 @@ their rate. VALUES is a small-scale registered business in Korea and <b>cannot i
 tax invoice</b>; Paddle's receipt is what you get.</p>
 </div></section>
 
-<section><div class="shell">
+<section id="how"><div class="shell">
 <div class="qa">
 <h3>How the files reach you</h3>
 <p>After payment we email you the EPUB and the PDF — both, for every book. No device limit and
