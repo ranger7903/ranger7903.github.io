@@ -152,6 +152,20 @@
       "달러": 74.9,
       "paddle": "pri_01m40d0s3p0xqzp57e5n8dezj9",
       "설치파일": "bisu"
+    },
+    "settle": {
+      "이름": "밸류스 정산 대조기",
+      "원": 49000,
+      "달러": 36.9,
+      "paddle": "pri_01m310rmatd80s3jss4qvcbre3",
+      "설치파일": "settle"
+    },
+    "money": {
+      "이름": "밸류스 돈 맞추개",
+      "원": 29900,
+      "달러": 22.9,
+      "paddle": "pri_01m310zz3fnxghrtdf0rqnhhq1",
+      "설치파일": "money"
     }
   },
   "결제": {
