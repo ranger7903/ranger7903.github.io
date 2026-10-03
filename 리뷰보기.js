@@ -18,6 +18,14 @@
   var 자리들 = document.querySelectorAll('[data-리뷰]');
   if (!자리들.length) return;
 
+  /* 2026-10-03 고침 — 손님 눈으로 다시 봄.
+   * 영어 쪽(dolbom·meter·yakbong·receipt·send-safely)에도 이 조각이 붙어 있는데
+   * 여기서 만드는 글이 전부 우리말이었다. 영어로 보시는 손님에게 한글이 그대로 떴다.
+   * 그래서 쪽의 <html lang="…"> 을 보고 그 나라 말로 적는다. */
+  var 영어 = (document.documentElement.getAttribute('lang') || 'ko')
+    .toLowerCase().indexOf('en') === 0;
+  function 말(ko, en) { return 영어 ? en : ko; }
+
   function 글막기(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -69,14 +77,22 @@
   function 없음(자리, 제품) {
     자리.innerHTML =
       '<div class="밸류스리뷰"><div class="약속">' +
-      '<b>아직 후기가 없습니다.</b> 그래서 이렇게 해 두었습니다.' +
+      말('<b>아직 후기가 없습니다.</b> 그래서 이렇게 해 두었습니다.',
+         '<b>Nobody has written one yet.</b> So here is what we do instead.') +
       '<ul>' +
-      '<li>사기 전에 <a href="free.html">공짜 도구</a>로 저희 솜씨를 먼저 보실 수 있습니다.</li>' +
-      '<li>사신 뒤 <b>7일 안</b>에, 정품 키를 아직 넣지 않으셨다면 <b>그냥 물러 드립니다.</b></li>' +
-      '<li>설치가 안 되거나 설명과 다르면 <b>기간과 상관없이</b> 돌려드립니다.</li>' +
+      말('<li>사기 전에 <a href="free.html">공짜 도구</a>로 저희 솜씨를 먼저 보실 수 있습니다.</li>',
+         '<li>Before you buy, try one of our <a href="free.html">free tools</a> and see the work for yourself.</li>') +
+      말('<li>사신 뒤 <b>7일 안</b>에, 정품 키를 아직 넣지 않으셨다면 <b>그냥 물러 드립니다.</b></li>',
+         '<li><b>Within 7 days</b> of buying, if you have not yet entered the licence key, <b>we refund it, no questions.</b></li>') +
+      말('<li>설치가 안 되거나 설명과 다르면 <b>기간과 상관없이</b> 돌려드립니다.</li>',
+         '<li>If it will not install, or it is not what the page said, we refund it <b>however long it has been.</b></li>') +
       '</ul>' +
-      '<span class="꼬리">자세한 것은 <a href="refund.html">환불 정책</a>에 적어 두었습니다. ' +
-      '이미 쓰고 계신 분이라면 <a href="' + 쓰는곳(제품) + '">한 줄 남겨 주세요</a> — 다음 판에서 고칩니다.</span>' +
+      '<span class="꼬리">' +
+      말('자세한 것은 <a href="refund.html">환불 정책</a>에 적어 두었습니다. ' +
+        '이미 쓰고 계신 분이라면 <a href="' + 쓰는곳(제품) + '">한 줄 남겨 주세요</a> — 다음 판에서 고칩니다.',
+         'The details are in our <a href="refund.html">refund policy</a>. ' +
+         'If you are already using it, <a href="' + 쓰는곳(제품) + '">please leave us a line</a> — we fix things in the next build.') +
+      '</span>' +
       '</div></div>';
   }
 
@@ -85,19 +101,27 @@
     var 합 = 리뷰들.reduce(function (s, r) { return s + (r.별 || 0); }, 0);
     var 평균 = (합 / 리뷰들.length);
     var h = '<div class="밸류스리뷰">' +
-      '<p style="margin:0 0 10px"><b>별 ' + 평균.toFixed(1) + '</b>' +
+      '<p style="margin:0 0 10px"><b>' +
+      말('별 ' + 평균.toFixed(1), 평균.toFixed(1) + ' out of 5') + '</b>' +
       ' <span class="별">' + '★'.repeat(Math.round(평균)) + '</span>' +
-      ' <span class="날">리뷰 ' + 리뷰들.length + '개</span></p>';
+      ' <span class="날">' +
+      말('리뷰 ' + 리뷰들.length + '개',
+         리뷰들.length + (리뷰들.length === 1 ? ' review' : ' reviews')) +
+      '</span></p>';
     리뷰들.slice(0, 8).forEach(function (r) {
       h += '<div class="한줄"><span class="별">' + '★'.repeat(r.별 || 0) + '</span>' +
         '<span class="날">' + 글막기(r.때) + '</span>';
       if (r.좋은점) h += '<p>' + 글막기(r.좋은점) + '</p>';
-      if (r.불편한점) h += '<p>아쉬운 점 — ' + 글막기(r.불편한점) + '</p>';
-      if (r.바람) h += '<p>바라는 것 — ' + 글막기(r.바람) + '</p>';
+      if (r.불편한점) h += '<p>' + 말('아쉬운 점 — ', 'Could be better — ') + 글막기(r.불편한점) + '</p>';
+      if (r.바람) h += '<p>' + 말('바라는 것 — ', 'Wished for — ') + 글막기(r.바람) + '</p>';
       h += '</div>';
     });
-    h += '<p class="꼬리">쓰신 분이 누구인지는 저희도 모릅니다. 이름을 묻지 않기 때문입니다. ' +
-      '<a href="' + 쓰는곳(제품) + '">나도 한 줄 남기기</a></p></div>';
+    h += '<p class="꼬리">' +
+      말('쓰신 분이 누구인지는 저희도 모릅니다. 이름을 묻지 않기 때문입니다. ' +
+        '<a href="' + 쓰는곳(제품) + '">나도 한 줄 남기기</a>',
+         'We do not know who wrote these — we never ask for a name. ' +
+         '<a href="' + 쓰는곳(제품) + '">Leave a line yourself</a>') +
+      '</p></div>';
     자리.innerHTML = h;
   }
 })();
