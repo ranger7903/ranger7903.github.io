@@ -301,6 +301,25 @@ The summarising happens <b>on your own computer</b> — no AI service, no server
 <span class="price">₩99,000 <small>≈ $74.9 · one payment, yours forever</small></span>
 <a class="go" href="javascript:void(0)" onclick="payWithPaddle('bisu')">Buy with card</a>
 <a class="go line" href="mailto:ranger7903@nate.com?subject=Automation%20Assistant%20question">💌 Ask first</a></div>
+<div class="tool"><span class="em">🧾</span><h3>Grant Settlement Checker</h3><p>Puts your bank statement next to your expenditure ledger, finds every mismatch, and fills in the government reporting spreadsheet for you.</p>
+<details class="more"><summary>More details</summary><p>Feed it the statement file <b>exactly as the bank gave it to you</b> and the ledger you keep in Excel. It works out which line pairs with which — including <b>one ledger line paid out in several transfers</b>, <b>several ledger lines paid in one transfer</b>, dates a few days apart, and amounts that do not agree — then shows you what is left over with no partner at all.<br><br>
+<b>It checks the running balance first.</b> Last line's balance minus money out plus money in should equal this line's balance; when it does not, your downloaded statement is missing rows, and reconciling a statement with missing rows makes innocent lines look wrong. Almost no other reconciliation tool does this check.<br><br>
+<b>It does not memorise the government form.</b> It opens the blank form <i>you</i> downloaded, reads its column headings and fills in underneath. When the form changes next year, it still fits.<br><br>
+It reports <b>nine kinds of problem</b>: statement-only, ledger-only, amount disagreement, outside the project period, entered twice, missing receipt, interest not returned, and spending over the granted amount. Rows worth a second look are <b>shaded yellow</b>, with a separate "VALUES check sheet" tab saying why — you upload only the first tab, so nothing gets in the way.<br><br>
+Everything is computed <b>on your own computer</b>. It works with the network unplugged.<br><br>
+<b>Please read before buying.</b> (1) <b>Windows only</b> — there is no macOS or Linux build yet. (2) It does not yet read <b>card statement files</b> (their columns differ from a bank statement). (3) It cannot yet <b>split one line across several budget categories</b>. (4) It leaves the free-form narrative tabs of the settlement report alone, because there is no fixed government template for them.</p></details>
+<span class="price">&#8361;49,000 <small>&#8776; $36.9 &middot; one payment, yours forever &middot; Windows</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('settle')">Buy with card</a>
+<a class="go line" href="mailto:ranger7903@nate.com?subject=Grant%20Settlement%20Checker%20question">&#128156; Ask first</a></div>
+<div class="tool"><span class="em">&#128176;</span><h3>Receivables Matcher</h3><p>Tells you who still has not paid &mdash; how much, and how many days late.</p>
+<details class="more"><summary>More details</summary><p>Give it your invoice list and your bank statement. Customers never pay the way your books expect: they <b>lump several invoices into one transfer</b>, <b>deduct the transfer fee</b>, <b>pay half now and half later</b>, and <b>pay under a different name</b>. It tries all four.<br><br>
+<b>Exact matches are assigned first.</b> Filling the oldest invoice first makes an exactly-paid invoice land on an older one and read as "paid in part" — that really happened, so the order was changed.<br><br>
+When a deposit arrives under a name you never invoiced and exactly one unpaid invoice matches that amount, it assigns it and tells you <b>"this name was that customer"</b>; write the name into your invoice list and it matches automatically from then on.<br><br>
+You get a three-tab spreadsheet: <b>Outstanding</b> (per customer: invoiced, received, fee, remaining, days overdue &mdash; anything past 30 days shaded red), <b>How it was matched</b>, and <b>Unidentified deposits</b>. Everything is computed on your own computer; customer names never leave it.<br><br>
+<b>Please read before buying.</b> (1) <b>Windows only.</b> (2) It does not read <b>card settlement files</b>. (3) It does not handle <b>VAT or tax invoices</b> &mdash; receivables only. (4) If the sender name differs <i>and</i> the amount does not match, it leaves the deposit unidentified rather than guessing. (5) <b>No drag-and-drop yet</b> &mdash; use the Choose button.</p></details>
+<span class="price">&#8361;29,900 <small>&#8776; $22.9 &middot; one payment, yours forever &middot; Windows</small></span>
+<a class="go" href="javascript:void(0)" onclick="payWithPaddle('money')">Buy with card</a>
+<a class="go line" href="mailto:ranger7903@nate.com?subject=Receivables%20Matcher%20question">&#128156; Ask first</a></div>
 <div class="tool"><span class="em">🗣️</span><h3>Interpreter Desk</h3><p>Sit across one laptop and each speak your own language.</p>
 <details class="more"><summary>More details</summary><p>No internet, nothing sent to any server. It hears when someone starts talking, works out which of the two spoke, and writes both sides down — no button to press. It also turns video files into .srt subtitles. <b>Ten languages you can hold a conversation in</b> (Korean, English, Japanese, Chinese, Russian, Indonesian, Vietnamese, Hindi, Thai, Tagalog) and <b>five more it only transcribes</b> (Uzbek, Nepali, Mongolian, Kazakh, Urdu) — we measured all twenty against human translations before drawing that line. Of those five, Kazakh and Urdu are transcribed <b>very accurately</b> (3% and 9% character error against human transcripts); Uzbek, Nepali and Mongolian sit at 46%, 31% and 38%. Uzbek is now written in the <b>Latin alphabet Uzbekistan actually uses</b>, not Cyrillic — that change alone halved the error.</p></details>
 <span class="price">₩69,000 <small>≈ $52.9 · Korean ↔ English</small></span>
@@ -408,6 +427,8 @@ VALUES — a little tool shop · Gyeongju, Korea · <a href="./">한국어</a> �
 <script>
 const PADDLE_CLIENT_TOKEN = "live_945afb1a1e3998081592ff13ef5";
 const PADDLE_PRICES = {
+    settle: "pri_01m310rmatd80s3jss4qvcbre3",
+    money: "pri_01m310zz3fnxghrtdf0rqnhhq1",
   bisu:      "pri_01m40d0s3p0xqzp57e5n8dezj9",
   garifile:  "pri_01m3h95rnf2rvjem5xb5s6ww8g",
   pdfgrab:   "pri_01m38evqgk7sk973zxdv3jb2xt",
