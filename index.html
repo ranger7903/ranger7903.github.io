@@ -63,13 +63,18 @@ nav .shell{display:flex;align-items:center;justify-content:space-between;height:
 .navlinks a{color:var(--ink-2);text-decoration:none;font-size:14.5px;padding:4px 0;white-space:nowrap}
 .brand b{white-space:nowrap}
 .navlinks{flex-wrap:nowrap}
-/* 창이 좁아지면 글자를 쪼개지 말고 «간격→글씨→덜 중요한 차림표» 차례로 줄인다 */
-@media (max-width:1190px){ .navlinks{gap:14px} .navlinks a{font-size:13.5px} }
-@media (max-width:1080px){ .navlinks a[href="#faq"]{display:none} }
-@media (max-width:1000px){ .navlinks a[href="updates.html"]{display:none} }
-@media (max-width:920px){ .navlinks a[href="리뷰.html"]{display:none} }
-@media (max-width:850px){ .navlinks a[href="download.html"]{display:none} }
-@media (max-width:780px){ .navlinks a[href="소식.html"]{display:none} }
+/* 2026-10-03 — 차림표가 화면 밖으로 나가 「편지하기」가 잘리고 쪽이 옆으로 밀리던 것:
+   차림표 줄만 조금 넓게 쓰고, 처음부터 촘촘한 간격을 쓴다.
+   창이 좁아지면 «간격→글씨→덜 중요한 차림표» 차례로 줄인다. */
+nav .shell{max-width:1240px}
+.navlinks{gap:14px}
+.navlinks a{font-size:13.5px}
+@media (max-width:1150px){ .navlinks a[href="#faq"]{display:none} }
+@media (max-width:1070px){ .navlinks a[href="updates.html"]{display:none} }
+@media (max-width:990px){ .navlinks a[href="리뷰.html"]{display:none} }
+@media (max-width:910px){ .navlinks a[href="download.html"]{display:none} }
+@media (max-width:830px){ .navlinks a[href="소식.html"]{display:none} }
+@media (max-width:760px){ .navlinks a[href="기관구매.html"]{display:none} }
 .navlinks a:hover{color:var(--terra)}
 @media (max-width:640px){ .navlinks a:not(.navbuy){display:none} }
 .navbuy{background:var(--terra);color:#FFF8F2 !important;padding:9px 18px !important;border-radius:999px;font-weight:700}
@@ -237,6 +242,7 @@ article.goods.hide{display:none !important}
   font-family:"Gowun Batang",serif;font-size:21px;font-weight:700}
 .cat small{font-size:13.5px;color:var(--ink-3);font-weight:400}
 .shelfgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px;margin-top:12px}
+@media (max-width:380px){ .shelfgrid{grid-template-columns:1fr} .shell{padding:0 14px} }
 .shelfgrid .goods{grid-template-columns:1fr !important;gap:14px;padding:18px;margin-top:0;border-radius:20px}
 .shelfgrid .goods.flip .g-photo{order:0}
 .shelfgrid .g-photo img{height:168px;object-fit:cover;object-position:top center}
