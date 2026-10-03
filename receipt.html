@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipt Wallet — Valuestools</title>
+<meta name="description" content="Photograph a receipt and it pulls out the date, the shop and the amount, stacks them in a table and totals each month. Free Android app. No account, no ads, nothing leaves the phone.">
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.75}
+  .wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);margin:0 0 22px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:20px;margin:0 0 16px}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-top:12px}
+  .bar > i{display:block;height:100%;width:0;background:var(--deep);transition:width .2s}
+  #say{margin-top:10px;font-size:15px;min-height:1.7em}
+  .free{display:inline-block;background:var(--okbg);color:var(--ok);
+    font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+  h2{font-size:18px;margin:0 0 8px}
+  ul,ol{padding-left:1.2em;margin:6px 0}
+  li{margin:6px 0}
+  .quiet{font-size:14px;color:var(--ink2)}
+  .안심{background:var(--okbg);border:1px solid #CBDCC6}
+  .못함칸{background:#F8F1DC;border:1px solid #E4D5A8}
+  a{color:var(--deep)}
+  .miss{background:#FBECE9;color:var(--warn);border-radius:8px;padding:11px 13px;
+    margin-top:12px;font-size:15px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="free">Free · no ads</span>
+  <h1>Receipt Wallet</h1>
+  <p class="sub">Photograph a receipt and it pulls out the <b>date, the shop and the amount</b>
+    and stacks them in a table. It totals each month for you. For Android phones.</p>
+
+  <div class="card 안심">
+    <h2>The photo never leaves the phone</h2>
+    <ul class="quiet" style="margin:0">
+      <li>Reading the text happens <b>on the phone</b>, start to finish. The photo is sent nowhere.</li>
+      <li>No account, no photo server, no ads.</li>
+      <li>The table stays on your phone. When you need it, export it as a <b>spreadsheet (csv)</b>
+        and hand it straight to your accounting software.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <button class="big" id="go">Get the app</button>
+    <div class="bar"><i id="bar"></i></div>
+    <div id="say">Getting ready…</div>
+    <div class="miss" id="err"></div>
+    <p class="quiet" style="margin:10px 0 0">
+      Open this page <b>on the phone</b> and press the button.
+      If you download it on a computer you will have to move the file across.</p>
+  </div>
+
+  <div class="card 못함칸">
+    <h2>Said plainly first — this is the first build</h2>
+    <p style="margin:0">It passes all 60 of our own checks, but it has <b>not yet been tried
+      widely on real paper receipts</b>. Every shop prints a different shape, so there will be
+      receipts it reads badly.</p>
+    <p style="margin:10px 0 0"><b>What it will not do is invent a number.</b> If a photo is too
+      blurred to read, it writes <b>“missing”</b> rather than 0, and marks the row orange with
+      <b>“please check”</b>. The total adds up only what it actually read, and says underneath
+      how many receipts it left out.</p>
+    <p class="quiet" style="margin:10px 0 0">If you find a receipt it reads badly, send us the
+      photo and we will add a rule for that shape.</p>
+  </div>
+
+  <div class="card">
+    <h2>One thing to say in advance</h2>
+    <p class="quiet" style="margin:0">When you install it, the permission list Android shows you
+      includes <b>“internet”</b>. That is put there by default by the toolkit the app is built
+      with, and <b>we do not use it</b> — no photo and no text is sent anywhere. In case that
+      does not sit well with you, the next build will have that permission removed altogether.</p>
+  </div>
+
+  <div class="card">
+    <h2>Once you have it</h2>
+    <ol>
+      <li>Tap the downloaded file (<b>Valuestools Receipt Wallet.apk</b>).</li>
+      <li>If it asks about "apps from unknown sources", choose <b>allow</b>.
+        <span class="quiet">— that is because it is not on the Play Store yet.</span></li>
+      <li>Press <b>Photograph a receipt</b>. You can also pick several at once from the gallery.</li>
+      <li>A row appears in the table. Anything it could not read is orange — tap that row and
+        type it in. The total updates the moment you do.</li>
+      <li>The table button at the top right gives you the spreadsheet to export.</li>
+    </ol>
+    <p class="quiet" style="margin:6px 0 0">Anything it reads badly, you can correct by hand on
+      the row itself — and if you send us the photo we will add a rule for that shape.</p>
+  </div>
+
+  <div class="card">
+    <h2>What this app promises</h2>
+    <ul class="quiet" style="margin:0">
+      <li><b>It does not invent what it could not read.</b> From a blurred photo it makes up no
+        value at all, and it does not mistake a business-registration number for an amount.</li>
+      <li><b>The total never goes quietly wrong.</b> It adds only what was read, and counts the
+        unread and the "please check" ones separately underneath.</li>
+      <li><b>Corrections count immediately.</b> An amount you type by hand goes into the total at
+        once and the orange mark disappears.</li>
+      <li>0.0001 seconds to pull one receipt apart; 0.16 seconds to stack 1,000 and produce the
+        totals, the monthly figures and the table. <b>Measured, not claimed.</b></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>When people use it</h2>
+    <ul class="quiet" style="margin:0">
+      <li>Receipts collected in an envelope and sorted out at the end of the month.</li>
+      <li>Travel or event expenses that must be handed in receipt by receipt — export the table
+        and attach it as it is.</li>
+      <li>A small shop wanting to see one month of spending at a glance.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Korean and English, both</h2>
+    <p class="quiet" style="margin:0">It follows the language your phone is set to.
+      <a href="%EC%98%81%EC%88%98%EC%A6%9D%EC%A7%80%EA%B0%91.html">한국어 페이지</a></p>
+    <p class="quiet" style="margin:6px 0 0">There is no iPhone build yet. If a very old phone
+      says “cannot install”, tell us and we will make a build for it.</p>
+  </div>
+
+  <div class="card">
+    <h2>What people said</h2>
+    <div data-리뷰="receipt"></div>
+  </div>
+
+  <p class="quiet"><a href="en.html">← back to the shop</a> · <a href="app-privacy.html">App privacy policy</a></p>
+
+</div>
+
+<script>
+(function () {
+  var 바 = document.getElementById('bar');
+  var 말 = document.getElementById('say');
+  var 단추 = document.getElementById('go');
+  var 탈 = document.getElementById('err');
+  var 짐 = null;
+
+  function 크기(n) { return (n / 1048576).toFixed(0) + ' MB'; }
+  function 알림(s) { 말.textContent = s; }
+  function 못함(s) { 탈.textContent = s; 탈.style.display = 'block'; }
+
+  function 지문(buf) {
+    return crypto.subtle.digest('SHA-256', buf).then(function (h) {
+      return Array.prototype.map.call(new Uint8Array(h), function (x) {
+        return ('0' + x.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
+
+  fetch('tools.manifest.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (m) {
+      var a = m.files && m.files.receipt;
+      if (!a || !a.parts || !a.parts.length) {
+        단추.disabled = true;
+        알림('Not ready yet. It will be here shortly.');
+        return;
+      }
+      짐 = { base: m.base, a: a };
+      알림(크기(a.totalSize) + ' · build ' + (a.version || ''));
+      단추.onclick = function () { 받기(a); };
+    })
+    .catch(function () {
+      단추.disabled = true;
+      알림('Please refresh in a moment.');
+    });
+
+  function 받기(f) {
+    단추.disabled = true;
+    탈.style.display = 'none';
+    var 모음 = [], 받은양 = 0;
+    var 차례 = Promise.resolve();
+    f.parts.forEach(function (조각) {
+      차례 = 차례.then(function () {
+        return fetch(짐.base + 조각.name, { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('a piece did not arrive (' + r.status + ')');
+            return r.arrayBuffer();
+          })
+          .then(function (buf) {
+            if (buf.byteLength !== 조각.size) throw new Error('a piece is the wrong size');
+            return 지문(buf).then(function (h) {
+              if (조각.sha256 && h !== 조각.sha256) throw new Error('a piece was damaged');
+              모음.push(new Uint8Array(buf));
+              받은양 += buf.byteLength;
+              바.style.width = (받은양 / f.totalSize * 100) + '%';
+              알림('Downloading ' + Math.round(받은양 / f.totalSize * 100) + '%');
+            });
+          });
+      });
+    });
+    차례.then(function () {
+      var 통 = new Uint8Array(f.totalSize), o = 0;
+      모음.forEach(function (b) { 통.set(b, o); o += b.length; });
+      알림('Checking…');
+      return 지문(통.buffer).then(function (h) {
+        if (f.sha256 && h !== f.sha256) throw new Error('the joined file does not match the original');
+        if (통[0] !== 0x50 || 통[1] !== 0x4B) throw new Error('this is not an app file');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([통],
+          { type: 'application/vnd.android.package-archive' }));
+        a.download = 'Valuestools Receipt Wallet.apk';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
+        바.style.width = '100%';
+        알림('Done. Tap the downloaded file to install it.');
+        단추.textContent = 'Download again';
+        단추.disabled = false;
+      });
+    }).catch(function (e) {
+      단추.disabled = false;
+      단추.textContent = 'Download again';
+      못함('The download stopped (' + e.message + '). Please press the button once more.');
+    });
+  }
+})();
+</script>
+<script src="리뷰보기.js"></script>
+<script src="세기.js" defer></script>
+</body>
+</html>

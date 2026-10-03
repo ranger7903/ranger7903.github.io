@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Send Safely — Photos · Valuestools</title>
+<meta name="description" content="Finds resident registration numbers, bank accounts, phone numbers, names and addresses inside a photo and covers them over. Free Android app. Nothing leaves the phone.">
+<style>
+  :root{
+    --ground:#FBF8F3; --surface:#fff; --sunk:#F4EEE5;
+    --ink:#2B2622; --ink2:#6B6259;
+    --line:#E6DCCE; --accent:#C0603C; --deep:#1F4E79;
+    --ok:#3E6B43; --okbg:#EAF1E6; --warn:#A8402F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-size:16px;line-height:1.75}
+  .wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);margin:0 0 22px;font-size:15px}
+  .card{background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;padding:20px;margin:0 0 16px}
+  .big{display:block;width:100%;padding:18px;border:0;border-radius:12px;
+    background:var(--deep);color:#fff;font-size:19px;font-weight:700;
+    cursor:pointer;font-family:inherit}
+  .big:disabled{background:#9AA6B1;cursor:default}
+  .bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-top:12px}
+  .bar > i{display:block;height:100%;width:0;background:var(--deep);transition:width .2s}
+  #say{margin-top:10px;font-size:15px;min-height:1.7em}
+  .free{display:inline-block;background:var(--okbg);color:var(--ok);
+    font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+  h2{font-size:18px;margin:0 0 8px}
+  ul,ol{padding-left:1.2em;margin:6px 0}
+  li{margin:6px 0}
+  .quiet{font-size:14px;color:var(--ink2)}
+  .안심{background:var(--okbg);border:1px solid #CBDCC6}
+  .못함칸{background:#F8F1DC;border:1px solid #E4D5A8}
+  a{color:var(--deep)}
+  .miss{background:#FBECE9;color:var(--warn);border-radius:8px;padding:11px 13px;
+    margin-top:12px;font-size:15px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="free">Free · no ads</span>
+  <h1>Send Safely — Photos</h1>
+  <p class="sub">Finds the <b>resident registration number, bank account, card number, phone
+    number, name and address</b> inside a photo and covers them over. For Android phones.</p>
+
+  <div class="card 안심">
+    <h2>The photo never leaves the phone</h2>
+    <ul class="quiet" style="margin:0">
+      <li>Reading the text and covering it both happen <b>on the phone</b>, start to finish.</li>
+      <li>After covering, <b>it reads the picture again by itself</b> to check that nothing is
+        still legible. If one spot survives, it covers wider and looks again.</li>
+      <li>When it saves, it also strips the <b>location and device information</b> the camera
+        attached to the photo.</li>
+      <li>No account, no photo server, no ads.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <button class="big" id="go">Get the app</button>
+    <div class="bar"><i id="bar"></i></div>
+    <div id="say">Getting ready…</div>
+    <div class="miss" id="err"></div>
+    <p class="quiet" style="margin:10px 0 0">
+      Open this page <b>on the phone</b> and press the button.
+      If you download it on a computer you will have to move the file across.</p>
+  </div>
+
+  <div class="card">
+    <h2>One thing to say in advance</h2>
+    <p class="quiet" style="margin:0">When you install it, the permission list Android shows you
+      includes <b>“internet”</b>. That is put there by default by the toolkit the app is built
+      with, and <b>we do not use it</b> — no photo and no text is sent anywhere. In case that
+      does not sit well with you, the next build will have that permission removed altogether.</p>
+  </div>
+
+  <div class="card">
+    <h2>Once you have it</h2>
+    <ol>
+      <li>Tap the downloaded file (<b>Valuestools Send Safely.apk</b>).</li>
+      <li>If it asks about "apps from unknown sources", choose <b>allow</b>.
+        <span class="quiet">— that is because it is not on the Play Store yet.</span></li>
+      <li>Open it and pick a photo. That is all there is to it.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>When people use it</h2>
+    <ul class="quiet" style="margin:0">
+      <li>Photographing a parcel label to send on — it covers the name, address and phone number.</li>
+      <li>Sending a copy of an ID card — it covers the back half of the registration number.</li>
+      <li>Sending a photo of a bankbook or card — it covers the account and card numbers.</li>
+    </ul>
+    <p class="quiet" style="margin:10px 0 0">You can switch each kind on and off in the app.
+      Things that do not need hiding — a business registration number, for instance — are
+      <b>off from the start</b>.</p>
+  </div>
+
+  <div class="card 못함칸">
+    <h2>Please still look before you send</h2>
+    <p style="margin:0">The app checks its own work — after covering, it reads the picture again
+      and covers wider if anything survived. <b>It never sends anything by itself</b>, so the
+      last look is yours. Give the covered picture a glance before it goes out.</p>
+  </div>
+
+  <div class="card">
+    <h2>There is a desktop version too</h2>
+    <p class="quiet" style="margin:0">This app works on photos. For <b>files</b> on a computer —
+      Excel, Word, HWP, PDF, CSV — there is <b>Send Safely — Files</b> for Windows, on the
+      <a href="en.html">shop page</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Korean and English, both</h2>
+    <p class="quiet" style="margin:0">It follows the language your phone is set to.
+      <a href="%EA%B0%80%EB%A0%A4%EC%84%9C%EB%B3%B4%EB%82%B4%EA%B8%B0.html">한국어 페이지</a></p>
+    <p class="quiet" style="margin:6px 0 0">There is no iPhone build yet. If a very old phone
+      says “cannot install”, tell us and we will make a build for it.</p>
+  </div>
+
+  <div class="card">
+    <h2>What people said</h2>
+    <div data-리뷰="garisend"></div>
+  </div>
+
+  <p class="quiet"><a href="en.html">← back to the shop</a> · <a href="app-privacy.html">App privacy policy</a></p>
+
+</div>
+
+<script>
+(function () {
+  var 바 = document.getElementById('bar');
+  var 말 = document.getElementById('say');
+  var 단추 = document.getElementById('go');
+  var 탈 = document.getElementById('err');
+  var 짐 = null;
+
+  function 크기(n) { return (n / 1048576).toFixed(0) + ' MB'; }
+  function 알림(s) { 말.textContent = s; }
+  function 못함(s) { 탈.textContent = s; 탈.style.display = 'block'; }
+
+  function 지문(buf) {
+    return crypto.subtle.digest('SHA-256', buf).then(function (h) {
+      return Array.prototype.map.call(new Uint8Array(h), function (x) {
+        return ('0' + x.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
+
+  fetch('tools.manifest.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (m) {
+      var a = m.files && m.files.garisend;
+      if (!a || !a.parts || !a.parts.length) {
+        단추.disabled = true;
+        알림('Not ready yet. It will be here shortly.');
+        return;
+      }
+      짐 = { base: m.base, a: a };
+      알림(크기(a.totalSize) + ' · build ' + (a.version || ''));
+      단추.onclick = function () { 받기(a); };
+    })
+    .catch(function () {
+      단추.disabled = true;
+      알림('Please refresh in a moment.');
+    });
+
+  function 받기(f) {
+    단추.disabled = true;
+    탈.style.display = 'none';
+    var 모음 = [], 받은양 = 0;
+    var 차례 = Promise.resolve();
+    f.parts.forEach(function (조각) {
+      차례 = 차례.then(function () {
+        return fetch(짐.base + 조각.name, { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('a piece did not arrive (' + r.status + ')');
+            return r.arrayBuffer();
+          })
+          .then(function (buf) {
+            if (buf.byteLength !== 조각.size) throw new Error('a piece is the wrong size');
+            return 지문(buf).then(function (h) {
+              if (조각.sha256 && h !== 조각.sha256) throw new Error('a piece was damaged');
+              모음.push(new Uint8Array(buf));
+              받은양 += buf.byteLength;
+              바.style.width = (받은양 / f.totalSize * 100) + '%';
+              알림('Downloading ' + Math.round(받은양 / f.totalSize * 100) + '%');
+            });
+          });
+      });
+    });
+    차례.then(function () {
+      var 통 = new Uint8Array(f.totalSize), o = 0;
+      모음.forEach(function (b) { 통.set(b, o); o += b.length; });
+      알림('Checking…');
+      return 지문(통.buffer).then(function (h) {
+        if (f.sha256 && h !== f.sha256) throw new Error('the joined file does not match the original');
+        if (통[0] !== 0x50 || 통[1] !== 0x4B) throw new Error('this is not an app file');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([통],
+          { type: 'application/vnd.android.package-archive' }));
+        a.download = 'Valuestools Send Safely.apk';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
+        바.style.width = '100%';
+        알림('Done. Tap the downloaded file to install it.');
+        단추.textContent = 'Download again';
+        단추.disabled = false;
+      });
+    }).catch(function (e) {
+      단추.disabled = false;
+      단추.textContent = 'Download again';
+      못함('The download stopped (' + e.message + '). Please press the button once more.');
+    });
+  }
+})();
+</script>
+<script src="리뷰보기.js"></script>
+<script src="세기.js" defer></script>
+</body>
+</html>
