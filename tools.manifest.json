@@ -902,39 +902,39 @@
   },
   "bisu": {
    "saveAs": "밸류스 자동화 비서.zip",
-   "version": "2026-10-03",
-   "totalSize": 47901730,
-   "sha256": "7ee2d98acad09647beed327b495bc992c20a589b8965ee9d1cf311391423d6a1",
+   "version": "2026-10-04",
+   "totalSize": 47906349,
+   "sha256": "c8ecafbb13c328ccfdf512fda683bf50a840e4dce1baa5c6f5ce3189b3d4d553",
    "parts": [
     {
      "name": "dist/bisu.part000",
      "size": 9437184,
-     "sha256": "b5b84b2e26bcaf5977fb680e46e0a1b54576bc74ab58768f060df5716bbf2559"
+     "sha256": "cc7569608e43767f20fca3425181fb4d955a5e35bb3964c77d0d26a481f99767"
     },
     {
      "name": "dist/bisu.part001",
      "size": 9437184,
-     "sha256": "6a10319e77165d20abcce2c504625902857aeea280a131de0b5017263fbc8a71"
+     "sha256": "1bff36648904ad174046c6b8184d7a461c0ff3a995dfd513d21f6f29a3624966"
     },
     {
      "name": "dist/bisu.part002",
      "size": 9437184,
-     "sha256": "d13e9abb8757cf5450238767b1b73a84007250ab1ccaaf1c44649670ef9757db"
+     "sha256": "2248e152981cb690f8ef5b6858e7d4e4fd9df36fe09e77947eaf9e2306f73061"
     },
     {
      "name": "dist/bisu.part003",
      "size": 9437184,
-     "sha256": "175dbdd8ebcd6ab6cfea17ba61b4737b729ae35ce1703d5e6645d2207dca3674"
+     "sha256": "cd8cd7084ed5a3e6b823a7e67313236f01db1d06d4ef0d815c6ac3fb91e28a98"
     },
     {
      "name": "dist/bisu.part004",
      "size": 9437184,
-     "sha256": "17035df4852bc3edff2dd476b71a5228b36dfcead738ce80635d461708c0f1e2"
+     "sha256": "426590ea3877b6d6c14fa4145ccae08a1bdc0c0eed749074d01977a8fe9174af"
     },
     {
      "name": "dist/bisu.part005",
-     "size": 715810,
-     "sha256": "0fdb26b2cbba460cd3c51378bca6f9392dcf5f268909e630a39ca27102107a8a"
+     "size": 720429,
+     "sha256": "3fddac43ddad7ef118cf2142fa3f0ac835c7ac0214d3223a762bfe332535340d"
     }
    ]
   }
