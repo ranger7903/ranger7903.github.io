@@ -118,56 +118,56 @@
   "settle": {
    "saveAs": "밸류스 정산 대조기.zip",
    "version": "2026-10-04",
-   "totalSize": 34898641,
-   "sha256": "4148b3835ac678fdd11c5a3120a3b39672939615f6b0fba1c19faebfc207f5e4",
+   "totalSize": 34898555,
+   "sha256": "b6720d39210c1064e37c84d2e8c71077a755e7afad4c819994d3814e46281c08",
    "parts": [
     {
      "name": "dist/settle.part000",
      "size": 9437184,
-     "sha256": "b283cbb39402cf7b67a4cd1e64418f68050aa8d49c5a9b14a1109c22395fda1c"
+     "sha256": "1852c5b6620cd58afbd8050e3a84383f588e0b94923b8de7910c56fed7100639"
     },
     {
      "name": "dist/settle.part001",
      "size": 9437184,
-     "sha256": "0514b244f65f0ad2bc32cf08ea89bfffc32fa6a80871c760d7b0d86d84abfece"
+     "sha256": "f2d17796d711a9aef7eda433a62e87ad0313f5598511a1c1e5907f3425964f88"
     },
     {
      "name": "dist/settle.part002",
      "size": 9437184,
-     "sha256": "885a1abfd8f0ac0012a5ae1bd7eb460c034292f4885df866d0e6192fb0f240fa"
+     "sha256": "68348ffeb7a0e8b38ddc89f2fdc0ea8fbe986eb5897db4b1d26f72d06a149cc6"
     },
     {
      "name": "dist/settle.part003",
-     "size": 6587089,
-     "sha256": "617fc27847b619c6f2915a7f912a016200389c2d20e9cf555716c5a0a3fb9717"
+     "size": 6587003,
+     "sha256": "f172435d0174814fbdf05f0f86d88bc791b27263fd72d65865886f59b433748b"
     }
    ]
   },
   "money": {
    "saveAs": "밸류스 돈 맞추개.zip",
    "version": "2026-10-04",
-   "totalSize": 34890010,
-   "sha256": "3a2e2485d62b14df64d0a5b7a6a222ed79ebb43e83eea196f161a26bb9081bc9",
+   "totalSize": 34889951,
+   "sha256": "7dffcda1ec739cf289ea14034e6bc805615e528a4ca75dc0d9ef1c15bd5ba7b5",
    "parts": [
     {
      "name": "dist/money.part000",
      "size": 9437184,
-     "sha256": "bb8126ee8b15bb3cd013fbaa074d435d5a757cb68a3f24b585a6565eb1b8be39"
+     "sha256": "132807b87e44dd68ec20b4be40fd91678829b332d3c9fc33a19cbb31c7ac4e08"
     },
     {
      "name": "dist/money.part001",
      "size": 9437184,
-     "sha256": "1bf3ef4cc4dc3aa289c6b0c3be2fd9dcd8fb69fde8711570e6c5608bd2341802"
+     "sha256": "8d8718378c89c03636f49fb9ab1843f4e88bee7a9e5bb60121ed7d2697aa4a1c"
     },
     {
      "name": "dist/money.part002",
      "size": 9437184,
-     "sha256": "0402a821d32db0811f19d68ffe974e0ce2a30e711082e312ffcda8659199158a"
+     "sha256": "c55b5602d7ec71349e547d2a47263154da0d7c09c012d08b34e3a6b5d7b6e845"
     },
     {
      "name": "dist/money.part003",
-     "size": 6578458,
-     "sha256": "cfe497b38a798ae7682e1fad017607e90f9e1ba6bfaae3e62c0f8c3b8d996e41"
+     "size": 6578399,
+     "sha256": "c90d256850c6bb22d4c01d928fae062d6b7b63bca39dc006157787d91ebd9c23"
     }
    ]
   },
