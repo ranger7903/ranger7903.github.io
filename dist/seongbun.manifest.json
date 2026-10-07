@@ -1,22 +1,37 @@
 {
  "file": "성분 풀이.apk",
- "bytes": 17155915,
- "sha256": "fd045033e216a2f28f4291ca15da108b76eda4441563edd5db4b05dac964afd3",
+ "bytes": 34482910,
+ "sha256": "4f8f2ad9c7113a3e1d61434fb6b87be4c9a7d7b58455c2b80bbb8c3d7b9fd193",
  "parts": [
   {
    "name": "seongbun.apk.part000",
    "bytes": 6291456,
-   "sha256": "1d8b9e974b758ca7c3d2572cb3ad7cabfe857b85f9edfc4c3cd006ea6f9765e7"
+   "sha256": "4458ab9ec7e163d5e9089eb102b3f8c2c4f7e6cfc70560fbc636ddcc27594932"
   },
   {
    "name": "seongbun.apk.part001",
    "bytes": 6291456,
-   "sha256": "1e18b2e37d78a1225234e3794fc6dbd4d2bbbe66d7c88b1129402dec9ef55f7e"
+   "sha256": "6976a70618abddf8b00c47bc3c758b39231a7a455162d4a303a2183565898c85"
   },
   {
    "name": "seongbun.apk.part002",
-   "bytes": 4573003,
-   "sha256": "d5c006b6f11065ebdfe9fb0c5b9e8af8c91bb1ecd202cfbf8f1c94436bf3889e"
+   "bytes": 6291456,
+   "sha256": "5176e1e509f378f97de7bfbc77afdca176bc4f26119fed5b5d025dfdd888052b"
+  },
+  {
+   "name": "seongbun.apk.part003",
+   "bytes": 6291456,
+   "sha256": "7f6a9b858fca3a1d453fe2787c66ce9060d8446480af80fc689d656700fb1c08"
+  },
+  {
+   "name": "seongbun.apk.part004",
+   "bytes": 6291456,
+   "sha256": "79a5897869929dde411b42e66f0a66f2f391b11c0857ef9114943940ad4fbb75"
+  },
+  {
+   "name": "seongbun.apk.part005",
+   "bytes": 3025630,
+   "sha256": "a32cf7d801831f31c17fa1a7d2b76b725c5fdb7e2e322276d1f3bf8aa1f4f664"
   }
  ]
 }
