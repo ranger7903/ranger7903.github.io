@@ -937,6 +937,62 @@
      "sha256": "3fddac43ddad7ef118cf2142fa3f0ac835c7ac0214d3223a762bfe332535340d"
     }
    ]
+  },
+  "seoryu": {
+   "saveAs": "밸류스 무슨 서류예요.apk",
+   "version": "2026-10-07",
+   "totalSize": 33704097,
+   "sha256": "eb02becde682b9eb1c778e114020bafe5980813e2d3ddc33a9e9be683d1ebd99",
+   "parts": [
+    {
+     "name": "dist/seoryu.part000",
+     "size": 9437184,
+     "sha256": "d5e9c27d5779a5db97fd85242ffb452cce52b410b3cc98e9a4f2720e8e0615cc"
+    },
+    {
+     "name": "dist/seoryu.part001",
+     "size": 9437184,
+     "sha256": "ac9f43cca5d26c4530cd805fd130c7aee626b4d287d349081a894f4927573b11"
+    },
+    {
+     "name": "dist/seoryu.part002",
+     "size": 9437184,
+     "sha256": "59d51e55032f829c58f46d8c26e3bc1b458cc0a71aef69d95085b506ceab48ac"
+    },
+    {
+     "name": "dist/seoryu.part003",
+     "size": 5392545,
+     "sha256": "62c0e4f3be881845af61d0c600022c452a9b429bbd9aec2ee9e3836bf4c238e3"
+    }
+   ]
+  },
+  "allergy": {
+   "saveAs": "밸류스 이거 먹어도 돼요.apk",
+   "version": "2026-10-07",
+   "totalSize": 33615066,
+   "sha256": "68e4412178042ef17720e86c3b18da9c9a4149f263d1c6afdcb32cdabefd55d0",
+   "parts": [
+    {
+     "name": "dist/allergy.part000",
+     "size": 9437184,
+     "sha256": "bd66da402ebf7ff1e64106c98b1647332451aeec6c3815a2192b763cf076d2db"
+    },
+    {
+     "name": "dist/allergy.part001",
+     "size": 9437184,
+     "sha256": "efce2314e1576a4fa2a821b29a708847c0b19cbe88c744b34216e58d87cd3daf"
+    },
+    {
+     "name": "dist/allergy.part002",
+     "size": 9437184,
+     "sha256": "da8f3170136d0460705d7975a1d1ca44144dc431c492c6c1e247448f3482be37"
+    },
+    {
+     "name": "dist/allergy.part003",
+     "size": 5303514,
+     "sha256": "68e962b306d1677b8e93079c357d5dbe0026227db18a7a1476cab46174e09745"
+    }
+   ]
   }
  }
 }
