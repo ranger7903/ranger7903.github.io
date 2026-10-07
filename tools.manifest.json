@@ -747,29 +747,29 @@
   },
   "yakbong": {
    "saveAs": "밸류스 약봉지 시간표.apk",
-   "version": "2026-09-21",
-   "totalSize": 37065689,
-   "sha256": "5b055b4634c325a3b608d8cfe30cd9901455793082ac517d4c155d0dd8dee7aa",
+   "version": "2026-10-05",
+   "totalSize": 37065757,
+   "sha256": "50ee3cb1e47c98b6c265c03619c22a1cd9521720e5df3432b7eabeccfd99e343",
    "parts": [
     {
      "name": "dist/yakbong.part000",
      "size": 9437184,
-     "sha256": "b2415fff09a6bda784854cace6806038321594c1dfd3e51578741dfdb5b4cfab"
+     "sha256": "c831407e058efd0c0590218ce3921d0a379811bf9bdcd91ee8945aefbba8f44a"
     },
     {
      "name": "dist/yakbong.part001",
      "size": 9437184,
-     "sha256": "366a118611ce76e20862f7fd7ad618937d3f21f423d98d6ff3aeafdf1555806c"
+     "sha256": "0443ed93c2cfeb2a875476cb2aa1536f14ce86be38a2dc6ddbfb6e4d963f134c"
     },
     {
      "name": "dist/yakbong.part002",
      "size": 9437184,
-     "sha256": "318c1ef4182592f9389ed1ff516fcec30e41f646fdb542fe31e82a1991799b73"
+     "sha256": "02df498b533ea89a09e8d715130a6f2ac877751215e04e85c1b3a5578d6f3449"
     },
     {
      "name": "dist/yakbong.part003",
-     "size": 8754137,
-     "sha256": "8cb1b204b5b78d7edb572596f376ae9f6d9e7ba26184978d7b618d40936f407f"
+     "size": 8754205,
+     "sha256": "cb2ddc3bfb6802e217d2f39878378fa3b815c96d814737073698e3272762b080"
     }
    ]
   },
