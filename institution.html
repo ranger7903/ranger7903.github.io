@@ -237,8 +237,7 @@ function draw(){
          '<button type="button" data-plus="' + p.key + '" aria-label="one more">+</button>' +
          '</div></td><td class="num" data-amt="' + p.key + '">' + won(0) + '</td></tr>';
   });
-  h += '</tbody></table><p class="small">VALUES AI Office Worker is billed monthly, so it is not in this table. ' +
-       'Email us if you need it.</p>';
+  h += '</tbody></table>';
   document.getElementById('picker').innerHTML = h;
   document.getElementById('picker').addEventListener('click', function(e){
     var t=e.target, p=t.getAttribute&&t.getAttribute('data-plus'), m=t.getAttribute&&t.getAttribute('data-minus');

@@ -90,11 +90,6 @@
      "열쇠": "translator",
      "이름": "밸류스 통역책상",
      "영문": "Valuestools Interpreter Desk"
-    },
-    {
-     "열쇠": "office",
-     "이름": "밸류스 AI 사무직원",
-     "영문": "Valuestools AI Office Clerk"
     }
    ],
    "영문": "Windows programs"

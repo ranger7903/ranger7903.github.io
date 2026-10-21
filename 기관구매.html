@@ -296,9 +296,7 @@ function 그리기(){
          '</div></td>' +
          '<td class="num" data-금액="' + p.열쇠 + '">0원</td></tr>';
   });
-  h += '</tbody></table>' +
-       '<p class="small">밸류스 AI 사무직원은 <b>매달 내는 것</b>이라 이 표에 넣지 않았습니다. ' +
-       '필요하시면 메일로 따로 말씀해 주십시오.</p>';
+  h += '</tbody></table>';
   document.getElementById('고르기').innerHTML = h;
 
   document.getElementById('고르기').addEventListener('click', function(e){
