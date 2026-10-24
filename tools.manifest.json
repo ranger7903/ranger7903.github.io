@@ -373,124 +373,124 @@
   },
   "translator": {
    "saveAs": "밸류스 통역책상 설치.exe",
-   "version": "2026-09-20",
-   "totalSize": 215313033,
-   "sha256": "2cac95cef8dcd60ab6c2e39b91fca1e62bfb1b5f7038b058b510c42a393e0e7f",
+   "version": "2026-10-24",
+   "totalSize": 215867974,
+   "sha256": "5b79e8a4fe5434773792d67c7589e0ea221db7f40271d68ec7fa906575e03959",
    "parts": [
     {
      "name": "dist/translator.part000",
      "size": 9437184,
-     "sha256": "eba13fe6503a28a1cb33e6edb16673d48528c1084690b6ddaeefb958f45b10f8"
+     "sha256": "2f94a0e2141bebe6521d05a892e8b03c570a36955ac69530bfdf47a058ffeac8"
     },
     {
      "name": "dist/translator.part001",
      "size": 9437184,
-     "sha256": "c63c8042c9f7badf9926a8b280ca77764aa1cd8c81d0f35923091324e563f636"
+     "sha256": "111dabb956f57d532aa93691d0cb87e4ec2b182b2d65b180dc60d824153435b0"
     },
     {
      "name": "dist/translator.part002",
      "size": 9437184,
-     "sha256": "ccfb60e34e60a960cf42a6ae7d04843093aed3770c20aa5fa2fdf7e9e5ce0e16"
+     "sha256": "324c0b57901334ba9cb74a1f70755af1a7f8d53ab860593364ee2dbdb0963394"
     },
     {
      "name": "dist/translator.part003",
      "size": 9437184,
-     "sha256": "3501361b2a3c93ea2db4b6ad626fe207259aa40e395b9d162172575e1cf25d61"
+     "sha256": "1c46e7ea2010466bb0742d423c12999c680daa3c1370e0c8df31d4201c154d97"
     },
     {
      "name": "dist/translator.part004",
      "size": 9437184,
-     "sha256": "f3fc2b2d5426aefdefbaeb2994b72547082b62353cc11f404e1eb8fde247fa4b"
+     "sha256": "48e145facb35597525894072dba6a079c8ce937bd75d6a94c983f95edfd900b4"
     },
     {
      "name": "dist/translator.part005",
      "size": 9437184,
-     "sha256": "9cddefb7a546ece3630b3a0a00f7aeff3043a5fa38faac24585f121b0764fb76"
+     "sha256": "54e311040bdca6020dca48792a72cbec67eea9ab6b0dcf4650e919fb57937f3e"
     },
     {
      "name": "dist/translator.part006",
      "size": 9437184,
-     "sha256": "3a1dabcbe7bad4fcd891173c49ada1e598ce9978558f3204c5d8e12a7d06d7fc"
+     "sha256": "51083a0ff5ef54234052783d04f5ea1383b3e65b6b7e56a2e3a351786a5fafdc"
     },
     {
      "name": "dist/translator.part007",
      "size": 9437184,
-     "sha256": "89147d36bc8b27c0c62d7b11fbfe15e2f355fc6e3f5a3730d8076e0ce51cb478"
+     "sha256": "7c0206af880fdf10b283e521b965a5fc00cd448b23f6fb7d5e6475e1543714f8"
     },
     {
      "name": "dist/translator.part008",
      "size": 9437184,
-     "sha256": "b71aaf4934c165e7dd145753e2bcc7c232b97b1d4b3321da6a5cdf5982fdb104"
+     "sha256": "4868c9af50d0069ed1c88c972c75c2029c660171d89c23e2ee1c0a8cc416ed40"
     },
     {
      "name": "dist/translator.part009",
      "size": 9437184,
-     "sha256": "3bc6f740596276c7f8eb51c37a46d3ea48b4523a8c5f5528c997777b1a9346c2"
+     "sha256": "21b1158949390d4fc3f59d8643498abdb5638eaa8e432244c4a6d3f3e35a0448"
     },
     {
      "name": "dist/translator.part010",
      "size": 9437184,
-     "sha256": "3123c334f4f584dda4a4cb1e3d652747c704c590754934a5802ab0564cacc471"
+     "sha256": "2397c7f5ffba4a8f81176db4d5db1703bd1f19c374a676ef6b64f1b3e380fc26"
     },
     {
      "name": "dist/translator.part011",
      "size": 9437184,
-     "sha256": "4440f44ad6b650972145f1c60d62cce23f51805b680445ab039f123280aa7cc1"
+     "sha256": "f62bc1b3e53ce69599a966fb37f71af571dcb9ebd14c96131bb6e45daa6c02bd"
     },
     {
      "name": "dist/translator.part012",
      "size": 9437184,
-     "sha256": "ae24a3e3932603a6135fddc82c1e8b1441220e8b8ae1f4414b2c159a7521ca4e"
+     "sha256": "bd7fd8844b52542f700e2ba4f41c3e2af61cf41b2b8a3961c91ab50558cabf58"
     },
     {
      "name": "dist/translator.part013",
      "size": 9437184,
-     "sha256": "1cc347c983abdc96142112bd8a00e482b2760e9b7cf4862a9f8949ea2594d429"
+     "sha256": "c7f0f2e9afb55d68be19a65e475cc408f0b3d3a6697d9674e9a6123207c655e2"
     },
     {
      "name": "dist/translator.part014",
      "size": 9437184,
-     "sha256": "7044f302f6baf7adb68df06c150aba3a50167b6f09c49d13b19e577cc906005a"
+     "sha256": "b0ef2d389c1f28936e3c3e86ec367a3c87e7a7d676c49c572d08ab670d47c8b1"
     },
     {
      "name": "dist/translator.part015",
      "size": 9437184,
-     "sha256": "f6c808de9c3583958db878824359cb8bbc3d68528065ffcd3d119dc0964b7c35"
+     "sha256": "ef824675f4dea5765c8023abf10b39dc3dfd1aa4ef0cdc5780cfcad14948b937"
     },
     {
      "name": "dist/translator.part016",
      "size": 9437184,
-     "sha256": "7fbc987fe2b61621ef32aa09d4bd006b32f617391d1ba6414d23b445d49613ad"
+     "sha256": "a054a27f4fda022605493daa286c11aaf03228783ddd90cbe37e80d04877a29d"
     },
     {
      "name": "dist/translator.part017",
      "size": 9437184,
-     "sha256": "91fafae51ae3e0f68d59d1c8aa2a46e8cfa1cf271d71da78513dfa5c6f38cc19"
+     "sha256": "afbde703149768dd33ac6c8e9ba7a84d09348b3eebcd056cf559ad2dce66a68b"
     },
     {
      "name": "dist/translator.part018",
      "size": 9437184,
-     "sha256": "5ee39dcb3eec9ffda5e5d0a47560b15e01f0e7a010dfd1c93b6afbc9dcb46732"
+     "sha256": "068c65c4feadd240fc5b420a68046dcc116aa9be35de5a88468b4f67c4af64e1"
     },
     {
      "name": "dist/translator.part019",
      "size": 9437184,
-     "sha256": "05ac56bd5e1d90bfbb50cd78d43467d00981d7e09255bbca6a0c478f5e559f2b"
+     "sha256": "9b064f0532abf1f2c3be7b82f023a7c2a90f75e52f50ff464c6da42f464b6599"
     },
     {
      "name": "dist/translator.part020",
      "size": 9437184,
-     "sha256": "a63e0f72fc8fd32e718879e9751e7c2d6610dc76e218934ff1b67fcda76ac896"
+     "sha256": "6242c6a27c9d679d70b8c8ad4bfebb3dba13a7fb8fa6bb874d6b30fe42c59367"
     },
     {
      "name": "dist/translator.part021",
      "size": 9437184,
-     "sha256": "24c4137ac3ae6823b3f6ae0fabd971219e83a59e89509dc4f0371296bd2bb69f"
+     "sha256": "9969fbfd81c84bf5b465a3716b6ab70c3023e6cb2afa2b541e823755532db197"
     },
     {
      "name": "dist/translator.part022",
-     "size": 7694985,
-     "sha256": "05ea31e03cbd79f83b28e520d5b11cad3996d46b4a50bf773c0b2bbf8c837b78"
+     "size": 8249926,
+     "sha256": "a7884d960d727cf0ed83d427793e7fa3061d4cc3dea836862448cd84af2a2ed9"
     }
    ]
   },
