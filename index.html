@@ -206,6 +206,11 @@ const PADDLE_PRICES = {
   // 바로 결제가 열립니다. 비어 있는 동안에는 "아직 준비 중"이라고 한국어로 안내합니다.
   booking:   "pri_01m1qy8245q9z3yk0fmge5pw4w",
   office:    "pri_01m1rar8c6qmq2krwattq2cmqp",
+  // 회의록 만들개 — Paddle 에 상품을 만든 뒤 그 가격 열쇠(pri_...)를 여기에
+  // 붙여넣으면 바로 카드 결제가 열립니다. 비어 있는 동안 카드 단추를 아예
+  // 내보내지 않고 「메일로 주문」만 보여 줍니다(눌렀는데 「준비 중」이 뜨는
+  // 일을 막기 위해서입니다 — 2026-09-27 에 그 탈을 겪었습니다).
+  hoeuirok:  "",
   translator_basic: "pri_01m1rkvg5gbcf9dxwebnhcb0nn",
   translator_all:   "pri_01m1rky0rg3n16qnt2vhrh6c91",
   bundle:    "pri_01m0z38eb44de9sn6j4761nhwd"
@@ -1555,6 +1560,43 @@ article.goods.hide{display:none !important}
       <summary>💬 쓰신 분들의 한 줄 — 눌러서 보기 · 남기기</summary>
       <div data-리뷰="money"></div>
     </details>
+    </div>
+  </article>
+
+  <article class="goods" id="p-hoeuirok" data-job="school office solo" style="display:block;background:var(--cream-2);border:2px solid var(--mustard);border-radius:22px;padding:26px 28px;margin-top:26px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:26px">
+      <div style="flex:1 1 300px;min-width:0">
+        <div class="g-head"><span class="g-emoji">🎙</span><h3>밸류스 회의록 만들개</h3><span class="newtag">새로 나왔어요</span></div>
+        <p class="g-tag">녹음 파일을 넣으면 한글(.hwpx) 회의록이 나옵니다 — 인터넷 없이</p>
+        <p class="g-story">회의가 끝나면 녹음을 들으며 다시 받아 적는 일이 남습니다. 한 시간 회의면 두세 시간이 듭니다.
+          이 프로그램은 녹음 파일을 골라 단추 하나를 누르면 <b>머리표·참석자·안건·발언 기록·결정 사항이 들어간 한글 회의록</b>을 만들어 드립니다.
+          <b>소리가 이 컴퓨터 밖으로 한 발짝도 안 나갑니다</b> — 인터넷 선을 빼고도 그대로 됩니다.</p>
+        <ul class="g-feats">
+<li><b>누가 말했는지 알아서 갈라 줍니다</b> — 마이크 하나에 여러 사람이 번갈아 말해도 사람별로 나눕니다. 네 사람이 번갈아 말하는 10분 회의로 재 보니 <b>40차례를 40번 다 맞혔고</b>, 사람 수를 안 알려 줘도 「네 명」을 맞혔습니다</li>
+<li><b>한글 파일이 바로 나옵니다</b> — 글자 덩어리가 아니라 <b>표와 머리표가 들어간 .hwpx</b> 입니다. 한글 2020에서 열어 확인했습니다. 받아서 바로 결재에 올리실 수 있습니다</li>
+<li><b>「정한 것」을 따로 모아 줍니다</b> — 「원안대로 의결하겠습니다」·「~기로 했습니다」 같은 말을 찾아 <b>결정 사항</b> 칸에 담습니다. 「결정적인 역할」처럼 비슷하기만 한 말은 걸러 냅니다. 🚨 회의록에 <b>「프로그램이 골라 온 것이니 보시고 고쳐 주십시오」</b>라고 적어 둡니다 — 사람이 한 번 보셔야 합니다</li>
+<li><b>얼마나 맞게 받아 적나 — 재 보고 적었습니다</b> 사람이 받아 적은 정답 글과 하나하나 견주었습니다. <b>「가벼움」 88.8%</b>(두뇌 464MB · 10분 녹음에 3분 50초) · <b>「정확함」 94.6%</b>(두뇌 809MB · 10분 녹음에 5분 28초). 둘 중에서 고르실 수 있습니다</li>
+<li><b>정직하게 말씀드립니다</b> — 위 숫자는 <b>깨끗하게 녹음된 소리</b>로 잰 것입니다. <b>두 사람이 겹쳐 말하거나, 마이크가 멀거나, 둘레가 아주 시끄러우면 더 떨어집니다.</b> 그런 녹음으로는 아직 재 보지 않았습니다</li>
+<li><b>처음 한 번만 두뇌를 받습니다</b> — 464MB 또는 809MB. 그 뒤로는 <b>인터넷이 아예 필요 없습니다</b>. 학교·회사 인터넷이 막아 두었다면 휴대폰 핫스팟으로 한 번만 받으시면 됩니다</li>
+<li><b>창을 낮춰도 단추가 안 사라집니다</b> — 창 높이 480까지 줄여 자로 재어 확인했습니다(단추 48개 전부)</li>
+<li><b>넣은 값이 남아 있습니다</b> — 회의명·장소·작성자·참석자 이름을 껐다 켜도 그대로 있습니다</li>
+<li>한국어·영어 두 가지 화면</li>
+<li>윈도우용입니다 (맥·리눅스판은 아직 없습니다)</li></ul>
+      </div>
+      <div style="flex:1 1 260px;text-align:center;min-width:0;max-width:100%">
+        <div style="font-size:13px;color:var(--ink-2);margin-bottom:2px">한 번 결제 · 평생 사용</div>
+        <span class="g-price" style="font-size:32px">39,000<small>원</small></span>
+        <div class="g-note" style="margin:8px 0 12px">받아쓰기를 사람에게 맡기면<br><b>한 시간에 6만 원</b>부터입니다</div>
+        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%ED%9A%8C%EC%9D%98%EB%A1%9D%20%EB%A7%8C%EB%93%A4%EA%B0%9C%20%EC%A3%BC%EB%AC%B8">메일로 주문하기</a>
+        <div class="g-note" style="margin-top:10px;line-height:1.6"><b>카드 결제는 곧 열립니다.</b><br>그때까지는 메일로 주문해 주세요 — 하루 안에 입금 안내와 정품 키를 보내 드립니다.</div>
+        <div class="g-note" style="margin-top:10px;line-height:1.6">결제가 끝나면 위 차림표의 <b>「업데이트 받는 곳」</b>에서 키를 넣어 바로 내려받으실 수 있습니다. (약 136MB)</div>
+        <div class="g-note" style="margin-top:10px;line-height:1.6;color:#5f5648;border:1px solid #e6dcce;background:#faf6ef;border-radius:10px;padding:9px 11px;text-align:left"><b>내 컴퓨터로 될까요?</b><br>윈도우 10·11 이면 됩니다. 램이 4GB 보다 작으면 「가벼움」만 쓰시는 것이 좋습니다. 10분 녹음에 4~6분쯤 걸리니, 한 시간 회의는 커피 한 잔 드시는 동안 끝납니다.</div>
+      </div>
+
+      <details class="g-reviews">
+        <summary>💬 쓰신 분들의 한 줄 — 눌러서 보기 · 남기기</summary>
+        <div data-리뷰="hoeuirok"></div>
+      </details>
     </div>
   </article>
 
