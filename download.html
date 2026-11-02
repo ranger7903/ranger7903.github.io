@@ -312,7 +312,11 @@ throw err;
 }
 function setProg(id, text){ var el = document.getElementById(id); if (el) el.textContent = text; }
 
+/* 2026-11-02 새 판 재검증이 끝날 때까지 받기를 멈춘다. 다시 열려면 false 로 바꾼다. */
+var OFFICE_HOLD = true;
+
 function assembleDownload(btnId){
+if (OFFICE_HOLD) return;
 var cfg = DOWNLOADS[btnId];
 var btn = $(btnId);
 if (!cfg || !btn || btn.dataset.busy === "1") return;
@@ -381,6 +385,7 @@ a.addEventListener("click", function(e){ e.preventDefault(); assembleDownload(id
 /* 설치파일 조각이 아직 안 올라왔을 때 깨진 단추를 보여주지 않는다.
 파일이 올라오면 이 페이지는 고칠 필요 없이 저절로 정상이 된다. */
 function checkFiles(){
+if (OFFICE_HOLD){ Object.keys(DOWNLOADS).forEach(function(id){ var a = $(id); if (!a) return; a.textContent = "준비 중"; a.style.opacity = ".45"; a.style.pointerEvents = "none"; }); var n = document.getElementById("prep"); if (n) n.style.display = "block"; return; }
 Object.keys(DOWNLOADS).forEach(function(id){
 var a = $(id);
 if (!a) return;
