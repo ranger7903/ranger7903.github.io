@@ -907,39 +907,39 @@
   },
   "bisu": {
    "saveAs": "밸류스 자동화 비서.zip",
-   "version": "2026-10-04",
-   "totalSize": 47906349,
-   "sha256": "c8ecafbb13c328ccfdf512fda683bf50a840e4dce1baa5c6f5ce3189b3d4d553",
+   "version": "2026-11-03",
+   "totalSize": 47457419,
+   "sha256": "57e6007a540be9ce5738275675f9f699f1551803e436d05b75d2e2fe28f5a1e0",
    "parts": [
     {
-     "name": "dist/bisu.part000",
+     "name": "dist/bisu1103.part000",
      "size": 9437184,
-     "sha256": "cc7569608e43767f20fca3425181fb4d955a5e35bb3964c77d0d26a481f99767"
+     "sha256": "0d628f189f9adcbdac644a3b787054f2d16ff92c7889c4caaad518bc18343eb4"
     },
     {
-     "name": "dist/bisu.part001",
+     "name": "dist/bisu1103.part001",
      "size": 9437184,
-     "sha256": "1bff36648904ad174046c6b8184d7a461c0ff3a995dfd513d21f6f29a3624966"
+     "sha256": "a4e1829fd5c77bd9ac1512cc5182388963cf776ef41c56b94360286475a03d53"
     },
     {
-     "name": "dist/bisu.part002",
+     "name": "dist/bisu1103.part002",
      "size": 9437184,
-     "sha256": "2248e152981cb690f8ef5b6858e7d4e4fd9df36fe09e77947eaf9e2306f73061"
+     "sha256": "f4863e197d83eaaa406d427f319b02a5a281ebadc97e60eef31ca3a02d657d06"
     },
     {
-     "name": "dist/bisu.part003",
+     "name": "dist/bisu1103.part003",
      "size": 9437184,
-     "sha256": "cd8cd7084ed5a3e6b823a7e67313236f01db1d06d4ef0d815c6ac3fb91e28a98"
+     "sha256": "72f1ce48788845cde00d0c7a48dbe819bd7ff1595fb2676d9391273754a0b117"
     },
     {
-     "name": "dist/bisu.part004",
+     "name": "dist/bisu1103.part004",
      "size": 9437184,
-     "sha256": "426590ea3877b6d6c14fa4145ccae08a1bdc0c0eed749074d01977a8fe9174af"
+     "sha256": "c70a3c360d75d451e1671bcc37e82421d521d7e52063fa50923b378b027c92cb"
     },
     {
-     "name": "dist/bisu.part005",
-     "size": 720429,
-     "sha256": "3fddac43ddad7ef118cf2142fa3f0ac835c7ac0214d3223a762bfe332535340d"
+     "name": "dist/bisu1103.part005",
+     "size": 271499,
+     "sha256": "216c4151600a0b535dff3e0a8a3ab7195a3c304bb7fb2866299928390293297c"
     }
    ]
   },
