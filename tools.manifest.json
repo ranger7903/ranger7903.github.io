@@ -908,38 +908,43 @@
   "bisu": {
    "saveAs": "밸류스 자동화 비서.zip",
    "version": "2026-11-04",
-   "totalSize": 47476233,
-   "sha256": "74ae1e3f716e6feb1d8f981cbcab1e9fa83b87fc4d0de9868d00185636f7c8d9",
+   "totalSize": 60653515,
+   "sha256": "8b65b2687f6d7b9d7f661fe0e16c11b652997379d0558850afec6795a94e2ba6",
    "parts": [
     {
-     "name": "dist/bisu1104.part000",
+     "name": "dist/bisu1104b.part000",
      "size": 9437184,
-     "sha256": "4d50fe510f88a980d7f1555986f5463d9aa2619068096077d8db0ea41ca9ae71"
+     "sha256": "3f8901aa4830085ded5e37c5432f5ba4b32b4607476ca9b159110fd862523032"
     },
     {
-     "name": "dist/bisu1104.part001",
+     "name": "dist/bisu1104b.part001",
      "size": 9437184,
-     "sha256": "783d2f8ac71bc89c12569ba93080db44e8623980eb18ba8f33703d4105a186e4"
+     "sha256": "29659ba69b77fffa4e9451843e676ee92254acd748f863a68b3eaebfe1d0bd73"
     },
     {
-     "name": "dist/bisu1104.part002",
+     "name": "dist/bisu1104b.part002",
      "size": 9437184,
-     "sha256": "556f42f96498c2ebd1dd798e25d0e78d4676784cfb308b2d7a5fe52d607ddc1e"
+     "sha256": "229b4c9bbf5a44c42551c90c183264172474011dec43d2fa40bca98442dc4e59"
     },
     {
-     "name": "dist/bisu1104.part003",
+     "name": "dist/bisu1104b.part003",
      "size": 9437184,
-     "sha256": "29bbe0d851f738bda867aeac56e43e50aa53e5c2f2dab21d2a5dbd7cca761f82"
+     "sha256": "91ed85e53434b75512c44ce5e03d455700fed11edea0914adec4b24333e5ef4a"
     },
     {
-     "name": "dist/bisu1104.part004",
+     "name": "dist/bisu1104b.part004",
      "size": 9437184,
-     "sha256": "1c3331e8a15b58c4aabbc75bab5bad270b5b2cfa1e6963e1b7000ceac5fc24e8"
+     "sha256": "466ed1aab0561cf1af2ee14a54b3fa3adfdf52db3da3390ac4d42f20eaa2fb08"
     },
     {
-     "name": "dist/bisu1104.part005",
-     "size": 290313,
-     "sha256": "025bf42a32f752198beab508fb7b5137fd083551997402a8b0bcff64a834597e"
+     "name": "dist/bisu1104b.part005",
+     "size": 9437184,
+     "sha256": "133d9d32c59138c3d0dcb1b77f8364f7ef3f886f4c1e2bb02bafe09260af3e80"
+    },
+    {
+     "name": "dist/bisu1104b.part006",
+     "size": 4030411,
+     "sha256": "53d53921c54a91f44577427f0be5712854ddf8063d46937414ce059f3df28f9d"
     }
    ]
   },
