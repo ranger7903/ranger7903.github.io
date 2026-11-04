@@ -907,39 +907,39 @@
   },
   "bisu": {
    "saveAs": "밸류스 자동화 비서.zip",
-   "version": "2026-11-03",
-   "totalSize": 47457419,
-   "sha256": "57e6007a540be9ce5738275675f9f699f1551803e436d05b75d2e2fe28f5a1e0",
+   "version": "2026-11-04",
+   "totalSize": 47476233,
+   "sha256": "74ae1e3f716e6feb1d8f981cbcab1e9fa83b87fc4d0de9868d00185636f7c8d9",
    "parts": [
     {
-     "name": "dist/bisu1103.part000",
+     "name": "dist/bisu1104.part000",
      "size": 9437184,
-     "sha256": "0d628f189f9adcbdac644a3b787054f2d16ff92c7889c4caaad518bc18343eb4"
+     "sha256": "4d50fe510f88a980d7f1555986f5463d9aa2619068096077d8db0ea41ca9ae71"
     },
     {
-     "name": "dist/bisu1103.part001",
+     "name": "dist/bisu1104.part001",
      "size": 9437184,
-     "sha256": "a4e1829fd5c77bd9ac1512cc5182388963cf776ef41c56b94360286475a03d53"
+     "sha256": "783d2f8ac71bc89c12569ba93080db44e8623980eb18ba8f33703d4105a186e4"
     },
     {
-     "name": "dist/bisu1103.part002",
+     "name": "dist/bisu1104.part002",
      "size": 9437184,
-     "sha256": "f4863e197d83eaaa406d427f319b02a5a281ebadc97e60eef31ca3a02d657d06"
+     "sha256": "556f42f96498c2ebd1dd798e25d0e78d4676784cfb308b2d7a5fe52d607ddc1e"
     },
     {
-     "name": "dist/bisu1103.part003",
+     "name": "dist/bisu1104.part003",
      "size": 9437184,
-     "sha256": "72f1ce48788845cde00d0c7a48dbe819bd7ff1595fb2676d9391273754a0b117"
+     "sha256": "29bbe0d851f738bda867aeac56e43e50aa53e5c2f2dab21d2a5dbd7cca761f82"
     },
     {
-     "name": "dist/bisu1103.part004",
+     "name": "dist/bisu1104.part004",
      "size": 9437184,
-     "sha256": "c70a3c360d75d451e1671bcc37e82421d521d7e52063fa50923b378b027c92cb"
+     "sha256": "1c3331e8a15b58c4aabbc75bab5bad270b5b2cfa1e6963e1b7000ceac5fc24e8"
     },
     {
-     "name": "dist/bisu1103.part005",
-     "size": 271499,
-     "sha256": "216c4151600a0b535dff3e0a8a3ab7195a3c304bb7fb2866299928390293297c"
+     "name": "dist/bisu1104.part005",
+     "size": 290313,
+     "sha256": "025bf42a32f752198beab508fb7b5137fd083551997402a8b0bcff64a834597e"
     }
    ]
   },
