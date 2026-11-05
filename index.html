@@ -761,7 +761,7 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "99000",
+       "price": "59000",
        "availability": "https://schema.org/InStock",
        "url": "https://valuestools.kr/"
       },
@@ -1468,9 +1468,13 @@ article.goods.hide{display:none !important}
         </p>
       </div>
       <div style="flex:0 0 auto;text-align:center;min-width:230px">
-        <span class="g-price" style="font-size:34px">99,000<small>원</small></span>
+        <span class="g-price" style="font-size:34px">59,000<small>원</small></span>
         <div class="g-note" style="margin:6px 0 14px">한 번 결제 · 평생 사용 · 구독 없음<br>윈도우·맥·리눅스 다 드려요</div>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('bisu')">결제하기</a>
+        <!-- 2026-11-05 값을 99,000 → 59,000 으로 내렸다. Paddle 금액을 같이 고치기 전까지
+             카드 단추를 내보내지 않는다(눌렀는데 다른 금액이 뜨면 안 된다). Paddle 을 고친 뒤
+             아래 메일 단추를 payWithPaddle('bisu') 결제하기 단추로 되돌린다. -->
+        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EC%A3%BC%EB%AC%B8%20(59%2C000%EC%9B%90)">메일로 주문하기</a>
+        <div class="g-note" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 새 가격으로 바꾸는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
         <a class="mbtn" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EB%AC%B8%EC%9D%98" style="margin-top:10px;display:inline-block">💌 먼저 물어보기</a>
       </div>
 
@@ -1478,6 +1482,43 @@ article.goods.hide{display:none !important}
         <summary>💬 쓰신 분들의 한 줄 — 눌러서 보기 · 남기기</summary>
         <div data-리뷰="bisu"></div>
       </details>
+    </div>
+  </article>
+
+  <article class="goods" id="p-office" data-job="school office" style="display:block;background:var(--cream-2);border:2px solid var(--terra);border-radius:22px;padding:26px 28px;margin-top:26px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:26px">
+      <div style="flex:1 1 340px">
+        <div class="g-head"><span class="g-emoji">🏢</span><h3>밸류스 AI 사무직원</h3><span class="newtag">새로 나왔어요</span></div>
+        <p class="g-tag">표 합치기 · 명단 대조 · 보고 집계를 한 창에서 — 자신 없는 곳은 「확인할 곳」으로 먼저 알려 드려요</p>
+        <p class="g-story">파일을 창에 끌어다 놓으면 무슨 일인지 스스로 판단해 처리합니다.
+          끝나면 <b>확신도(%)</b>와 함께 결과가 올라오고, <b>틀렸을 만한 곳은 스스로 표시</b>해 둡니다.
+          모르는 일은 오류 대신 <b>질문</b>으로 묻고, 돈이 걸린 일은 사장님이 보실 때까지 기다립니다.
+          <b>원본 파일은 절대 바꾸지 않습니다.</b></p>
+        <img src="office-ko.jpg" alt="AI 사무직원 업무 현황판 화면" width="760" height="520" loading="lazy"
+             style="width:100%;height:auto;border:1px solid var(--line);border-radius:14px;margin:12px 0 4px">
+        <ul class="g-feats"><li><b>표 합치기</b> — 여러 파일·여러 시트를 하나로 (옛 .xls · CSV 도)</li>
+<li><b>명단·거래 대조</b> — 두 표에서 없는 줄과 다른 값을 찾아요. 시트가 여러 개인 출석부도 전부 읽어요</li>
+<li><b>정기 보고 집계</b> — 항목별·월별 합계와 전월 대비, 보기 좋은 보고서 엑셀까지</li>
+<li><b>영수증·서류 사진</b>에서 날짜·금액·상호를 읽어 회계용 표로</li>
+<li>서식에 이름만 채워 <b>증명서</b>를 한꺼번에 만들어요</li>
+<li>부분합 「소계」 줄, 글자로 적힌 숫자·날짜, 앞자리 0 학번 같은 <b>지저분한 실제 표 80가지</b>로 시험을 마쳤어요</li>
+<li>자료는 <b>이 컴퓨터 밖으로 나가지 않아요</b> — 인터넷 없이도 돌아가요</li></ul>
+        <p class="g-note" style="max-width:none;margin-top:10px;background:#FFF3EA;border:1px dashed var(--terra);border-radius:12px;padding:12px 14px">
+          <b>사시기 전에 꼭 읽어 주세요.</b><br>
+          ① <b>윈도우 전용</b>입니다(설치파일 약 293MB). 프로그램 화면은 지금 한국어입니다.<br>
+          ② 엑셀 수식 중 <b>저장된 값이 없는 칸</b>은 계산하지 않고 「확인할 곳」으로 알려 드립니다.
+          학번 없이 이름만 같은 사람(동명이인)은 서로 가려내지 못합니다.
+        </p>
+      </div>
+      <div style="flex:0 0 auto;text-align:center;min-width:230px">
+        <span class="g-price" style="font-size:34px">99,000<small>원</small></span>
+        <div class="g-note" style="margin:6px 0 14px">출시 기념가 · 한 번 결제<br>평생 사용 · 구독 없음 · 윈도우</div>
+        <!-- 2026-11-05 공개. Paddle 금액을 99,000원으로 맞춰 확인하기 전까지 카드 단추를 내보내지 않는다.
+             확인 뒤 payWithPaddle('office') 결제하기 단추로 바꾼다. -->
+        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=AI%20%EC%82%AC%EB%AC%B4%EC%A7%81%EC%9B%90%20%EC%A3%BC%EB%AC%B8%20(99%2C000%EC%9B%90)">메일로 주문하기</a>
+        <div class="g-note" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 준비하는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
+        <a class="mbtn" href="mailto:ranger7903@nate.com?subject=AI%20%EC%82%AC%EB%AC%B4%EC%A7%81%EC%9B%90%20%EB%AC%B8%EC%9D%98" style="margin-top:10px;display:inline-block">💌 먼저 물어보기</a>
+      </div>
     </div>
   </article>
 
