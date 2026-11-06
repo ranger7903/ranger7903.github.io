@@ -152,7 +152,7 @@ table.steps tr:last-child td{border-bottom:none}
 </div>
 
 <div class="card"><span class="tape" style="background:#BFD8B8"></span>
-<p class="step">밸류스 AI 사무직원 (2026-11-06 판 · v3.5) — 명단 대조 · 표 합치기 · 표를 보고서로 정리 · 영수증 사진 정리 · 증명서 발급</p>
+<p class="step">밸류스 AI 사무직원 (2026-11-06 판 · v3.6) — 명단 대조 · 표 합치기 · 표를 보고서로 정리 · 영수증 사진 정리 · 증명서 발급</p>
 <p style="margin:0 0 10px;font-size:13.5px;color:var(--ink2)">
 <b>이번 판에서 바뀐 것 (11-06)</b> — 파일을 넣으면 바로 만들지 않고 <b>「이렇게 하겠습니다」 살펴보기</b>를 먼저 보여 드립니다.
 무슨 일로 알아들었는지, 어떤 파일의 어떤 열을 쓰는지, 결과가 몇 줄인지, 확신이 얼마인지,
@@ -184,7 +184,7 @@ table.steps tr:last-child td{border-bottom:none}
 <a href="mailto:ranger7903@nate.com" style="color:inherit;font-weight:700">ranger7903@nate.com</a>
 으로 알려 주시면 바로 메일로 보내드릴게요.
 </div>
-<p class="hint">깔면 약 860MB를 차지합니다. 영수증 사진 읽기는 처음 쓸 때 95MB를, 여러 나라 말 안내문은 처음 쓸 때 477MB를 인터넷으로 한 번 더 받습니다. 표 합치기와 명단 대조는 인터넷 없이 됩니다.</p>
+<p class="hint">깔면 약 730MB를 차지합니다. 사진 읽기를 뺀 모든 일은 인터넷 없이 됩니다. 영수증·서류 사진 읽기만 처음 쓸 때 약 95MB를 한 번 받으며, 받기 전에 먼저 여쭙니다. 인터넷이 막힌 곳은 다른 컴퓨터에서 받아 USB로 넣을 수 있습니다.</p>
 <p class="hint">이번 판부터 번역 부품이 함께 들어가면서 파일이 커졌습니다(예전 20MB대 → 지금 300MB 안팎).
 받기를 누르면 여러 조각으로 나눠 받은 뒤 자동으로 하나로 합치고, 합친 파일이 원본과 같은지 스스로 확인한 다음에만 내려받기가 시작됩니다. 시간이 조금 걸릴 수 있어요.</p>
 <p class="hint">설치 안내 화면은 5개 언어로 나옵니다. 프로그램 화면은 지금 한국어입니다.</p>
@@ -273,7 +273,8 @@ if (!nacl.sign.detached.verify(payload, sig, pub)) return null;
 var info = JSON.parse(new TextDecoder("utf-8").decode(payload));
 if (!info || typeof info !== "object" || !info.p) return null;
 var prods = [].concat(info.p);
-if (prods.indexOf("*") < 0 && prods.indexOf(PRODUCT) < 0) return { denied: true, info: info };
+// 2026-11-06 묶음 키(*)로는 열지 않는다 — 홈페이지 묶음(열한 가지)에 AI 사무직원은 없다
+if (prods.indexOf(PRODUCT) < 0) return { denied: true, bundle: prods.indexOf("*") >= 0, info: info };
 return info;
 } catch(e){ return null; }
 }
@@ -409,7 +410,9 @@ if (!fromMemory) say("bad", "키가 맞지 않아요. 메일에 적힌 키를 �
 return false;
 }
 if (info.denied){
-if (!fromMemory) say("bad", "이 키는 AI 사무직원 키가 아니에요. 구매하신 제품의 키인지 확인해 주세요.");
+if (!fromMemory) say("bad", info.bundle
+  ? "「파는 도구 전부」 묶음 키예요. AI 사무직원은 묶음에 들어 있지 않아 따로 산 키가 있어야 해요."
+  : "이 키는 AI 사무직원 키가 아니에요. 구매하신 제품의 키인지 확인해 주세요.");
 return false;
 }
 try { localStorage.setItem(STORE, keyStr.trim()); } catch(e){}
@@ -436,7 +439,9 @@ try { saved = localStorage.getItem(STORE); } catch(e){}
 if (q && tryKey(q, true)) { history.replaceState(null, "", location.pathname); return; }
 if (saved && tryKey(saved, true)) return;
 $("gate").style.display = "block";
-if (q) { $("key").value = q; say("bad", "주소에 담긴 키가 맞지 않아요. 메일의 키를 다시 붙여넣어 주세요."); }
+// 2026-11-06 카드 결제가 끝나고 바로 온 손님
+if (new URLSearchParams(location.search).get("paid") === "1") say("good", "결제 고맙습니다. 정품 키를 메일로 보냈어요 — 몇 분 안에 도착합니다. 메일의 키를 아래 칸에 붙여 넣으시면 바로 받으실 수 있어요. (메일의 「바로 받기」 단추를 누르셔도 됩니다)");
+if (q) { $("key").value = q; tryKey(q, false); }
 })();
 </script>
 <script src="도우미.js" defer></script>

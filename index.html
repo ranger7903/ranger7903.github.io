@@ -215,6 +215,7 @@ const PADDLE_PRICES = {
   translator_all:   "pri_01m1rky0rg3n16qnt2vhrh6c91",
   bundle:    "pri_01m0z38eb44de9sn6j4761nhwd"
 };
+const PADDLE_SUCCESS = { office: "https://valuestools.kr/download.html?paid=1" };
 Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
 function payWithPaddle(key) {
   const priceId = PADDLE_PRICES[key];
@@ -222,9 +223,12 @@ function payWithPaddle(key) {
   // [2026-09-10] 결제창 글자를 한국어로 못 박는다.
   // 지금까지는 손님 브라우저 설정을 따라갔다. 그래서 한글 홈페이지를 보다가
   // 결제를 눌렀는데 결제창만 영어로 뜨는 일이 있었다.
+  // [2026-11-06] 결제가 끝나면 «그 자리에서» 받는 곳으로 — 지금은 AI 사무직원만
+  var 설정 = { locale: "ko" };
+  if (PADDLE_SUCCESS[key]) 설정.successUrl = PADDLE_SUCCESS[key];
   Paddle.Checkout.open({
     items: [{ priceId: priceId, quantity: 1 }],
-    settings: { locale: "ko" }
+    settings: 설정
   });
 }
 </script>
@@ -1503,10 +1507,10 @@ article.goods.hide{display:none !important}
 <li><b>영수증·서류 사진</b>에서 날짜·금액·상호를 읽어 회계용 표로</li>
 <li>서식에 이름만 채워 <b>증명서</b>를 한꺼번에 만들어요</li>
 <li>부분합 「소계」 줄, 글자로 적힌 숫자·날짜, 앞자리 0 학번 같은 <b>지저분한 실제 표 80가지</b>로 시험을 마쳤어요</li>
-<li>자료는 <b>이 컴퓨터 밖으로 나가지 않아요</b> — 표 합치기와 명단 대조는 인터넷 없이 됩니다. 영수증 사진 읽기는 처음 한 번 95MB를, 여러 나라 말 안내문은 처음 한 번 477MB를 받습니다</li></ul>
+<li>자료는 <b>이 컴퓨터 밖으로 나가지 않아요</b> — 사진 읽기를 뺀 모든 일은 처음부터 인터넷 없이 됩니다. 영수증·서류 사진 읽기만 처음 한 번 글자 읽기 두뇌(약 95MB)를 받아야 하고, 받기 전에 먼저 여쭙니다. 인터넷이 막힌 회사·학교는 USB로 옮겨 넣을 수 있어요</li></ul>
         <p class="g-note" style="max-width:none;margin-top:10px;background:#FFF3EA;border:1px dashed var(--terra);border-radius:12px;padding:12px 14px">
           <b>사시기 전에 꼭 읽어 주세요.</b><br>
-          ① <b>윈도우 전용</b>입니다. 내려받기 약 293MB · 깔면 약 860MB · 영수증 사진 읽기를 쓰시면 95MB를, 여러 나라 말 안내문을 쓰시면 477MB를 한 번 더 받습니다. 프로그램 화면은 지금 한국어입니다.<br>
+          ① <b>윈도우 전용</b>입니다. 내려받기 약 257MB · 깔면 약 730MB · 영수증 사진 읽기를 쓰시면 처음 한 번 약 95MB를 더 받습니다(받기 전에 여쭙니다). 프로그램 화면은 지금 한국어입니다.<br>
           ② 엑셀 수식 중 <b>저장된 값이 없는 칸</b>은 계산하지 않고 「확인할 곳」으로 알려 드립니다.
           학번 없이 이름만 같은 사람(동명이인)은 서로 가려내지 못합니다.
         </p>
@@ -1988,7 +1992,7 @@ article.goods.hide{display:none !important}
   <details open><summary>정말 인터넷 없이 되나요? 자료가 밖으로 나가지 않나요?</summary>
     <p>자료는 밖으로 나가지 않아요. 밸류스 도구는 서버 없이 당신 컴퓨터 안에서 일하고, 파일이나 입력 내용을 저희 쪽으로 보내지 않아요.
       대부분의 도구는 인터넷 선을 뽑아도 똑같이 움직여요. 다만 인터넷이 필요한 때가 있어요.<br>
-      · <b>통역책상 · AI 사무직원</b> — 처음 한 번 번역·글자 읽기 두뇌를 받을 때 (받은 뒤에는 인터넷 없이 됩니다)<br>
+      · <b>통역책상</b> — 처음 한 번 번역 두뇌를 받을 때 · <b>AI 사무직원</b> — 영수증 사진 읽기를 처음 쓸 때 글자 읽기 두뇌(약 95MB)를 받을 때, 여쭌 뒤에만 (받은 뒤에는 인터넷 없이 됩니다)<br>
       · <b>자동화 비서</b> — 메일을 읽어 올 때와, 켜 두신 알림(카카오톡·메일)을 보낼 때. 메일을 간추리는 일은 이 컴퓨터 안에서 합니다</p></details>
   <details><summary>구독인가요?</summary>
     <p>아니요. 한 번 결제하면 기간 제한 없이 쓰실 수 있고, 같은 버전대(v1.x) 업데이트는 무료로 드려요.</p></details>

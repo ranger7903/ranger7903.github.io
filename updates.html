@@ -121,8 +121,8 @@ textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12
 
 <div class="free">🎁 <b>무료 도구는 그냥 받아 가세요</b> —
  <a href="nametag_free.exe" download="밸류스 이름표 붙이기.exe">이름표 붙이기 바로 받기</a>
- (키 필요 없음) &nbsp;·&nbsp;
- <a href="download.html">AI 사무직원 받기</a></div>
+ (키 필요 없음)</div>
+<p class="hint">AI 사무직원은 따로 파는 물건이라 <a href="download.html" style="color:var(--terra)">AI 사무직원 받는 곳</a>에서 사무직원 키로 받으세요.</p>
 
 <a class="back" href="./">← 가게로 돌아가기</a>
 </div>
@@ -142,8 +142,10 @@ var NAMES = {
  register:"🧮 밸류스 계산대", reservation:"📅 밸류스 예약수첩",
  button:"🔘 밸류스 단추 (도구 여는 곳)",
  settle:"🧾 밸류스 정산 대조기", money:"💰 밸류스 돈 맞추개",
- memocard:"🃏 암기 수첩(모바일)"};
+ memocard:"🃏 암기 수첩(모바일)", office:"🏢 밸류스 AI 사무직원"};
 var WEBAPP = {memocard:"memocard.html"};
+// 2026-11-06 AI 사무직원은 받는 곳이 따로 있다 — 키를 담아 그리로 잇는다(묶음 키 * 로는 안 열린다)
+var LINKOUT = {office: function(raw){ return "download.html?key=" + encodeURIComponent(raw); }};
 var MANIFEST = null;
 
 function b64d(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='=';
@@ -240,10 +242,10 @@ document.getElementById('check').onclick = function(){
       var nm = document.createElement('span'); nm.className='nm';
       nm.textContent = NAMES[k] + (f ? '  (' + f.version + ' · ' + human(f.totalSize) + ')' : '');
       row.appendChild(nm);
-      if(WEBAPP[k]){
-        var a = document.createElement('a'); a.className='get'; a.href = WEBAPP[k];
+      if(WEBAPP[k] || LINKOUT[k]){
+        var a = document.createElement('a'); a.className='get'; a.href = LINKOUT[k] ? LINKOUT[k](raw) : WEBAPP[k];
         a.style.textAlign='center'; a.style.textDecoration='none'; a.style.lineHeight='1.9';
-        a.textContent = '열기'; row.appendChild(a);
+        a.textContent = LINKOUT[k] ? '받는 곳으로' : '열기'; row.appendChild(a);
       }else{
         var bar = document.createElement('span'); bar.className='bar';
         bar.appendChild(document.createElement('i'));
