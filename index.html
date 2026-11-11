@@ -231,6 +231,50 @@ function payWithPaddle(key) {
     settings: 설정
   });
 }
+
+/* [2026-11-11] 값이 맞을 때만 카드 단추를 내보낸다.
+   data-pay 가 붙은 「메일로 주문하기」 단추는, 결제창(Paddle)이 실제로 받는 값이
+   이 쪽에 적힌 값(data-won 원, data-usd 센트, data-cycle 달마다)과 «똑같을 때만»
+   스스로 「카드로 결제하기」로 바뀐다. 다르거나 못 물어보면 메일 주문 그대로 둔다.
+   그래서 눌렀는데 다른 금액이 뜨는 일이 없고, Paddle 값만 고치면 이 쪽은 다시 안 올려도 된다. */
+function 값맞으면카드로(나라말) {
+  try {
+    var 단추 = [].slice.call(document.querySelectorAll('a[data-pay][data-won]'));
+    if (!단추.length || !window.Paddle || !Paddle.PricePreview) return;
+    var 물건 = 단추.map(function (a) { return { priceId: PADDLE_PRICES[a.getAttribute('data-pay')], quantity: 1 }; })
+                   .filter(function (x) { return !!x.priceId; });
+    if (!물건.length) return;
+    function 묻기(나라) { return Paddle.PricePreview({ items: 물건, address: { countryCode: 나라 } }); }
+    Promise.all([묻기('KR'), 묻기('US')]).then(function (답) {
+      function 줄(r, id) {
+        var L = (r && r.data && r.data.details && r.data.details.lineItems) || [];
+        for (var i = 0; i < L.length; i++) if (L[i].price && L[i].price.id === id) return L[i];
+        return null;
+      }
+      단추.forEach(function (a) {
+        var k = a.getAttribute('data-pay'), id = PADDLE_PRICES[k];
+        var 한 = 줄(답[0], id), 미 = 줄(답[1], id);
+        if (!한 || !미) return;
+        if (답[0].data.currencyCode !== 'KRW' || 답[1].data.currencyCode !== 'USD') return;
+        var 달 = a.getAttribute('data-cycle') || '';
+        var 난달 = 한.price.billingCycle ? (한.price.billingCycle.frequency === 1 ? 한.price.billingCycle.interval : '?') : '';
+        var 같다 = parseInt(한.totals.total, 10) === parseInt(a.getAttribute('data-won'), 10)
+                && parseInt(미.totals.subtotal, 10) === parseInt(a.getAttribute('data-usd'), 10)
+                && 달 === 난달;
+        a.setAttribute('data-pay-state', 같다 ? 'card' : 'mail');
+        if (!같다) return;
+        a.setAttribute('href', 'javascript:void(0)');
+        a.onclick = function () { payWithPaddle(k); };
+        a.textContent = 나라말 === 'en' ? 'Buy now' : '카드로 결제하기';
+        var 글 = document.querySelector('[data-pay-note="' + k + '"]');
+        if (글) 글.innerHTML = 나라말 === 'en'
+          ? 'Prefer a bank transfer? Email us.'
+          : '카드가 어려우시면 메일 주세요. 결제 방법과 정품 키를 보내 드려요.';
+      });
+    }).catch(function () {});
+  } catch (e) {}
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ 값맞으면카드로('ko'); }); else 값맞으면카드로('ko');
 </script>
 
 <style>
@@ -1515,8 +1559,8 @@ article.goods.hide{display:none !important}
         <!-- 2026-11-05 값을 99,000 → 59,000 으로 내렸다. Paddle 금액을 같이 고치기 전까지
              카드 단추를 내보내지 않는다(눌렀는데 다른 금액이 뜨면 안 된다). Paddle 을 고친 뒤
              아래 메일 단추를 payWithPaddle('bisu') 결제하기 단추로 되돌린다. -->
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EC%A3%BC%EB%AC%B8%20(59%2C000%EC%9B%90)">메일로 주문하기</a>
-        <div class="g-note" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 새 가격으로 바꾸는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
+        <a class="btn fill" data-pay="bisu" data-won="59000" data-usd="4490" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EC%A3%BC%EB%AC%B8%20(59%2C000%EC%9B%90)">메일로 주문하기</a>
+        <div class="g-note" data-pay-note="bisu" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 새 가격으로 바꾸는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
         <a class="mbtn" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EB%AC%B8%EC%9D%98" style="margin-top:10px;display:inline-block">💌 먼저 물어보기</a>
       </div>
 
@@ -1560,8 +1604,8 @@ article.goods.hide{display:none !important}
         <div class="g-note" style="margin:6px 0 14px">출시 기념가 · 월 구독<br>한 달마다 정품 키를 새로 드려요 · 윈도우</div>
         <!-- 2026-11-05 공개. Paddle 금액을 99,000원으로 맞춰 확인하기 전까지 카드 단추를 내보내지 않는다.
              확인 뒤 payWithPaddle('office') 결제하기 단추로 바꾼다. -->
-        <a class="btn fill" href="mailto:ranger7903@nate.com?subject=AI%20%EC%82%AC%EB%AC%B4%EC%A7%81%EC%9B%90%20%EC%A3%BC%EB%AC%B8%20(%ED%95%9C%20%EB%8B%AC%2099%2C000%EC%9B%90)">메일로 주문하기</a>
-        <div class="g-note" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 준비하는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
+        <a class="btn fill" data-pay="office" data-won="99000" data-usd="7490" data-cycle="month" href="mailto:ranger7903@nate.com?subject=AI%20%EC%82%AC%EB%AC%B4%EC%A7%81%EC%9B%90%20%EC%A3%BC%EB%AC%B8%20(%ED%95%9C%20%EB%8B%AC%2099%2C000%EC%9B%90)">메일로 주문하기</a>
+        <div class="g-note" data-pay-note="office" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 준비하는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
         <a class="mbtn" href="mailto:ranger7903@nate.com?subject=AI%20%EC%82%AC%EB%AC%B4%EC%A7%81%EC%9B%90%20%EB%AC%B8%EC%9D%98" style="margin-top:10px;display:inline-block">💌 먼저 물어보기</a>
       </div>
     </div>
@@ -1932,7 +1976,7 @@ article.goods.hide{display:none !important}
     <div class="step"><span class="n">셋,</span><b>정품 키로 바로 받기</b>
       <p>결제하신 메일로 <b>정품 키</b>가<br>자동으로 도착해요. 그 키를 <a href="updates.html" style="color:inherit;text-decoration:underline">받는 곳</a>에<br>붙여넣으면 설치파일이 바로 내려와요.</p></div>
   </div>
-  <div class="refund"><b>작은 약속</b> — 설치했는데 잘 되지 않고, 저희가 고쳐드리지도 못하면 전액 돌려드려요.
+  <div class="refund"><b>작은 약속</b> — 산 날부터 7일 안이고 정품 키를 아직 넣지 않으셨으면 전액 돌려드려요. 설치가 안 되거나 설명과 다르면 기간과 상관없이 돌려드려요. 자세한 것은 <a href="refund.html" style="color:inherit">환불정책</a>에 있어요.
     영수증은 결제 직후 메일로 자동 발송돼요.</div>
 </div></section>
 
@@ -2054,7 +2098,7 @@ article.goods.hide{display:none !important}
   <div class="letter"><dl style="margin:0">
     <div class="row"><dt>받는 곳</dt><dd><a href="mailto:ranger7903@nate.com">ranger7903@nate.com</a></dd></div>
     <div class="row"><dt>데려가기</dt><dd>도구 카드의 「결제하기」로 카드 결제하시면 정품 키가 메일로 자동 도착해요. 그 키를 <a href="updates.html">받는 곳</a>에 붙여넣으면 설치파일이 바로 내려옵니다. 계좌이체를 원하시면 메일 주세요.</dd></div>
-    <div class="row"><dt>작은 약속</dt><dd>설치 후 정상 동작하지 않으면 전액 돌려드려요.</dd></div>
+    <div class="row"><dt>작은 약속</dt><dd>산 날부터 7일 안, 정품 키를 넣기 전이면 전액 돌려드려요. 설치가 안 되거나 설명과 다르면 기간과 상관없이 돌려드려요.</dd></div>
     <div class="row"><dt>맞춤 제작</dt><dd>쓰시는 서식에 맞춘 기능도 상담해 드려요.</dd></div>
   </dl></div>
 </div></section>
@@ -2065,6 +2109,7 @@ article.goods.hide{display:none !important}
   <div style="text-align:right">편지 ranger7903@nate.com<br>
     <a href="사업자정보.html" style="color:var(--terra);text-decoration:none">사업자정보</a> · <a href="terms.html" style="color:var(--terra);text-decoration:none">이용약관</a> · <a href="privacy.html" style="color:var(--terra);text-decoration:none">개인정보처리방침</a> · <a href="refund.html" style="color:var(--terra);text-decoration:none">환불정책</a> · <a href="기관구매.html" style="color:var(--terra);text-decoration:none">학교·기관 구매</a><br>
     © 2026 밸류스</div>
+  <div id="biz-line" style="flex-basis:100%;font-size:12.5px;line-height:1.8;border-top:1px dashed var(--line);padding-top:14px">상호 사재기 (브랜드 밸류스) · 대표자 이성빈 · 사업자등록번호 858-15-02513 · 간이과세자<br>(38141) 경상북도 경주시 북성로 61 (서부동, 경주명사마을) · 전화 010-3401-6153 · 전자우편 ranger7903@nate.com<br>통신판매업 신고 면제 대상입니다. 자세한 것은 <a href="사업자정보.html" style="color:var(--terra);text-decoration:none">사업자정보</a>에 있습니다.</div>
 </div></footer>
 
 
