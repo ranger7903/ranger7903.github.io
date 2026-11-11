@@ -1,7 +1,7 @@
 # 밸류스 (VALUES)
 
 **사무실의 되풀이되는 일을 덜어 주는 작은 도구 상점입니다.**
-경주에서 한 사람이 만듭니다. → **[valuestools.kr](https://valuestools.kr/)**
+→ **[valuestools.kr](https://valuestools.kr/)**
 
 이 저장소는 그 홈페이지(valuestools.kr)의 내용입니다.
 
@@ -90,7 +90,7 @@
 
 **ranger7903@nate.com** — 만든 사람이 직접 읽고 직접 답합니다.
 
-밸류스 · 상호 사재기 · 대표 이성빈 · 사업자등록번호 858-15-02513 ·
+밸류스 ·
 [사업자정보](https://valuestools.kr/%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html) ·
 [이용약관](https://valuestools.kr/terms.html) ·
 [개인정보처리방침](https://valuestools.kr/privacy.html) ·
