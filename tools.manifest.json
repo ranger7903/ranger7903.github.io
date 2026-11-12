@@ -191,19 +191,19 @@
   },
   "keeper": {
    "saveAs": "밸류스 폴더지킴이 설치.exe",
-   "version": "2026-09-20",
-   "totalSize": 14299608,
-   "sha256": "60c88e30cb0647137e1ed25de564c6a7cb21ed4d7925e75747ae832bcb94d41f",
+   "version": "2026-11-12",
+   "totalSize": 13632894,
+   "sha256": "3de6911de71798618e726ec6b927e8bddf1a9a1e7bfc1efd13c08dd6720b18dc",
    "parts": [
     {
-     "name": "dist/keeper.part000",
+     "name": "dist/keeper_1112.part000",
      "size": 9437184,
-     "sha256": "aa92d213e95ad939f0bc674c167bf39ce89bb4819b32e3cabc1cc57ba0786aec"
+     "sha256": "366a33d1481fff3618bf4380f2190a12ccd7217d8ebea9b35cd69f80bd664606"
     },
     {
-     "name": "dist/keeper.part001",
-     "size": 4862424,
-     "sha256": "00f4cf99ad1d81c853d7244f4bef15a9fced9be25ba57bb1c797a9ac64703039"
+     "name": "dist/keeper_1112.part001",
+     "size": 4195710,
+     "sha256": "ce55a4b74a66918c7be13e2f71c04df04c931fd483a2ece2e0d6506742450da1"
     }
    ]
   },
@@ -245,24 +245,24 @@
   },
   "pdfkit": {
    "saveAs": "밸류스 PDF 반짇고리 설치.exe",
-   "version": "2026-10-31",
-   "totalSize": 19791188,
-   "sha256": "025a701f2d4789eac8208b50a4b3c87c427d957af83e9388ce1cb14a9eb6040c",
+   "version": "2026-11-12",
+   "totalSize": 19865716,
+   "sha256": "04185921224caf93f28565d859691162629a5385d31c081c137e637b4e656338",
    "parts": [
     {
-     "name": "dist/pdfkit.part000",
+     "name": "dist/pdfkit_1112.part000",
      "size": 9437184,
-     "sha256": "4d439a6e8263501230cab644d70ab870e97f65a58c98fb1168d2ced36b89c13b"
+     "sha256": "743de88e530b9320159741cdedc6619559ed3e04061fe08246ebc127e087ead3"
     },
     {
-     "name": "dist/pdfkit.part001",
+     "name": "dist/pdfkit_1112.part001",
      "size": 9437184,
-     "sha256": "c06272dee0a80edced2f8f93f63eaa64ca4448d5f53fe5e046e242488268100d"
+     "sha256": "e8fd44c76e3a6f6eb5e0e40f03f2a4b6f759a9b2031336368f19a0f10d9b144a"
     },
     {
-     "name": "dist/pdfkit.part002",
-     "size": 916820,
-     "sha256": "74648bd5c4483aebfefed25d0b2f7b3a2eb644a3ae9dce53e615d804800baa04"
+     "name": "dist/pdfkit_1112.part002",
+     "size": 991348,
+     "sha256": "57e061bdb2b9d11a7fa3108d382a012a94f1233e1bfbf7907a2f5426c498338a"
     }
    ]
   },
