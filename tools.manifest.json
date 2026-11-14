@@ -839,28 +839,28 @@
   "pdfgrab": {
    "saveAs": "밸류스 표 뽑개 설치.exe",
    "version": "2026-11-14",
-   "totalSize": 29673260,
-   "sha256": "bc997fdb4cc93bb7d75a1116ec71c5a5a3ba82cef89fadb07a1ff189a000e8f4",
+   "totalSize": 29677078,
+   "sha256": "5dcb2b16d91547cc7203f3714fc36daf4a4d2e31102a49824094a0685458e6e7",
    "parts": [
     {
-     "name": "dist/pdfgrab_1114d.part000",
+     "name": "dist/pdfgrab_1114e.part000",
      "size": 9437184,
-     "sha256": "fc0ed24b97358c616f823001baccd43f9a9aa89cab9a46f1aad2976af744a278"
+     "sha256": "36eacfd351ced7b87b2890b06aecfb649d74b0d476be5cde397e1060f81165ad"
     },
     {
-     "name": "dist/pdfgrab_1114d.part001",
+     "name": "dist/pdfgrab_1114e.part001",
      "size": 9437184,
      "sha256": "d25fc4c3b8c74486a3830fe5e8433fe0332d17e257d2e8ca100d19e52bdfa25f"
     },
     {
-     "name": "dist/pdfgrab_1114d.part002",
+     "name": "dist/pdfgrab_1114e.part002",
      "size": 9437184,
      "sha256": "605e5edd2aa97e6591968d136d1cabed21c826f4944957c347c2759d5f958967"
     },
     {
-     "name": "dist/pdfgrab_1114d.part003",
-     "size": 1361708,
-     "sha256": "f403dc209f0f09aa46135a01c7136f215cc3738e03f2786a7f43b5dd12956579"
+     "name": "dist/pdfgrab_1114e.part003",
+     "size": 1365526,
+     "sha256": "c82037646e01f7907b68f66e65a64f387c7899b645514e654eae5937b313d91c"
     }
    ]
   },
