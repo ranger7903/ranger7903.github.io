@@ -1016,89 +1016,89 @@
   },
   "hoeuirok": {
    "saveAs": "밸류스 회의록 만들개 설치.exe",
-   "version": "2026-10-02",
-   "totalSize": 142190553,
-   "sha256": "79471230076f16f91cf1b784887336e680093dcddb34ca4fa90ad5f7ea5a896d",
+   "version": "2026-11-15",
+   "totalSize": 145301163,
+   "sha256": "ff05a8639fb9464b24d5b5e5ae50f2362393256b3068cb98bddea571b3500fcf",
    "parts": [
     {
-     "name": "dist/hoeuirok.part000",
+     "name": "dist/hoeuirok_1115.part000",
      "size": 9437184,
-     "sha256": "eb9e3ccd68608a2dc89b7c01323536ccfffb2608bb538aa90c6260904ffb62ff"
+     "sha256": "38d6cb85db9da9a05dd6e53e7dc4d4bb9d678d3923170f6007370ba1f52c5c52"
     },
     {
-     "name": "dist/hoeuirok.part001",
+     "name": "dist/hoeuirok_1115.part001",
      "size": 9437184,
-     "sha256": "aa73c99b7b0b89a9db27789c54d3fd01688a417f2dddc8f26ee6659fc4d67473"
+     "sha256": "bdb9679ab595b81b9b9dd1fcf8e741f9151b8e43a4ea7e22ff8f439cc26ed276"
     },
     {
-     "name": "dist/hoeuirok.part002",
+     "name": "dist/hoeuirok_1115.part002",
      "size": 9437184,
-     "sha256": "8ab1475762d43d16262f76860c7f60d3fda04d17df6002ef18e627c39da7d3b8"
+     "sha256": "5d4261a15a01ca7f70f99faf8dfffc739a6c987e84ad34bcc6e57830b08c3c43"
     },
     {
-     "name": "dist/hoeuirok.part003",
+     "name": "dist/hoeuirok_1115.part003",
      "size": 9437184,
-     "sha256": "e241721fc7b01e6b3f74462b70622bc3343760e681c7bed486bf2de5f1ba3b7d"
+     "sha256": "6430347ceee9f0ed86294700399ddcc749e6ad23ee5b9fd74dd283b543da7ea9"
     },
     {
-     "name": "dist/hoeuirok.part004",
+     "name": "dist/hoeuirok_1115.part004",
      "size": 9437184,
-     "sha256": "ac1b75db9c34e6dac21eb0f58f9e5f00f333be5ded95eddca0fa5ebcd7af7b4d"
+     "sha256": "4244dde29929940946eb42c587b5029fc51b66b18a3e719f8585d02f350865a0"
     },
     {
-     "name": "dist/hoeuirok.part005",
+     "name": "dist/hoeuirok_1115.part005",
      "size": 9437184,
-     "sha256": "1bf40dbd4c683e4bec89cc4aff8a29a9fd84c977fb5a33c9a9a10cb9993a0cf5"
+     "sha256": "9f35312411d8d3e9877bb356d1182709d5341ea74b0fc3aae4589f656f6b0bda"
     },
     {
-     "name": "dist/hoeuirok.part006",
+     "name": "dist/hoeuirok_1115.part006",
      "size": 9437184,
-     "sha256": "3e872b29b96d24ad31d17c05ffbf56389e670f5b04068194d68fb0e3e2b41164"
+     "sha256": "bb5c4161c53f21bfc208424702816f9807692a3c8f3639111bb64fc49ce046ef"
     },
     {
-     "name": "dist/hoeuirok.part007",
+     "name": "dist/hoeuirok_1115.part007",
      "size": 9437184,
-     "sha256": "e12c9a1a14204b302ccd2659ddc31120eed01fca5cab6676a198e5a1ff9f21f2"
+     "sha256": "a753172aaa10bc3448e33c4f653a561d064e1ba06e2a4a9fa98de8bc8555ac65"
     },
     {
-     "name": "dist/hoeuirok.part008",
+     "name": "dist/hoeuirok_1115.part008",
      "size": 9437184,
-     "sha256": "240590e578011bf944558754821221293033bfc8b98e9deea6dd4048b8e5c81e"
+     "sha256": "77a4d155154f1021f3238ae41472852d992ae74f275a8a88d89d079ce98687f6"
     },
     {
-     "name": "dist/hoeuirok.part009",
+     "name": "dist/hoeuirok_1115.part009",
      "size": 9437184,
-     "sha256": "3a0444c5834450dbdd5b24cfc17256c25ae5100313e6283506ae4c604dbeeda4"
+     "sha256": "a9db0abbf33e1e9795c9f97ee3feb5c60556e020bd5b37d98e823d00125aac04"
     },
     {
-     "name": "dist/hoeuirok.part010",
+     "name": "dist/hoeuirok_1115.part010",
      "size": 9437184,
-     "sha256": "bcc52e58f7302f747fbbb89bb4b7bee9bf193456b16b4f740aa94d59e5e40ea8"
+     "sha256": "15e204bbddae73d478a07563ee7dcc07846bf6b2b8f9caf22feff5bc3f9cc26e"
     },
     {
-     "name": "dist/hoeuirok.part011",
+     "name": "dist/hoeuirok_1115.part011",
      "size": 9437184,
-     "sha256": "2d976fda9e5a12d2244d486d1e651f0dfdc250739a8fdb6e48a0b6cab3a6c864"
+     "sha256": "9cc8c65d28ba922d945e5021e770a3656de151111553bffbee6edd0feed2eb93"
     },
     {
-     "name": "dist/hoeuirok.part012",
+     "name": "dist/hoeuirok_1115.part012",
      "size": 9437184,
-     "sha256": "21855653d09831e1a294ecab4626ea27c3912faacd5ead3c23645302d16f19e6"
+     "sha256": "2289fa7cfdc5398966a9637dba89148bdafd2803c032249d6846cdb7e0e531c4"
     },
     {
-     "name": "dist/hoeuirok.part013",
+     "name": "dist/hoeuirok_1115.part013",
      "size": 9437184,
-     "sha256": "c30142d6911ff281333353ea018968989d3948b6cad25960364d6c930bac2563"
+     "sha256": "e979a8b3a247994ee3a598ef50e3b8a058ac82bc4f3cb747688360d759f7edc3"
     },
     {
-     "name": "dist/hoeuirok.part014",
+     "name": "dist/hoeuirok_1115.part014",
      "size": 9437184,
-     "sha256": "21791a54236d2c4cf3c0688eade6f42e8aa93da56751345c41c36922db3a7bba"
+     "sha256": "b74ae6a89a7290b28619088420ce392d23dd1524b8f748736ba115954f66d52f"
     },
     {
-     "name": "dist/hoeuirok.part015",
-     "size": 632793,
-     "sha256": "5a5a0c92afd644150b17b82c344e67718d27f324e6b12660e46fe7939ba5aac6"
+     "name": "dist/hoeuirok_1115.part015",
+     "size": 3743403,
+     "sha256": "1b40f90759f1bdf89a03235079d2e99922640554fe75bfc56e84aad18db829aa"
     }
    ]
   },
