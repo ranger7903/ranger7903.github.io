@@ -44,7 +44,6 @@
 | [성분 풀이](https://valuestools.kr/seongbun.html) | 화장품 뒷면을 등급 대신 **근거**로 읽어 줍니다 (안드로이드) |
 | [타일 서바이브](https://valuestools.kr/tile.html) | 한 판 5분짜리 생존 놀이 (웹에서 바로) |
 | [손말](https://valuestools.kr/%EC%86%90%EB%A7%90%EC%95%B1.html) | 창구에서 되풀이되는 말을 미리 담아 두는 앱 |
-| [우리집 계량기](https://valuestools.kr/%EA%B3%84%EB%9F%89%EA%B8%B0.html) | 검침 숫자를 찍어서 기록 |
 | [약봉지 시간표](https://valuestools.kr/%EC%95%BD%EB%B4%89%EC%A7%80.html) | 약봉지를 찍으면 먹는 시간표가 나옵니다 |
 | [부모님 돌봄 일지](https://valuestools.kr/%EB%8F%8C%EB%B4%84.html) | 형제가 함께 적고, 누가 얼마를 보내면 똑같아지는지 알려 줍니다 |
 | [영수증 지갑](https://valuestools.kr/%EC%98%81%EC%88%98%EC%A6%9D%EC%A7%80%EA%B0%91.html) | 영수증을 찍으면 날짜·가게·금액을 뽑아 표로 |
