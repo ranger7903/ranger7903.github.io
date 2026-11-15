@@ -272,8 +272,8 @@ function 값맞으면카드로(나라말) {
         a.textContent = 나라말 === 'en' ? 'Buy now' : '카드로 결제하기';
         var 글 = document.querySelector('[data-pay-note="' + k + '"]');
         if (글) 글.innerHTML = 나라말 === 'en'
-          ? 'Prefer a bank transfer? Email us.'
-          : '카드가 어려우시면 메일 주세요. 결제 방법과 정품 키를 보내 드려요.';
+          ? 'After payment your license key arrives by email.'
+          : '결제가 끝나면 정품 키가 메일로 바로 갑니다.';
       });
     }).catch(function () {});
   } catch (e) {}
@@ -1171,7 +1171,7 @@ article.goods.hide{display:none !important}
 <div class="g-buy">
         <span class="g-price">19,000<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="stampcut" data-won="19000" data-usd="1500" href="mailto:ranger7903@nate.com?subject=%EB%B0%B8%EB%A5%98%EC%8A%A4%20%EB%8F%84%EC%9E%A5%20%EC%98%A4%EB%A6%AC%EA%B0%9C%20%EC%A3%BC%EB%AC%B8%20%2819%2C000%EC%9B%90%29">메일로 주문하기</a>
+        <a class="btn fill" data-pay="stampcut" data-won="19000" data-usd="1500" href="javascript:void(0)" onclick="payWithPaddle('stampcut')">카드로 결제하기</a>
         <a class="btn line" href="try.html?lang=ko#stampcut">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="stampcut">무료로 먼저 써 보실 수 있어요. 품질은 정품과 똑같고, 저장을 3번까지 해 보실 수 있습니다.</span>
       </div>
@@ -1203,7 +1203,7 @@ article.goods.hide{display:none !important}
 <div class="g-buy">
         <span class="g-price">24,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="scanlike" data-won="24900" data-usd="1900" href="mailto:ranger7903@nate.com?subject=%EB%B0%B8%EB%A5%98%EC%8A%A4%20%EC%8A%A4%EC%BA%94%ED%95%9C%20%EA%B2%83%EC%B2%98%EB%9F%BC%20%EC%A3%BC%EB%AC%B8%20%2824%2C900%EC%9B%90%29">메일로 주문하기</a>
+        <a class="btn fill" data-pay="scanlike" data-won="24900" data-usd="1900" href="javascript:void(0)" onclick="payWithPaddle('scanlike')">카드로 결제하기</a>
         <a class="btn line" href="try.html?lang=ko#scanlike">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="scanlike">무료로 먼저 써 보실 수 있어요. 품질은 정품과 똑같고, 저장을 3번까지 해 보실 수 있습니다.</span>
       </div>
@@ -1596,7 +1596,7 @@ article.goods.hide{display:none !important}
 <div class="g-buy">
         <span class="g-price">13,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="proofbox" data-won="13900" data-usd="999" href="mailto:ranger7903@nate.com?subject=%EB%B0%B8%EB%A5%98%EC%8A%A4%20%EC%9E%91%EC%97%85%20%EC%A6%9D%EA%B1%B0%20%EC%83%81%EC%9E%90%20%EC%A3%BC%EB%AC%B8%20%2813%2C900%EC%9B%90%29">메일로 주문하기</a>
+        <a class="btn fill" data-pay="proofbox" data-won="13900" data-usd="999" href="javascript:void(0)" onclick="payWithPaddle('proofbox')">카드로 결제하기</a>
         <a class="btn line" href="try.html?lang=ko#proofbox">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="proofbox">무료로 먼저 써 보실 수 있어요. 노래 한 곡은 무료로 기록합니다.</span>
       </div>
@@ -1628,7 +1628,7 @@ article.goods.hide{display:none !important}
 <div class="g-buy">
         <span class="g-price">34,900<small>원</small></span>
         <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="songfactory" data-won="34900" data-usd="2499" href="mailto:ranger7903@nate.com?subject=%EB%B0%B8%EB%A5%98%EC%8A%A4%20%EB%85%B8%EB%9E%98%20%EA%B3%B5%EC%9E%A5%20%EC%A3%BC%EB%AC%B8%20%2834%2C900%EC%9B%90%29">메일로 주문하기</a>
+        <a class="btn fill" data-pay="songfactory" data-won="34900" data-usd="2499" href="javascript:void(0)" onclick="payWithPaddle('songfactory')">카드로 결제하기</a>
         <a class="btn line" href="try.html?lang=ko#songfactory">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="songfactory">무료로 먼저 써 보실 수 있어요. 30초 노래는 무료로 만듭니다.</span>
       </div>
@@ -1696,7 +1696,7 @@ article.goods.hide{display:none !important}
         <!-- 2026-11-05 값을 99,000 → 59,000 으로 내렸다. Paddle 금액을 같이 고치기 전까지
              카드 단추를 내보내지 않는다(눌렀는데 다른 금액이 뜨면 안 된다). Paddle 을 고친 뒤
              아래 메일 단추를 payWithPaddle('bisu') 결제하기 단추로 되돌린다. -->
-        <a class="btn fill" data-pay="bisu" data-won="59000" data-usd="4400" data-cycle="month" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EC%A3%BC%EB%AC%B8%20(59%2C000%EC%9B%90)">메일로 주문하기</a>
+        <a class="btn fill" data-pay="bisu" data-won="59000" data-usd="4400" data-cycle="month" href="javascript:void(0)" onclick="payWithPaddle('bisu')">카드로 결제하기</a>
         <div class="g-note" data-pay-note="bisu" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 새 가격으로 바꾸는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
         <a class="mbtn" href="mailto:ranger7903@nate.com?subject=%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B9%84%EC%84%9C%20%EB%AC%B8%EC%9D%98" style="margin-top:10px;display:inline-block">💌 먼저 물어보기</a>
       </div>
@@ -1741,7 +1741,7 @@ article.goods.hide{display:none !important}
         <div class="g-note" style="margin:6px 0 14px">출시 기념가 · 월 구독<br>한 달마다 정품 키를 새로 드려요 · 윈도우</div>
         <!-- 2026-11-05 공개. Paddle 금액을 99,000원으로 맞춰 확인하기 전까지 카드 단추를 내보내지 않는다.
              확인 뒤 payWithPaddle('office') 결제하기 단추로 바꾼다. -->
-        <a class="btn fill" data-pay="office" data-won="99000" data-usd="7400" data-cycle="month" href="mailto:ranger7903@nate.com?subject=AI%20%EC%82%AC%EB%AC%B4%EC%A7%81%EC%9B%90%20%EC%A3%BC%EB%AC%B8%20(%ED%95%9C%20%EB%8B%AC%2099%2C000%EC%9B%90)">메일로 주문하기</a>
+        <a class="btn fill" data-pay="office" data-won="99000" data-usd="7400" data-cycle="month" href="javascript:void(0)" onclick="payWithPaddle('office')">카드로 결제하기</a>
         <div class="g-note" data-pay-note="office" style="margin:8px 0 0;font-size:12.5px">카드 결제창을 준비하는 중이에요.<br>메일 주시면 결제 방법과 정품 키를 바로 보내 드려요.</div>
         <a class="mbtn" href="mailto:ranger7903@nate.com?subject=AI%20%EC%82%AC%EB%AC%B4%EC%A7%81%EC%9B%90%20%EB%AC%B8%EC%9D%98" style="margin-top:10px;display:inline-block">💌 먼저 물어보기</a>
       </div>
@@ -1855,7 +1855,6 @@ article.goods.hide{display:none !important}
         <span class="g-price" style="font-size:32px">39,000<small>원</small></span>
         <div class="g-note" style="margin:8px 0 12px">받아쓰기를 사람에게 맡기면<br><b>한 시간에 6만 원</b>부터입니다</div>
         <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('hoeuirok')">카드로 결제하기</a>
-        <a class="btn line" href="mailto:ranger7903@nate.com?subject=%ED%9A%8C%EC%9D%98%EB%A1%9D%20%EB%A7%8C%EB%93%A4%EA%B0%9C%20%EC%A3%BC%EB%AC%B8" style="margin-top:8px;display:inline-block">카드 말고 계좌로 — 메일 주세요</a>
         <div class="g-note" style="margin-top:10px;line-height:1.6">결제하시면 <b>정품 키가 바로 메일로</b> 갑니다.</div>
         <div class="g-note" style="margin-top:10px;line-height:1.6">결제가 끝나면 위 차림표의 <b>「업데이트 받는 곳」</b>에서 키를 넣어 바로 내려받으실 수 있습니다. (약 136MB)</div>
         <div class="g-note" style="margin-top:10px;line-height:1.6;color:#5f5648;border:1px solid #e6dcce;background:#faf6ef;border-radius:10px;padding:9px 11px;text-align:left"><b>내 컴퓨터로 될까요?</b><br>윈도우 10·11 이면 됩니다. 램이 4GB 보다 작으면 「가벼움」만 쓰시는 것이 좋습니다. 10분 녹음에 4~6분쯤 걸리니, 한 시간 회의는 커피 한 잔 드시는 동안 끝납니다.</div>
@@ -2099,7 +2098,7 @@ article.goods.hide{display:none !important}
   <p class="eyebrow">데려가는 법</p>
   <h2>세 걸음이면 책상 위에 도착해요</h2>
   <p class="lede">💳 <b>카드로 바로 데려가실 수 있어요</b> — 위 도구 카드의 「결제하기」를 누르면 결제창이 열려요.
-    원화(원)로 표시된 그 금액 그대로 결제되고, 카드가 어려우시면 <b>계좌이체</b>도 그대로 열려 있어요.</p>
+    원화(원)로 표시된 그 금액 그대로 결제되고, 결제가 끝나면 정품 키가 메일로 바로 가요.</p>
   <div style="background:var(--terra-soft);border:1px solid var(--terra);border-radius:14px;padding:14px 18px;margin:14px 0;font-size:15.5px;line-height:1.75">
     🏫 <b>학교·관공서·회사에서 사시나요?</b> 행정실은 개인 카드로 못 사시지요.
     <a href="기관구매.html" style="color:var(--terra);font-weight:700">학교·기관 구매 쪽</a>에서
@@ -2234,7 +2233,7 @@ article.goods.hide{display:none !important}
     어떤 이야기든 하루 안에 답장을 드려요.</p>
   <div class="letter"><dl style="margin:0">
     <div class="row"><dt>받는 곳</dt><dd><a href="mailto:ranger7903@nate.com">ranger7903@nate.com</a></dd></div>
-    <div class="row"><dt>데려가기</dt><dd>도구 카드의 「결제하기」로 카드 결제하시면 정품 키가 메일로 자동 도착해요. 그 키를 <a href="updates.html">받는 곳</a>에 붙여넣으면 설치파일이 바로 내려옵니다. 계좌이체를 원하시면 메일 주세요.</dd></div>
+    <div class="row"><dt>데려가기</dt><dd>도구 카드의 「결제하기」로 카드 결제하시면 정품 키가 메일로 자동 도착해요. 그 키를 <a href="updates.html">받는 곳</a>에 붙여넣으면 설치파일이 바로 내려옵니다.</dd></div>
     <div class="row"><dt>작은 약속</dt><dd>산 날부터 7일 안, 정품 키를 넣기 전이면 전액 돌려드려요. 설치가 안 되거나 설명과 다르면 기간과 상관없이 돌려드려요.</dd></div>
     <div class="row"><dt>맞춤 제작</dt><dd>쓰시는 서식에 맞춘 기능도 상담해 드려요.</dd></div>
   </dl></div>
