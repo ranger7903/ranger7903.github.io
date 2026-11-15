@@ -166,6 +166,34 @@
    "paddle": "pri_01m5s3mhh12sac13w182fftf2y",
    "설치파일": "hoeuirok"
   },
+  "stampcut": {
+   "이름": "밸류스 도장 오리개",
+   "원": 19000,
+   "달러": 15,
+   "paddle": "pri_01m7fcj2dsh7fvea9vjz93qzhp",
+   "설치파일": "stampcut"
+  },
+  "scanlike": {
+   "이름": "밸류스 스캔한 것처럼",
+   "원": 24900,
+   "달러": 19,
+   "paddle": "pri_01m7fcm43md9f75avb5jsw0v4p",
+   "설치파일": "scanlike"
+  },
+  "proofbox": {
+   "이름": "밸류스 작업 증거 상자",
+   "원": 13900,
+   "달러": 9.99,
+   "paddle": "pri_01m7fcnah7eytxbvj6y344gkgm",
+   "설치파일": "proofbox"
+  },
+  "songfactory": {
+   "이름": "밸류스 노래 공장",
+   "원": 34900,
+   "달러": 24.99,
+   "paddle": "pri_01m7fcp3vfe5tqe16qjskrarf9",
+   "설치파일": "songfactory"
+  },
   "office": {
    "이름": "AI 사무직원",
    "원": 99000,
