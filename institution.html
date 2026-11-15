@@ -204,6 +204,7 @@ VALUES (registered name 사재기)<br>
 (function(){
 'use strict';
 var skip = { office:1, bisu:1 };
+var EN = { translator_all:'Interpreter Desk (all fifteen languages)', bundle:'Desk Set (eleven desk tools in one bundle)', translator_basic:'Interpreter Desk (Korean ↔ English)', settle:'Grant Settlement Checker', pdfgrab:'Table Grabber', hoeuirok:'Minutes Maker', listcompare:'Smart List Compare', moahwp:'Korean Form Gatherer', garifile:'Redact for Files', money:'Receivables Matcher', merger:'Smart Data Merger', formfiller:'Smart Form Filler', booking:'Booking Notebook', quick:'Quick Typer', gongmun:'Official Letter Checker', counter:'VALUES Counter', garden:'Desk Garden', handwrite:'Heart Drawer (PC)' };
 var items = [], picked = {};
 function won(n){ return '₩' + n.toLocaleString('en-US'); }
 function today(){ return new Date().toISOString().slice(0,10); }
@@ -215,7 +216,7 @@ fetch('prices.json', {cache:'no-store'}).then(function(r){ return r.json(); }).t
   Object.keys(m).forEach(function(k){
     var v = m[k];
     if (v['무료'] || !v['원'] || skip[k]) return;
-    items.push({ key:k, name:v['이름'], won:v['원'] });
+    items.push({ key:k, name:(EN[k] || v['이름']), won:v['원'] });
   });
   items.sort(function(a,b){ return b.won - a.won; });
   draw();
