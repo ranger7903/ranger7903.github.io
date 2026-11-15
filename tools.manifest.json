@@ -1104,29 +1104,29 @@
   },
   "shorts": {
    "saveAs": "밸류스 쇼츠공장 설치.exe",
-   "version": "2026-11-14 v1.9",
-   "totalSize": 34430862,
-   "sha256": "e12ece999e9388090728db1d9b44e7dad8bdacfb4a34c03513e1df17bee27eb1",
+   "version": "2026-11-15 v2.0",
+   "totalSize": 34453892,
+   "sha256": "1ff38c7bffc8bb251febf85314913cfac6fd542f137b49c0b884e096c84b704e",
    "parts": [
     {
-     "name": "dist/shorts_1114w.part000",
+     "name": "dist/shorts_1115v.part000",
      "size": 9437184,
-     "sha256": "b10aad1b8ef7dfe86ca8ca137d7e53a69c52e4cd8a1233907cbca7b2cb04c91a"
+     "sha256": "36ef1087213606181036eaa3554dfc888be13659eacc4b32308b0ad35c1bdeaf"
     },
     {
-     "name": "dist/shorts_1114w.part001",
+     "name": "dist/shorts_1115v.part001",
      "size": 9437184,
-     "sha256": "d0a8223ce8cee5560c16de73d8a96a5f5473b52957a265de6535ead4c67e9cf9"
+     "sha256": "7ebaa89b271f16d1b444c80afcac4604091afe5943587b258649b76b1a85fc19"
     },
     {
-     "name": "dist/shorts_1114w.part002",
+     "name": "dist/shorts_1115v.part002",
      "size": 9437184,
-     "sha256": "21cb54dbee4adc467b59e89a7b915d4c6181255d2cfdcc8511464f5250392b44"
+     "sha256": "094ce5b11a8b68469567925bb13ee7da7800caf2e346d83418ac9d2b53e17459"
     },
     {
-     "name": "dist/shorts_1114w.part003",
-     "size": 6119310,
-     "sha256": "d3fb3e6a4918a09d2f0338097c9468b1b8e2cff73fb3894bb5b0814307ef99fa"
+     "name": "dist/shorts_1115v.part003",
+     "size": 6142340,
+     "sha256": "8d5e58c939ff4825ebacc0f039c17068cb75d509445d10d2f8e91048b1093345"
     }
    ]
   },
