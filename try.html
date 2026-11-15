@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Try before you buy · VALUES</title>
+<link rel="canonical" href="https://valuestools.kr/try.html">
+<meta name="description" content="Free trials of VALUES Windows programs: Stamp Cutter, Scan Like, Proof Box and Song Factory. Everything runs on your own computer. Pay once if you like it.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap">
+<style>
+:root{--cream:#FAF5EC;--card:#FFFDF8;--line:#E4D9C6;--ink:#41382E;--ink2:#6E6355;--ink3:#9A8F7F;
+ --terra:#D97757;--terra-soft:#F6E3DA;--sage:#7E9B77;
+ --shadow:0 2px 4px rgba(80,60,30,.05),0 18px 46px -30px rgba(80,60,30,.5)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Gowun Dodum","Malgun Gothic",sans-serif;font-size:16px;line-height:1.8}
+.shell{max-width:720px;margin:0 auto;padding:0 20px 60px}
+nav{border-bottom:1px dashed var(--line)}
+nav .shell{display:flex;align-items:center;height:60px;padding-bottom:0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.stamp{width:32px;height:32px;border:2px solid var(--terra);border-radius:50%;display:grid;place-items:center;color:var(--terra);font-family:"Gowun Batang",serif;font-weight:700;font-size:14px;transform:rotate(-6deg)}
+.brand b{font-family:"Gowun Batang",serif;font-size:20px}
+h1{font-family:"Gowun Batang",serif;font-size:26px;margin:34px 0 6px;text-align:center}
+.sub{text-align:center;color:var(--ink2);font-size:14.5px;margin:0 0 26px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+.prod{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#fff;font-size:14.5px}
+.prod .nm{flex:1 1 200px}
+.prod .nm b{font-size:15.5px}
+.prod .nm em{display:block;font-style:normal;color:var(--ink3);font-size:13px;line-height:1.6}
+.prod .get{border:none;background:var(--sage);color:#fff;font-family:inherit;font-size:13.5px;font-weight:700;border-radius:9px;padding:9px 16px;cursor:pointer;min-width:124px;text-align:center;text-decoration:none;display:inline-block}
+.prod .get:disabled{opacity:.6;cursor:default}
+.bar{flex:1 1 100%;height:7px;background:#EFE7D8;border-radius:4px;overflow:hidden;display:none}
+.bar i{display:block;height:100%;width:0;background:var(--sage);transition:width .2s}
+.err{display:none;background:#F9E3E0;border:1px dashed var(--terra);color:#8a3d2b;border-radius:10px;padding:11px 15px;font-size:13.5px;margin-top:10px}
+.note{background:#F4F1E6;border:1px dashed var(--line);border-radius:10px;padding:12px 16px;font-size:13.5px;color:var(--ink2);margin-top:14px}
+.back{display:block;text-align:center;margin-top:26px;color:var(--ink3);font-size:13.5px;text-decoration:none}
+</style>
+<style>
+.lang{margin-left:auto;font-size:13.5px;color:var(--ink3);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px}
+.prod .buy{background:var(--terra)}
+.price{display:block;font-size:13px;color:var(--ink2);margin-top:2px}
+</style>
+</head>
+<body>
+<nav><div class="shell"><a class="brand" href="./en.html"><span class="stamp">値</span><b>VALUES</b></a><a class="lang" id="lang" href="?lang=ko">한국어</a></div></nav>
+<div class="shell">
+  <h1 id="h1">Try before you buy</h1>
+  <p class="sub" id="sub">Download the full program. It works with full quality right away; a few saves are free. If you like it, pay once and paste the key. No subscription, no account.</p>
+  <div class="card">
+    <div id="prods"><div class="prod"><span class="nm">Loading...</span></div></div>
+    <div class="err" id="err"></div>
+    <div class="note" id="n1"></div>
+    <div class="note" id="n2"></div>
+  </div>
+  <a class="back" id="back" href="./en.html">Back to the shop</a>
+</div>
+<script>
+var KO = /[?&]lang=ko/.test(location.search) || (!/[?&]lang=en/.test(location.search) && (navigator.language||'').toLowerCase().indexOf('ko')===0 && /[?&]auto/.test(location.search));
+var T = {
+ en:{h1:"Try before you buy", sub:"Download the full program. It works with full quality right away; a few saves are free. If you like it, pay once and paste the key. No subscription, no account.",
+   n1:"<b>It takes a moment.</b> The file comes in several pieces, is joined, and is checked against the original before it is saved. Please keep this page open until it says Done.",
+   n2:"<b>Windows may warn you once.</b> We have not bought a Microsoft signature yet. When downloading: Chrome menu then Keep. When opening: More info then Run anyway.",
+   back:"Back to the shop", get:"Download free trial", busy:"Downloading...", check:"Checking...", done:"Done", again:"Try again", soon:"Coming soon", buy:"Buy", lang:"한국어",
+   fail:"The download stopped. Check your internet and press Try again. If it keeps failing, email ranger7903@nate.com and we will send it."},
+ ko:{h1:"사기 전에 먼저 써 보세요", sub:"프로그램 전체를 받습니다. 품질은 처음부터 그대로이고, 몇 번은 무료로 저장해 볼 수 있습니다. 마음에 드시면 한 번만 내고 정품 키를 넣으시면 됩니다. 달마다 내는 돈도, 회원가입도 없습니다.",
+   n1:"<b>받는 데 조금 걸립니다.</b> 파일을 여러 조각으로 받아 하나로 합치고, 원본과 같은지 확인한 다음 저장합니다. 「받았어요」가 뜰 때까지 이 창을 닫지 말아 주세요.",
+   n2:"<b>윈도우가 한 번 막을 수 있습니다. 고장이 아닙니다.</b> 받을 때는 크롬 아래쪽 메뉴에서 「계속」, 열 때는 파란 창에서 「추가 정보」 다음 「실행」을 누르세요.",
+   back:"가게로 돌아가기", get:"무료로 써 보기", busy:"받는 중...", check:"확인하는 중...", done:"받았어요", again:"다시 받기", soon:"준비 중", buy:"사기", lang:"English",
+   fail:"받다가 끊겼어요. 인터넷을 확인하고 「다시 받기」를 눌러 주세요. 계속 안 되면 ranger7903@nate.com 으로 알려 주시면 메일로 보내 드립니다."}
+};
+var L = KO ? T.ko : T.en;
+var 무료들 = [
+ {slug:"stampcut", en:["Stamp Cutter","Cuts a red seal or a signature off a scan or phone photo as a clean see-through PNG, and stamps it onto your PDF. 3 free saves.","$15 · one-time"],
+   ko:["도장 오리개","종이나 폰 사진에 찍힌 빨간 도장·서명을 투명한 그림으로 깨끗하게 오려 PDF에 찍어 줍니다. 3번 무료 저장.","19,000원 · 한 번만"], buy:"en.html#p-stampcut", kobuy:"./#p-stampcut"},
+ {slug:"scanlike", en:["Scan Like","Turns phone photos of documents into straight, clean pages that look scanned, and binds them into one PDF. 3 free saves.","$19 · one-time"],
+   ko:["스캔한 것처럼","폰으로 찍은 서류 사진을 스캔한 것처럼 반듯하고 깨끗하게 펴서 PDF 하나로 묶습니다. 3번 무료 저장.","24,900원 · 한 번만"], buy:"en.html#p-scanlike", kobuy:"./#p-scanlike"},
+ {slug:"proofbox", en:["Proof Box (for music makers)","Keeps a dated, tamper-evident record of your song files while you work, so you can show the song is yours if it is ever flagged as AI. 1 song free.","$9.99 · one-time"],
+   ko:["작업 증거 상자 (음악 만드는 분)","노래를 만드는 동안 파일마다 날짜 도장 찍힌 기록을 쌓아, AI로 의심받을 때 내 작업이라는 증거 꾸러미를 냅니다. 1곡 무료.","13,900원 · 한 번만"], buy:"en.html#p-proofbox", kobuy:"./#p-proofbox"},
+ {slug:"songfactory", en:["Song Factory","Makes songs with singing on your own computer. No download limit, no monthly fee, nothing sent out. 30-second songs free; a key opens up to 4 minutes.","$24.99 · one-time"],
+   ko:["노래 공장","내 컴퓨터에서 가사가 있는 노래를 만듭니다. 내려받기 수 제한 없음, 달마다 내는 돈 없음. 30초 노래는 무료, 정품 키를 넣으면 4분까지.","34,900원 · 한 번만"], buy:"en.html#p-songfactory", kobuy:"./#p-songfactory"}
+];
+var MANIFEST = null;
+function 보임(n){ return (n/1048576).toFixed(1)+"MB"; }
+function hex(buf){ return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
+function 탈(msg){ var e=document.getElementById('err'); e.textContent=msg; e.style.display='block'; }
+function 받기(slug, btn, bar){
+  var info = MANIFEST.files[slug];
+  if(!info || !info.parts || !info.parts.length){ 탈(L.soon); return; }
+  btn.disabled = true; bar.style.display='block';
+  var fill = bar.firstChild, bufs = [], loaded = 0, i = 0;
+  function next(){
+    if(i >= info.parts.length) return Promise.resolve();
+    var p = info.parts[i];
+    return fetch(MANIFEST.base + p.name, {cache:'no-store'}).then(function(r){
+      if(!r.ok) throw new Error('part');
+      return r.arrayBuffer();
+    }).then(function(ab){
+      if(ab.byteLength !== p.size) throw new Error('size');
+      bufs[i] = new Uint8Array(ab); loaded += ab.byteLength; i++;
+      var pct = Math.round(loaded / info.totalSize * 100);
+      fill.style.width = pct + '%';
+      btn.textContent = L.busy.replace('...','') + ' ' + pct + '%';
+      return next();
+    });
+  }
+  next().then(function(){
+    var all = new Uint8Array(info.totalSize), off = 0;
+    for(var k=0;k<bufs.length;k++){ all.set(bufs[k], off); off += bufs[k].length; }
+    btn.textContent = L.check;
+    return crypto.subtle.digest('SHA-256', all).then(function(d){
+      if(hex(d) !== info.sha256) throw new Error('sha');
+      var url = URL.createObjectURL(new Blob([all], {type:'application/octet-stream'}));
+      var a = document.createElement('a');
+      a.href = url; a.download = info.saveAs;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+      btn.textContent = L.done; fill.style.width='100%';
+    });
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = L.again;
+    탈(L.fail);
+  });
+}
+
+
+function 그리기(){
+  var box = document.getElementById('prods'); box.innerHTML = '';
+  무료들.forEach(function(x){
+    var f = MANIFEST ? MANIFEST.files[x.slug] : null, w = KO ? x.ko : x.en;
+    var row = document.createElement('div'); row.className='prod'; row.id = x.slug;
+    var nm = document.createElement('span'); nm.className='nm';
+    nm.innerHTML = '<b>'+w[0]+'</b><em>'+w[1]+'</em><span class="price">'+w[2]+(f ? ' · Windows 10/11 · '+보임(f.totalSize) : '')+'</span>';
+    row.appendChild(nm);
+    var bar = document.createElement('span'); bar.className='bar'; bar.appendChild(document.createElement('i'));
+    var btn = document.createElement('button'); btn.className='get';
+    var ok = !!(f && f.parts && f.parts.length);
+    btn.textContent = ok ? L.get : L.soon; if(!ok) btn.disabled = true;
+    (function(slug,b,bb){ b.onclick=function(){ 받기(slug,b,bb); }; })(x.slug, btn, bar);
+    var buy = document.createElement('a'); buy.className='get buy'; buy.href = KO ? x.kobuy : x.buy; buy.textContent = L.buy;
+    row.appendChild(btn); row.appendChild(buy); row.appendChild(bar); box.appendChild(row);
+  });
+}
+document.documentElement.lang = KO ? 'ko' : 'en';
+['h1','sub','n1','n2','back'].forEach(function(k){ document.getElementById(k).innerHTML = L[k]; });
+document.getElementById('back').href = KO ? './' : './en.html';
+var lg = document.getElementById('lang'); lg.textContent = L.lang; lg.href = KO ? '?lang=en' : '?lang=ko';
+if (KO) document.title = '사기 전에 먼저 써 보세요 · 밸류스';
+fetch('tools.manifest.json', {cache:'no-store'}).then(function(r){ return r.json(); })
+  .then(function(m){ MANIFEST = m; 그리기(); if(location.hash){ var el=document.getElementById(location.hash.slice(1)); if(el) el.scrollIntoView(); } })
+  .catch(function(){ 그리기(); 탈(L.fail); });
+</script>
+<script src="세기.js" defer></script>
+</body>
+</html>

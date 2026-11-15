@@ -1129,6 +1129,108 @@
      "sha256": "d3fb3e6a4918a09d2f0338097c9468b1b8e2cff73fb3894bb5b0814307ef99fa"
     }
    ]
+  },
+  "proofbox": {
+   "saveAs": "VALUES-ProofBox-Setup-1.0.0.exe",
+   "version": "2026-11-15",
+   "totalSize": 27418511,
+   "sha256": "e51e9e4eb6f7539c5f5afb4063602f36b8a8e5fae9dfe43b284ffeca1f263c9e",
+   "parts": [
+    {
+     "name": "dist/proofbox_pb1115.part000",
+     "size": 9437184,
+     "sha256": "8fda7e38201d40b58d247a8ed8b6b9188d06b08f6d816153b0e6e9a158e65ceb"
+    },
+    {
+     "name": "dist/proofbox_pb1115.part001",
+     "size": 9437184,
+     "sha256": "cca447f9f08ca1d81c2a6857ece35a0110d6fbdbd0c27cb57fd702dccc13f39e"
+    },
+    {
+     "name": "dist/proofbox_pb1115.part002",
+     "size": 8544143,
+     "sha256": "139192387ea9700bb33ee0472594a3e69d1cf8e22516206a4f1d0f2e24a464fb"
+    }
+   ]
+  },
+  "songfactory": {
+   "saveAs": "VALUES-SongFactory-Setup-1.0.0.exe",
+   "version": "2026-11-15",
+   "totalSize": 15183261,
+   "sha256": "1388099512de39730e087ad8307873ec2a7e383cabc428ee4af560d1c7394bc5",
+   "parts": [
+    {
+     "name": "dist/songfactory_sf1115.part000",
+     "size": 9437184,
+     "sha256": "9a64661138b3f1c389cb9151dcaa0d8302bbc04ea486cf7c6af98caaa908628d"
+    },
+    {
+     "name": "dist/songfactory_sf1115.part001",
+     "size": 5746077,
+     "sha256": "dc4ed82745d66b9027c4553be645156a93474e7096e5d650d90c5d4470eea5e2"
+    }
+   ]
+  },
+  "stampcut": {
+   "saveAs": "VALUES-StampCutter-Setup-1.0.0.exe",
+   "version": "2026-11-15",
+   "totalSize": 36204048,
+   "sha256": "98acf673e1c456966bed895f577596cbf0119209fe13f1249952fca69761563d",
+   "parts": [
+    {
+     "name": "dist/stampcut_sc1115.part000",
+     "size": 9437184,
+     "sha256": "39f5637e9b12154b216860783b92ee8ccfe896cbb49f5548d93c31ad02362b37"
+    },
+    {
+     "name": "dist/stampcut_sc1115.part001",
+     "size": 9437184,
+     "sha256": "bf142f7e8e40adf682f12cab4e67374375fa500aba6b2512e2e5080f5b312a86"
+    },
+    {
+     "name": "dist/stampcut_sc1115.part002",
+     "size": 9437184,
+     "sha256": "8b4e5b2f7186fd2a23300b421700c027785da15610f4da9a3853cba9d8cd96c6"
+    },
+    {
+     "name": "dist/stampcut_sc1115.part003",
+     "size": 7892496,
+     "sha256": "493fd596378dc3f7ba2432a77049671e67a14d178ad59c3c8f69de288d74b9bf"
+    }
+   ]
+  },
+  "scanlike": {
+   "saveAs": "VALUES-ScanLike-Setup-1.0.0.exe",
+   "version": "2026-11-15",
+   "totalSize": 34001483,
+   "sha256": "ee41aa6176a901d97e5b0f72da8716a69e392e1cd275ae09b6e816b8ae6fd3ac",
+   "parts": [
+    {
+     "name": "dist/scanlike_sl1115.part000",
+     "size": 9437184,
+     "sha256": "fb183a9ad9749c413cc5755c7a11c81eabd4edafed4d8f969ee5c253327e5828"
+    },
+    {
+     "name": "dist/scanlike_sl1115.part001",
+     "size": 9437184,
+     "sha256": "f3584dfc20827087dd2efcdd04e5a2f3f627038230f99193a032bc23c81170e3"
+    },
+    {
+     "name": "dist/scanlike_sl1115.part002",
+     "size": 9437184,
+     "sha256": "a7516dffa449104dd5fbf3916143ffb320588c6d79e0a72c5b32787f1885a355"
+    },
+    {
+     "name": "dist/scanlike_sl1115x.part003",
+     "size": 2844965,
+     "sha256": "6a893763abdb69c8eba844e94d46cca0ba6218faad8b1fabfebf4de7588a40c4"
+    },
+    {
+     "name": "dist/scanlike_sl1115x.part004",
+     "size": 2844966,
+     "sha256": "831e72bd6923ea11034cfa419579f46fd1c8fd7a90fca4de78931b354d30ca59"
+    }
+   ]
   }
  }
 }
