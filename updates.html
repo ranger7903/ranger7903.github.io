@@ -226,7 +226,7 @@ document.getElementById('check').onclick = function(){
   // 따로 파는 물건이라 세트 키('*')로는 열리지 않는다.
   var 세트 = ['pdfgrab','moahwp','gongmun','merge','formfill','compare','quick','keeper','garden','handwrite','pdfkit','crayon','register','reservation'];
   var all = (info.p && info.p.indexOf('*') >= 0);
-  var mine = all ? 세트.slice() : (info.p || []);
+  var mine = all ? 세트.concat((info.p || []).filter(function(x){ return x !== '*' && 세트.indexOf(x) < 0; })) : (info.p || []);  // 2026-11-15 묶음과 낱개를 함께 산 키
   // 무료로 드리는 것은 누구에게나
   if (mine.indexOf('memocard') < 0) mine = mine.concat(['memocard']);
   // 「밸류스 단추」는 다른 도구를 한 자리에서 여는 열쇠고리라, 어떤 키를 가진 분께든 드린다
