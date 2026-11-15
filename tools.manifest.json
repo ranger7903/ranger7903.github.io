@@ -192,18 +192,18 @@
   "keeper": {
    "saveAs": "밸류스 폴더지킴이 설치.exe",
    "version": "2026-11-15 v1.2",
-   "totalSize": 13642949,
-   "sha256": "707971194bd4158dd22af88ddc305fdfddd6de4c7b26a19ff7d168d6fafed54c",
+   "totalSize": 13645218,
+   "sha256": "c1b114a10ec6cd5c43c9e9f41e5615cd2d21d6580921a4ed91c916fcd6c62c25",
    "parts": [
     {
-     "name": "dist/keeper_1115v.part000",
+     "name": "dist/keeper_1115w.part000",
      "size": 9437184,
-     "sha256": "36ff2b9846d13765aa0daadb123d546263941c832ee924fab282ee5ce2cdfe71"
+     "sha256": "120b7b268e2d78dfa8ff3f3b0bcccabfdff3ad5a9de649eb9125fbe74c285b4e"
     },
     {
-     "name": "dist/keeper_1115v.part001",
-     "size": 4205765,
-     "sha256": "bbf09c25a8701a98f079a487d4481b3e28fb742d30a1b48334603777d28eec6b"
+     "name": "dist/keeper_1115w.part001",
+     "size": 4208034,
+     "sha256": "80e463b0a00ddeaafa7a57215b74c066250b0a7c4f616c425dc6bf893e964fe7"
     }
    ]
   },
