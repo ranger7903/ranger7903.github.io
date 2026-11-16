@@ -169,6 +169,11 @@
      "영문": "Tile Survive"
     },
     {
+     "열쇠": "hangul",
+     "이름": "Hangul Steps (외국인용 한국어)",
+     "영문": "Hangul Steps"
+    },
+    {
      "열쇠": "memocard",
      "이름": "암기 수첩",
      "영문": "Memo Cards"
