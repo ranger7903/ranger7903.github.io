@@ -564,10 +564,12 @@ function home(){
   $('#jpggo').onclick = () => saveJpegs();
   if ($('#keep')) $('#keep').onchange = e => { S.keep = e.target.checked; saveDraft(); };
   let armed = 0;
-  $('#clear').onclick = () => {
+  $('#clear').onclick = async () => {
     if (Date.now() - armed > 4000) { armed = Date.now(); $('#clear').textContent = 'Tap again to remove all ' + n + ' pages'; return; }
-    S.pages.forEach(p => { imgDel(p.id); delete BLOB[p.id]; if (THUMB[p.id]) URL.revokeObjectURL(THUMB[p.id]); delete THUMB[p.id]; });
+    S.pages.forEach(p => { delete BLOB[p.id]; if (THUMB[p.id]) URL.revokeObjectURL(THUMB[p.id]); delete THUMB[p.id]; });
     S.pages = []; S.name = ''; saveDraft(); home();
+    // one transaction for all photos, and wait for it, so a quick reload or closed tab can't leave photos behind
+    await (addQ = addQ.then(() => tx('img', 'readwrite', s => s.clear())).catch(() => {}));
   };
 }
 function movePage(id, dir){
@@ -831,6 +833,15 @@ async function start(){
     if (keep.length !== S.pages.length) { S.pages = keep; saveDraft(); }
     home(); S.pages.forEach(makeThumb);
   }
+  // Remove any photo that no page uses any more (e.g. the tab closed while a delete was still being written).
+  // Runs in the add-photo queue so it can never race with a photo being added.
+  addQ = addQ.then(async () => {
+    const used = new Set(S.pages.map(p => p.id));
+    const keys = await tx('img', 'readonly', s => s.getAllKeys());
+    const gone = (keys || []).filter(k => !used.has(k));
+    if (gone.length) await tx('img', 'readwrite', s => { gone.forEach(k => s.delete(k)); return null; });
+  }).catch(() => {});
+  await addQ;
   QS.ready = true;
 }
 start();
