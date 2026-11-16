@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doctor Visit Prep — one clear page to show your doctor</title>
+<meta name="description" content="Write down your symptoms, medicines, allergies and questions, then show the doctor one clear page — headings in 15 languages. Private, offline, no account.">
+<!--
+  Doctor Visit Prep (Valuestools, 2026-11-16 first build). Product key name: doctorprep.
+  Customer: anyone going to a doctor, especially travellers and expats who don't speak the local language.
+   · Notes: main problem, symptoms (dated updates, 0-10), medicines, allergies, conditions, questions.
+   · Visit sheet: one page to print (A4/Letter) or hold up on the phone. Headings + tap-chips are translated;
+     the patient's own text is never machine-translated and the page says so.
+   · No diagnosis, no advice. Emergency line + a few emergency numbers.
+   · Free: 1 person, 1 current sheet, English + 1 other heading language.
+     Paid: family profiles, all 15 languages, visit history, backup file.
+   · Data only on this device (localStorage).
+-->
+<link rel="manifest" href="doctorprep_manifest.json">
+<meta name="theme-color" content="#1F5B63">
+<link rel="icon" href="doctorprep_icon192.png">
+<script src="nacl.min.js"></script>
+<style>
+:root{--bg:#F6F8F7;--card:#fff;--ink:#1F2A2C;--ink2:#5E6B6D;--line:#D9E2E1;--deep:#1F5B63;--accent:#C2553A;--ok:#2F6B45;--okbg:#E7F2EA;--bad:#A23A2A;--badbg:#FBE9E5;--warnbg:#FFF4D6;--warnline:#E3C463}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;font-size:17px;line-height:1.45}
+main{max-width:640px;margin:0 auto;padding:12px 14px 48px}
+header{display:flex;align-items:center;gap:8px;margin:4px 0 10px}
+header h1{font-size:20px;margin:0;flex:1;min-width:0}
+header h1 small{display:block;font-size:13px;font-weight:400;color:var(--ink2)}
+button{font:inherit;cursor:pointer;color:inherit}
+input,textarea,select{font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;width:100%;max-width:100%}
+textarea{resize:vertical;min-height:44px}
+label{display:block;font-size:14px;color:var(--ink2);margin:10px 0 4px}
+.icon{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 10px;font-size:15px;white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.card h2{font-size:17px;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.card h2 .n{font-size:13px;font-weight:400;color:var(--ink2);flex:1}
+.big{display:block;width:100%;border:none;border-radius:14px;padding:14px;font-size:17px;font-weight:700;background:var(--deep);color:#fff;margin-top:12px}
+.big.alt{background:#fff;color:var(--deep);border:1px solid var(--deep)}
+.big.red{background:var(--bad)}
+.small{border:1px solid var(--deep);background:#fff;color:var(--deep);border-radius:999px;padding:6px 12px;font-size:14px}
+.small.solid{background:var(--deep);color:#fff}
+.small.danger{border-color:var(--bad);color:var(--bad)}
+.row{display:flex;gap:8px;align-items:center}
+.row > *{min-width:0}
+.grow{flex:1}
+.muted{color:var(--ink2);font-size:13px}
+.item{display:flex;gap:8px;align-items:flex-start;border-top:1px solid var(--line);padding:8px 0}
+.item:first-of-type{border-top:none}
+.item .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.item .t b{display:block}
+.x{border:none;background:none;color:var(--ink2);font-size:20px;line-height:1;padding:2px 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:15px}
+.chip.on{border:2px solid var(--deep);background:#E5F0F0;font-weight:600}
+.emer{background:var(--badbg);border:1px solid #E7B9AE;border-radius:12px;padding:10px 12px;font-size:14px;margin:10px 0}
+.emer b{color:var(--bad)}
+.emer table{border-collapse:collapse;margin-top:6px;font-size:14px}
+.emer td{padding:2px 10px 2px 0;vertical-align:top}
+.emer td:first-child{font-weight:700;white-space:nowrap}
+.note{background:var(--warnbg);border:1px solid var(--warnline);border-radius:12px;padding:10px 12px;font-size:14px;margin:10px 0}
+.sev{display:inline-block;min-width:44px;text-align:center;border-radius:8px;padding:1px 6px;font-weight:700;font-size:14px;background:#EEF2F2}
+.sev.h{background:#F7D9D1;color:#7E2414}.sev.m{background:#FBEBC8;color:#6B4A00}.sev.l{background:#DDEFE2;color:#1E5532}
+input[type=range]{padding:0;border:none;height:34px;accent-color:var(--deep)}
+.modal{position:fixed;inset:0;background:rgba(20,30,32,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}
+.modal .card{max-width:460px;width:100%;max-height:90vh;overflow:auto}
+footer{text-align:center;color:var(--ink2);font-size:13px;margin-top:22px}
+a{color:var(--deep)}
+
+/* ───── Visit sheet ───── */
+.tool{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}
+.tool select{width:auto;flex:1;min-width:150px}
+.sheet{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;font-size:16px;line-height:1.4;overflow-wrap:anywhere}
+.sheet[lang=ja]{font-family:"Hiragino Sans","Yu Gothic UI","Yu Gothic","Meiryo","Noto Sans JP","Noto Sans CJK JP",sans-serif}
+.sheet[lang=ko]{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.sheet[lang=zh]{font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC","Noto Sans CJK SC",sans-serif}
+.sheet[lang=ar]{font-family:"Segoe UI","Geeza Pro","Noto Naskh Arabic","Noto Sans Arabic",Tahoma,sans-serif}
+.sheet[lang=hi]{font-family:"Nirmala UI","Kohinoor Devanagari","Noto Sans Devanagari","Mangal",sans-serif}
+.sheet[lang=th]{font-family:"Leelawadee UI","Thonburi","Noto Sans Thai","Tahoma",sans-serif}
+.sheet .en{font-size:.72em;color:#667;font-weight:400}
+.sheet h3 .en{margin-inline-start:6px}
+.sh-top .ttl .en{display:block;margin:0}
+.sheet td .en{white-space:nowrap}
+.sh-top{border-bottom:3px solid var(--deep);padding-bottom:8px;margin-bottom:10px}
+.sh-top .ttl{font-size:1.3em;font-weight:800;color:var(--deep)}
+.sh-meta{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:6px}
+.sh-meta span b{font-weight:600;color:#445}
+.sheet h3{font-size:1.02em;margin:12px 0 4px;color:var(--deep);border-bottom:1px solid var(--line);padding-bottom:2px;break-after:avoid}
+.sheet .sec{break-inside:avoid}
+.sheet .main{font-size:1.12em;font-weight:600}
+.sheet table{width:100%;border-collapse:collapse}
+.sheet th,.sheet td{text-align:start;vertical-align:top;padding:3px 6px;border-bottom:1px solid #EEF1F1}
+.sheet th{font-size:.82em;color:#445;font-weight:600}
+.sheet .sym{padding:4px 0 6px;border-bottom:1px solid #EEF1F1}
+.sheet .sym .nm{font-weight:700}
+.sheet .kv{display:block;padding-inline-start:12px}
+.sheet .kv b{font-weight:600;color:#445}
+.sheet .allergy{background:var(--badbg);border:2px solid var(--bad);border-radius:8px;padding:6px 10px;font-weight:700}
+.sheet ol,.sheet ul{margin:2px 0;padding-inline-start:22px}
+.sheet .foot{margin-top:12px;font-size:.78em;color:#556;border-top:1px solid var(--line);padding-top:6px}
+.sheet .none{color:#778;font-style:italic}
+.sheet.huge{font-size:21px}
+.sheet.huge .en{font-size:.62em}
+
+@media print{
+  @page{margin:12mm}
+  html,body{background:#fff}
+  main{max-width:none;padding:0;margin:0}
+  .noprint,header,.tool,.emer,.note,footer,.modal{display:none !important}
+  .sheet{border:none;border-radius:0;padding:0;font-size:10pt;line-height:1.28}
+  .sheet.huge{font-size:10pt}
+  .sheet .sec{break-inside:auto}
+  .sheet .sym{break-inside:avoid;padding:2px 0 3px}
+  .sheet .sym .nm{display:inline;margin-inline-end:12px}
+  .sheet .kv{display:inline;padding:0;margin-inline-end:12px}
+  .sheet h3{margin:7px 0 3px}
+  .sheet th,.sheet td{padding:1px 6px}
+  .sheet tr{break-inside:avoid}
+  .sh-top{padding-bottom:5px;margin-bottom:6px}
+  .sheet .allergy{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sh-top{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+'use strict';
+// ───────── Languages for the doctor side ─────────
+// Only these fixed headings, labels and chip words are translated. The patient's own text is shown exactly as typed.
+const LANGS = [
+ ['en','English','English'],['es','Español','Spanish'],['fr','Français','French'],['de','Deutsch','German'],
+ ['pt','Português','Portuguese'],['it','Italiano','Italian'],['ja','日本語','Japanese'],['ko','한국어','Korean'],
+ ['zh','中文（简体）','Chinese (Simplified)'],['ar','العربية','Arabic'],['tr','Türkçe','Turkish'],['vi','Tiếng Việt','Vietnamese'],
+ ['th','ไทย','Thai'],['ru','Русский','Russian'],['hi','हिन्दी','Hindi']];
+const LCODES = LANGS.map(l => l[0]);
+// order of every row below: en es fr de pt it ja ko zh ar tr vi th ru hi
+function row(s){ const a = s.split('|'); const o = {}; LCODES.forEach((c, i) => o[c] = a[i]); return o; }
+const T = {
+ title: row('Patient notes for the doctor|Resumen del paciente para el médico|Résumé du patient pour le médecin|Patientenangaben für den Arzttermin|Resumo do paciente para o médico|Riepilogo del paziente per il medico|診察用メモ（患者記入）|진료용 환자 메모|就诊信息（患者填写）|ملخص المريض للطبيب|Doktor için hasta özeti|Tóm tắt của bệnh nhân cho bác sĩ|ข้อมูลผู้ป่วยสำหรับแพทย์|Сведения пациента для врача|डॉक्टर के लिए मरीज़ का सारांश'),
+ name: row('Name|Nombre|Nom|Name|Nome|Nome|氏名|이름|姓名|الاسم|Ad|Họ tên|ชื่อ|Имя|नाम'),
+ age: row('Age|Edad|Âge|Alter|Idade|Età|年齢|나이|年龄|العمر|Yaş|Tuổi|อายุ|Возраст|उम्र'),
+ date: row('Date|Fecha|Date|Datum|Data|Data|日付|날짜|日期|التاريخ|Tarih|Ngày|วันที่|Дата|तारीख़'),
+ main: row('Main problem|Motivo de consulta|Motif de consultation|Hauptbeschwerde|Queixa principal|Motivo della visita|主訴|주 증상|主诉|الشكوى الرئيسية|Ana şikâyet|Lý do khám|อาการสำคัญ|Основная жалоба|मुख्य शिकायत'),
+ symptoms: row('Symptoms|Síntomas|Symptômes|Symptome|Sintomas|Sintomi|症状|증상|症状|الأعراض|Belirtiler|Triệu chứng|อาการ|Симптомы|लक्षण'),
+ started: row('Started|Inicio|Début|Beginn|Início|Inizio|発症日|시작일|开始时间|تاريخ البدء|Başlangıç|Bắt đầu|เริ่มเป็นเมื่อ|Начало|शुरुआत'),
+ severity: row('Severity (0–10)|Intensidad (0–10)|Intensité (0–10)|Stärke (0–10)|Intensidade (0–10)|Intensità (0–10)|程度 (0–10)|심한 정도 (0–10)|严重程度 (0–10)|الشدة (0–10)|Şiddet (0–10)|Mức độ (0–10)|ความรุนแรง (0–10)|Интенсивность (0–10)|तीव्रता (0–10)'),
+ better: row('Better with|Mejora con|Amélioré par|Besser durch|Melhora com|Migliora con|楽になること|좋아지는 경우|缓解因素|يتحسن مع|İyileştiren|Đỡ hơn khi|ดีขึ้นเมื่อ|Облегчает|आराम मिलता है'),
+ worse: row('Worse with|Empeora con|Aggravé par|Schlechter durch|Piora com|Peggiora con|悪くなること|나빠지는 경우|加重因素|يسوء مع|Kötüleştiren|Nặng hơn khi|แย่ลงเมื่อ|Усиливает|तकलीफ़ बढ़ती है'),
+ details: row('Details|Detalles|Détails|Details|Detalhes|Dettagli|詳細|세부 내용|详情|تفاصيل|Ayrıntılar|Chi tiết|รายละเอียด|Подробности|विवरण'),
+ timeline: row('Timeline|Evolución|Évolution|Verlauf|Evolução|Decorso|経過|경과|病情经过|تطور الأعراض|Seyir|Diễn biến|ความเปลี่ยนแปลงของอาการ|Динамика|लक्षणों का क्रम'),
+ meds: row('Current medicines|Medicamentos actuales|Médicaments actuels|Aktuelle Medikamente|Medicamentos em uso|Farmaci in uso|服用中の薬|복용 중인 약|正在服用的药物|الأدوية الحالية|Kullandığı ilaçlar|Thuốc đang dùng|ยาที่ใช้อยู่|Принимаемые лекарства|चल रही दवाइयाँ'),
+ med: row('Medicine|Medicamento|Médicament|Medikament|Medicamento|Farmaco|薬剤名|약 이름|药名|الدواء|İlaç|Tên thuốc|ชื่อยา|Препарат|दवा'),
+ dose: row('Dose|Dosis|Dose|Dosis|Dose|Dose|用量|용량|剂量|الجرعة|Doz|Liều|ขนาดยา|Доза|खुराक'),
+ freq: row('How often|Frecuencia|Fréquence|Häufigkeit|Frequência|Frequenza|服用回数|복용 횟수|服用次数|عدد المرات|Sıklık|Số lần dùng|ความถี่|Частота приёма|कितनी बार'),
+ allergies: row('Allergies|Alergias|Allergies|Allergien|Alergias|Allergie|アレルギー|알레르기|过敏史|الحساسية|Alerjiler|Dị ứng|ประวัติการแพ้|Аллергия|एलर्जी'),
+ nka: row('No known allergies|Sin alergias conocidas|Aucune allergie connue|Keine bekannten Allergien|Sem alergias conhecidas|Nessuna allergia nota|既知のアレルギーなし|알려진 알레르기 없음|无已知过敏|لا توجد حساسية معروفة|Bilinen alerjisi yok|Không có dị ứng đã biết|ไม่มีประวัติแพ้|Известной аллергии нет|कोई ज्ञात एलर्जी नहीं'),
+ none: row('Not stated|No indicado|Non renseigné|Keine Angabe|Não informado|Non indicato|記入なし|기재 없음|未填写|لم يُذكر|Belirtilmedi|Không ghi|ไม่ได้ระบุ|Не указано|नहीं बताया गया'),
+ conds: row('Medical conditions|Antecedentes médicos|Antécédents médicaux|Vorerkrankungen|Doenças pré-existentes|Malattie note|持病・既往歴|병력|既往病史|التاريخ المرضي|Mevcut hastalıklar|Tiền sử bệnh|โรคประจำตัว|Заболевания в анамнезе|चिकित्सा इतिहास'),
+ questions: row('Questions for the doctor|Preguntas para el médico|Questions pour le médecin|Fragen an den Arzt|Perguntas para o médico|Domande per il medico|医師への質問|질문 사항|想问医生的问题|أسئلة للطبيب|Doktora sorular|Câu hỏi cho bác sĩ|คำถามถึงแพทย์|Вопросы к врачу|डॉक्टर से सवाल'),
+ note: row('Written by the patient. Only the headings are translated; the rest is exactly as the patient wrote it.|Escrito por el paciente. Solo los títulos están traducidos; el resto está tal como lo escribió.|Rédigé par le patient. Seuls les titres sont traduits ; le reste est tel qu’il l’a écrit.|Vom Patienten ausgefüllt. Nur die Überschriften sind übersetzt, der übrige Text ist im Original.|Preenchido pelo paciente. Só os títulos estão traduzidos; o restante está como ele escreveu.|Compilato dal paziente. Solo i titoli sono tradotti; il resto è come scritto da lui.|患者本人が記入。見出しのみ翻訳しており、本文は本人の記入のままです。|환자가 직접 작성. 제목만 번역되었고 나머지는 환자가 쓴 그대로입니다.|由患者本人填写。仅标题为翻译，其余内容为患者原文。|كتبها المريض. العناوين فقط مترجمة، وبقية النص كما كتبه المريض.|Hasta tarafından yazılmıştır. Yalnızca başlıklar çevrilmiştir; diğer metin hastanın yazdığı gibidir.|Do bệnh nhân tự viết. Chỉ các tiêu đề được dịch; phần còn lại giữ nguyên như bệnh nhân viết.|ผู้ป่วยเขียนเอง แปลเฉพาะหัวข้อ ส่วนข้อความอื่นเป็นตามที่ผู้ป่วยเขียน|Заполнено пациентом. Переведены только заголовки; остальной текст — как написал пациент.|मरीज़ द्वारा लिखा गया। केवल शीर्षकों का अनुवाद है; बाकी पाठ मरीज़ के अपने शब्दों में है।')
+};
+// How-often choices (pre-translated)
+const FREQ = {
+ f1: row('once a day|una vez al día|une fois par jour|einmal täglich|uma vez ao dia|una volta al giorno|1日1回|하루 1번|每日1次|مرة واحدة يومياً|günde 1 kez|ngày 1 lần|วันละ 1 ครั้ง|1 раз в день|दिन में 1 बार'),
+ f2: row('twice a day|dos veces al día|deux fois par jour|zweimal täglich|duas vezes ao dia|due volte al giorno|1日2回|하루 2번|每日2次|مرتان يومياً|günde 2 kez|ngày 2 lần|วันละ 2 ครั้ง|2 раза в день|दिन में 2 बार'),
+ f3: row('three times a day|tres veces al día|trois fois par jour|dreimal täglich|três vezes ao dia|tre volte al giorno|1日3回|하루 3번|每日3次|3 مرات يومياً|günde 3 kez|ngày 3 lần|วันละ 3 ครั้ง|3 раза в день|दिन में 3 बार'),
+ prn: row('as needed|si es necesario|si besoin|bei Bedarf|quando necessário|al bisogno|必要時|필요할 때|必要时|عند الحاجة|gerektiğinde|khi cần|เมื่อจำเป็น|при необходимости|ज़रूरत पड़ने पर')
+};
+// Tap-to-add symptom words (pre-translated)
+const SYM = {
+ fever: row('Fever|Fiebre|Fièvre|Fieber|Febre|Febbre|発熱|발열|发烧|حمى|Ateş|Sốt|ไข้|Повышенная температура|बुखार'),
+ cough: row('Cough|Tos|Toux|Husten|Tosse|Tosse|咳|기침|咳嗽|سعال|Öksürük|Ho|ไอ|Кашель|खांसी'),
+ headache: row('Headache|Dolor de cabeza|Maux de tête|Kopfschmerzen|Dor de cabeça|Mal di testa|頭痛|두통|头痛|صداع|Baş ağrısı|Đau đầu|ปวดศีรษะ|Головная боль|सिरदर्द'),
+ throat: row('Sore throat|Dolor de garganta|Mal de gorge|Halsschmerzen|Dor de garganta|Mal di gola|喉の痛み|인후통|喉咙痛|ألم في الحلق|Boğaz ağrısı|Đau họng|เจ็บคอ|Боль в горле|गले में खराश'),
+ nose: row('Runny nose|Secreción nasal|Nez qui coule|Laufende Nase|Coriza|Naso che cola|鼻水|콧물|流鼻涕|سيلان الأنف|Burun akıntısı|Sổ mũi|น้ำมูกไหล|Насморк|नाक बहना'),
+ sob: row('Shortness of breath|Falta de aire|Essoufflement|Atemnot|Falta de ar|Mancanza di respiro|息切れ|호흡곤란|气短|ضيق في التنفس|Nefes darlığı|Khó thở|หายใจลำบาก|Одышка|सांस फूलना'),
+ nausea: row('Nausea|Náuseas|Nausées|Übelkeit|Náuseas|Nausea|吐き気|메스꺼움|恶心|غثيان|Bulantı|Buồn nôn|คลื่นไส้|Тошнота|जी मिचलाना'),
+ vomit: row('Vomiting|Vómitos|Vomissements|Erbrechen|Vômitos|Vomito|嘔吐|구토|呕吐|قيء|Kusma|Nôn|อาเจียน|Рвота|उल्टी'),
+ diarrhoea: row('Diarrhoea|Diarrea|Diarrhée|Durchfall|Diarreia|Diarrea|下痢|설사|腹泻|إسهال|İshal|Tiêu chảy|ท้องเสีย|Диарея|दस्त'),
+ constip: row('Constipation|Estreñimiento|Constipation|Verstopfung|Prisão de ventre|Stitichezza|便秘|변비|便秘|إمساك|Kabızlık|Táo bón|ท้องผูก|Запор|कब्ज़'),
+ dizzy: row('Dizziness|Mareo|Étourdissements|Schwindel|Tontura|Capogiri|めまい|어지러움|头晕|دوخة|Baş dönmesi|Chóng mặt|เวียนศีรษะ|Головокружение|चक्कर आना'),
+ rash: row('Rash|Erupción en la piel|Éruption cutanée|Hautausschlag|Erupção cutânea|Eruzione cutanea|発疹|발진|皮疹|طفح جلدي|Döküntü|Phát ban|ผื่น|Сыпь|त्वचा पर चकत्ते'),
+ itch: row('Itching|Picazón|Démangeaisons|Juckreiz|Coceira|Prurito|かゆみ|가려움|瘙痒|حكة|Kaşıntı|Ngứa|คัน|Зуд|खुजली'),
+ swelling: row('Swelling|Hinchazón|Gonflement|Schwellung|Inchaço|Gonfiore|腫れ|부종|肿胀|تورم|Şişlik|Sưng|บวม|Отёк|सूजन'),
+ tired: row('Tiredness|Cansancio|Fatigue|Müdigkeit|Cansaço|Stanchezza|倦怠感|피로감|乏力|إرهاق|Halsizlik|Mệt mỏi|อ่อนเพลีย|Слабость|थकान'),
+ pain: row('Pain|Dolor|Douleur|Schmerzen|Dor|Dolore|痛み|통증|疼痛|ألم|Ağrı|Đau|ปวด|Боль|दर्द')
+};
+const AREA = {
+ head: row('head|cabeza|tête|Kopf|cabeça|testa|頭|머리|头部|الرأس|baş|đầu|ศีรษะ|голова|सिर'),
+ throat: row('throat|garganta|gorge|Hals|garganta|gola|喉|목|喉咙|الحلق|boğaz|họng|คอ|горло|गला'),
+ ear: row('ear|oído|oreille|Ohr|ouvido|orecchio|耳|귀|耳朵|الأذن|kulak|tai|หู|ухо|कान'),
+ eye: row('eye|ojo|œil|Auge|olho|occhio|目|눈|眼睛|العين|göz|mắt|ตา|глаз|आँख'),
+ tooth: row('tooth|diente|dent|Zahn|dente|dente|歯|치아|牙齿|السن|diş|răng|ฟัน|зуб|दाँत'),
+ chest: row('chest|pecho|poitrine|Brust|peito|petto|胸|가슴|胸部|الصدر|göğüs|ngực|หน้าอก|грудь|छाती'),
+ belly: row('abdomen|abdomen|ventre|Bauch|abdome|addome|腹部|배|腹部|البطن|karın|bụng|ท้อง|живот|पेट'),
+ back: row('back|espalda|dos|Rücken|costas|schiena|背中|등|背部|الظهر|sırt|lưng|หลัง|спина|पीठ'),
+ lowback: row('lower back|zona lumbar|bas du dos|unterer Rücken|lombar|zona lombare|腰|허리|腰部|أسفل الظهر|bel|thắt lưng|หลังส่วนล่าง|поясница|कमर'),
+ arm: row('arm|brazo|bras|Arm|braço|braccio|腕|팔|手臂|الذراع|kol|cánh tay|แขน|рука|बाँह'),
+ leg: row('leg|pierna|jambe|Bein|perna|gamba|脚|다리|腿|الساق|bacak|chân|ขา|нога|पैर'),
+ joint: row('joint|articulación|articulation|Gelenk|articulação|articolazione|関節|관절|关节|المفصل|eklem|khớp|ข้อต่อ|сустав|जोड़')
+};
+const COLON = {ja:'：', zh:'：', ar:': '};
+function colon(l){ return COLON[l] || ': '; }
+
+// ───────── Helpers ─────────
+const $ = s => document.querySelector(s);
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function todayISO(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function clampSev(v){ v = parseInt(v, 10); return isNaN(v) ? 0 : Math.max(0, Math.min(10, v)); }
+function sevCls(v){ return v >= 7 ? 'h' : v >= 4 ? 'm' : 'l'; }
+function langName(c){ const l = LANGS.find(x => x[0] === c); return l ? (l[0] === 'en' ? 'English' : l[1] + ' — ' + l[2]) : c; }
+
+// ───────── License key (same scheme as every Valuestools app) ─────────
+const PUB_B64 = 'z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=';
+const LKEY = 'vt_doctorprep_lic';
+let LIC = null;
+try { LIC = JSON.parse(localStorage.getItem(LKEY) || 'null'); } catch (e) {}
+function licensed(){ return !!(LIC && LIC.ok); }
+function b64d(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+  const bin = atob(s), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+function verifyKey(raw){
+  try {
+    raw = (raw || '').trim().replace(/\s+/g, '');
+    if (!raw.startsWith('VALUES.')) return 'bad';
+    const p = raw.split('.'); if (p.length !== 3) return 'bad';
+    if (typeof nacl === 'undefined') return 'nonacl';
+    const payload = b64d(p[1]), sig = b64d(p[2]);
+    if (!nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return 'bad';
+    const info = JSON.parse(new TextDecoder().decode(payload));
+    const prods = info.p || [];
+    if (!(prods.indexOf('*') >= 0 || prods.indexOf('doctorprep') >= 0)) return 'noprod';
+    return info;
+  } catch (e) { return 'bad'; }
+}
+let view = null, back = null;
+function unlockScreen(reason){
+  const ret = view && view !== unlockScreen ? view : home;
+  view = unlockScreen;
+  $('#app').innerHTML = '<header><button class="icon" id="ub">←</button><h1>Unlock the full version</h1></header><div class="card">' +
+    (reason ? '<p><b>' + esc(reason) + '</b></p>' : '') +
+    '<p>The free version is complete for one person: all your notes and a printable visit sheet in English plus one other language.</p>' +
+    '<p>The full version adds:</p><ul><li><b>Family profiles</b> — notes and sheets for several people (children, parents, a partner).</li>' +
+    '<li><b>All 15 languages</b> for the doctor side, so you are ready in any country.</li>' +
+    '<li><b>Visit history</b> — keep each past visit sheet and look back at it later.</li>' +
+    '<li><b>Backup file</b> — save everything to a file and restore it on a new phone.</li></ul>' +
+    '<p class="muted">Online checkout is opening soon. Until then, write to <a href="mailto:ranger7903@nate.com?subject=Doctor%20Visit%20Prep%20full%20version">ranger7903@nate.com</a> and we will reply with how to get a key.</p>' +
+    '<label for="keyin"><b>Already have a key?</b> Paste it here (it starts with VALUES.)</label>' +
+    '<textarea id="keyin" rows="3" style="font-size:14px"></textarea>' +
+    '<button class="big" id="kgo">Unlock</button><p id="kmsg" class="muted"></p></div>';
+  $('#ub').onclick = () => render(view = ret);
+  $('#kgo').onclick = () => {
+    const r = verifyKey($('#keyin').value), m = $('#kmsg');
+    if (r === 'nonacl') { m.textContent = 'The key checker has not loaded yet. Connect to the internet once, reload, and try again.'; return; }
+    if (r === 'noprod') { m.textContent = 'This key is genuine, but it is for a different Valuestools product.'; return; }
+    if (r === 'bad' || !r) { m.textContent = 'That key doesn’t look right. Please paste the whole key, starting with VALUES.'; return; }
+    LIC = {ok:true, n:r.n || ''}; try { localStorage.setItem(LKEY, JSON.stringify(LIC)); } catch (e) {}
+    m.textContent = 'Unlocked. Thank you!';
+    setTimeout(() => render(view = ret), 900);
+  };
+}
+
+// ───────── Storage ─────────
+const KEY = 'vt_doctorprep_v1';
+function newPerson(){ return {id:uid(), name:'', age:'', problem:'', syms:[], meds:[], allergies:[], nka:false, conds:[], qs:[], history:[]}; }
+let S = {people:[], cur:null, lang:'es', freeLang:null, big:false};
+try { const x = JSON.parse(localStorage.getItem(KEY) || 'null'); if (x && Array.isArray(x.people)) S = Object.assign(S, x); } catch (e) {}
+if (!S.people.length) { const p = newPerson(); S.people.push(p); S.cur = p.id; }
+let saveFail = false;
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); saveFail = false; } catch (e) { saveFail = true; } }
+function P(){ let p = S.people.find(x => x.id === S.cur); if (!p || (!licensed() && p !== S.people[0])) { p = S.people[0]; S.cur = p.id; } return p; }
+function langOK(c){ return c === 'en' || licensed() || c === S.freeLang; }
+
+// ───────── Labels ─────────
+function symLabel(s, l){
+  if (s.chip === 'pain' && s.area) return SYM.pain[l] + colon(l) + AREA[s.area][l];
+  if (s.chip && SYM[s.chip]) return SYM[s.chip][l];
+  return '';
+}
+function symName(s){ return symLabel(s, 'en') || s.text || 'Symptom'; }
+function freqLabel(m, l){ return m.fk && FREQ[m.fk] ? FREQ[m.fk][l] : ''; }
+function latest(s){ const a = s.log.slice().sort((x, y) => x.d < y.d ? -1 : x.d > y.d ? 1 : 0); return a.length ? a[a.length - 1] : null; }
+function first(s){ const a = s.log.slice().sort((x, y) => x.d < y.d ? -1 : x.d > y.d ? 1 : 0); return a.length ? a[0] : null; }
+
+// ───────── Emergency box ─────────
+const EMER = '<div class="emer"><b>Not medical advice.</b> This app only helps you write things down — it gives no diagnosis and no advice. ' +
+  '<b>In an emergency call your local emergency number.</b><table>' +
+  '<tr><td>112</td><td>European Union (and most of Europe; also works in the UK)</td></tr>' +
+  '<tr><td>911</td><td>United States, Canada</td></tr>' +
+  '<tr><td>999</td><td>United Kingdom</td></tr>' +
+  '<tr><td>119</td><td>Japan, South Korea (ambulance and fire)</td></tr>' +
+  '<tr><td>000</td><td>Australia</td></tr></table>' +
+  '<div class="muted" style="margin-top:4px">Elsewhere, check the local number when you arrive.</div></div>';
+
+// ───────── Home: the notes ─────────
+function home(){
+  view = home;
+  const p = P();
+  let h = '<header><h1>Doctor Visit Prep<small>Notes for your appointment, one clear page for the doctor</small></h1>' +
+    '<button class="icon" id="menu">Menu</button></header>';
+  if (saveFail) h += '<div class="note"><b>Could not save.</b> Your browser storage is full or blocked. Your latest change may be lost.</div>';
+  // person switcher
+  h += '<div class="card"><div class="row"><div class="grow"><b>' + (p.name ? esc(p.name) : 'You') + '</b>' +
+    (S.people.length > 1 ? ' <span class="muted">(' + S.people.length + ' people)</span>' : '') + '</div>' +
+    (S.people.length > 1 ? '<select id="who" style="width:auto">' + S.people.map(x => '<option value="' + x.id + '"' + (x.id === p.id ? ' selected' : '') + '>' + esc(x.name || 'Unnamed') + '</option>').join('') + '</select>' : '') +
+    '<button class="small" id="addp">+ Person</button></div>' +
+    '<div class="row"><div class="grow"><label for="pname">Name (optional)</label><input id="pname" value="' + esc(p.name) + '" autocomplete="off"></div>' +
+    '<div style="width:118px"><label for="page">Age (optional)</label><input id="page" value="' + esc(p.age) + '" inputmode="numeric" maxlength="12"></div></div>' +
+    '<label for="pprob">Main problem — in a few words, why you are going</label><textarea id="pprob" rows="2" placeholder="e.g. Fever and cough for 4 days">' + esc(p.problem) + '</textarea></div>';
+  h += '<button class="big" id="opensheet">Open visit sheet</button>';
+  // symptoms
+  h += '<div class="card"><h2>Symptoms <span class="n">' + p.syms.length + '</span><button class="small solid" id="addsym">+ Add</button></h2>';
+  if (!p.syms.length) h += '<p class="muted">What is wrong, when it started, how bad it is (0–10), and what makes it better or worse. Add an update each day to track it.</p>';
+  p.syms.forEach(s => {
+    const L = latest(s), F = first(s);
+    h += '<div class="item"><div class="t"><b>' + esc(symName(s)) + '</b>' +
+      (s.chip && s.text ? '<span class="muted">' + esc(s.text) + '</span><br>' : '') +
+      '<span class="muted">Started ' + esc(s.start || '—') + ' · ' + s.log.length + ' update' + (s.log.length === 1 ? '' : 's') + '</span> ' +
+      (L ? '<span class="sev ' + sevCls(L.sev) + '">' + (F && F !== L ? F.sev + '→' : '') + L.sev + '/10</span>' : '') +
+      '</div><button class="small" data-up="' + s.id + '">+ Update</button><button class="small" data-es="' + s.id + '">Edit</button></div>';
+  });
+  h += '</div>';
+  // medicines
+  h += '<div class="card"><h2>Medicines <span class="n">' + p.meds.length + '</span><button class="small solid" id="addmed">+ Add</button></h2>';
+  if (!p.meds.length) h += '<p class="muted">Everything you take — including the pill, vitamins and herbal remedies. Name, dose and how often.</p>';
+  p.meds.forEach(m => {
+    h += '<div class="item"><div class="t"><b>' + esc(m.name) + '</b><span class="muted">' + esc([m.dose, freqLabel(m, 'en') || m.ftext].filter(Boolean).join(' · ')) +
+      (m.fk && m.ftext ? ' · ' + esc(m.ftext) : '') + '</span></div><button class="small" data-em="' + m.id + '">Edit</button></div>';
+  });
+  h += '</div>';
+  // allergies
+  h += listCard('allergies', 'Allergies', 'e.g. penicillin — rash', 'Medicines, foods, latex… and what happens.');
+  // conditions
+  h += listCard('conds', 'Medical conditions', 'e.g. asthma since childhood', 'Long-term illnesses, past operations, pregnancy.');
+  h += listCard('qs', 'Questions to ask', 'e.g. Can I still fly on Friday?', 'Write them now so you don’t forget in the room.');
+  h += '<button class="big" id="opensheet2">Open visit sheet</button>';
+  h += EMER;
+  h += '<footer>' + (licensed() ? 'Full version' + (LIC.n ? ' — thank you, ' + esc(LIC.n) : '') + '.' : 'Free version: one person, English + one other language. <a href="javascript:void(0)" id="unl">Unlock the full version</a>') +
+    '<br>Your notes stay on this device only. No account, no tracking.</footer>';
+  $('#app').innerHTML = h;
+  // wire
+  const bindText = (id, f) => { $('#' + id).addEventListener('input', e => { p[f] = e.target.value; save(); }); };
+  bindText('pname', 'name'); bindText('page', 'age'); bindText('pprob', 'problem');
+  $('#pname').addEventListener('change', () => render(home));
+  if ($('#who')) $('#who').onchange = e => { S.cur = e.target.value; save(); render(home); };
+  $('#addp').onclick = () => { if (!licensed()) { unlockScreen('Family profiles are part of the full version.'); return; } const n = newPerson(); S.people.push(n); S.cur = n.id; save(); render(home); setTimeout(() => $('#pname') && $('#pname').focus(), 0); };
+  $('#opensheet').onclick = $('#opensheet2').onclick = () => sheetView();
+  $('#addsym').onclick = () => symEdit(null);
+  $('#addmed').onclick = () => medEdit(null);
+  $('#menu').onclick = () => menu();
+  if ($('#unl')) $('#unl').onclick = () => unlockScreen();
+  document.querySelectorAll('[data-up]').forEach(b => b.onclick = () => updEdit(b.dataset.up));
+  document.querySelectorAll('[data-es]').forEach(b => b.onclick = () => symEdit(b.dataset.es));
+  document.querySelectorAll('[data-em]').forEach(b => b.onclick = () => medEdit(b.dataset.em));
+  ['allergies', 'conds', 'qs'].forEach(k => wireList(k));
+  if ($('#nka')) $('#nka').onchange = e => { p.nka = e.target.checked; save(); render(home); };
+}
+function listCard(k, title, ph, hint){
+  const p = P(), a = p[k];
+  let h = '<div class="card" id="c_' + k + '"><h2>' + title + ' <span class="n">' + a.length + '</span></h2>';
+  if (k === 'allergies') h += '<label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="nka" style="width:auto"' + (p.nka ? ' checked' : '') + (a.length ? ' disabled' : '') + '> I have no known allergies</label>';
+  if (!a.length) h += '<p class="muted">' + hint + '</p>';
+  a.forEach((t, i) => h += '<div class="item"><div class="t">' + esc(t) + '</div><button class="x" aria-label="Remove" data-del="' + k + ':' + i + '">×</button></div>');
+  if (!(k === 'allergies' && p.nka)) h += '<div class="row" style="margin-top:6px"><input id="in_' + k + '" placeholder="' + esc(ph) + '" class="grow" maxlength="2000"><button class="small solid" id="add_' + k + '">Add</button></div>';
+  return h + '</div>';
+}
+function wireList(k){
+  const p = P(), inp = $('#in_' + k);
+  if (inp) {
+    const add = () => { const v = inp.value.trim(); if (!v) { inp.focus(); return; } p[k].push(v); if (k === 'allergies') p.nka = false; save(); render(home); setTimeout(() => { const e = $('#in_' + k); if (e) { e.focus(); } }, 0); };
+    $('#add_' + k).onclick = add;
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+  }
+  document.querySelectorAll('[data-del^="' + k + ':"]').forEach(b => b.onclick = () => { p[k].splice(+b.dataset.del.split(':')[1], 1); save(); render(home); });
+}
+
+// ───────── Symptom editor ─────────
+function symEdit(id){
+  view = () => symEdit(id);
+  const p = P();
+  const s = id ? p.syms.find(x => x.id === id) : {id:uid(), chip:'', area:'', text:'', start:todayISO(), better:'', worse:'', log:[]};
+  const isNew = !id;
+  let sev = isNew ? 3 : (latest(s) ? latest(s).sev : 0);
+  const chipsH = () => Object.keys(SYM).map(k => '<button class="chip' + (s.chip === k ? ' on' : '') + '" data-chip="' + k + '">' + esc(SYM[k].en) + '</button>').join('');
+  const areasH = () => Object.keys(AREA).map(k => '<button class="chip' + (s.area === k ? ' on' : '') + '" data-area="' + k + '">' + esc(AREA[k].en) + '</button>').join('');
+  let h = '<header><button class="icon" id="bk">←</button><h1>' + (isNew ? 'Add a symptom' : 'Edit symptom') + '</h1></header><div class="card">' +
+    '<label>Tap a common symptom — the doctor sees it in their language</label><div class="chips" id="chips">' + chipsH() + '</div>' +
+    '<div id="areas"' + (s.chip === 'pain' ? '' : ' hidden') + '><label>Where is the pain?</label><div class="chips">' + areasH() + '</div></div>' +
+    '<label for="stext">' + 'Your own words (optional if you tapped one above — shown exactly as typed)' + '</label><textarea id="stext" rows="2" maxlength="4000" placeholder="e.g. sharp pain on the right side when I breathe in">' + esc(s.text) + '</textarea>' +
+    '<label for="sstart">When did it start?</label><input type="date" id="sstart" value="' + esc(s.start) + '" max="' + todayISO() + '">' +
+    (isNew ? '<label for="ssev">How bad is it now? <b id="sevv">' + sev + '</b>/10 <span class="muted">(0 = none, 10 = worst imaginable)</span></label><input type="range" id="ssev" min="0" max="10" step="1" value="' + sev + '">' : '') +
+    '<label for="sbetter">What makes it better?</label><input id="sbetter" maxlength="2000" value="' + esc(s.better) + '" placeholder="e.g. lying still, paracetamol">' +
+    '<label for="sworse">What makes it worse?</label><input id="sworse" maxlength="2000" value="' + esc(s.worse) + '" placeholder="e.g. walking, eating">' +
+    '<p id="smsg" class="muted" style="color:var(--bad)"></p>' +
+    '<button class="big" id="ssave">Save</button>' +
+    (!isNew ? '<h2 style="margin-top:18px">Updates</h2>' + (s.log.length ? s.log.slice().sort((a, b) => a.d < b.d ? 1 : -1).map(e => '<div class="item"><div class="t"><b>' + esc(e.d) + ' <span class="sev ' + sevCls(e.sev) + '">' + e.sev + '/10</span></b>' + (e.note ? '<span class="muted">' + esc(e.note) + '</span>' : '') + '</div><button class="x" aria-label="Remove update" data-dl="' + e.id + '">×</button></div>').join('') : '<p class="muted">No updates yet.</p>') +
+      '<button class="big alt" id="sup">+ Add an update</button><button class="big alt red" id="sdel" style="background:#fff;color:var(--bad);border-color:var(--bad)">Delete this symptom</button>' : '') +
+    '</div>';
+  $('#app').innerHTML = h;
+  window.scrollTo(0, 0);
+  const pull = () => { s.text = $('#stext').value; s.start = $('#sstart').value; s.better = $('#sbetter').value; s.worse = $('#sworse').value; };
+  $('#bk').onclick = () => render(home);
+  $('#chips').onclick = e => { const b = e.target.closest('[data-chip]'); if (!b) return; $('#smsg').textContent = ''; s.chip = s.chip === b.dataset.chip ? '' : b.dataset.chip; if (s.chip !== 'pain') s.area = '';
+    $('#chips').innerHTML = chipsH(); $('#areas').hidden = s.chip !== 'pain'; $('#areas .chips').innerHTML = areasH(); };
+  $('#areas').onclick = e => { const b = e.target.closest('[data-area]'); if (!b) return; s.area = s.area === b.dataset.area ? '' : b.dataset.area; $('#areas .chips').innerHTML = areasH(); };
+  if ($('#ssev')) $('#ssev').oninput = e => { sev = clampSev(e.target.value); $('#sevv').textContent = sev; };
+  $('#ssave').onclick = () => {
+    pull(); s.text = s.text.trim();
+    if (!s.chip && !s.text) { $('#smsg').textContent = 'Tap a symptom or write a few words about it.'; return; }
+    if (s.start && s.start > todayISO()) s.start = todayISO();
+    if (isNew) { s.log.push({id:uid(), d:todayISO(), sev:sev, note:''}); p.syms.push(s); }
+    save(); render(home);
+  };
+  if (!isNew) {
+    $('#sup').onclick = () => { pull(); save(); updEdit(s.id); };
+    $('#sdel').onclick = () => ask('Delete “' + symName(s) + '” and all its updates?', 'Delete', () => { p.syms = p.syms.filter(x => x.id !== s.id); save(); render(home); });
+    document.querySelectorAll('[data-dl]').forEach(b => b.onclick = () => { pull(); s.log = s.log.filter(x => x.id !== b.dataset.dl); save(); symEdit(s.id); });
+  }
+}
+function updEdit(sid){
+  view = () => updEdit(sid);
+  const p = P(), s = p.syms.find(x => x.id === sid); if (!s) { render(home); return; }
+  const L = latest(s); let sev = L ? L.sev : 3;
+  $('#app').innerHTML = '<header><button class="icon" id="bk">←</button><h1>Update: ' + esc(symName(s)) + '</h1></header><div class="card">' +
+    '<label for="ud">Date</label><input type="date" id="ud" value="' + todayISO() + '" max="' + todayISO() + '">' +
+    '<label for="us">How bad is it? <b id="sevv">' + sev + '</b>/10 <span class="muted">(0 = none, 10 = worst imaginable)</span></label><input type="range" id="us" min="0" max="10" step="1" value="' + sev + '">' +
+    '<label for="un">Anything new? (optional)</label><textarea id="un" rows="3" maxlength="4000" placeholder="e.g. fever 38.5 °C in the evening, slept badly"></textarea>' +
+    '<button class="big" id="usave">Save update</button></div>';
+  window.scrollTo(0, 0);
+  $('#bk').onclick = () => render(home);
+  $('#us').oninput = e => { sev = clampSev(e.target.value); $('#sevv').textContent = sev; };
+  $('#usave').onclick = () => {
+    let d = $('#ud').value || todayISO(); if (d > todayISO()) d = todayISO();
+    s.log.push({id:uid(), d:d, sev:sev, note:$('#un').value.trim()});
+    if (!s.start || d < s.start) s.start = d;
+    save(); render(home);
+  };
+}
+
+// ───────── Medicine editor ─────────
+function medEdit(id){
+  view = () => medEdit(id);
+  const p = P();
+  const m = id ? p.meds.find(x => x.id === id) : {id:uid(), name:'', dose:'', fk:'', ftext:''};
+  const fH = () => Object.keys(FREQ).map(k => '<button class="chip' + (m.fk === k ? ' on' : '') + '" data-f="' + k + '">' + FREQ[k].en + '</button>').join('');
+  $('#app').innerHTML = '<header><button class="icon" id="bk">←</button><h1>' + (id ? 'Edit medicine' : 'Add a medicine') + '</h1></header><div class="card">' +
+    '<label for="mn">Name (as on the box — brand names differ between countries, so add the active ingredient if you know it)</label><input id="mn" maxlength="500" value="' + esc(m.name) + '" placeholder="e.g. Ibuprofen (Advil)">' +
+    '<label for="md">Dose</label><input id="md" maxlength="500" value="' + esc(m.dose) + '" placeholder="e.g. 400 mg">' +
+    '<label>How often — tap one (translated for the doctor)</label><div class="chips" id="fchips">' + fH() + '</div>' +
+    '<label for="mf">…or in your own words / extra detail</label><input id="mf" maxlength="500" value="' + esc(m.ftext) + '" placeholder="e.g. every morning with food">' +
+    '<p id="mmsg" class="muted" style="color:var(--bad)"></p><button class="big" id="msave">Save</button>' +
+    (id ? '<button class="big alt" id="mdel" style="color:var(--bad);border-color:var(--bad)">Delete this medicine</button>' : '') + '</div>';
+  window.scrollTo(0, 0);
+  $('#bk').onclick = () => render(home);
+  $('#fchips').onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; m.fk = m.fk === b.dataset.f ? '' : b.dataset.f; $('#fchips').innerHTML = fH(); };
+  $('#msave').onclick = () => {
+    m.name = $('#mn').value.trim(); m.dose = $('#md').value.trim(); m.ftext = $('#mf').value.trim();
+    if (!m.name) { $('#mmsg').textContent = 'Please write the medicine’s name.'; return; }
+    if (!id) p.meds.push(m);
+    save(); render(home);
+  };
+  if (id) $('#mdel').onclick = () => ask('Delete “' + m.name + '”?', 'Delete', () => { p.meds = p.meds.filter(x => x.id !== m.id); save(); render(home); });
+}
+
+// ───────── Small dialog (in-page, no browser popups) ─────────
+function ask(text, yes, onYes, extra){
+  const d = document.createElement('div'); d.className = 'modal'; d.id = 'dlg';
+  d.innerHTML = '<div class="card"><p>' + esc(text) + '</p>' + (extra || '') + '<button class="big" id="dyes">' + esc(yes) + '</button><button class="big alt" id="dno">Cancel</button></div>';
+  document.body.appendChild(d);
+  $('#dno').onclick = () => d.remove();
+  $('#dyes').onclick = () => { d.remove(); onYes(); };
+}
+
+// ───────── Visit sheet ─────────
+function sheetHTML(p, l, dateStr){
+  const en = l !== 'en';
+  const H = (k) => esc(T[k][l]) + (en ? ' <span class="en" lang="en" dir="ltr">' + esc(T[k].en) + '</span>' : '');
+  const U = (t) => '<span dir="auto">' + esc(t) + '</span>';               // patient text, as typed
+  const NONE = '<span class="none">' + esc(T.none[l]) + '</span>';
+  const tr = (txt, entxt) => esc(txt) + (en && entxt ? ' <span class="en" lang="en" dir="ltr">(' + esc(entxt) + ')</span>' : '');
+  let h = '<div class="sh-top"><div class="ttl">' + H('title') + '</div><div class="sh-meta">' +
+    (p.name ? '<span><b>' + esc(T.name[l]) + colon(l) + '</b>' + U(p.name) + '</span>' : '') +
+    (p.age ? '<span><b>' + esc(T.age[l]) + colon(l) + '</b>' + U(p.age) + '</span>' : '') +
+    '<span><b>' + esc(T.date[l]) + colon(l) + '</b><span dir="ltr">' + esc(dateStr) + '</span></span></div></div>';
+  const mainTxt = p.problem.trim() || (p.syms[0] ? (symLabel(p.syms[0], l) || p.syms[0].text) : '');
+  h += '<div class="sec"><h3>' + H('main') + '</h3><div class="main">' + (mainTxt ? (p.problem.trim() ? U(p.problem) : (p.syms[0].chip ? tr(symLabel(p.syms[0], l), symLabel(p.syms[0], 'en')) : U(mainTxt))) : NONE) + '</div></div>';
+  // symptoms
+  h += '<div class="sec"><h3>' + H('symptoms') + '</h3>';
+  if (!p.syms.length) h += NONE;
+  p.syms.forEach(s => {
+    const F = first(s), L = latest(s), lab = symLabel(s, l);
+    h += '<div class="sym"><div class="nm">' + (lab ? tr(lab, symLabel(s, 'en')) : U(s.text)) + '</div>' +
+      (lab && s.text ? '<span class="kv"><b>' + esc(T.details[l]) + colon(l) + '</b>' + U(s.text) + '</span>' : '') +
+      (s.start ? '<span class="kv"><b>' + esc(T.started[l]) + colon(l) + '</b><span dir="ltr">' + esc(s.start) + '</span></span>' : '') +
+      (L ? '<span class="kv"><b>' + esc(T.severity[l]) + colon(l) + '</b><span dir="ltr">' + (F && F !== L && F.sev !== L.sev ? F.sev + ' → ' : '') + L.sev + '/10</span></span>' : '') +
+      (s.better ? '<span class="kv"><b>' + esc(T.better[l]) + colon(l) + '</b>' + U(s.better) + '</span>' : '') +
+      (s.worse ? '<span class="kv"><b>' + esc(T.worse[l]) + colon(l) + '</b>' + U(s.worse) + '</span>' : '') + '</div>';
+  });
+  h += '</div>';
+  // timeline
+  const ev = [];
+  // only symptoms tracked over several days (or with a note) — a single reading is already shown above
+  p.syms.forEach(s => s.log.forEach(e => { if (s.log.length > 1 || e.note) ev.push({d:e.d, sev:e.sev, note:e.note, s:s}); }));
+  ev.sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0);
+  if (ev.length) {
+    h += '<div class="sec"><h3>' + H('timeline') + '</h3><table><tbody>' + ev.map(e =>
+      '<tr><td style="white-space:nowrap"><span dir="ltr">' + esc(e.d) + '</span></td><td' + ((symLabel(e.s, l) || e.s.text).length <= 22 ? ' style="white-space:nowrap"' : '') + '>' + (symLabel(e.s, l) ? esc(symLabel(e.s, l)) : U(e.s.text)) + '</td><td style="white-space:nowrap"><span dir="ltr">' + e.sev + '/10</span></td><td style="width:55%">' + (e.note ? U(e.note) : '') + '</td></tr>').join('') + '</tbody></table></div>';
+  }
+  // medicines
+  h += '<div class="sec"><h3>' + H('meds') + '</h3>';
+  if (!p.meds.length) h += NONE;
+  else h += '<table><thead><tr><th>' + esc(T.med[l]) + '</th><th>' + esc(T.dose[l]) + '</th><th>' + esc(T.freq[l]) + '</th></tr></thead><tbody>' + p.meds.map(m =>
+    '<tr><td><b>' + U(m.name) + '</b></td><td' + (m.dose.length <= 14 ? ' style="white-space:nowrap"' : '') + '>' + U(m.dose) + '</td><td>' + (m.fk ? tr(freqLabel(m, l), freqLabel(m, 'en')) : '') + (m.ftext ? '<div dir="auto">' + esc(m.ftext) + '</div>' : '') + '</td></tr>').join('') + '</tbody></table>';
+  h += '</div>';
+  // allergies
+  h += '<div class="sec"><h3>' + H('allergies') + '</h3>' + (p.allergies.length ? '<div class="allergy"><ul>' + p.allergies.map(a => '<li>' + U(a) + '</li>').join('') + '</ul></div>' :
+    p.nka ? '<div>' + tr(T.nka[l], T.nka.en) + '</div>' : NONE) + '</div>';
+  h += '<div class="sec"><h3>' + H('conds') + '</h3>' + (p.conds.length ? '<ul>' + p.conds.map(a => '<li>' + U(a) + '</li>').join('') + '</ul>' : NONE) + '</div>';
+  h += '<div class="sec"><h3>' + H('questions') + '</h3>' + (p.qs.length ? '<ol>' + p.qs.map(a => '<li>' + U(a) + '</li>').join('') + '</ol>' : NONE) + '</div>';
+  h += '<div class="foot">' + esc(T.note[l]) + (en ? '<br><span lang="en" dir="ltr">' + esc(T.note.en) + '</span>' : '') + '</div>';
+  return h;
+}
+function sheetView(hist){
+  view = () => sheetView(hist);
+  const p = hist ? hist.p : P();
+  let l = hist ? hist.lang : S.lang;
+  if (!langOK(l)) l = S.freeLang && langOK(S.freeLang) ? S.freeLang : 'en';
+  const opts = LANGS.map(x => '<option value="' + x[0] + '"' + (x[0] === l ? ' selected' : '') + '>' + esc(langName(x[0])) + (langOK(x[0]) ? '' : ' (full version)') + '</option>').join('');
+  const dir = l === 'ar' ? 'rtl' : 'ltr';
+  let h = '<header class="noprint"><button class="icon" id="bk">←</button><h1>' + (hist ? 'Past visit ' + esc(hist.date) : 'Visit sheet') + '<small>Show this to the doctor, or print it</small></h1></header>';
+  h += '<div class="tool noprint"><label for="lang" style="margin:0;width:100%">Doctor’s language</label><select id="lang">' + opts + '</select>' +
+    '<button class="small" id="big">' + (S.big ? 'Normal text' : 'Bigger text') + '</button><button class="small solid" id="prt">Print / PDF</button></div>';
+  h += '<div class="note noprint"><b>Only the headings and the tap-to-add words are translated.</b> Everything you typed yourself is shown exactly as you wrote it — write it in the doctor’s language if you can, or keep it simple. ' +
+    (!licensed() ? 'Free version: English + one other language' + (S.freeLang ? ' (' + esc(langName(S.freeLang)) + ')' : '') + '.' : '') + '</div>';
+  h += '<div class="sheet' + (S.big ? ' huge' : '') + '" id="sheet" lang="' + l + '" dir="' + dir + '">' + sheetHTML(p, l, hist ? hist.date : todayISO()) + '</div>';
+  if (!hist) h += '<button class="big alt noprint" id="savehist">Save this visit to history</button>';
+  else h += '<button class="big alt noprint" id="delhist" style="color:var(--bad);border-color:var(--bad)">Delete this past visit</button>';
+  h += '<div class="noprint">' + EMER + '</div>';
+  $('#app').innerHTML = h;
+  window.scrollTo(0, 0);
+  $('#bk').onclick = () => hist ? historyView() : render(home);
+  $('#prt').onclick = () => window.print();
+  $('#big').onclick = () => { S.big = !S.big; save(); sheetView(hist); };
+  $('#lang').onchange = e => {
+    const c = e.target.value;
+    if (langOK(c)) { if (hist) hist.lang = c; else { S.lang = c; save(); } sheetView(hist); return; }
+    e.target.value = l;
+    if (!licensed() && !S.freeLang) {
+      ask('Use ' + langName(c) + ' as your free second language?', 'Yes, use ' + LANGS.find(x => x[0] === c)[1], () => { S.freeLang = c; S.lang = c; save(); sheetView(hist); },
+        '<p class="muted">The free version includes English plus one other language, and this choice is kept. Switching to other languages needs the full version.</p>');
+    } else { const en = x => LANGS.find(y => y[0] === x)[2]; unlockScreen(en(c) + ' is in the full version. Your free version includes English and ' + en(S.freeLang) + '.'); }
+  };
+  if (!hist) $('#savehist').onclick = () => {
+    if (!licensed()) { unlockScreen('Visit history is part of the full version.'); return; }
+    p.history.unshift({id:uid(), date:todayISO(), lang:l, snap:JSON.parse(JSON.stringify(Object.assign({}, p, {history:[]})))});
+    save(); $('#savehist').textContent = 'Saved to history ✓'; $('#savehist').disabled = true;
+  };
+  else $('#delhist').onclick = () => ask('Delete the visit of ' + hist.date + '?', 'Delete', () => { const pp = P(); pp.history = pp.history.filter(x => x.id !== hist.id); save(); historyView(); });
+}
+function historyView(){
+  view = historyView;
+  if (!licensed()) { unlockScreen('Visit history is part of the full version.'); return; }
+  const p = P();
+  let h = '<header><button class="icon" id="bk">←</button><h1>Past visits<small>' + esc(p.name || 'You') + '</small></h1></header><div class="card">';
+  if (!p.history.length) h += '<p class="muted">No past visits yet. On the visit sheet, tap “Save this visit to history” after your appointment.</p>';
+  p.history.forEach(v => h += '<div class="item"><div class="t"><b>' + esc(v.date) + '</b><span class="muted">' + esc(v.snap.problem || (v.snap.syms[0] ? symName(v.snap.syms[0]) : '')) + '</span></div><button class="small" data-hv="' + v.id + '">Open</button></div>');
+  $('#app').innerHTML = h + '</div>';
+  $('#bk').onclick = () => menu();
+  document.querySelectorAll('[data-hv]').forEach(b => b.onclick = () => { const v = p.history.find(x => x.id === b.dataset.hv); sheetView({id:v.id, date:v.date, lang:v.lang, p:v.snap}); });
+}
+
+// ───────── Menu, backup ─────────
+function menu(){
+  view = menu;
+  const p = P();
+  let h = '<header><button class="icon" id="bk">←</button><h1>Menu</h1></header>';
+  h += '<div class="card"><h2>People</h2>' + S.people.map(x => '<div class="item"><div class="t"><b>' + esc(x.name || 'Unnamed') + (x.id === p.id ? ' <span class="muted">(open now)</span>' : '') + '</b></div>' +
+    (x.id !== p.id && licensed() ? '<button class="small" data-op="' + x.id + '">Open</button>' : '') + (S.people.length > 1 ? '<button class="small danger" data-dp="' + x.id + '">Delete</button>' : '') + '</div>').join('') +
+    '<button class="big alt" id="addp2">+ Add a person' + (licensed() ? '' : ' (full version)') + '</button></div>';
+  h += '<div class="card"><h2>Past visits</h2><p class="muted">Keep each visit sheet and look back later.</p><button class="big alt" id="hist">Open past visits' + (licensed() ? '' : ' (full version)') + '</button></div>';
+  h += '<div class="card"><h2>Backup</h2><p class="muted">Your notes live only in this browser. Save a backup file to keep them safe or move them to a new phone.</p>' +
+    '<button class="big alt" id="exp">Save backup file' + (licensed() ? '' : ' (full version)') + '</button><button class="big alt" id="imp">Restore from backup file' + (licensed() ? '' : ' (full version)') + '</button>' +
+    '<input type="file" id="impf" accept=".json,application/json" hidden><p id="bmsg" class="muted"></p></div>';
+  h += '<div class="card"><h2>Clear notes</h2><p class="muted">Remove all notes for ' + esc(p.name || 'this person') + ' (for example after you are better).</p><button class="big alt" id="clr" style="color:var(--bad);border-color:var(--bad)">Clear these notes</button></div>';
+  h += '<div class="card"><h2>Full version</h2>' + (licensed() ? '<p>Unlocked' + (LIC.n ? ' — thank you, ' + esc(LIC.n) : '') + '.</p>' : '<button class="big" id="unl2">Unlock the full version</button>') + '</div>';
+  $('#app').innerHTML = h;
+  $('#bk').onclick = () => render(home);
+  $('#addp2').onclick = () => { if (!licensed()) { unlockScreen('Family profiles are part of the full version.'); return; } const n = newPerson(); S.people.push(n); S.cur = n.id; save(); render(home); };
+  document.querySelectorAll('[data-op]').forEach(b => b.onclick = () => { S.cur = b.dataset.op; save(); render(home); });
+  document.querySelectorAll('[data-dp]').forEach(b => b.onclick = () => { const x = S.people.find(y => y.id === b.dataset.dp);
+    ask('Delete ' + (x.name || 'this person') + ' and all their notes and past visits?', 'Delete', () => { S.people = S.people.filter(y => y.id !== x.id); if (S.cur === x.id) S.cur = S.people[0].id; save(); menu(); }); });
+  $('#hist').onclick = () => historyView();
+  $('#exp').onclick = () => { if (!licensed()) { unlockScreen('The backup file is part of the full version.'); return; } exportBackup(); };
+  $('#imp').onclick = () => { if (!licensed()) { unlockScreen('The backup file is part of the full version.'); return; } $('#impf').click(); };
+  $('#impf').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => importBackup(String(r.result)); r.readAsText(f); };
+  $('#clr').onclick = () => ask('Clear all notes for ' + (p.name || 'this person') + '? Past visits are kept.', 'Clear', () => { Object.assign(p, {problem:'', syms:[], meds:[], allergies:[], nka:false, conds:[], qs:[]}); save(); render(home); });
+  if ($('#unl2')) $('#unl2').onclick = () => unlockScreen();
+}
+function backupText(){ return JSON.stringify({app:'doctorprep', v:1, saved:new Date().toISOString(), data:S}, null, 1); }
+function exportBackup(){
+  const b = new Blob([backupText()], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'doctorprep-backup-' + todayISO() + '.json';
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  const m = $('#bmsg'); if (m) m.textContent = 'Backup file saved to your downloads.';
+}
+function importBackup(txt){
+  let x; try { x = JSON.parse(txt); } catch (e) { x = null; }
+  const m = $('#bmsg');
+  if (!x || x.app !== 'doctorprep' || !x.data || !Array.isArray(x.data.people) || !x.data.people.length) { if (m) m.textContent = 'This file is not a Doctor Visit Prep backup.'; return false; }
+  const n = x.data.people.length;
+  ask('Replace the notes on this device with the backup (' + n + ' ' + (n === 1 ? 'person' : 'people') + ')?', 'Restore', () => {
+    const def = newPerson();
+    S = Object.assign({people:[], cur:null, lang:'es', freeLang:null, big:false}, x.data);
+    S.people = S.people.map(p => Object.assign(newPerson(), p, {id:p.id || def.id}));
+    S.cur = S.people[0].id; save(); render(home);
+  });
+  return true;
+}
+
+function render(v){ (v || view || home)(); }
+render(view = home);
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('doctorprep_sw.js');
+</script>
+</body>
+</html>

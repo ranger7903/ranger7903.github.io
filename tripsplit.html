@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trip Split — who paid what, who owes whom. Offline, no sign-up</title>
+<meta name="description" content="Split shared trip expenses with friends or family. Works offline abroad, several currencies, fewest transfers to settle up. No account, no ads.">
+<!--
+  Trip Split (밸류스, 2026-11-16 첫 판)
+  손님: 친구·가족과 여행하는 사람, 함께 사는 사람(전 세계). 그래서
+   · 아무도 가입 안 함. 이 기기에만 저장. 외국에서 인터넷 없어도 됨.
+   · 돈은 늘 «가장 작은 단위 정수»(센트·엔)로 셈 → 잃는 센트 없음, 합은 정확히 0.
+   · 외화는 손님이 한 번 넣은 환율로 집 통화로 바꿈. 어떤 환율을 썼는지 늘 보여 줌.
+   · 정산: 가장 적은 송금 수(작은 모임은 정확한 최소, 큰 모임은 n-1 이하).
+   · 숫자: 소수점은 늘 점, 천 단위는 좁은 빈칸 → 어느 나라에서 읽어도 같은 뜻.
+   · 무료: 여행 하나, 핵심 기능 전부(집 통화 하나로). 유료: 여행 여러 개·보관함, 외화 환산, CSV.
+-->
+<link rel="manifest" href="tripsplit_manifest.json">
+<meta name="theme-color" content="#1E5A56">
+<link rel="icon" href="tripsplit_icon192.png">
+<script src="nacl.min.js"></script>
+<style>
+:root{--bg:#F7F6F2;--card:#fff;--ink:#22262A;--ink2:#5F666C;--line:#DEDCD4;--deep:#1E5A56;--accent:#C2643A;--ok:#2F6B3E;--okbg:#E6F1E7;--bad:#A3402E;--badbg:#F7E5E1;--soft:#EEF3F2}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45}
+main{max-width:600px;margin:0 auto;padding:12px 14px 48px}
+header{display:flex;align-items:center;gap:10px;margin:4px 0 12px}
+header h1{font-size:20px;margin:0;flex:1;min-width:0;overflow-wrap:anywhere}
+header h1 small{display:block;font-size:13px;font-weight:400;color:var(--ink2)}
+button{font:inherit;cursor:pointer;color:inherit}
+.icon{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 11px;font-size:15px;flex:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.card h2{font-size:16px;margin:0 0 8px}
+.big{display:block;width:100%;border:none;border-radius:12px;padding:13px;font-size:16px;font-weight:700;background:var(--deep);color:#fff;margin-top:10px}
+.big.alt{background:#fff;color:var(--deep);border:1px solid var(--deep)}
+.big.danger{background:#fff;color:var(--bad);border:1px solid var(--bad)}
+.big.danger.armed{background:var(--bad);color:#fff}
+.sm{border:1px solid var(--deep);background:#fff;color:var(--deep);border-radius:999px;padding:5px 12px;font-size:14px;flex:none}
+.sm.solid{background:var(--deep);color:#fff}
+.sm.ghost{border-color:var(--line);color:var(--ink2)}
+label{display:block;font-weight:600;font-size:14px;margin:10px 0 4px}
+input[type=text],input[type=date],input[inputmode],select,textarea{font:inherit;width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+textarea{font-size:13px;font-family:ui-monospace,Consolas,monospace;line-height:1.4}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{min-width:0}
+.grow{flex:1}
+.muted{color:var(--ink2);font-size:13px}
+.err{color:var(--bad);font-size:14px;min-height:1px;margin-top:6px}
+.err:empty{display:none}
+.hint{font-size:13px;color:var(--deep);margin-top:4px;min-height:18px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#E7E5DE;border-radius:12px;padding:4px;margin:8px 0}
+.tabs button{border:none;background:none;border-radius:9px;padding:8px 2px;font-size:14px;font-weight:600;color:var(--ink2)}
+.tabs button.on{background:#fff;color:var(--deep);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#E7E5DE;border-radius:10px;padding:3px}
+.seg button{border:none;background:none;border-radius:8px;padding:7px 2px;font-size:14px;color:var(--ink2)}
+.seg button.on{background:#fff;color:var(--deep);font-weight:700}
+.list>*{border-top:1px solid var(--line)}
+.list>*:first-child{border-top:none}
+.exp{display:block;width:100%;text-align:left;background:none;border:none;padding:10px 2px}
+.exp .r1{display:flex;gap:10px;align-items:baseline}
+.exp .r1 b{flex:1;min-width:0;overflow-wrap:anywhere}
+.amt{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+.exp .r2,.exp .r3{font-size:13px;color:var(--ink2);overflow-wrap:anywhere}
+.exp .r3{color:var(--deep)}
+.day{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em;padding:12px 2px 2px;border-top:none!important}
+.bal{display:flex;gap:10px;align-items:center;padding:10px 2px}
+.bal .n{flex:1;min-width:0;overflow-wrap:anywhere}
+.bal .n small{display:block;color:var(--ink2);font-size:12px}
+.nw{white-space:nowrap}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.tr{display:flex;gap:10px;align-items:center;padding:10px 2px}
+.tr .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.done{background:var(--okbg);border-radius:12px;padding:12px;text-align:center;font-weight:600;color:var(--ok)}
+.mem{display:flex;gap:8px;align-items:center;padding:6px 0}
+.mem input[type=checkbox]{width:20px;height:20px;flex:none}
+.mem .nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.mem input[inputmode]{width:110px;flex:none;text-align:right}
+.mem .sh:empty{display:none}
+.mem .sh{width:96px;text-align:right;font-size:13px;color:var(--ink2);flex:none;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px;background:#F3E3D8;color:var(--accent);vertical-align:middle;margin-left:4px}
+.trip{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:6px 0}
+.trip .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.trip .t small{display:block;color:var(--ink2);font-size:13px}
+.ratebox{background:var(--soft);border-radius:10px;padding:10px;margin-top:8px}
+.ratebox input{width:130px!important}
+.note{background:var(--soft);border-radius:10px;padding:9px 11px;font-size:13px;color:var(--ink2)}
+.lock{background:#FFF6E8;border:1px solid #EBCB94;border-radius:10px;padding:9px 11px;font-size:14px}
+footer{text-align:center;color:var(--ink2);font-size:12px;margin-top:24px}
+a{color:var(--deep)}
+.sum{display:flex;gap:12px}
+.sum div{flex:1;background:var(--soft);border-radius:10px;padding:8px 10px}
+.sum b{display:block;font-size:17px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.sum span{font-size:12px;color:var(--ink2)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+// ───────── Currencies (ISO 4217 minor units) ─────────
+const CURS = [
+ ['USD','US dollar',2],['EUR','Euro',2],['GBP','British pound',2],['JPY','Japanese yen',0],['KRW','Korean won',0],['VND','Vietnamese dong',0],
+ ['CNY','Chinese yuan',2],['HKD','Hong Kong dollar',2],['TWD','Taiwan dollar',2],['SGD','Singapore dollar',2],['THB','Thai baht',2],['MYR','Malaysian ringgit',2],
+ ['IDR','Indonesian rupiah',2],['PHP','Philippine peso',2],['KHR','Cambodian riel',2],['LAK','Lao kip',2],['INR','Indian rupee',2],['LKR','Sri Lankan rupee',2],
+ ['NPR','Nepalese rupee',2],['PKR','Pakistani rupee',2],['BDT','Bangladeshi taka',2],['AUD','Australian dollar',2],['NZD','New Zealand dollar',2],['FJD','Fijian dollar',2],
+ ['CAD','Canadian dollar',2],['MXN','Mexican peso',2],['BRL','Brazilian real',2],['ARS','Argentine peso',2],['CLP','Chilean peso',0],['COP','Colombian peso',2],
+ ['PEN','Peruvian sol',2],['CRC','Costa Rican colon',2],['CHF','Swiss franc',2],['SEK','Swedish krona',2],['NOK','Norwegian krone',2],['DKK','Danish krone',2],
+ ['ISK','Icelandic krona',0],['PLN','Polish zloty',2],['CZK','Czech koruna',2],['HUF','Hungarian forint',2],['RON','Romanian leu',2],['BGN','Bulgarian lev',2],
+ ['RSD','Serbian dinar',2],['TRY','Turkish lira',2],['GEL','Georgian lari',2],['UAH','Ukrainian hryvnia',2],['KZT','Kazakh tenge',2],['AED','UAE dirham',2],
+ ['SAR','Saudi riyal',2],['QAR','Qatari riyal',2],['BHD','Bahraini dinar',3],['KWD','Kuwaiti dinar',3],['OMR','Omani rial',3],['JOD','Jordanian dinar',3],
+ ['ILS','Israeli shekel',2],['EGP','Egyptian pound',2],['MAD','Moroccan dirham',2],['TND','Tunisian dinar',3],['ZAR','South African rand',2],['KES','Kenyan shilling',2],
+ ['TZS','Tanzanian shilling',2],['UGX','Ugandan shilling',0],['RWF','Rwandan franc',0],['XOF','West African CFA franc',0],['XAF','Central African CFA franc',0],
+ ['XPF','CFP franc',0],['PYG','Paraguayan guarani',0],['MNT','Mongolian tugrik',2],['MVR','Maldivian rufiyaa',2]
+];
+const CUR = {}; CURS.forEach(c => CUR[c[0]] = {name:c[1], dec:c[2]});
+function DEC(c){ return CUR[c] ? CUR[c].dec : 2; }
+function guessHome(){
+  const m = {US:'USD',GB:'GBP',JP:'JPY',KR:'KRW',VN:'VND',CA:'CAD',AU:'AUD',NZ:'NZD',IN:'INR',CN:'CNY',TW:'TWD',HK:'HKD',SG:'SGD',CH:'CHF',SE:'SEK',NO:'NOK',DK:'DKK',PL:'PLN',CZ:'CZK',HU:'HUF',MX:'MXN',BR:'BRL',TH:'THB',PH:'PHP',ID:'IDR',MY:'MYR',ZA:'ZAR',TR:'TRY',IL:'ILS',AE:'AED',IS:'ISK',CL:'CLP'};
+  const euro = 'AT BE CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK'.split(' ');
+  const r = ((navigator.language || 'en-US').split('-')[1] || '').toUpperCase();
+  return m[r] || (euro.indexOf(r) >= 0 ? 'EUR' : 'USD');
+}
+function curOptions(sel, only){
+  return CURS.filter(c => !only || only.indexOf(c[0]) >= 0).map(c => '<option value="' + c[0] + '"' + (c[0] === sel ? ' selected' : '') + '>' + c[0] + ' — ' + esc(c[1]) + '</option>').join('');
+}
+
+// ───────── Numbers: integers in the smallest unit, always ─────────
+// Shown with a dot for decimals and a narrow space between thousands, so 1 234.50 reads the same everywhere.
+const TS = ' ';
+function fmtNum(minor, dec, sep){
+  const neg = minor < 0; const a = Math.abs(minor); const p = Math.pow(10, dec);
+  const ip = Math.floor(a / p), fp = a - ip * p;
+  let s = String(ip).replace(/\B(?=(\d{3})+(?!\d))/g, sep == null ? TS : sep);
+  if (dec) s += '.' + String(fp).padStart(dec, '0');
+  return (neg ? '−' : '') + s;
+}
+function money(minor, cur){ return fmtNum(minor, DEC(cur)) + ' ' + cur; }
+function plainNum(minor, dec){ return fmtNum(minor, dec, '').replace('−', '-'); }
+// Parse what a person types. Accepts 1234.5, 1 234.50, 1,234.50, 1.234,50, 42,5. Returns {minor} or {err}.
+function parseAmount(str, dec, cur){
+  let s = String(str == null ? '' : str).trim().replace(/[\s  '’_]/g, '');
+  if (!s) return {err:'Enter an amount.'};
+  if (!/^[0-9.,]+$/.test(s) || !/[0-9]/.test(s)) return {err:'Use digits only, with a dot for decimals (for example 42.50).'};
+  const ld = s.lastIndexOf('.'), lc = s.lastIndexOf(',');
+  let dsep = null;
+  if (ld >= 0 && lc >= 0) dsep = ld > lc ? '.' : ',';
+  else if (ld >= 0 || lc >= 0) {
+    const ch = ld >= 0 ? '.' : ',';
+    const cnt = s.split(ch).length - 1, after = s.length - s.lastIndexOf(ch) - 1;
+    if (cnt > 1) dsep = null;
+    else if (after === 3 && dec !== 3) dsep = null;
+    else dsep = ch;
+  }
+  let ip = s, fp = '';
+  if (dsep) { const k = s.lastIndexOf(dsep); ip = s.slice(0, k); fp = s.slice(k + 1); }
+  ip = ip.replace(/[.,]/g, '');
+  if (/[.,]/.test(fp)) return {err:'That number has too many separators.'};
+  if (fp.length > dec) return {err: dec === 0 ? (cur || 'This currency') + ' has no decimals — enter a whole number.' : (cur || 'This currency') + ' has ' + dec + ' decimals at most.'};
+  ip = ip.replace(/^0+(?=\d)/, '') || '0';
+  if (ip.length > 12) return {err:'That number is too large.'};
+  return {minor: Number(ip) * Math.pow(10, dec) + Number((fp + '000').slice(0, dec) || 0)};
+}
+// Exchange rate typed once: "1 FOREIGN = v HOME" (dir h) or "1 HOME = v FOREIGN" (dir f). Kept as an exact fraction.
+function parseRate(str){
+  let s = String(str == null ? '' : str).trim().replace(/[\s  '’_]/g, '');
+  if (!s) return {err:'Enter the exchange rate.'};
+  if (!/^[0-9.,]+$/.test(s)) return {err:'Use digits only, with a dot for decimals.'};
+  const ld = s.lastIndexOf('.'), lc = s.lastIndexOf(',');
+  let dsep = null;
+  if (ld >= 0 && lc >= 0) dsep = ld > lc ? '.' : ',';
+  else if (ld >= 0) dsep = (s.split('.').length > 2) ? null : '.';
+  else if (lc >= 0) dsep = (s.split(',').length > 2 || s.length - lc - 1 === 3) ? null : ',';
+  let ip = s, fp = '';
+  if (dsep) { const k = s.lastIndexOf(dsep); ip = s.slice(0, k); fp = s.slice(k + 1); }
+  ip = ip.replace(/[.,]/g, '');
+  if (/[.,]/.test(fp)) return {err:'That rate has too many separators.'};
+  if (fp.length > 12 || ip.length > 12) return {err:'That rate has too many digits.'};
+  ip = ip.replace(/^0+(?=\d)/, '') || '0';
+  const num = BigInt(ip + fp), den = 10n ** BigInt(fp.length);
+  if (num === 0n) return {err:'The rate must be more than zero.'};
+  let t = (ip + (fp ? '.' + fp : '')); if (t.startsWith('.')) t = '0' + t;
+  return {num, den, text:t};
+}
+function rateFrac(r){ // home per 1 foreign, as [n, d]
+  const p = parseRate(r.v); if (p.err) return null;
+  return r.dir === 'f' ? [p.den, p.num] : [p.num, p.den];
+}
+function rateText(cur, home, r){
+  return r.dir === 'f' ? '1 ' + home + ' = ' + r.v + ' ' + cur : '1 ' + cur + ' = ' + r.v + ' ' + home;
+}
+function sigText(n, d, digits){ // fraction to a short decimal, for the "other way round" hint
+  const x = Number(n) / Number(d); if (!isFinite(x) || x === 0) return '0';
+  return x >= 1 ? String(Number(x.toPrecision(Math.max(digits, String(Math.floor(x)).length)))) : String(Number(x.toPrecision(digits)));
+}
+const MAXH = 1e14; // largest single expense after conversion, in the smallest unit (keeps every sum exact)
+function convert(minor, fromCur, home, frac){ // round half up, exact
+  if (fromCur === home) return minor;
+  const [n, d] = frac;
+  const num = BigInt(minor) * n * (10n ** BigInt(DEC(home)));
+  const den = d * (10n ** BigInt(DEC(fromCur)));
+  return Number((num * 2n + den) / (den * 2n));
+}
+
+// ───────── Splitting (largest remainder; the sum is always exact) ─────────
+function allocate(total, weights, rot){
+  const n = weights.length; const W = weights.reduce((a, b) => a + BigInt(b), 0n);
+  if (W === 0n) return weights.map(() => 0);
+  const T = BigInt(total); let left = T; const base = [], rem = [];
+  for (let i = 0; i < n; i++) { const x = T * BigInt(weights[i]); base.push(x / W); rem.push(x % W); left -= x / W; }
+  const order = weights.map((w, i) => i).filter(i => weights[i] > 0)
+    .sort((a, b) => rem[b] > rem[a] ? 1 : rem[b] < rem[a] ? -1 : ((a - rot + n * 9) % n) - ((b - rot + n * 9) % n));
+  for (let k = 0; left > 0n; k++, left--) base[order[k % order.length]] += 1n;
+  return base.map(Number);
+}
+function hashRot(id, n){ let h = 0; for (const c of String(id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return n ? h % n : 0; }
+// Returns {own: {mid: minor in expense currency}, home: {mid: minor in home}, H, frac}
+function splitExpense(t, e){
+  const ids = t.members.map(m => m.id);
+  let w;
+  if (e.mode === 'exact') w = ids.map(id => e.parts[id] || 0);
+  else w = ids.map(id => e.parts[id] || 0);
+  const rot = hashRot(e.id, ids.length);
+  const own = e.mode === 'exact' ? w.slice() : allocate(e.amt, w, rot);
+  let frac = null, H = e.amt, homeArr = own;
+  if (e.cur !== t.home) {
+    frac = t.rates[e.cur] ? rateFrac(t.rates[e.cur]) : null;
+    if (!frac) return null;
+    H = convert(e.amt, e.cur, t.home, frac);
+    homeArr = allocate(H, own, rot);
+  }
+  const o = {}, h = {}; ids.forEach((id, i) => { o[id] = own[i]; h[id] = homeArr[i]; });
+  return {own:o, home:h, H, frac};
+}
+function balances(t){
+  const b = {}, paid = {}, share = {}; t.members.forEach(m => { b[m.id] = 0; paid[m.id] = 0; share[m.id] = 0; });
+  let total = 0;
+  t.expenses.forEach(e => {
+    const s = splitExpense(t, e); if (!s) return;
+    total += s.H; b[e.payer] += s.H; paid[e.payer] += s.H;
+    for (const id in s.home) { b[id] -= s.home[id]; share[id] += s.home[id]; }
+  });
+  t.payments.forEach(p => { b[p.from] += p.amt; b[p.to] -= p.amt; });
+  return {b, paid, share, total};
+}
+
+// ───────── Settle up: fewest transfers ─────────
+// Up to 14 people with a non-zero balance: exact minimum (split into as many zero-sum groups as possible).
+// Bigger groups: greedy, never more than n-1 transfers.
+function settleGroup(items, out){ // items [{id,v}] summing to 0; at most len-1 transfers
+  const d = items.map(x => ({id:x.id, v:x.v})).filter(x => x.v !== 0);
+  for (;;) {
+    let mn = null, mx = null;
+    d.forEach(x => { if (x.v < 0 && (!mn || x.v < mn.v)) mn = x; if (x.v > 0 && (!mx || x.v > mx.v)) mx = x; });
+    if (!mn || !mx) break;
+    const exact = d.find(x => x.v > 0 && x.v === -mn.v);
+    const to = exact || mx; const a = Math.min(-mn.v, to.v);
+    out.push({from:mn.id, to:to.id, amt:a}); mn.v += a; to.v -= a;
+  }
+  return out;
+}
+function settleGreedy(ids, bal){ return settleGroup(ids.map(id => ({id, v:bal[id]})), []); }
+function settle(ids, bal){
+  const nz = ids.filter(id => bal[id] !== 0);
+  if (nz.length > 14) return settleGreedy(ids, bal);
+  const n = nz.length, N = 1 << n, sum = new Float64Array(N), dp = new Int8Array(N);
+  for (let m = 1; m < N; m++) { const lb = m & -m, i = 31 - Math.clz32(lb); sum[m] = sum[m ^ lb] + bal[nz[i]]; }
+  for (let m = 1; m < N; m++) { let best = 0; for (let i = 0; i < n; i++) if (m & (1 << i)) { const v = dp[m ^ (1 << i)]; if (v > best) best = v; } dp[m] = best + (sum[m] === 0 ? 1 : 0); }
+  // walk back to find the groups
+  const groups = []; let m = N - 1, start = m;
+  while (m) {
+    let pick = -1, best = -1;
+    for (let i = 0; i < n; i++) if (m & (1 << i)) { const v = dp[m ^ (1 << i)]; if (v > best) { best = v; pick = i; } }
+    const nm = m ^ (1 << pick);
+    if (sum[nm] === 0) { groups.push(start ^ nm); start = nm; }
+    m = nm;
+  }
+  const out = [];
+  groups.forEach(g => { const it = []; for (let i = 0; i < n; i++) if (g & (1 << i)) it.push({id:nz[i], v:bal[nz[i]]}); settleGroup(it, out); });
+  return out;
+}
+
+// ───────── Free part and the license key ─────────
+// Free: one trip with everything in its home currency. A Valuestools key (product «tripsplit», or «*») adds
+// unlimited trips + archive, other currencies with exchange rates, and CSV export.
+const PUB_B64 = 'z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=';
+const LKEY = 'vt_tripsplit_lic';
+let LIC = null;
+try { LIC = JSON.parse(localStorage.getItem(LKEY) || 'null'); } catch (e) {}
+function licensed(){ return !!(LIC && LIC.ok); }
+function b64d(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+  const bin = atob(s), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+function verifyKey(raw){
+  try {
+    raw = (raw || '').trim().replace(/\s+/g, '');
+    if (!raw.startsWith('VALUES.')) return 'bad';
+    const p = raw.split('.'); if (p.length !== 3) return 'bad';
+    if (typeof nacl === 'undefined') return 'nonacl';
+    const payload = b64d(p[1]), sig = b64d(p[2]);
+    if (!nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return 'bad';
+    const info = JSON.parse(new TextDecoder().decode(payload));
+    const prods = info.p || [];
+    if (!(prods.indexOf('*') >= 0 || prods.indexOf('tripsplit') >= 0)) return 'noprod';
+    return info;
+  } catch (e) { return 'bad'; }
+}
+const WHY = {trips:'Your free trip is in use. The full version keeps as many trips as you like, plus an archive for finished ones.',
+  cur:'Spending in more than one currency is part of the full version: type each rate once and Trip Split converts everything to your home currency.',
+  csv:'CSV export (for Excel, Numbers or Google Sheets) is part of the full version.',
+  archive:'The trip archive is part of the full version.'};
+function unlockScreen(why){
+  const back = UI.back || home;
+  view = () => unlockScreen(why);
+  $('#app').innerHTML = '<header><button class="icon" id="ub">←</button><h1>Get the full version</h1></header><div class="card">' +
+    (why && WHY[why] ? '<p><b>' + esc(WHY[why]) + '</b></p>' : '') +
+    '<p>Free, for good: one trip with everything in one currency — expenses, three ways to split, balances, settle up, marking payments and sharing the summary.</p>' +
+    '<p>The full version adds:</p><ul><li>Unlimited trips, and an archive for finished ones</li><li>Several currencies on one trip, converted at the rates you type</li><li>CSV export for spreadsheets</li></ul>' +
+    '<p class="muted">Online checkout is opening soon. Until then, write to <a href="mailto:ranger7903@nate.com?subject=Trip%20Split%20full%20version">ranger7903@nate.com</a> and we will reply with how to get a key.</p>' +
+    '<label for="keyin">Already have a key? Paste it here (it starts with VALUES.)</label>' +
+    '<textarea id="keyin" rows="3"></textarea>' +
+    '<button class="big" id="kgo">Unlock</button><p id="kmsg" class="muted"></p></div>';
+  $('#ub').onclick = () => { UI.back = null; back(); };
+  $('#kgo').onclick = () => {
+    const r = verifyKey($('#keyin').value), m = $('#kmsg');
+    if (r === 'nonacl') { m.textContent = 'The key checker has not loaded yet. Connect to the internet once, reload, and try again.'; return; }
+    if (r === 'noprod') { m.textContent = 'This key is genuine, but it is for a different Valuestools product.'; return; }
+    if (r === 'bad' || !r) { m.textContent = 'That key doesn’t look right. Please paste the whole key, starting with VALUES.'; return; }
+    LIC = {ok:true, n:r.n || ''}; try { localStorage.setItem(LKEY, JSON.stringify(LIC)); } catch (e) {}
+    m.textContent = 'Unlocked. Thank you — enjoy every trip!';
+    setTimeout(() => { UI.back = null; back(); }, 900);
+  };
+}
+function needFull(why, back){ UI.back = back; unlockScreen(why); }
+
+// ───────── Storage ─────────
+const KEY = 'vt_tripsplit_v1';
+let S = {trips:[], cur:null};
+try { const x = JSON.parse(localStorage.getItem(KEY) || 'null'); if (x && Array.isArray(x.trips)) S = Object.assign(S, x); } catch (e) {}
+let saveErr = '';
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); saveErr = ''; } catch (e) { saveErr = 'Could not save on this device (storage is full or blocked).'; } }
+function trip(){ return S.trips.find(t => t.id === S.cur) || null; }
+function mname(t, id){ const m = t.members.find(m => m.id === id); return m ? m.name : '?'; }
+function todayISO(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(iso){ const p = String(iso || '').split('-'); if (p.length !== 3) return iso || ''; return Number(p[2]) + ' ' + MON[Number(p[1]) - 1] + ' ' + p[0]; }
+function foreignCurs(t){ const s = {}; t.expenses.forEach(e => { if (e.cur !== t.home) s[e.cur] = 1; }); Object.keys(t.rates || {}).concat(t.extra || []).forEach(c => { if (c !== t.home) s[c] = 1; }); return Object.keys(s).sort(); }
+
+// ───────── Screens ─────────
+let view = null; const UI = {tab:'exp', back:null};
+function render(){ view(); window.scrollTo(0, 0); }
+function go(v){ view = v; render(); }
+
+function home(){
+  const t = trip();
+  if (t) return tripView();
+  if (!S.trips.length) return newTrip();
+  tripsList();
+}
+function tripsList(){
+  view = tripsList;
+  const act = S.trips.filter(t => !t.archived), arc = S.trips.filter(t => t.archived);
+  const card = t => { const b = balances(t); return '<button class="trip" onclick="openTrip(\'' + t.id + '\')"><span class="t"><b>' + esc(t.name) + '</b><small>' + t.members.length + ' people · ' + t.expenses.length + ' expenses · ' + money(b.total, t.home) + '</small></span><span>›</span></button>'; };
+  let h = '<header><h1>Trip Split<small>Who paid what, who owes whom</small></h1><button class="icon" onclick="go(about)" aria-label="About">?</button></header>';
+  h += act.map(card).join('') || '<div class="card muted">No open trips.</div>';
+  h += '<button class="big" onclick="startNewTrip()">+ New trip' + (licensed() || !S.trips.length ? '' : ' <span class="pill" style="background:#fff">FULL</span>') + '</button>';
+  if (arc.length) h += '<div class="card"><h2>Archive</h2>' + arc.map(card).join('') + '</div>';
+  h += foot();
+  $('#app').innerHTML = h;
+}
+function foot(){ return '<footer>Works offline. No sign-up. Everything stays on this device.<br>' + (licensed() ? 'Full version' + (LIC.n ? ' — thank you, ' + esc(LIC.n) : '') : 'Free version · <a href="javascript:void(0)" onclick="needFull(null, view)">Full version</a>') + ' · <a href="javascript:void(0)" onclick="go(about)">About</a></footer>'; }
+function openTrip(id){ S.cur = id; save(); UI.tab = 'exp'; go(tripView); }
+function startNewTrip(){ if (S.trips.length >= 1 && !licensed()) return needFull('trips', view); go(newTrip); }
+
+function newTrip(){
+  view = newTrip;
+  const first = !S.trips.length;
+  let h = '<header>' + (first ? '' : '<button class="icon" onclick="go(tripsList)">←</button>') + '<h1>' + (first ? 'Trip Split<small>Shared expenses for a trip — offline, no sign-up for anyone</small>' : 'New trip') + '</h1>' + (first ? '<button class="icon" onclick="go(about)" aria-label="About">?</button>' : '') + '</header>';
+  if (first) h += '<div class="note">Add what each person paid. Trip Split works out who owes whom and the fewest payments to settle up. Only one phone needs it.</div>';
+  h += '<div class="card"><label for="tn">Trip name</label><input type="text" id="tn" maxlength="80" placeholder="e.g. Lisbon in June">' +
+    '<label for="th">Home currency</label><select id="th">' + curOptions(guessHome()) + '</select><div class="muted">Everything is added up in this currency. It can’t be changed once there are expenses.</div>' +
+    '<label>People on the trip</label><div id="tm">' + [1, 2, 3].map(i => memInput(i)).join('') + '</div>' +
+    '<button class="sm" onclick="addMemInput()">+ Another person</button>' +
+    '<div class="err" id="terr"></div><button class="big" id="tgo" onclick="createTrip()">Create trip</button></div>';
+  $('#app').innerHTML = h + foot();
+}
+function memInput(i){ return '<input type="text" class="mi" maxlength="40" placeholder="Name ' + i + '" style="margin-bottom:6px">'; }
+function addMemInput(){ const d = $('#tm'); d.insertAdjacentHTML('beforeend', memInput(d.children.length + 1)); d.lastChild.focus(); }
+function cleanName(s, n){ return String(s || '').replace(/\s+/g, ' ').trim().slice(0, n); }
+function createTrip(){
+  const name = cleanName($('#tn').value, 80) || 'My trip';
+  const names = [...document.querySelectorAll('.mi')].map(i => cleanName(i.value, 40)).filter(Boolean);
+  const err = $('#terr');
+  if (names.length < 2) { err.textContent = 'Add at least two people.'; return; }
+  const low = names.map(n => n.toLowerCase());
+  if (new Set(low).size !== low.length) { err.textContent = 'Two people have the same name. Add an initial to tell them apart.'; return; }
+  if (S.trips.length >= 1 && !licensed()) return needFull('trips', newTrip);
+  const t = {id:uid(), name, home:$('#th').value, members:names.map(n => ({id:uid(), name:n})), rates:{}, expenses:[], payments:[], archived:false, created:Date.now()};
+  S.trips.push(t); S.cur = t.id; save(); UI.tab = 'exp'; go(tripView);
+}
+
+function tripView(){
+  view = tripView;
+  const t = trip(); if (!t) { S.cur = null; return home(); }
+  const b = balances(t);
+  let h = '<header><button class="icon" onclick="S.cur=null;save();go(tripsList)" aria-label="All trips">☰</button><h1>' + esc(t.name) + '<small>' + t.members.length + ' people · home currency ' + t.home + (t.archived ? ' · archived' : '') + '</small></h1><button class="icon" onclick="go(tripSettings)" aria-label="Trip settings">⚙︎</button></header>';
+  h += '<div class="sum"><div><span>Total spent</span><b>' + money(b.total, t.home) + '</b></div><div><span>Expenses</span><b>' + t.expenses.length + '</b></div></div>';
+  h += '<button class="big" id="addx" onclick="editExpense(null)">+ Add expense</button>';
+  h += '<div class="tabs">' + [['exp','Expenses'],['bal','Balances'],['set','Settle up'],['share','Share']].map(x => '<button class="' + (UI.tab === x[0] ? 'on' : '') + '" id="tab_' + x[0] + '" onclick="UI.tab=\'' + x[0] + '\';tripView()">' + x[1] + '</button>').join('') + '</div>';
+  if (saveErr) h += '<div class="err">' + esc(saveErr) + '</div>';
+  if (UI.tab === 'exp') h += expList(t);
+  else if (UI.tab === 'bal') h += balList(t, b);
+  else if (UI.tab === 'set') h += settleView(t, b);
+  else h += shareView(t);
+  $('#app').innerHTML = h + foot();
+}
+function splitLabel(t, e){
+  const ids = t.members.map(m => m.id).filter(id => e.parts[id] > 0);
+  if (e.mode === 'equal') return ids.length === t.members.length ? 'split equally, everyone' : 'split equally: ' + ids.map(id => mname(t, id)).join(', ');
+  if (e.mode === 'shares') return 'by shares: ' + ids.map(id => mname(t, id) + ' ' + (e.parts[id] / 100)).join(', ');
+  return 'exact amounts: ' + ids.map(id => mname(t, id) + ' ' + money(e.parts[id], e.cur)).join(', ');
+}
+function expList(t){
+  if (!t.expenses.length) return '<div class="card"><p><b>No expenses yet.</b></p><p class="muted">Tap “Add expense” each time someone pays for the group — dinner, tickets, fuel, the flat. Add the date and who it was for.</p></div>';
+  const xs = t.expenses.slice().sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : b.at - a.at);
+  let h = '<div class="card list">', last = '';
+  xs.forEach(e => {
+    if (e.date !== last) { h += '<div class="day">' + fmtDate(e.date) + '</div>'; last = e.date; }
+    const s = splitExpense(t, e);
+    h += '<button class="exp" onclick="editExpense(\'' + e.id + '\')"><div class="r1"><b>' + esc(e.desc) + '</b><span class="amt">' + money(e.amt, e.cur) + '</span></div>' +
+      '<div class="r2">' + esc(mname(t, e.payer)) + ' paid · ' + esc(splitLabel(t, e)) + '</div>' +
+      (e.cur !== t.home ? '<div class="r3">' + (s ? '= ' + money(s.H, t.home) + ' at ' + esc(rateText(e.cur, t.home, t.rates[e.cur])) : 'No rate for ' + e.cur + ' yet — set it in trip settings') + '</div>' : '') + '</button>';
+  });
+  return h + '</div>';
+}
+function balList(t, b){
+  let h = '<div class="card list">';
+  t.members.forEach(m => {
+    const v = b.b[m.id];
+    h += '<div class="bal"><span class="n"><b>' + esc(m.name) + '</b><small><span class="nw">paid ' + money(b.paid[m.id], t.home) + '</span> · <span class="nw">share ' + money(b.share[m.id], t.home) + '</span></small></span><span class="amt ' + (v > 0 ? 'pos' : v < 0 ? 'neg' : '') + '">' + (v > 0 ? 'gets back ' + money(v, t.home) : v < 0 ? 'owes ' + money(-v, t.home) : 'square') + '</span></div>';
+  });
+  h += '</div><p class="muted">“Paid” is what each person paid for the group. “Share” is their part of the costs. Payments marked as paid in Settle up are included.' + (foreignCurs(t).length ? ' Foreign amounts use the rates in trip settings.' : '') + '</p>';
+  return h;
+}
+function settleView(t, b){
+  const ids = t.members.map(m => m.id);
+  const tr = settle(ids, b.b);
+  let h = '<div class="card"><h2>To settle up</h2>';
+  if (!t.expenses.length) h += '<p class="muted">Add some expenses first.</p>';
+  else if (!tr.length) h += '<div class="done">Everyone is square.</div>';
+  else {
+    h += '<div class="list">' + tr.map((x, i) => '<div class="tr"><span class="t"><b>' + esc(mname(t, x.from)) + '</b> pays <b>' + esc(mname(t, x.to)) + '</b><br><span class="amt">' + money(x.amt, t.home) + '</span></span><button class="sm solid" id="pay' + i + '" onclick="markPaid(\'' + x.from + '\',\'' + x.to + '\',' + x.amt + ')">Mark paid</button></div>').join('') + '</div>';
+    h += '<p class="muted">The fewest payments that make everyone square (' + tr.length + ' for ' + t.members.length + ' people). Exact to the last ' + (DEC(t.home) ? 'cent' : 'unit') + '.</p>';
+  }
+  h += '</div>';
+  if (t.payments.length) {
+    h += '<div class="card"><h2>Already paid</h2><div class="list">' + t.payments.slice().reverse().map(p => '<div class="tr"><span class="t">' + esc(mname(t, p.from)) + ' paid ' + esc(mname(t, p.to)) + ' <span class="amt">' + money(p.amt, t.home) + '</span><br><span class="muted">' + fmtDate(p.date) + '</span></span><button class="sm ghost" onclick="undoPay(\'' + p.id + '\')">Undo</button></div>').join('') + '</div></div>';
+  }
+  return h;
+}
+function markPaid(from, to, amt){ const t = trip(); t.payments.push({id:uid(), from, to, amt, date:todayISO()}); save(); tripView(); }
+function undoPay(id){ const t = trip(); t.payments = t.payments.filter(p => p.id !== id); save(); tripView(); }
+
+// ───────── Share and export ─────────
+function summaryText(t){
+  const b = balances(t), L = [];
+  L.push('Trip Split — ' + t.name);
+  L.push('People: ' + t.members.map(m => m.name).join(', '));
+  L.push('Home currency: ' + t.home + ' · total spent ' + money(b.total, t.home));
+  L.push('');
+  L.push('EXPENSES (' + t.expenses.length + ')');
+  if (!t.expenses.length) L.push('none yet');
+  t.expenses.slice().sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.at - b.at).forEach(e => {
+    const s = splitExpense(t, e);
+    L.push(fmtDate(e.date) + ' · ' + e.desc + ' · ' + mname(t, e.payer) + ' paid ' + money(e.amt, e.cur) + (e.cur !== t.home && s ? ' = ' + money(s.H, t.home) : '') + ' · ' + splitLabel(t, e));
+  });
+  const fc = foreignCurs(t).filter(c => t.rates[c]);
+  if (fc.length) { L.push(''); L.push('RATES USED (typed in by hand)'); fc.forEach(c => L.push(rateText(c, t.home, t.rates[c]))); }
+  L.push(''); L.push('BALANCES');
+  t.members.forEach(m => { const v = b.b[m.id]; L.push(m.name + ': ' + (v > 0 ? 'gets back ' + money(v, t.home) : v < 0 ? 'owes ' + money(-v, t.home) : 'square')); });
+  const tr = settle(t.members.map(m => m.id), b.b);
+  L.push(''); L.push('TO SETTLE UP');
+  if (!tr.length) L.push('Everyone is square.');
+  tr.forEach(x => L.push(mname(t, x.from) + ' pays ' + mname(t, x.to) + ' ' + money(x.amt, t.home)));
+  if (t.payments.length) { L.push(''); L.push('ALREADY PAID'); t.payments.forEach(p => L.push(fmtDate(p.date) + ' · ' + mname(t, p.from) + ' paid ' + mname(t, p.to) + ' ' + money(p.amt, t.home))); }
+  L.push(''); L.push('(Dot = decimals. Space = thousands.) Made with Trip Split, offline — valuestools.kr');
+  return L.join('\n');
+}
+function csvCell(v, num){ let s = String(v == null ? '' : v); if (!num && /^[=+\-@\t\r]/.test(s)) s = "'" + s; return /[",\n\r;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function csvText(t){
+  const hd = DEC(t.home), rows = [];
+  rows.push(['Date','Description','Paid by','Amount','Currency','Rate used','Amount in ' + t.home,'Split'].concat(t.members.map(m => m.name + ' share (' + t.home + ')')));
+  t.expenses.slice().sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.at - b.at).forEach(e => {
+    const s = splitExpense(t, e); if (!s) return;
+    rows.push([e.date, e.desc, mname(t, e.payer), {n:plainNum(e.amt, DEC(e.cur))}, e.cur, e.cur === t.home ? '' : rateText(e.cur, t.home, t.rates[e.cur]), {n:plainNum(s.H, hd)}, e.mode].concat(t.members.map(m => ({n:plainNum(s.home[m.id], hd)}))));
+  });
+  t.payments.forEach(p => rows.push([p.date, 'Payment to ' + mname(t, p.to), mname(t, p.from), {n:plainNum(p.amt, hd)}, t.home, '', {n:plainNum(p.amt, hd)}, 'payment'].concat(t.members.map(m => ({n: m.id === p.from ? plainNum(-p.amt, hd) : m.id === p.to ? plainNum(p.amt, hd) : ''})))));
+  const b = balances(t);
+  rows.push([]); rows.push(['Person','Paid (' + t.home + ')','Share (' + t.home + ')','Balance (' + t.home + ')']);
+  t.members.forEach(m => rows.push([m.name, {n:plainNum(b.paid[m.id], hd)}, {n:plainNum(b.share[m.id], hd)}, {n:plainNum(b.b[m.id], hd)}]));
+  rows.push([]); rows.push(['From','To','Amount (' + t.home + ')']);
+  settle(t.members.map(m => m.id), b.b).forEach(x => rows.push([mname(t, x.from), mname(t, x.to), {n:plainNum(x.amt, hd)}]));
+  return rows.map(r => r.map(c => c && typeof c === 'object' ? csvCell(c.n, true) : csvCell(c)).join(',')).join('\r\n') + '\r\n';
+}
+function shareView(t){
+  const canShare = typeof navigator.share === 'function';
+  return '<div class="card"><h2>Summary to send to the group</h2>' +
+    (canShare ? '<button class="big" id="shr" onclick="doShare()">Share…</button><p class="muted">Sends the text below to WhatsApp, Messages, email or any app.</p>' : '<p class="muted">Select the text below and copy it into any message.</p>') +
+    '<textarea id="sumtext" rows="14" readonly>' + esc(summaryText(t)) + '</textarea>' +
+    '<button class="big alt" id="selall" onclick="const x=$(\'#sumtext\');x.focus();x.select()">Select all text</button><div class="hint" id="shmsg"></div></div>' +
+    '<div class="card"><h2>Spreadsheet</h2><p class="muted">Every expense, each person’s share, balances and transfers — opens in Excel, Numbers or Google Sheets.</p><button class="big alt" id="csvb" onclick="doCSV()">Download CSV' + (licensed() ? '' : ' <span class="pill">FULL</span>') + '</button></div>';
+}
+function doShare(){
+  const t = trip(), text = summaryText(t);
+  navigator.share({title:'Trip Split — ' + t.name, text}).then(() => { $('#shmsg').textContent = 'Shared.'; }).catch(e => { if (e && e.name !== 'AbortError') $('#shmsg').textContent = 'Sharing did not work here — select the text above and copy it instead.'; });
+}
+function fileName(t){ return 'tripsplit-' + (t.name.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'trip') + '.csv'; }
+function doCSV(){
+  if (!licensed()) return needFull('csv', tripView);
+  const t = trip(), blob = new Blob(['﻿' + csvText(t)], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fileName(t);
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  $('#shmsg').textContent = '';
+}
+
+// ───────── Add / edit an expense ─────────
+let E = null; // the expense being edited (a working copy)
+function editExpense(id){
+  const t = trip(); const ex = id ? t.expenses.find(e => e.id === id) : null;
+  E = ex ? JSON.parse(JSON.stringify(ex)) : {id:null, desc:'', amt:0, cur:t.home, payer:t.members[0].id, date:todayISO(), mode:'equal', parts:{}};
+  if (!ex) t.members.forEach(m => E.parts[m.id] = 1);
+  E.amtText = ex ? plainNum(ex.amt, DEC(ex.cur)) : '';
+  E.partText = {};
+  t.members.forEach(m => { const v = E.parts[m.id] || 0;
+    E.partText[m.id] = E.mode === 'exact' ? (v ? plainNum(v, DEC(E.cur)) : '') : E.mode === 'shares' ? (v ? String(v / 100) : '') : ''; });
+  E.eq = {}; t.members.forEach(m => E.eq[m.id] = E.mode === 'equal' ? (E.parts[m.id] > 0) : true);
+  if (E.mode !== 'equal') t.members.forEach(m => E.eq[m.id] = (E.parts[m.id] || 0) > 0);
+  E.armed = false;
+  go(expForm);
+}
+function expForm(){
+  view = expForm;
+  const t = trip(); const fc = foreignCurs(t);
+  const curList = [t.home].concat(fc.filter(c => c !== t.home)); if (curList.indexOf(E.cur) < 0) curList.push(E.cur);
+  let h = '<header><button class="icon" onclick="go(tripView)">✕</button><h1>' + (E.id ? 'Edit expense' : 'Add expense') + '<small>' + esc(t.name) + '</small></h1></header><div class="card">';
+  h += '<label for="xd">What was it?</label><input type="text" id="xd" maxlength="120" placeholder="e.g. Dinner, train tickets" value="' + esc(E.desc) + '">';
+  h += '<label for="xa">Amount</label><div class="row"><input id="xa" class="grow" inputmode="decimal" autocomplete="off" placeholder="0' + (DEC(E.cur) ? '.' + '0'.repeat(DEC(E.cur)) : '') + '" value="' + esc(E.amtText) + '">' +
+    '<select id="xc" style="width:118px;flex:none">' + curList.map(c => '<option value="' + c + '"' + (c === E.cur ? ' selected' : '') + '>' + c + '</option>').join('') + '<option value="__other">Other…</option></select></div>';
+  h += '<div class="hint" id="xah"></div>';
+  h += '<div id="xother"></div><div id="xrate"></div>';
+  h += '<label for="xp">Paid by</label><select id="xp">' + t.members.map(m => '<option value="' + m.id + '"' + (m.id === E.payer ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('') + '</select>';
+  h += '<label for="xdt">Date</label><input type="date" id="xdt" value="' + esc(E.date) + '"><div class="hint" id="xdth">' + fmtDate(E.date) + '</div>';
+  h += '<label>Split</label><div class="seg">' + [['equal','Equally'],['exact','Exact amounts'],['shares','By shares']].map(x => '<button id="m_' + x[0] + '" class="' + (E.mode === x[0] ? 'on' : '') + '" onclick="setMode(\'' + x[0] + '\')">' + x[1] + '</button>').join('') + '</div>';
+  h += '<div class="muted" id="xmh" style="margin-top:6px"></div><div id="xm"></div><div class="hint" id="xleft"></div>';
+  h += '<div class="err" id="xerr"></div><button class="big" id="xsave" onclick="saveExpense()">' + (E.id ? 'Save changes' : 'Add expense') + '</button>';
+  if (E.id) h += '<button class="big danger" id="xdel" onclick="delExpense()">Delete expense</button>';
+  h += '</div>';
+  $('#app').innerHTML = h;
+  $('#xd').oninput = e => E.desc = e.target.value;
+  $('#xa').oninput = e => { E.amtText = e.target.value; refresh(); };
+  $('#xc').onchange = e => {
+    const v = e.target.value;
+    if (v === '__other') { if (!licensed()) { e.target.value = E.cur; return needFull('cur', expForm); } showOther(); return; }
+    changeCur(v);
+  };
+  $('#xp').onchange = e => E.payer = e.target.value;
+  $('#xdt').onchange = $('#xdt').oninput = e => { E.date = e.target.value; $('#xdth').textContent = fmtDate(E.date); };
+  memRows(); refresh();
+}
+function changeCur(v){
+  const t = trip(), old = E.cur; E.cur = v;
+  if (E.mode === 'exact') t.members.forEach(m => { const p = parseAmount(E.partText[m.id], DEC(old)); if (!p.err && DEC(v) < DEC(old) && p.minor % Math.pow(10, DEC(old) - DEC(v))) E.partText[m.id] = ''; });
+  expFormKeep();
+}
+function expFormKeep(){ const y = window.scrollY; expForm(); window.scrollTo(0, y); }
+function showOther(){
+  const t = trip();
+  $('#xother').innerHTML = '<div class="ratebox"><label for="xoc" style="margin-top:0">Currency of this expense</label><select id="xoc">' + curOptions('', CURS.map(c => c[0]).filter(c => c !== t.home)) + '</select><button class="sm" style="margin-top:8px" id="xocgo">Use this currency</button></div>';
+  $('#xocgo').onclick = () => changeCur($('#xoc').value);
+}
+function rateBoxHTML(t, cur, r, id){
+  const dir = r ? r.dir : 'h';
+  return '<div class="row" style="flex-wrap:wrap;gap:6px"><select id="' + id + 'dir" style="width:auto">' +
+    '<option value="h"' + (dir === 'h' ? ' selected' : '') + '>1 ' + cur + ' =</option><option value="f"' + (dir === 'f' ? ' selected' : '') + '>1 ' + t.home + ' =</option></select>' +
+    '<input id="' + id + 'v" inputmode="decimal" autocomplete="off" placeholder="rate" value="' + esc(r ? r.v : '') + '"><span id="' + id + 'unit">' + (dir === 'h' ? t.home : cur) + '</span></div><div class="hint" id="' + id + 'h"></div>';
+}
+function rateHint(t, cur, dir, v){
+  const p = parseRate(v); if (!String(v || '').trim()) return '';
+  if (p.err) return '<span class="neg">' + esc(p.err) + '</span>';
+  const r = {dir, v:p.text}; const f = rateFrac(r);
+  return 'Rate used: <b>' + esc(rateText(cur, t.home, r)) + '</b> (so 1 ' + (dir === 'h' ? t.home + ' = ' + sigText(f[1], f[0], 6) + ' ' + cur : cur + ' = ' + sigText(f[0], f[1], 6) + ' ' + t.home) + ')';
+}
+function wireRate(t, cur, id, onchange){
+  const upd = () => { const dir = $('#' + id + 'dir').value; $('#' + id + 'unit').textContent = dir === 'h' ? t.home : cur; $('#' + id + 'h').innerHTML = rateHint(t, cur, dir, $('#' + id + 'v').value); if (onchange) onchange(); };
+  $('#' + id + 'dir').onchange = upd; $('#' + id + 'v').oninput = upd; upd();
+}
+function setMode(m){
+  const t = trip(); if (E.mode === m) return;
+  E.mode = m;
+  t.members.forEach(x => { E.partText[x.id] = m === 'shares' ? (E.eq[x.id] ? '1' : '') : ''; });
+  document.querySelectorAll('.seg button').forEach(b => b.classList.toggle('on', b.id === 'm_' + m));
+  memRows(); refresh();
+}
+function memRows(){
+  const t = trip(), dec = DEC(E.cur);
+  $('#xmh').textContent = E.mode === 'equal' ? 'Tick who it was for.' : E.mode === 'exact' ? 'Type each person’s part in ' + E.cur + '. Leave empty for 0.' : 'Give shares, e.g. 2 for a couple, 1 for one person, 0 for nobody.';
+  $('#xm').innerHTML = (E.mode === 'equal' ? '<div class="row" style="gap:6px;margin:4px 0"><button class="sm ghost" onclick="allEq(true)">Everyone</button><button class="sm ghost" onclick="allEq(false)">Nobody</button></div>' : '') +
+    t.members.map(m => '<div class="mem">' + (E.mode === 'equal' ? '<input type="checkbox" id="q_' + m.id + '"' + (E.eq[m.id] ? ' checked' : '') + '>' : '') +
+    '<label class="nm" for="' + (E.mode === 'equal' ? 'q_' : 'p_') + m.id + '" style="margin:0;font-weight:400">' + esc(m.name) + '</label>' +
+    (E.mode !== 'equal' ? '<input id="p_' + m.id + '" inputmode="decimal" autocomplete="off" placeholder="' + (E.mode === 'exact' ? (dec ? '0.' + '0'.repeat(dec) : '0') : '0') + '" value="' + esc(E.partText[m.id] || '') + '">' : '') +
+    '<span class="sh" id="s_' + m.id + '"></span></div>').join('');
+  t.members.forEach(m => {
+    if (E.mode === 'equal') $('#q_' + m.id).onchange = e => { E.eq[m.id] = e.target.checked; refresh(); };
+    else $('#p_' + m.id).oninput = e => { E.partText[m.id] = e.target.value; refresh(); };
+  });
+}
+function allEq(v){ trip().members.forEach(m => E.eq[m.id] = v); memRows(); refresh(); }
+// Read the form into a candidate expense. Returns {e} or {err}.
+function readForm(){
+  const t = trip(), dec = DEC(E.cur);
+  const a = parseAmount(E.amtText, dec, E.cur);
+  const out = {id:E.id, desc:cleanName(E.desc, 120), cur:E.cur, payer:E.payer, date:E.date, mode:E.mode, parts:{}};
+  if (a.err) return {err:a.err, field:'amt'};
+  if (a.minor <= 0) return {err:'The amount must be more than zero.', field:'amt'};
+  out.amt = a.minor;
+  if (E.mode === 'equal') { t.members.forEach(m => { if (E.eq[m.id]) out.parts[m.id] = 1; }); if (!Object.keys(out.parts).length) return {err:'Tick at least one person it was for.', e:out}; }
+  else if (E.mode === 'exact') {
+    let sum = 0;
+    for (const m of t.members) { const s = String(E.partText[m.id] || '').trim(); if (!s) continue; const p = parseAmount(s, dec, E.cur); if (p.err) return {err:m.name + ': ' + p.err, e:out}; if (p.minor > 0) { out.parts[m.id] = p.minor; sum += p.minor; } }
+    out.sum = sum;
+    if (sum !== out.amt) return {err: sum < out.amt ? money(out.amt - sum, E.cur) + ' still to assign.' : 'The parts add up to ' + money(sum - out.amt, E.cur) + ' more than the amount.', e:out};
+  } else {
+    for (const m of t.members) { const s = String(E.partText[m.id] || '').trim(); if (!s) continue; const p = parseAmount(s, 2, 'Shares'); if (p.err) return {err:m.name + ': shares must be a number like 1, 2 or 1.5.', e:out}; if (p.minor > 0) out.parts[m.id] = p.minor; }
+    if (!Object.keys(out.parts).length) return {err:'Give at least one person a share.', e:out};
+  }
+  if (E.cur !== t.home) {
+    const rv = $('#rtv') ? $('#rtv').value : '';
+    const p = parseRate(rv); if (p.err) return {err:'Exchange rate: ' + p.err, e:out, field:'rate'};
+    if (convert(out.amt, E.cur, t.home, rateFrac({dir:$('#rtdir').value, v:p.text})) > MAXH) return {err:'Converted to ' + t.home + ', this is more than Trip Split can count. Check the amount and the rate.', e:out};
+  }
+  return {e:out};
+}
+function refresh(){
+  const t = trip(), dec = DEC(E.cur);
+  const a = parseAmount(E.amtText, dec, E.cur);
+  $('#xah').innerHTML = String(E.amtText || '').trim() ? (a.err ? '<span class="neg">' + esc(a.err) + '</span>' : 'Reads as <b>' + money(a.minor, E.cur) + '</b>') : '';
+  // rate box
+  const rb = $('#xrate');
+  if (E.cur !== t.home) {
+    if (!rb.dataset.cur || rb.dataset.cur !== E.cur) {
+      const r = t.rates[E.cur];
+      rb.dataset.cur = E.cur;
+      rb.innerHTML = '<div class="ratebox"><b>Exchange rate for ' + E.cur + '</b>' + (r ? '<div class="muted">Changing it updates every ' + E.cur + ' expense on this trip.</div>' : '<div class="muted">Type it once — from your bank app, a receipt or the exchange office. It is used for every ' + E.cur + ' expense on this trip.</div>') + rateBoxHTML(t, E.cur, r, 'rt') + '</div>';
+      wireRate(t, E.cur, 'rt', refresh);
+    }
+  } else { rb.innerHTML = ''; delete rb.dataset.cur; }
+  const r = readForm(), left = $('#xleft'); delete left.dataset.home;
+  // per-person preview in the expense currency, plus home if foreign
+  const e = r.e;
+  t.members.forEach(m => { const el = $('#s_' + m.id); if (el) el.textContent = ''; });
+  if (e && e.amt > 0 && (E.mode !== 'exact' || e.sum === e.amt)) {
+    const tmp = JSON.parse(JSON.stringify(t)); tmp.rates = Object.assign({}, tmp.rates);
+    if ($('#rtv')) { const p = parseRate($('#rtv').value); if (!p.err) tmp.rates[E.cur] = {dir:$('#rtdir').value, v:p.text}; }
+    const s = Object.keys(e.parts).length ? splitExpense(tmp, Object.assign({}, e, {id:E.id || 'new'})) : null;
+    if (s && E.mode !== 'exact') t.members.forEach(m => { const el = $('#s_' + m.id); if (el && e.parts[m.id]) el.textContent = money(s.own[m.id], E.cur); });
+    if (s && E.cur !== t.home) left.dataset.home = '≈ ' + money(s.H, t.home) + ' in total'; else delete left.dataset.home;
+  }
+  if (E.mode === 'exact' && e && e.amt) left.textContent = 'Assigned ' + money(e.sum || 0, E.cur) + ' of ' + money(e.amt, E.cur) + (e.sum === e.amt ? ' ✓' : '');
+  else left.textContent = '';
+  if (left.dataset.home) left.textContent += (left.textContent ? ' · ' : '') + left.dataset.home;
+  $('#xerr').textContent = '';
+}
+function saveExpense(){
+  const t = trip(); E.desc = $('#xd').value; E.date = $('#xdt').value || todayISO(); E.payer = $('#xp').value;
+  const r = readForm();
+  if (r.err) { $('#xerr').textContent = r.err; return; }
+  const e = r.e; if (!e.desc) e.desc = 'Expense';
+  delete e.sum;
+  if (e.cur !== t.home) {
+    if (!licensed()) return needFull('cur', expForm);
+    const p = parseRate($('#rtv').value); if (p.err) { $('#xerr').textContent = 'Exchange rate: ' + p.err; return; }
+    t.rates[e.cur] = {dir:$('#rtdir').value, v:p.text};
+  }
+  if (e.id) { const i = t.expenses.findIndex(x => x.id === e.id); e.at = t.expenses[i].at; t.expenses[i] = e; }
+  else { e.id = uid(); e.at = Date.now(); t.expenses.push(e); }
+  save(); UI.tab = 'exp'; go(tripView);
+}
+function delExpense(){
+  const b = $('#xdel');
+  if (!E.armed) { E.armed = true; b.classList.add('armed'); b.textContent = 'Tap again to delete'; return; }
+  const t = trip(); t.expenses = t.expenses.filter(x => x.id !== E.id); save(); go(tripView);
+}
+
+// ───────── Trip settings ─────────
+function tripSettings(){
+  view = tripSettings;
+  const t = trip(); const fc = foreignCurs(t);
+  let h = '<header><button class="icon" onclick="go(tripView)">←</button><h1>Trip settings<small>' + esc(t.name) + '</small></h1></header>';
+  h += '<div class="card"><label for="sn" style="margin-top:0">Trip name</label><div class="row"><input type="text" id="sn" maxlength="80" value="' + esc(t.name) + '"><button class="sm" onclick="renameTrip()">Save</button></div>';
+  h += '<label for="sh">Home currency</label>' + (t.expenses.length || t.payments.length ? '<div>' + t.home + ' — ' + esc((CUR[t.home] || {}).name || '') + '</div><div class="muted">Fixed, because the trip already has expenses.</div>' : '<select id="sh" onchange="setHome(this.value)">' + curOptions(t.home) + '</select>') + '</div>';
+  h += '<div class="card"><h2>People</h2>' + t.members.map(m => '<div class="row" style="margin:6px 0"><input type="text" id="mn_' + m.id + '" maxlength="40" value="' + esc(m.name) + '"><button class="sm" onclick="renameMem(\'' + m.id + '\')">Save</button><button class="sm ghost" onclick="removeMem(\'' + m.id + '\')" aria-label="Remove">✕</button></div>').join('') +
+    '<div class="row" style="margin-top:10px"><input type="text" id="nm" maxlength="40" placeholder="Add a person"><button class="sm solid" onclick="addMem()">Add</button></div><div class="err" id="merr"></div></div>';
+  h += '<div class="card"><h2>Currencies and rates</h2><p class="muted" style="margin-top:0">Every amount is converted to ' + t.home + ' at the rate shown here. There is no internet lookup: you type the rate once, and you can see exactly which rate was used.</p>';
+  if (!fc.length) h += '<p class="muted">No other currencies yet.</p>';
+  fc.forEach(c => { const n = t.expenses.filter(e => e.cur === c).length; h += '<div class="ratebox"><b>' + c + '</b> <span class="muted">' + esc((CUR[c] || {}).name || '') + ' · ' + n + ' expense' + (n === 1 ? '' : 's') + '</span>' + rateBoxHTML(t, c, t.rates[c], 'r_' + c) + '<div class="row" style="gap:6px"><button class="sm solid" onclick="saveRate(\'' + c + '\')">Save rate</button>' + (n ? '' : '<button class="sm ghost" onclick="dropCur(\'' + c + '\')">Remove</button>') + '</div></div>'; });
+  h += '<div class="ratebox"><label for="ac" style="margin-top:0">Add a currency' + (licensed() ? '' : ' <span class="pill">FULL</span>') + '</label><div class="row"><select id="ac">' + curOptions('', CURS.map(c => c[0]).filter(c => c !== t.home && fc.indexOf(c) < 0)) + '</select><button class="sm solid" onclick="addCur()">Add</button></div></div><div class="err" id="rerr"></div></div>';
+  h += '<div class="card"><h2>This trip</h2><button class="big alt" onclick="toggleArchive()">' + (t.archived ? 'Move back to open trips' : 'Archive this trip') + (licensed() ? '' : ' <span class="pill">FULL</span>') + '</button>' +
+    '<button class="big danger" id="tdel" onclick="delTrip(this)">Delete this trip</button><p class="muted">Deleting removes the trip and all its expenses from this device. It can’t be undone.</p></div>';
+  $('#app').innerHTML = h + foot();
+  fc.forEach(c => wireRate(t, c, 'r_' + c));
+}
+function renameTrip(){ const t = trip(); t.name = cleanName($('#sn').value, 80) || t.name; save(); tripSettings(); }
+function setHome(v){ const t = trip(); if (t.expenses.length || t.payments.length) return; t.home = v; delete t.rates[v]; t.extra = (t.extra || []).filter(x => x !== v); save(); tripSettings(); }
+function nameTaken(t, name, except){ return t.members.some(m => m.id !== except && m.name.toLowerCase() === name.toLowerCase()); }
+function renameMem(id){ const t = trip(), n = cleanName($('#mn_' + id).value, 40); if (!n) return; if (nameTaken(t, n, id)) { $('#merr').textContent = 'Someone already has that name.'; return; } t.members.find(m => m.id === id).name = n; save(); tripSettings(); }
+function addMem(){ const t = trip(), n = cleanName($('#nm').value, 40); if (!n) { $('#merr').textContent = 'Type a name first.'; return; } if (nameTaken(t, n)) { $('#merr').textContent = 'Someone already has that name.'; return; } t.members.push({id:uid(), name:n}); save(); tripSettings(); }
+function removeMem(id){
+  const t = trip();
+  const used = t.expenses.some(e => e.payer === id || e.parts[id] > 0) || t.payments.some(p => p.from === id || p.to === id);
+  if (used) { $('#merr').textContent = mname(t, id) + ' is in some expenses or payments. Edit those first, then remove.'; return; }
+  if (t.members.length <= 2) { $('#merr').textContent = 'A trip needs at least two people.'; return; }
+  t.members = t.members.filter(m => m.id !== id); save(); tripSettings();
+}
+function saveRate(c){ const t = trip(), p = parseRate($('#r_' + c + 'v').value); if (p.err) { $('#rerr').textContent = c + ': ' + p.err; return; }
+  const r = {dir:$('#r_' + c + 'dir').value, v:p.text};
+  if (t.expenses.some(e => e.cur === c && convert(e.amt, c, t.home, rateFrac(r)) > MAXH)) { $('#rerr').textContent = c + ': with this rate an expense becomes too large to count. Check the rate.'; return; }
+  t.rates[c] = r; save(); tripSettings(); }
+function addCur(){
+  if (!licensed()) return needFull('cur', tripSettings);
+  const t = trip(), c = $('#ac').value; if (!c) return;
+  t.extra = t.extra || []; if (t.extra.indexOf(c) < 0) t.extra.push(c);
+  save(); tripSettings(); const i = $('#r_' + c + 'v'); if (i) i.focus();
+}
+function dropCur(c){ const t = trip(); if (t.expenses.some(e => e.cur === c)) return; delete t.rates[c]; t.extra = (t.extra || []).filter(x => x !== c); save(); tripSettings(); }
+function toggleArchive(){ if (!licensed()) return needFull('archive', tripSettings); const t = trip(); t.archived = !t.archived; save(); if (t.archived) { S.cur = null; save(); go(tripsList); } else go(tripView); }
+function delTrip(b){
+  if (!b.classList.contains('armed')) { b.classList.add('armed'); b.textContent = 'Tap again to delete “' + trip().name.slice(0, 30) + '”'; return; }
+  S.trips = S.trips.filter(t => t.id !== S.cur); S.cur = null; save(); go(home);
+}
+
+// ───────── About + self-check ─────────
+function about(){
+  view = about;
+  let h = '<header><button class="icon" onclick="go(home)">←</button><h1>About Trip Split</h1></header>';
+  h += '<div class="card"><p>Trip Split adds up shared costs for a trip, a flat or any group and tells you the fewest payments that make everyone square.</p><ul>' +
+    '<li><b>Offline.</b> Nothing is sent anywhere. Your trips stay on this device.</li><li><b>No sign-up</b> for you or your friends. One phone is enough; share the summary with the group.</li>' +
+    '<li><b>Exact.</b> Money is counted in whole cents (or yen, won, dong), so splits always add up and no cent is lost.</li>' +
+    '<li><b>Numbers read the same everywhere:</b> a dot for decimals and a small space between thousands — 1' + TS + '234.50 EUR, 12' + TS + '000 JPY.</li></ul>' +
+    '<p class="muted">' + (licensed() ? 'Full version' + (LIC.n ? ' — registered to ' + esc(LIC.n) : '') + '.' : 'Free version: one trip, one currency. <a href="javascript:void(0)" onclick="needFull(null, about)">See the full version</a>') + '</p></div>';
+  h += '<div class="card"><h2>Self-check</h2><p class="muted" style="margin-top:0">Runs the money maths on hundreds of random groups and checks that every balance adds up to exactly zero and that settling up never needs more than one payment less than the number of people.</p><button class="big alt" id="stgo" onclick="runSelf()">Run self-check</button><div id="stout" class="hint"></div></div>';
+  $('#app').innerHTML = h + foot();
+}
+function runSelf(){ const r = selfTest(400); $('#stout').innerHTML = (r.fails.length ? '<span class="neg">' + r.fails.length + ' problems: ' + esc(r.fails.slice(0, 3).join(' | ')) + '</span>' : '✓ All ' + r.checks + ' checks passed on ' + r.cases + ' random groups.'); }
+
+// Unit-style checks of the money maths (run from About, and by the test script).
+function rng(seed){ return () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function selfTest(N, seed){
+  const R = rng(seed || 12345), ri = n => Math.floor(R() * n), pick = a => a[ri(a.length)];
+  const fails = []; let checks = 0;
+  const ok = (c, msg) => { checks++; if (!c) fails.push(msg); };
+  // fixed cases
+  ok(allocate(10000, [1, 1, 1], 0).join() === '3334,3333,3333', 'thirds of 100.00');
+  ok(allocate(1000, [1, 1, 1], 0).reduce((a, b) => a + b) === 1000, 'thirds of 1000 JPY');
+  ok(allocate(1000, [1, 1, 1], 0).join() === '334,333,333', 'JPY 1000/3 = 334,333,333');
+  ok(allocate(7, [2, 1], 0).join() === '5,2' || allocate(7, [2, 1], 0).join() === '4,3', 'shares 2:1 of 7');
+  ok(parseAmount('1,234.50', 2).minor === 123450, 'parse 1,234.50');
+  ok(parseAmount('1.234,50', 2).minor === 123450, 'parse 1.234,50');
+  ok(parseAmount('42,5', 2).minor === 4250, 'parse 42,5');
+  ok(parseAmount('12 000', 0).minor === 12000, 'parse 12 000 JPY');
+  ok(parseAmount('12.000', 0).minor === 12000, 'parse 12.000 JPY');
+  ok(!!parseAmount('100.5', 0).err, 'JPY rejects decimals');
+  ok(parseAmount('1.005', 2).minor === 100500, '1.005 EUR read as 1 005.00 (dot before 3 digits = thousands)');
+  ok(parseAmount('1.005', 3).minor === 1005, '1.005 BHD');
+  ok(convert(10000, 'EUR', 'JPY', [1625n, 10n]) === 16250, '100 EUR at 162.5 = 16 250 JPY');
+  ok(convert(5000, 'JPY', 'USD', [1n, 150n]) === 3333, '5000 JPY at 1 USD=150 JPY = 33.33 USD');
+  ok(convert(100000, 'KRW', 'VND', [18n, 1n]) === 1800000, 'KRW to VND');
+  ok(fmtNum(1234567, 0).indexOf('.') < 0, '0-decimal format has no dot');
+  ok(money(123450, 'EUR') === '1' + TS + '234.50 EUR', 'format 1 234.50 EUR');
+  const codes = ['USD', 'EUR', 'JPY', 'KRW', 'VND', 'BHD', 'GBP', 'CLP'];
+  let cases = 0;
+  for (let c = 0; c < N; c++) {
+    cases++;
+    const n = 2 + ri(11);
+    const t = {home:pick(codes), members:[], rates:{}, expenses:[], payments:[]};
+    for (let i = 0; i < n; i++) t.members.push({id:'m' + i, name:'P' + i});
+    codes.forEach(k => { if (k !== t.home) t.rates[k] = {dir:R() < 0.5 ? 'h' : 'f', v:((1 + ri(3000000)) / Math.pow(10, ri(6))).toFixed(6).replace(/\.?0+$/, '')}; });
+    const ne = 1 + ri(15);
+    for (let k = 0; k < ne; k++) {
+      const cur = R() < 0.4 ? t.home : pick(codes), mag = Math.pow(10, 1 + ri(9));
+      const e = {id:'e' + c + '_' + k, cur, amt:1 + ri(mag), payer:'m' + ri(n), mode:pick(['equal', 'exact', 'shares']), parts:{}, date:'2026-01-01'};
+      const who = t.members.filter(() => R() < 0.6).map(m => m.id); if (!who.length) who.push('m' + ri(n));
+      if (e.mode === 'equal') who.forEach(id => e.parts[id] = 1);
+      else if (e.mode === 'shares') who.forEach(id => e.parts[id] = 1 + ri(500));
+      else { let left = e.amt; who.forEach((id, i) => { const v = i === who.length - 1 ? left : ri(left + 1); e.parts[id] = v; left -= v; }); }
+      t.expenses.push(e);
+      if (cur !== t.home && convert(e.amt, cur, t.home, rateFrac(t.rates[cur])) > MAXH) { t.expenses.pop(); ok(true, ''); continue; } // the form refuses these
+      const s = splitExpense(t, e);
+      ok(!!s, 'split null');
+      if (s) {
+        ok(Object.values(s.own).reduce((a, b) => a + b, 0) === e.amt, 'own split sum ' + e.id);
+        ok(Object.values(s.home).reduce((a, b) => a + b, 0) === s.H, 'home split sum ' + e.id);
+        ok(Object.values(s.home).every(Number.isInteger) && Number.isInteger(s.H), 'integers ' + e.id);
+        if (e.mode === 'equal') { const v = who.map(id => s.own[id]); ok(Math.max(...v) - Math.min(...v) <= 1, 'equal within 1 unit ' + e.id); }
+      }
+    }
+    for (let k = ri(3); k > 0; k--) { const a = 'm' + ri(n), b = 'm' + ri(n); if (a !== b) t.payments.push({id:'p' + k, from:a, to:b, amt:1 + ri(100000)}); }
+    const B = balances(t), ids = t.members.map(m => m.id);
+    ok(ids.reduce((a, id) => a + B.b[id], 0) === 0, 'balances sum to zero, case ' + c);
+    const tr = settle(ids, B.b), gr = settleGreedy(ids, B.b);
+    const nz = ids.filter(id => B.b[id] !== 0).length;
+    ok(tr.length <= Math.max(0, n - 1), 'at most n-1 transfers, case ' + c);
+    ok(gr.length <= Math.max(0, n - 1), 'greedy at most n-1, case ' + c);
+    ok(tr.length <= gr.length, 'exact minimum not worse than greedy, case ' + c);
+    ok(nz === 0 ? tr.length === 0 : tr.length >= Math.ceil(nz / 2), 'lower bound, case ' + c);
+    const after = Object.assign({}, B.b);
+    tr.forEach(x => { ok(x.amt > 0 && Number.isInteger(x.amt) && x.from !== x.to, 'transfer valid, case ' + c); ok(B.b[x.from] < 0 && B.b[x.to] > 0, 'debtors pay creditors, case ' + c); after[x.from] += x.amt; after[x.to] -= x.amt; });
+    ok(ids.every(id => after[id] === 0), 'settled to exactly zero, case ' + c);
+    const g2 = Object.assign({}, B.b); gr.forEach(x => { g2[x.from] += x.amt; g2[x.to] -= x.amt; });
+    ok(ids.every(id => g2[id] === 0), 'greedy settled to zero, case ' + c);
+    if (DEC(t.home) === 0) tr.forEach(x => ok(money(x.amt, t.home).indexOf('.') < 0 && (x.amt >= 1e12 || parseAmount(fmtNum(x.amt, 0), 0).minor === x.amt), '0-decimal transfer, case ' + c));
+    else tr.forEach(x => { if (x.amt < 1e12 * Math.pow(10, DEC(t.home))) ok(parseAmount(fmtNum(x.amt, DEC(t.home)), DEC(t.home)).minor === x.amt, 'format round trip, case ' + c); });
+  }
+  // big groups: greedy path
+  for (let c = 0; c < 50; c++) {
+    cases++;
+    const n = 15 + ri(30), ids = [], bal = {}; let sum = 0;
+    for (let i = 0; i < n; i++) { ids.push('b' + i); bal['b' + i] = ri(2000001) - 1000000; sum += bal['b' + i]; }
+    bal['b0'] -= sum;
+    const tr = settle(ids, bal); const after = Object.assign({}, bal); tr.forEach(x => { after[x.from] += x.amt; after[x.to] -= x.amt; });
+    ok(tr.length <= n - 1, 'big group n-1, case ' + c); ok(ids.every(id => after[id] === 0), 'big group zero, case ' + c);
+  }
+  return {cases, checks, fails};
+}
+
+render(view = home);
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('tripsplit_sw.js');
+</script>
+</body>
+</html>

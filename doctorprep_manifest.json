@@ -1,0 +1,13 @@
+{
+  "name": "Doctor Visit Prep",
+  "short_name": "Doctor Prep",
+  "description": "Your symptoms, medicines, allergies and questions on one clear page for the doctor, with headings in 15 languages",
+  "start_url": "/doctorprep.html",
+  "display": "standalone",
+  "background_color": "#F6F8F7",
+  "theme_color": "#1F5B63",
+  "icons": [
+    {"src": "doctorprep_icon192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "doctorprep_icon512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}

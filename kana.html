@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kana Steps — read Japanese hiragana and katakana, from zero</title>
+<meta name="description" content="Learn to read Japanese from zero, in English. Hiragana and katakana in small steps, words you already know, travel phrases with sound. No account, no ads.">
+<!--
+  Kana Steps (밸류스, 2026-11-16 첫 판) — Hangul Steps 엔진을 일본어 가나로.
+  손님: 일본어를 처음 배우는 영어 사용자(애니 팬·여행자).
+   · 히라가나 46 → 탁음·반탁음 → 요음 → 작은 っ·장음, 일찍 «아는 낱말 읽기».
+   · 가타카나 + 아는 외래어(コーヒー, テレビ), 생활 말 6과, 숫자·엔 값 2과.
+   · 보기는 지금까지 배운 가나만(닮은 글자 さ/ち, シ/ツ, ソ/ン 도 배운 것만).
+   · 소리는 기기의 일본어 목소리. 없으면 듣기 문제를 숨긴다.
+   · 무료: 히라가나 전부 + 첫 생활 말. 나머지는 열쇠(제품 «kana» 또는 «*»).
+-->
+<link rel="manifest" href="kana_manifest.json">
+<meta name="theme-color" content="#7A2E3A">
+<link rel="icon" href="kana_icon192.png">
+<script src="nacl.min.js"></script>
+<style>
+:root{--bg:#FBF8F3;--card:#fff;--ink:#2B2622;--ink2:#6B6259;--line:#E6DCCE;--accent:#C0603C;--deep:#7A2E3A;--ok:#3E6B43;--okbg:#EAF1E6;--bad:#A8402F;--badbg:#F8E7E3}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI","Meiryo","Noto Sans JP",sans-serif;font-size:17px;line-height:1.5}
+.ja{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Noto Sans CJK JP","Source Han Sans JP","Yu Gothic UI","Yu Gothic","YuGothic","Meiryo","MS Gothic",sans-serif}
+main{max-width:560px;margin:0 auto;padding:14px 14px 40px}
+header{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+header h1{font-size:21px;margin:0;flex:1}
+header h1 small{display:block;font-size:13px;font-weight:400;color:var(--ink2)}
+button{font:inherit;cursor:pointer}
+.icon{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 10px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.unit h2{font-size:17px;margin:0 0 4px}
+.unit p{margin:0 0 8px;color:var(--ink2);font-size:14px}
+.lesson{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;margin:6px 0}
+.lesson .t{flex:1;min-width:0}
+.lesson .t b{display:block;font-size:16px}
+.lesson .t span{font-size:13px;color:var(--ink2)}
+.lesson .s{font-size:14px;color:var(--ok);white-space:nowrap}
+.lesson.next{border:2px solid var(--accent)}
+.big{display:block;width:100%;border:none;border-radius:14px;padding:14px;font-size:17px;font-weight:700;background:var(--deep);color:#fff;margin-top:12px}
+.big.alt{background:#fff;color:var(--deep);border:1px solid var(--deep)}
+.big:disabled{opacity:.4}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:6px 0 12px}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
+.glyph{font-size:90px;text-align:center;line-height:1.2;margin:6px 0;word-break:keep-all;overflow-wrap:anywhere}
+.glyph.word{font-size:46px}
+.glyph.phrase{font-size:28px;margin:14px 0}
+.rom{text-align:center;color:var(--deep);font-size:20px;min-height:30px}
+.rom.hidden{color:var(--ink2);font-size:14px;cursor:pointer;text-decoration:underline dotted}
+.en{text-align:center;font-size:19px;font-weight:600}
+.tip{background:#F4EEE5;border-radius:12px;padding:10px 12px;font-size:15px;margin-top:10px}
+.say{display:flex;gap:8px;justify-content:center;margin:8px 0}
+.say button{border:1px solid var(--deep);background:#fff;color:var(--deep);border-radius:999px;padding:8px 16px;font-size:16px}
+.q{text-align:center;font-size:15px;color:var(--ink2);margin-bottom:4px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.choices.one{grid-template-columns:1fr}
+.choice{border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px 8px;font-size:19px;min-height:58px;word-break:keep-all;overflow-wrap:anywhere}
+.choice.k1{font-size:34px;padding:8px}
+.choice.k2{font-size:24px}
+.choice.k3{font-size:19px}
+.choice.right{background:var(--okbg);border-color:var(--ok)}
+.choice.wrong{background:var(--badbg);border-color:var(--bad)}
+.fb{margin-top:12px;border-radius:12px;padding:10px 12px;font-size:15px;display:none}
+.fb.good{display:block;background:var(--okbg)}
+.fb.bad{display:block;background:var(--badbg)}
+.center{text-align:center}
+.warn{background:#FFF4D6;border:1px solid #E8C96A;border-radius:12px;padding:10px 12px;font-size:14px}
+.muted{color:var(--ink2);font-size:13px}
+footer{text-align:center;color:var(--ink2);font-size:13px;margin-top:26px}
+label.opt{display:flex;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap}
+select{font:inherit;padding:6px;border-radius:8px;border:1px solid var(--line)}
+.done{font-size:54px;text-align:center}
+.romq{text-align:center;font-size:34px;font-weight:700;color:var(--deep);margin:14px 0}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+'use strict';
+// ───────── Kana tables ─────────
+const HB = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん';
+const HBR = 'a i u e o ka ki ku ke ko sa shi su se so ta chi tsu te to na ni nu ne no ha hi fu he ho ma mi mu me mo ya yu yo ra ri ru re ro wa o n'.split(' ');
+const DK = 'がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ', DB = 'かきくけこさしすせそたちつてとはひふへほはひふへほ';
+const DKR = 'ga gi gu ge go za ji zu ze zo da ji zu de do ba bi bu be bo pa pi pu pe po'.split(' ');
+const toK = s => s.replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+const toH = s => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+const isKata = s => /[ァ-ヺー]/.test(s);
+const R1 = {}, BIG = {};
+[...HB].forEach((c, i) => { R1[c] = HBR[i]; R1[toK(c)] = HBR[i]; });
+[...DK].forEach((c, i) => { R1[c] = DKR[i]; R1[toK(c)] = DKR[i]; });
+[...'ぁぃぅぇぉ'].forEach((c, i) => { R1[c] = 'aiueo'[i]; R1[toK(c)] = 'aiueo'[i]; BIG[c] = 'あいうえお'[i]; BIG[toK(c)] = 'アイウエオ'[i]; });
+[...'ゃゅょ'].forEach((c, i) => { R1[c] = ['ya','yu','yo'][i]; R1[toK(c)] = R1[c]; BIG[c] = 'やゆよ'[i]; BIG[toK(c)] = 'ヤユヨ'[i]; });
+R1['ヴ'] = 'vu';
+const SY = 'ゃゅょャュョ', SV = 'ぁぃぅぇぉァィゥェォ';
+const NOQ = ['っ', 'ッ', 'ー'];  // shown on cards, practised inside words
+function units(s){
+  const cs = [...s], out = [];
+  for (let i = 0; i < cs.length; i++) {
+    const c = cs[i], n = cs[i + 1];
+    if (n && (SY.indexOf(n) >= 0 || SV.indexOf(n) >= 0) && R1[c] && SY.indexOf(c) < 0 && SV.indexOf(c) < 0) { out.push(c + n); i++; }
+    else out.push(c);
+  }
+  return out;
+}
+function unitRom(u){
+  if (u.length === 1) return R1[u] || '';
+  const b = R1[u[0]] || '', s = u[1];
+  if (SY.indexOf(s) >= 0) { const v = R1[s][1], st = b.slice(0, -1); return (st === 'sh' || st === 'ch' || st === 'j') ? st + v : st + 'y' + v; }
+  if (SV.indexOf(s) >= 0) {
+    const v = R1[s];
+    if (b === 'fu') return 'f' + v; if (b === 'vu') return 'v' + v; if (b === 'u') return 'w' + v;
+    if ((b === 'te' || b === 'de') && v === 'i') return b[0] + 'i';
+    if ((b === 'to' || b === 'do') && v === 'u') return b[0] + 'u';
+    return b.slice(0, -1) + v;
+  }
+  return '';
+}
+// Plain Hepburn (no macrons) — used for answer choices made from kana.
+function romaji(s){
+  const us = units(s); let out = '';
+  for (let i = 0; i < us.length; i++) {
+    const u = us[i], n = us[i + 1] ? unitRom(us[i + 1]) : '';
+    if (u === 'っ' || u === 'ッ') { out += n.startsWith('ch') ? 't' : (/^[bcdfghjkmprstvwz]/.test(n) ? n[0] : ''); continue; }
+    if (u === 'ー') { const m = out.match(/[aeiou]$/); out += m ? m[0] : ''; continue; }
+    if (u === 'ん' || u === 'ン') { out += 'n' + (/^[aeiouy]/.test(n) ? "'" : ''); continue; }
+    const r = unitRom(u);
+    out += r || ({'？':'?','！':'!','、':',','。':'.','　':' '}[u] || u);
+  }
+  return out;
+}
+const isKanaChar = c => /[ぁ-ゖァ-ヺー]/.test(c);
+function dakFam(h){
+  const i = DK.indexOf(h), base = i >= 0 ? DB[i] : h, out = [base];
+  [...DK].forEach((d, j) => { if (DB[j] === base) out.push(d); });
+  return out;
+}
+// Look-alike groups. Only the ones the learner has already met are ever used.
+const LOOKS = ['さちき','ぬめ','ねれわ','るろ','はほけ','いり','こに','あおめ','うら','まも','しつ','くへ','たな','てそ','ゆよ','すお','ぬね','らち',
+  'シツ','ソンノ','シン','ソツ','クケタ','ウワフ','スヌ','チテ','コユロ','アマ','ナメ','ルレ','セサ','ラフ','ミシ','ワク','ヲラ','ヤセ','ノメ','ニコ','エユ'];
+function similar(u){
+  let out = [];
+  if (u.length === 1) {
+    LOOKS.forEach(g => { if (g.indexOf(u) >= 0) out = out.concat(g.split('')); });
+    const fam = dakFam(toH(u)); out = out.concat(fam.map(x => isKata(u) ? toK(x) : x));
+  } else {
+    const a = u[0], s = u[1];
+    out.push(a + BIG[s]);  // きゃ ↔ きや: the size matters
+    (SY.indexOf(s) >= 0 ? (isKata(u) ? 'ャュョ' : 'ゃゅょ') : (isKata(u) ? 'ァィゥェォ' : '')).split('').forEach(s2 => out.push(a + s2));
+    similar(a).forEach(a2 => out.push(a2 + s));
+  }
+  return uniq(out.filter(x => x !== u));
+}
+
+// ───────── Tips ─────────
+const TIP = {
+ 'あ':'“a” as in father.','い':'“ee” as in see. Two short strokes.','う':'“oo” as in moon, with relaxed lips.','え':'“e” as in bed.','お':'“o” as in go, short and pure. Like あ with an extra stroke on the right.',
+ 'か':'“ka”.','き':'“kee”. It looks like a key. (さ has one bar fewer.)','く':'“koo”. An open beak — cuckoo!','け':'“ke” as in kettle.','こ':'“ko”. Two short lines. (に has one more stroke in front.)',
+ 'さ':'“sa”. Like き with one bar. Its mirror image is ち. In some fonts the bottom is joined.','し':'“shi” — Japanese has no “si”. A fish hook.','す':'“su”. The u is very soft, often just “s”.','せ':'“se” as in set.','そ':'“so”. A zigzag.',
+ 'た':'“ta”.','ち':'“chi” — not “ti”. The mirror image of さ.','つ':'“tsu”, like the end of “cats” + u. A wave.','て':'“te”.','と':'“to”. A toe with a thorn.',
+ 'な':'“na”.','に':'“ni”. Like こ with a stroke in front.','ぬ':'“nu”. It ends in a loop — め (coming soon) has none.','ね':'“ne”. It ends in a loop — compare れ and わ later.','の':'“no”. One swirl. The most common letter of all: it means “of”.',
+ 'は':'“ha”. When it is the little word “as for”, it is said “wa”: こんにちは = konnichiwa.','ひ':'“hi”. A wide smile.','ふ':'“fu”, between f and h — blow softly, lips not touching your teeth.','へ':'“he”. A little hill. Said “e” when it means “to”.','ほ':'“ho”. Like は with an extra bar on top.',
+ 'ま':'“ma”. Compare も, which has its hook at the top.','み':'“mi”.','む':'“mu”.','め':'“me”. Like ぬ but without the loop.','も':'“mo”. A fish hook with two bars.',
+ 'や':'“ya”.','ゆ':'“yu”.','よ':'“yo”.','わ':'“wa”. It ends in a round curve.','を':'Said “o”, just like お. It only marks the object: ほん を よむ (read a book). Some songs say “wo”.','ん':'“n”. The only letter that is just a consonant. It never starts a word.',
+ 'ら':'“ra” — a light tap of the tongue, between r, l and d.','り':'“ri”. Two strokes, the right one longer.','る':'“ru”. A loop at the end — ろ has none.','れ':'“re”. It ends in a flick — ね ends in a loop, わ in a curve.','ろ':'“ro”. Like る without the loop.',
+ 'ア':'“a”. Compare マ (ma).','イ':'“i”. Like a person leaning.','ウ':'“u”. A dot on a roof. ワ (wa) has no dot.','エ':'“e”. Like a capital I.','オ':'“o”.',
+ 'カ':'“ka”. Almost the same as か.','キ':'“ki”. Like き without the bottom curve.','ク':'“ku”. Compare ケ (ke) and タ (ta).','ケ':'“ke”.','コ':'“ko”. A box open on the left.',
+ 'サ':'“sa”.','シ':'“shi”. The dots sit on the LEFT and the long stroke RISES from the bottom. Compare ツ.','ス':'“su”. ヌ (nu) has one extra stroke.','セ':'“se”. Like せ.','ソ':'“so”. One dot, and a long stroke FALLING from the top. Compare ン.',
+ 'タ':'“ta”. Like ク with a dash inside.','チ':'“chi”. Compare テ (te).','ツ':'“tsu”. The dots sit on TOP and the long stroke FALLS down. Compare シ.','テ':'“te”.','ト':'“to”.',
+ 'ナ':'“na”. A cross. Compare メ (an X).','ニ':'“ni”. Two lines — like に without its side.','ヌ':'“nu”. Like ス with an extra stroke.','ネ':'“ne”.','ノ':'“no”. One single stroke.',
+ 'ハ':'“ha”. Two strokes apart, like a roof.','ヒ':'“hi”.','フ':'“fu”. Compare ウ and ワ.','ヘ':'“he”. Exactly the same shape as へ.','ホ':'“ho”.',
+ 'マ':'“ma”. Compare ア (a).','ミ':'“mi”. Three strokes.','ム':'“mu”.','メ':'“me”. An X. Compare ナ.','モ':'“mo”. Like も.',
+ 'ヤ':'“ya”. Like や.','ユ':'“yu”. Compare コ.','ヨ':'“yo”.',
+ 'ラ':'“ra”.','リ':'“ri”. Like り.','ル':'“ru”. Compare レ (re).','レ':'“re”. One stroke.','ロ':'“ro”. A closed box. Compare コ.',
+ 'ワ':'“wa”. Compare ウ (u), which has a dot.','ヲ':'“o”. Rare — you will mostly see it in games and song lyrics.','ン':'“n”. The dot is on the LEFT and the stroke RISES. Compare ソ.'
+};
+function tipFor(u){
+  if (TIP[u]) return TIP[u];
+  if (u.length === 1) {
+    const h = toH(u), i = DK.indexOf(h);
+    if (i >= 0) {
+      const base = isKata(u) ? toK(DB[i]) : DB[i], dots = i >= 20 ? 'a small circle' : 'two dots';
+      return base + ' (' + romaji(base) + ') + ' + dots + ' = ' + u + ' (' + romaji(u) + ').' + (h === 'ぢ' || h === 'づ' ? ' It sounds the same as ' + (h === 'ぢ' ? 'じ' : 'ず') + ' and is rare.' : (h === 'じ' ? ' Hepburn writes it “ji”.' : ''));
+    }
+    return '';
+  }
+  const a = u[0], s = u[1];
+  if (SY.indexOf(s) >= 0) return a + ' (' + romaji(a) + ') + small ' + s + ' = “' + romaji(u) + '”, one beat. With a full-size ' + BIG[s] + ', ' + a + BIG[s] + ' is “' + romaji(a + BIG[s]) + '”, two beats.';
+  return a + ' + small ' + s + ' = “' + romaji(u) + '”. A sound for foreign words.';
+}
+
+// ───────── Course ─────────
+const K = s => units(s.replace(/\s/g, ''));
+function W(list){ return list.map(a => ({jp:a[0], r:a[1], en:a[2], note:a[3] || '', near:a[4] || null})); }
+const COURSE = [
+ {unit:'Hiragana', blurb:'Hiragana is the basic Japanese alphabet: 46 letters, each one a syllable. Learn it first — everything else builds on it.', lessons:[
+  {id:'h1', title:'The five vowels', sub:'あ い う え お', kana:K('あいうえお'),
+   intro:'Japanese has only five vowel sounds, and they never change: a, i, u, e, o — like “ah, ee, oo, eh, oh”. Each hiragana letter is one beat. Start with the vowels.',
+   words:W([['あい','ai','love'],['いえ','ie','house'],['うえ','ue','up, above'],['あお','ao','blue']])},
+  {id:'h2', title:'K sounds', sub:'か き く け こ', kana:K('かきくけこ'),
+   intro:'Add k to each vowel: ka, ki, ku, ke, ko. Every row of hiragana works this way — one consonant with the five vowels.',
+   words:W([['かお','kao','face'],['あか','aka','red'],['いけ','ike','pond'],['こえ','koe','voice'],['えき','eki','train station'],['あき','aki','autumn'],['きく','kiku','to listen']])},
+  {id:'h3', title:'S sounds', sub:'さ し す せ そ', kana:K('さしすせそ'),
+   intro:'The s row has one surprise: “si” is said “shi”. So the row is sa, shi, su, se, so.',
+   words:W([['あさ','asa','morning'],['いす','isu','chair'],['かさ','kasa','umbrella'],['しお','shio','salt'],['せかい','sekai','world'],['うそ','uso','a lie'],['あし','ashi','foot, leg']])},
+  {id:'h4', title:'T sounds', sub:'た ち つ て と', kana:K('たちつてと'),
+   intro:'Two surprises in the t row: “chi” and “tsu”. The ts is the sound at the end of “cats”.',
+   words:W([['した','shita','below, under'],['くつ','kutsu','shoes'],['て','te','hand'],['そと','soto','outside'],['ちかてつ','chikatetsu','subway'],['たかい','takai','expensive; tall'],['くち','kuchi','mouth']])},
+  {id:'h5', title:'N sounds', sub:'な に ぬ ね の', kana:K('なにぬねの'),
+   intro:'The n row is regular: na, ni, nu, ne, no. Watch ぬ and ね — both end in a little loop.',
+   words:W([['いぬ','inu','dog'],['ねこ','neko','cat'],['なつ','natsu','summer'],['なに','nani','what'],['おかね','okane','money'],['あなた','anata','you']])},
+  {id:'r1', title:'Words you already know', sub:'Read them yourself', self:true, kana:[],
+   intro:'With 25 letters you can already read real Japanese — words you know from sushi bars and anime. Try to read each one before you tap.',
+   words:W([['すし','sushi','sushi','The u is very soft: it sounds like “s’shi”.'],['さけ','sake','sake (rice wine)','In Japan さけ means any alcohol — and it is also the word for salmon.'],
+    ['おたく','otaku','otaku, a super-fan','In Japan it can sound a little negative.'],['かたな','katana','katana, a Japanese sword'],['こけし','kokeshi','kokeshi, a wooden doll'],
+    ['あにき','aniki','big brother (tough-guy slang)','You hear it in anime and gangster films.'],['すき','suki','I like it; I love you','In anime, すき！ is a confession. The u almost disappears: “ski”.'],['たこ','tako','octopus','As in takoyaki, octopus balls.']])},
+  {id:'h6', title:'H sounds', sub:'は ひ ふ へ ほ', kana:K('はひふへほ'),
+   intro:'ha, hi, fu, he, ho. ふ is “fu”, softer than an English f: blow gently with your lips almost closed.',
+   words:W([['はな','hana','flower; nose'],['ひと','hito','person'],['ふね','fune','boat'],['ほし','hoshi','star'],['へそ','heso','belly button'],['はこ','hako','box'],['ひこうき','hikōki','airplane','こう is a long “kō”. More on long sounds later.']])},
+  {id:'h7', title:'M sounds', sub:'ま み む め も', kana:K('まみむめも'),
+   intro:'ma, mi, mu, me, mo. Now you can tell ぬ (with a loop) from め (no loop).',
+   words:W([['みみ','mimi','ear'],['あめ','ame','rain; candy','Two words, told apart by the tone of voice.'],['むし','mushi','insect, bug'],['もも','momo','peach'],['さしみ','sashimi','sashimi, sliced raw fish'],['つなみ','tsunami','tsunami'],['なまえ','namae','name'],['あたま','atama','head']])},
+  {id:'h8', title:'Y, W and N', sub:'や ゆ よ わ を ん', kana:K('やゆよわをん'),
+   intro:'Only three y sounds — ya, yu, yo — and two w letters. を is said “o”; it only marks the object of a sentence. ん is the one letter that is just a sound: “n”.',
+   words:W([['やま','yama','mountain'],['ゆき','yuki','snow'],['ほん','hon','book'],['にほん','nihon','Japan'],['みかん','mikan','mandarin orange'],['かわ','kawa','river'],['ふとん','futon','futon, a bed on the floor'],['ほん を よむ','hon o yomu','to read a book','を is said “o”.']])},
+  {id:'h9', title:'R sounds', sub:'ら り る れ ろ', kana:K('らりるれろ'),
+   intro:'Japanese r is a quick tap of the tongue — between r, l and d. This is the last row: after it you know all 46 basic hiragana!',
+   words:W([['さくら','sakura','cherry blossom'],['くるま','kuruma','car'],['りす','risu','squirrel'],['よる','yoru','night'],['これ','kore','this'],['それ','sore','that'],['いろ','iro','color'],['はれ','hare','sunny weather']])},
+  {id:'d1', title:'Two little dots: G and Z', sub:'が ぎ ぐ げ ご · ざ じ ず ぜ ぞ', kana:K('がぎぐげござじずぜぞ'),
+   intro:'Two little dots (called ten-ten) make a sound “voiced”: k becomes g, and s becomes z. Note じ: it is “ji”, not “zi”.',
+   words:W([['まんが','manga','manga, comics'],['ひらがな','hiragana','hiragana'],['ちず','chizu','map'],['みず','mizu','water'],['ふじさん','fujisan','Mount Fuji'],['かぎ','kagi','key'],['りんご','ringo','apple'],['ごめん','gomen','sorry (casual)']])},
+  {id:'d2', title:'Two little dots: D and B', sub:'だ ぢ づ で ど · ば び ぶ べ ぼ', kana:K('だぢづでどばびぶべぼ'),
+   intro:'t becomes d, and h becomes b. ぢ and づ sound just like じ and ず, and they are rare — most words use じ and ず.',
+   words:W([['でんわ','denwa','telephone'],['ともだち','tomodachi','friend'],['かばん','kaban','bag'],['そば','soba','soba, buckwheat noodles'],['えび','ebi','shrimp'],['どこ','doko','where'],['はなぢ','hanaji','nosebleed','One of the few words with ぢ. It is said “ji”, like じ.'],['つづく','tsuzuku','to be continued','You see it at the end of anime episodes.']])},
+  {id:'d3', title:'The little circle: P', sub:'ぱ ぴ ぷ ぺ ぽ', kana:K('ぱぴぷぺぽ'),
+   intro:'A small circle (maru) on the h row makes p: pa, pi, pu, pe, po. So は ha, ば ba, ぱ pa — three sounds from one shape.',
+   words:W([['さんぽ','sanpo','a walk'],['ぽかぽか','pokapoka','nice and warm'],['ぺこぺこ','pekopeko','starving','おなか ぺこぺこ = “my stomach is empty”.'],['ぴかぴか','pikapika','sparkling','The pika in Pikachu.'],['えんぴつ','enpitsu','pencil'],['てんぷら','tenpura','tempura']])},
+  {id:'r2', title:'More words you know', sub:'Read them yourself', self:true, kana:[],
+   intro:'You can read every hiragana letter now. Here are words the whole world knows. A tip: う after an o sound makes it long, so ありがとう is “arigatō”.',
+   words:W([['ありがとう','arigatō','thank you','The う just makes the o long.'],['すもう','sumō','sumo wrestling'],['からて','karate','karate'],['わさび','wasabi','wasabi'],['すきやき','sukiyaki','sukiyaki'],['かわいい','kawaii','cute','Two い = a long “ii”.'],['すごい','sugoi','amazing!'],['ばんざい','banzai','hooray! (cheer)']])},
+  {id:'c1', title:'Small ya, yu, yo', sub:'きゃ しゃ ちゃ …', kana:K('きゃ きゅ きょ しゃ しゅ しょ ちゃ ちゅ ちょ'),
+   intro:'A small ゃ, ゅ or ょ after an i-letter melts into one sound: き + ゃ = kya — one beat, not ki-ya. Look at the size: きゃ is “kya”, but きや is “ki-ya”.',
+   words:W([['きょう','kyō','today'],['しゃしん','shashin','photo'],['おちゃ','ocha','green tea'],['とうきょう','tōkyō','Tokyo','Both う make the o long: Tō-kyō.'],['しゅくだい','shukudai','homework'],['いしゃ','isha','doctor'],['ちゅうい','chūi','caution, watch out']])},
+  {id:'c2', title:'More blended sounds', sub:'にゃ ひゃ みゃ りゃ …', kana:K('にゃ にゅ にょ ひゃ ひゅ ひょ みゃ みゅ みょ りゃ りゅ りょ'),
+   intro:'The same trick with n, h, m and r: にゃ nya, ひゃ hya, みゃ mya, りゃ rya. りょ “ryo” is one beat — say it quickly.',
+   words:W([['ひゃく','hyaku','hundred'],['りょかん','ryokan','ryokan, a Japanese inn'],['りょうり','ryōri','cooking, a dish'],['こんにゃく','konnyaku','konnyaku (a jelly food)'],['みょうじ','myōji','family name'],['りゅう','ryū','dragon']])},
+  {id:'c3', title:'Blended sounds with dots', sub:'ぎゃ じゃ びゃ ぴゃ …', kana:K('ぎゃ ぎゅ ぎょ じゃ じゅ じょ びゃ びゅ びょ ぴゃ ぴゅ ぴょ'),
+   intro:'The dotted letters blend too. Note the j row: じゃ “ja”, じゅ “ju”, じょ “jo”.',
+   words:W([['ぎゅうにゅう','gyūnyū','milk'],['じゃあね','jā ne','see you!'],['にんじゃ','ninja','ninja'],['ぎょうざ','gyōza','gyoza, dumplings'],['じゅぎょう','jugyō','class, lesson'],['びょういん','byōin','hospital'],['ぎゅうどん','gyūdon','beef rice bowl'],['じょうず','jōzu','skillful, good at']])},
+  {id:'sl', title:'Small っ and long vowels', sub:'きって · おばあさん', kana:['っ'],
+   cards:[{g:'っ', r:'a tiny pause', say:'きって', tip:'A small っ means: stop for one beat, then say the next sound. It doubles the next consonant: きって = kit-te (stamp). Compare きて = kite (come). You can’t say っ on its own.'},
+          {g:'ああ いい うう えい おう', r:'ā · ii · ū · ē · ō', say:'おばあさん', tip:'A vowel can be held twice as long. Japanese writes the extra beat: おばさん obasan (aunt) — おばあさん obāsan (grandmother). え and お are usually made long with い and う: せんせい, とうきょう.'}],
+   intro:'Two small things change meaning in Japanese: a little pause (small っ) and a long vowel. Listen for the length — and count the beats.',
+   words:W([['きって','kitte','postage stamp','',['きて','きつて']],['ちょっと','chotto','a little; just a moment','',['ちょと','ちょつと']],['がっこう','gakkō','school','',['がこう','がっこ']],
+    ['おばあさん','obāsan','grandmother','',['おばさん']],['おばさん','obasan','aunt; a middle-aged woman','',['おばあさん']],['ゆうき','yūki','courage','',['ゆき']],
+    ['びよういん','biyōin','hair salon','Careful: びょういん (byōin) is hospital!',['びょういん']],['おねえさん','onēsan','older sister','',['おねさん']],['おにいさん','oniisan','older brother','',['おにさん']],['せんせい','sensei','teacher']])}
+ ]},
+ {unit:'Katakana', blurb:'Katakana is the second alphabet: the same 46 sounds, sharper shapes. It writes words from other languages — so you can read lots of words you already know.', lessons:[
+  {id:'k1', title:'Katakana A and K', sub:'ア イ ウ エ オ · カ キ ク ケ コ', kana:K('アイウエオカキクケコ'),
+   intro:'Same sounds, new shapes. Some katakana look like their hiragana twin (カ/か, キ/き). We go row by row, the same way as before.'},
+  {id:'k2', title:'Katakana S and T', sub:'サ シ ス セ ソ · タ チ ツ テ ト', kana:K('サシスセソタチツテト'), self:true,
+   intro:'Here are the famous look-alikes シ shi and ツ tsu. The secret is the direction: シ has its dots on the left and the long stroke rises up. ツ has its dots on top and the stroke falls down.',
+   words:W([['アイス','aisu','ice cream'],['テスト','tesuto','test'],['キス','kisu','kiss'],['スイス','suisu','Switzerland'],['テキスト','tekisuto','textbook'],['タコス','takosu','tacos']])},
+  {id:'k3', title:'Katakana N and H', sub:'ナ ニ ヌ ネ ノ · ハ ヒ フ ヘ ホ', kana:K('ナニヌネノハヒフヘホ'), self:true,
+   intro:'ヘ is exactly the same shape as へ. フ is “fu” — Japanese uses it for English f.',
+   words:W([['テニス','tenisu','tennis'],['ネクタイ','nekutai','necktie'],['ナイフ','naifu','knife'],['ツナ','tsuna','tuna'],['ソフト','sofuto','software; soft-serve ice cream']])},
+  {id:'k4', title:'Katakana M and Y', sub:'マ ミ ム メ モ · ヤ ユ ヨ', kana:K('マミムメモヤユヨ'), self:true,
+   intro:'Japanese adds a soft u or o after consonants that end a word: mask → マスク (masuku). Say them lightly.',
+   words:W([['アニメ','anime','anime'],['トマト','tomato','tomato'],['マスク','masuku','face mask'],['ハム','hamu','ham'],['ミニ','mini','mini'],['メモ','memo','memo, a note'],['タイヤ','taiya','tire (tyre)']])},
+  {id:'k5', title:'Katakana R, W and ン', sub:'ラ リ ル レ ロ · ワ ヲ ン', kana:K('ラリルレロワヲン'), self:true,
+   intro:'The last basic row. Watch ン “n” against ソ “so”: ン has its dot on the left and the stroke rises, like シ. ソ falls down, like ツ.',
+   words:W([['ホテル','hoteru','hotel'],['カメラ','kamera','camera'],['トイレ','toire','toilet'],['ワイン','wain','wine'],['レモン','remon','lemon'],['メロン','meron','melon'],['アメリカ','amerika','America'],['レストラン','resutoran','restaurant']])},
+  {id:'k6', title:'Dots and circles in katakana', sub:'ガ ザ ダ バ パ', kana:K('ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ'), rows:true, self:true,
+   intro:'The dots and the circle work exactly as in hiragana: カ ka → ガ ga, ハ ha → バ ba → パ pa.',
+   words:W([['テレビ','terebi','TV'],['ラジオ','rajio','radio'],['パン','pan','bread','From Portuguese “pão”, not English.'],['ピザ','piza','pizza'],['バナナ','banana','banana'],['ドア','doa','door'],['バス','basu','bus'],['ロンドン','rondon','London']])},
+  {id:'k7', title:'The long dash and small ッ', sub:'コーヒー · ベッド · メニュー', self:true,
+   kana:['ー','ッ'].concat(K('キャ キュ キョ シャ シュ ショ チャ チュ チョ ニャ ニュ ニョ ヒャ ヒュ ヒョ ミャ ミュ ミョ リャ リュ リョ ギャ ギュ ギョ ジャ ジュ ジョ ビャ ビュ ビョ ピャ ピュ ピョ')),
+   cards:[{g:'ー', r:'long vowel', say:'コーヒー', tip:'Katakana uses a dash for a long vowel: コーヒー = kō-hī (coffee). The dash just holds the sound before it.'},
+          {g:'ッ', r:'a tiny pause', say:'ベッド', tip:'Just like hiragana っ: a one-beat pause that doubles the next sound. ベッド = bed-do (bed).'},
+          {g:'キャ シュ ジョ', r:'kya · shu · jo', say:'キャ シュ ジョ', tip:'Every blended sound from hiragana works in katakana: キャ kya, シャ sha, チャ cha, ニュ nyu, ジャ ja, ピョ pyo…'}],
+   intro:'Three small things cover most loanwords: the long dash ー, the small ッ pause, and the small ャ ュ ョ you already know.',
+   words:W([['コーヒー','kōhī','coffee','',['コヒー','コーヒ']],['ビール','bīru','beer','',['ビル']],['ビル','biru','building','',['ビール']],['ケーキ','kēki','cake','',['ケキ']],['タクシー','takushī','taxi'],['ラーメン','rāmen','ramen','',['ラメン']],
+    ['メニュー','menyū','menu','',['メニュ','メニユー']],['ジュース','jūsu','juice'],['チケット','chiketto','ticket','',['チケト']],['ベッド','beddo','bed','',['ベド']],['ゲーム','gēmu','game','',['ゲム']],['コンビニ','konbini','convenience store']])},
+  {id:'k8', title:'New sounds for new words', sub:'ティ ファ シェ …', self:true, kana:K('ティ ディ ファ フィ フェ フォ ウィ ウェ ウォ シェ ジェ チェ'),
+   intro:'To write foreign sounds, katakana adds a small ァ ィ ゥ ェ ォ: テ + ィ = ティ “ti”, フ + ァ = ファ “fa”. Hiragana never needs these.',
+   words:W([['パーティー','pātī','party'],['カフェ','kafe','café'],['フォーク','fōku','fork'],['ファン','fan','fan (a supporter)'],['シェフ','shefu','chef'],['チェック','chekku','check'],
+    ['フィギュア','figyua','figure (anime figurine)'],['ファイト！','faito!','Fight! You can do it!'],['ディズニー','dizunī','Disney'],['ウェブ','webu','the web']])}
+ ]},
+ {unit:'Everyday phrases', blurb:'Short, polite phrases for a trip. We put spaces between words to help you read — real Japanese has none. Remember: the little word は is said “wa” and を is said “o”.', lessons:[
+  {id:'p1', title:'Hello and thank you', sub:'The words you use every day', words:W([
+    ['こんにちは','konnichiwa','Hello (daytime)','The last letter is は, but here it is said “wa”.'],['おはよう ございます','ohayō gozaimasu','Good morning','With friends, just おはよう.'],
+    ['こんばんは','konbanwa','Good evening'],['ありがとう ございます','arigatō gozaimasu','Thank you (polite)'],
+    ['すみません','sumimasen','Excuse me / I’m sorry','Use it to get attention, to apologise, and even to say thanks.'],['はい','hai','Yes'],
+    ['いいえ','iie','No','People often avoid a hard “no” and say ちょっと… (“it’s a bit…”) instead.'],['さようなら','sayōnara','Goodbye (for a long time)','With friends, people say じゃあね or またね.'],
+    ['おやすみなさい','oyasuminasai','Good night'],['いただきます','itadakimasu','(said before eating)','Roughly “I humbly receive” — a thank-you for the food.'],
+    ['よろしく おねがいします','yoroshiku onegaishimasu','Nice to meet you','Literally “please treat me well”. Said after your name.']])},
+  {id:'p2', title:'At a restaurant', sub:'Order, eat, pay', words:W([
+    ['いらっしゃいませ','irasshaimase','Welcome! (staff greet you)','You don’t need to answer — a nod or a smile is fine.'],['なんめい さま ですか？','nanmei-sama desu ka?','How many people? (staff ask)'],
+    ['ふたり です','futari desu','Two people.','One person is ひとり (hitori).'],['メニュー を ください','menyū o kudasai','The menu, please','___ を ください = “___, please”.'],
+    ['これ を ください','kore o kudasai','This one, please','Point at the menu — it always works.'],['みず を ください','mizu o kudasai','Water, please','Water and tea are usually free.'],
+    ['おいしい！','oishii!','Delicious!'],['おかいけい おねがいします','okaikei onegaishimasu','The bill, please','Often you pay at the register by the door. No tipping in Japan.'],
+    ['ごちそうさまでした','gochisōsama deshita','Thank you for the meal (after eating)']])},
+  {id:'p3', title:'Shopping', sub:'Prices, bags, cards', words:W([
+    ['これ は いくら ですか？','kore wa ikura desu ka?','How much is this?','は is said “wa”.'],['これ に します','kore ni shimasu','I’ll take this one'],
+    ['カード で いい ですか？','kādo de ii desu ka?','Can I pay by card?'],['ふくろ は いりません','fukuro wa irimasen','I don’t need a bag'],
+    ['みて いる だけ です','mite iru dake desu','I’m just looking'],['ほかの いろ は ありますか？','hoka no iro wa arimasu ka?','Do you have other colors?'],
+    ['しちゃく できますか？','shichaku dekimasu ka?','Can I try it on?'],['レシート を ください','reshīto o kudasai','A receipt, please']])},
+  {id:'p4', title:'Getting around', sub:'Trains, taxis, finding places', words:W([
+    ['えき は どこ ですか？','eki wa doko desu ka?','Where is the station?','___ は どこ ですか？ = “Where is ___?”'],['トイレ は どこ ですか？','toire wa doko desu ka?','Where is the toilet?'],
+    ['この でんしゃ は とうきょう に いきますか？','kono densha wa tōkyō ni ikimasu ka?','Does this train go to Tokyo?'],
+    ['ここ まで おねがいします','koko made onegaishimasu','To this place, please','In a taxi: show the address on your phone and say this.'],
+    ['ここ で とめて ください','koko de tomete kudasai','Please stop here'],['みぎ','migi','right'],['ひだり','hidari','left'],['まっすぐ','massugu','straight ahead'],['きっぷ','kippu','train ticket']])},
+  {id:'p5', title:'When you need help', sub:'Say you are learning', words:W([
+    ['たすけて！','tasukete!','Help!'],['にほんご が わかりません','nihongo ga wakarimasen','I don’t understand Japanese'],
+    ['えいご は はなせますか？','eigo wa hanasemasu ka?','Do you speak English?'],['ゆっくり おねがいします','yukkuri onegaishimasu','Slowly, please'],
+    ['もう いちど おねがいします','mō ichido onegaishimasu','Once more, please'],['びょういん は どこ ですか？','byōin wa doko desu ka?','Where is a hospital?'],
+    ['みち に まよいました','michi ni mayoimashita','I’m lost'],['だいじょうぶ です','daijōbu desu','I’m okay / No, thank you','Very useful: “I’m fine” and also a polite “no thanks”.'],
+    ['けいさつ','keisatsu','police','In an emergency call 110 for police, 119 for fire or ambulance.']])},
+  {id:'p6', title:'Words from anime', sub:'Now you’ll catch them', words:W([
+    ['やった！','yatta!','I did it! / Yes!'],['せんぱい','senpai','senior (at school or work)','Someone a year or more ahead of you.'],['がんばって！','ganbatte!','Do your best! / Go for it!'],
+    ['なんで？','nande?','Why?'],['まじ？','maji?','Seriously?','Casual — between friends only.'],['ただいま','tadaima','I’m home!'],['おかえり','okaeri','Welcome home!','The answer to ただいま.'],
+    ['いくぞ！','ikuzo!','Let’s go! (tough, casual)'],['ばか','baka','idiot','Rude! Fun to recognise, risky to say.'],['うるさい！','urusai!','So noisy! / Shut up!'],['だめ！','dame!','No! / Don’t!']])}
+ ]},
+ {unit:'Numbers and prices', blurb:'Count to ten, then hear a price in yen and pay the right amount.', lessons:[
+  {id:'n1', title:'Counting 1 to 10', sub:'いち, に, さん…', intro:'Japanese numbers are very regular. Learn 1 to 10, and the rest follows: 11 is じゅういち (ten-one), 20 is にじゅう (two-ten). 4, 7 and 9 have two readings; we show the one you hear most.', words:W([
+    ['いち','ichi','one (1)'],['に','ni','two (2)'],['さん','san','three (3)'],['よん','yon','four (4)','Also し (shi). But し sounds like the word for death, so people prefer よん.'],
+    ['ご','go','five (5)'],['ろく','roku','six (6)'],['なな','nana','seven (7)','Also しち (shichi).'],['はち','hachi','eight (8)'],['きゅう','kyū','nine (9)','Also く (ku).'],
+    ['じゅう','jū','ten (10)'],['じゅういち','jūichi','eleven (11)'],['にじゅう','nijū','twenty (20)']])},
+  {id:'n2', title:'Prices in yen', sub:'ひゃく えん, せん えん…', intro:'A price is a number + えん (yen). On price tags you will see ¥ or the sign 円 — both mean yen. Big numbers go by まん (10,000): ¥10,000 is いちまん えん. A few sounds change: 300 is さんびゃく, 800 is はっぴゃく, 3,000 is さんぜん.', words:W([
+    ['ひゃく えん','hyaku en','¥100'],['ごひゃく えん','gohyaku en','¥500','A big coin.'],['さんびゃく えん','sanbyaku en','¥300','ひゃく becomes びゃく after さん.'],
+    ['はっぴゃく えん','happyaku en','¥800'],['せん えん','sen en','¥1,000','The smallest bill.'],['さんぜん えん','sanzen en','¥3,000','せん becomes ぜん after さん.'],
+    ['いちまん えん','ichiman en','¥10,000','One まん = 10,000. Say the いち.'],['にまん ごせん えん','niman gosen en','¥25,000','Two まん and five thousand.'],['いくら ですか？','ikura desu ka?','How much is it?']])}
+ ]}
+];
+const LESSONS = []; COURSE.forEach(u => u.lessons.forEach(l => { l.unit = u.unit; LESSONS.push(l); }));
+// What the learner has met by the end of each lesson (course order).
+(function(){ let acc = []; LESSONS.forEach(l => { acc = acc.concat(l.kana || []); l.units = acc.slice(); l.chars = new Set(acc.join('')); }); })();
+const ITEM_LESSON = {};
+LESSONS.forEach(l => { (l.kana || []).forEach(u => { if (NOQ.indexOf(u) < 0) ITEM_LESSON['l:' + u] = l.id; }); (l.words || []).forEach(w => { ITEM_LESSON['w:' + w.jp] = l.id; }); });
+
+// ───────── Free lessons and the license key ─────────
+// Free: all of «Hiragana» + the first phrase lesson. The rest opens with a Valuestools license key (product «kana», or «*»).
+const FREE = LESSONS.filter(l => l.unit === 'Hiragana').map(l => l.id).concat(['p1']);
+const PUB_B64 = 'z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=';
+const LKEY = 'vt_kanasteps_lic';
+let LIC = null;
+try { LIC = JSON.parse(localStorage.getItem(LKEY) || 'null'); } catch (e) {}
+function licensed(){ return !!(LIC && LIC.ok); }
+function locked(l){ return !!l && FREE.indexOf(l.id) < 0 && !licensed(); }
+function b64d(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+  const bin = atob(s), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+function verifyKey(raw){
+  try {
+    raw = (raw || '').trim().replace(/\s+/g, '');
+    if (!raw.startsWith('VALUES.')) return 'bad';
+    const p = raw.split('.'); if (p.length !== 3) return 'bad';
+    if (typeof nacl === 'undefined') return 'nonacl';
+    const payload = b64d(p[1]), sig = b64d(p[2]);
+    if (!nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return 'bad';
+    const info = JSON.parse(new TextDecoder().decode(payload));
+    const prods = info.p || [];
+    if (!(prods.indexOf('*') >= 0 || prods.indexOf('kana') >= 0)) return 'noprod';
+    return info;
+  } catch (e) { return 'bad'; }
+}
+function unlockScreen(want){
+  view = unlockScreen;
+  $('#app').innerHTML = '<header><button class="icon" onclick="render(view=home)" aria-label="Back">←</button><h1>Unlock the full course</h1></header><div class="card">' +
+    (want && want.title ? '<p><b>“' + jx(want.title) + '”</b> is part of the full course.</p>' : '') +
+    '<p>The first ' + FREE.length + ' lessons are free — all of hiragana and your first phrases. The full course adds katakana with the loanwords you already know (<span class="ja" lang="ja">コーヒー, テレビ, ホテル</span>), restaurant, shopping, getting around, asking for help, anime words, numbers and prices in yen, and every lesson we add later.</p>' +
+    '<p class="muted">Online checkout is opening soon. Until then, write to <a href="mailto:ranger7903@nate.com?subject=Kana%20Steps%20full%20course">ranger7903@nate.com</a> and we will reply with how to get a key.</p>' +
+    '<label for="keyin"><b>Already have a key?</b> Paste it here (it starts with VALUES.)</label>' +
+    '<textarea id="keyin" rows="3" style="width:100%;margin-top:6px;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:8px"></textarea>' +
+    '<button class="big" id="kgo">Unlock</button><p id="kmsg" class="muted"></p></div>';
+  $('#kgo').onclick = () => {
+    const r = verifyKey($('#keyin').value), m = $('#kmsg');
+    if (r === 'nonacl') { m.textContent = 'The key checker has not loaded yet. Connect to the internet once, reload, and try again.'; return; }
+    if (r === 'noprod') { m.textContent = 'This key is genuine, but it is for a different Valuestools product.'; return; }
+    if (r === 'bad' || !r) { m.textContent = 'That key doesn’t look right. Please paste the whole key, starting with VALUES.'; return; }
+    LIC = {ok:true, n:r.n || ''}; try { localStorage.setItem(LKEY, JSON.stringify(LIC)); } catch (e) {}
+    m.textContent = 'Unlocked. Enjoy the full course!';
+    setTimeout(() => render(view = home), 900);
+  };
+}
+
+// ───────── Storage ─────────
+const KEY = 'vt_kanasteps_v1';
+let S = {done:{}, cards:{}, rom:'tap', slow:false, days:[]};
+try { const x = JSON.parse(localStorage.getItem(KEY) || 'null'); if (x) S = Object.assign(S, x); } catch (e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function today(){ const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); }
+function dayNum(){ return Math.floor(Date.now() / 86400000); }
+const GAPS = [0, 1, 3, 7, 14, 30];
+function mark(id, ok){
+  const c = S.cards[id] || {box:0, due:0};
+  c.box = ok ? Math.min(c.box + 1, GAPS.length - 1) : 0;
+  c.due = dayNum() + (ok ? GAPS[c.box] : 0);
+  S.cards[id] = c;
+  if (S.days.indexOf(today()) < 0) { S.days.push(today()); if (S.days.length > 400) S.days.shift(); }
+}
+function streak(){
+  let n = 0, d = new Date();
+  for (;;) { const k = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+    if (S.days.indexOf(k) < 0) { if (n === 0 && d.toDateString() === new Date().toDateString()) { d.setDate(d.getDate() - 1); continue; } break; }
+    n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+// ───────── Sound (the device's own Japanese voice) ─────────
+let VOICE = null, voiceChecked = false;
+function findVoice(){
+  if (!('speechSynthesis' in window)) { voiceChecked = true; return; }
+  const vs = speechSynthesis.getVoices();
+  if (vs.length) voiceChecked = true;
+  const ja = vs.filter(v => /^ja[-_]/i.test(v.lang) || v.lang === 'ja');
+  VOICE = ja.find(v => v.localService) || ja[0] || null;  // an offline voice first
+}
+if ('speechSynthesis' in window) { findVoice(); speechSynthesis.onvoiceschanged = () => { findVoice(); if (view === home) render(); }; }
+setTimeout(() => { voiceChecked = true; if (view === home) render(); }, 1500);
+function say(t, slow){
+  if (!VOICE || !t) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t.replace(/[?!？！]/g, ''));
+  u.voice = VOICE; u.lang = VOICE.lang || 'ja-JP'; u.rate = (slow || S.slow) ? 0.55 : 0.85;
+  speechSynthesis.speak(u);
+}
+const canSay = u => NOQ.indexOf(u) < 0;
+
+// ───────── helpers ─────────
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function uniq(a){ return a.filter((x, i) => a.indexOf(x) === i); }
+function choices(right, pool, n){ return shuffle([right].concat(shuffle(uniq(pool.filter(x => x !== right))).slice(0, (n || 4) - 1))); }
+// English text with Japanese inside: give the Japanese runs a Japanese font and lang, so they never fall back to a Chinese/Korean font.
+const jx = s => esc(s).replace(/[\u3001-\u30FF\uFF01-\uFF60]+/g, m => '<span class="ja" lang="ja">' + m + '</span>');
+function romHtml(r){
+  if (S.rom === 'never') return '<div class="rom"></div>';
+  if (S.rom === 'always') return '<div class="rom">' + esc(r) + '</div>';
+  return '<div class="rom hidden" onclick="this.className=\'rom\';this.textContent=' + esc(JSON.stringify(r)) + '">show how it sounds</div>';
+}
+function sayBtns(t){
+  if (!VOICE || !t) return '';
+  const j = esc(JSON.stringify(t));
+  return '<div class="say"><button onclick="say(' + j + ')">▶ Listen</button><button onclick="say(' + j + ',true)">🐢 Slowly</button></div>';
+}
+function glyphClass(s){ const n = [...s].length; return n <= 2 ? '' : n <= 6 ? ' word' : ' phrase'; }
+
+let view = null;
+function render(){ view(); window.scrollTo(0, 0); }
+
+// ───────── Home ─────────
+function nextLesson(){ return LESSONS.find(l => !S.done[l.id] && !locked(l)) || LESSONS.find(l => !S.done[l.id]) || null; }
+function dueItems(){ const d = dayNum(); return Object.keys(S.cards).filter(k => S.cards[k].due <= d && S.done[ITEM_LESSON[k]]); }
+function home(){
+  view = home;
+  const nx = nextLesson(), due = dueItems().length, st = streak();
+  let h = '<header><h1>Kana Steps<small>Read Japanese from zero — in English</small></h1><button class="icon" onclick="settings()" aria-label="Settings">⚙︎</button></header>';
+  if (voiceChecked && !VOICE) h += '<div class="warn" id="novoice"><b>No Japanese voice on this device yet.</b> Everything still works, but you won’t hear the words, and listening questions are skipped. ' +
+    'To add one: <b>Android</b> — Settings › Text-to-speech › Google › install Japanese. <b>iPhone</b> — Settings › Accessibility › Spoken Content › Voices › Japanese. ' +
+    '<b>Windows</b> — Settings › Time &amp; language › Speech › Add voices › Japanese. <b>Mac</b> — System Settings › Accessibility › Spoken Content › System voice › Japanese. Then reload this page.</div>';
+  h += '<div class="card"><div>' +
+    (Object.keys(S.done).length ? '<b>Welcome back.</b> ' + (st > 1 ? st + ' days in a row.' : '') : '<b>Start here.</b> In about an hour you will read your first Japanese words on your own.') +
+    '</div>' +
+    (nx ? '<button class="big" onclick="startLesson(\'' + nx.id + '\')">' + (Object.keys(S.done).length ? 'Continue: ' : 'Begin: ') + esc(nx.title) + '</button>' : '<p>You have finished every lesson. Keep your reviews going!</p>') +
+    '<button class="big alt" onclick="startReview()" ' + (due ? '' : 'disabled') + '>Review' + (due ? ' (' + due + ' due)' : ' — nothing due') + '</button></div>';
+  COURSE.forEach(u => {
+    h += '<div class="card unit"><h2>' + esc(u.unit) + '</h2><p>' + jx(u.blurb) + '</p>';
+    u.lessons.forEach(l => {
+      const d = S.done[l.id];
+      h += '<button class="lesson' + (nx && nx.id === l.id ? ' next' : '') + '" onclick="startLesson(\'' + l.id + '\')"><span class="t"><b>' + jx(l.title) + '</b><span class="ja" lang="ja">' + esc(l.sub) + '</span></span><span class="s">' + (d ? '★'.repeat(d) + '☆'.repeat(3 - d) : (locked(l) ? '🔒' : (FREE.indexOf(l.id) >= 0 && !licensed() ? '<span class="muted">free</span>' : ''))) + '</span></button>';
+    });
+    h += '</div>';
+  });
+  h += '<div class="center muted" style="margin-top:6px">' + (licensed() ? 'Full course unlocked' + (LIC.n ? ' — thank you, ' + esc(LIC.n) : '') + '.' : 'The first ' + FREE.length + ' lessons are free. <a href="javascript:void(0)" onclick="unlockScreen()">Unlock the full course</a>') + '</div>';
+  h += '<footer>No account, no ads. Your progress stays on this device.<br>Made by Valuestools · <a href="https://valuestools.kr/en.html">valuestools.kr</a></footer>';
+  $('#app').innerHTML = h;
+}
+function settings(){
+  view = settings;
+  $('#app').innerHTML = '<header><button class="icon" onclick="render(view=home)" aria-label="Back">←</button><h1>Settings</h1></header><div class="card">' +
+    '<label class="opt">Romaji (Latin letters):<select id="ro"><option value="always">Always show</option><option value="tap">Show when I tap</option><option value="never">Never — kana only</option></select></label>' +
+    '<p class="muted">Romaji helps at first, but real reading means reading kana. Try “Never” once you finish hiragana. (Questions that ask for the sound still show romaji choices.)</p>' +
+    '<label class="opt"><input type="checkbox" id="sl"> Always speak slowly</label>' +
+    '<p class="muted">Sound comes from your device’s own Japanese voice' + (VOICE ? ' (' + esc(VOICE.name) + ').' : ' — none found yet.') + '</p>' +
+    '<button class="big alt" onclick="if(confirm(\'Erase all progress on this device?\')){S={done:{},cards:{},rom:\'tap\',slow:false,days:[]};save();render(view=home)}">Start over</button></div>';
+  $('#ro').value = S.rom; $('#sl').checked = S.slow;
+  $('#ro').onchange = e => { S.rom = e.target.value; save(); };
+  $('#sl').onchange = e => { S.slow = e.target.checked; save(); };
+}
+
+// ───────── Lesson: intro cards then quiz ─────────
+let L = null, cards = [], ci = 0;
+function startLesson(id){
+  const want = LESSONS.find(l => l.id === id);
+  if (!want) return;
+  if (locked(want)) { unlockScreen(want); return; }
+  L = want;
+  cards = [];
+  if (L.intro) cards.push({kind:'text'});
+  if (L.cards) L.cards.forEach(x => cards.push({kind:'letter', x}));
+  // k7 has 33 blended sounds: one summary card instead of 33 cards (they are practised in the quiz).
+  const rest = L.id === 'k7' ? [] : (L.kana || []).filter(u => NOQ.indexOf(u) < 0);
+  if (L.rows) {
+    for (let i = 0; i < rest.length; i += 5) {
+      const g = rest.slice(i, i + 5), base = g.map(x => toK(DB[DK.indexOf(toH(x))]));
+      const tip = base.join(' ') + ' + ' + (DK.indexOf(toH(g[0])) >= 20 ? 'a small circle' : 'two dots') + ' → ' + g.join(' ') + '.' + (g.indexOf('ヂ') >= 0 ? ' ヂ and ヅ are rare; they sound like ジ and ズ.' : '');
+      cards.push({kind:'letter', x:{g:g.join(' '), r:g.map(romaji).join(' '), say:g.join('、'), tip}});
+    }
+  } else rest.forEach(u => cards.push({kind:'letter', x:{g:u, r:romaji(u), say:u, tip:tipFor(u)}}));
+  (L.words || []).forEach(x => cards.push({kind:'word', x}));
+  ci = 0; view = showCard; render();
+}
+function reveal(el, txt, jp){ el.className = 'en'; el.textContent = txt; say(jp); }
+function showCard(){
+  const c = cards[ci];
+  let h = '<header><button class="icon" onclick="render(view=home)" aria-label="Close">✕</button><h1 style="font-size:17px">' + jx(L.title) + '</h1></header><div class="bar"><i style="width:' + Math.round(ci / cards.length * 100) + '%"></i></div><div class="card">';
+  if (c.kind === 'text') h += '<p>' + jx(L.intro) + '</p>';
+  else if (c.kind === 'letter') {
+    h += '<div class="glyph ja' + glyphClass(c.x.g.replace(/ /g, '')) + '" lang="ja">' + esc(c.x.g) + '</div>' +
+      '<div class="rom">' + esc(c.x.r) + '</div>' + sayBtns(c.x.say) + '<div class="tip">' + jx(c.x.tip) + '</div>';
+    setTimeout(() => say(c.x.say), 250);
+  } else {
+    const w = c.x;
+    h += '<div class="glyph ja' + glyphClass(w.jp) + '" lang="ja">' + esc(w.jp) + '</div>' +
+      (L.self ? '<div class="rom hidden" id="rv" onclick="reveal(this,' + esc(JSON.stringify(w.en + ' · ' + w.r)) + ',' + esc(JSON.stringify(w.jp)) + ')">Try to read it — then tap to check</div>'
+        : romHtml(w.r) + '<div class="en">' + esc(w.en) + '</div>') +
+      sayBtns(w.jp) + (w.note ? '<div class="tip">' + jx(w.note) + '</div>' : '');
+    if (!L.self) setTimeout(() => say(w.jp), 250);
+  }
+  h += '<button class="big" onclick="ci++;if(ci<cards.length)render();else startQuiz()">' + (ci + 1 < cards.length ? 'Next' : 'Practice now') + '</button></div>';
+  $('#app').innerHTML = h;
+}
+
+// ───────── Questions ─────────
+// Distractors: look-alikes first, then letters from this lesson, then any letter met so far — never one not yet taught.
+function distract(u, mine, learned){
+  const Ls = new Set(learned), ru = romaji(u);
+  const ok = x => units(x).every(y => Ls.has(y)) && romaji(x) !== ru && NOQ.indexOf(x) < 0;
+  const simAll = similar(u).filter(ok);
+  // For blends, the full-size trap (きゃ vs きや) always comes first.
+  const sim = (u.length > 1 && simAll[0] === u[0] + BIG[u[1]]) ? [simAll[0]].concat(shuffle(simAll.slice(1))) : shuffle(simAll);
+  const same = shuffle(mine.filter(x => ok(x) && isKata(x) === isKata(u)));
+  const kind = shuffle(learned.filter(x => ok(x) && isKata(x) === isKata(u) && x.length === u.length));
+  const any = shuffle(learned.filter(x => ok(x) && isKata(x) === isKata(u)));
+  const out = [], seen = new Set([ru]);
+  [sim.slice(0, 2), same, sim.slice(2), kind, any].forEach(list => list.forEach(x => { const r = romaji(x); if (out.length < 3 && !seen.has(r)) { seen.add(r); out.push(x); } }));
+  return out;
+}
+function kanaQ(u, mine, learned, type){
+  const ks = shuffle([u].concat(distract(u, mine, learned))), r = romaji(u);
+  if (type === 'show') return {id:'l:' + u, prompt:'How do you read it?', show:u, ans:r, opts:ks.map(romaji), uses:ks, sayAfter:u};
+  if (type === 'pick') return {id:'l:' + u, prompt:'Which one is “' + r + '”?', showRom:r, ans:u, opts:ks, k:true, uses:ks, sayAfter:u};
+  return {id:'l:' + u, prompt:'Listen. Which one is it?', listen:u, ans:u, opts:ks, k:true, uses:ks, note:r};
+}
+function poolFor(Lx){
+  let pool = (Lx.words || []).slice();
+  if (pool.length < 4) {
+    const i = LESSONS.indexOf(Lx);
+    for (let j = i - 1; j >= 0 && pool.length < 6; j--) {
+      const l2 = LESSONS[j];
+      if (l2.unit !== Lx.unit) continue;
+      (l2.words || []).forEach(w => { if ([...w.jp].every(c => !isKanaChar(c) || Lx.chars.has(c))) pool.push(w); });
+    }
+  }
+  return pool;
+}
+function wordQs(Lx, words, pool){
+  const qs = [];
+  words.forEach(w => {
+    const id = 'w:' + w.jp, jpOpts = () => choices(w.jp, pool.map(x => x.jp));
+    qs.push({id, prompt:'What does this mean?', show:w.jp, ans:w.en, opts:choices(w.en, pool.map(x => x.en)), uses:[w.jp], sayAfter:w.jp, note:w.r});
+    let o = jpOpts();
+    if (VOICE) qs.push({id, prompt:'Listen. Which one did you hear?', listen:w.jp, ans:w.jp, opts:o, k:true, uses:o, note:w.en});
+    o = jpOpts();
+    qs.push({id, prompt:'How do you say it in Japanese?', showEn:w.en, ans:w.jp, opts:o, k:true, uses:o, sayAfter:w.jp, note:w.r});
+    if (Lx && Lx.self) qs.push({id, prompt:'How do you read it?', show:w.jp, ans:w.r, opts:choices(w.r, pool.map(x => x.r)), uses:[w.jp], sayAfter:w.jp, note:w.en});
+    if (w.near) {
+      o = shuffle([w.jp].concat(w.near));
+      qs.push({id, prompt:'Which one says “' + w.r + '” (' + w.en + ')?', ans:w.jp, opts:o, k:true, uses:o, sayAfter:w.jp, near:true});
+      if (VOICE) { o = shuffle([w.jp].concat(w.near)); qs.push({id, prompt:'Listen carefully — count the beats. Which one is it?', listen:w.jp, ans:w.jp, opts:o, k:true, uses:o, note:w.r + ' — ' + w.en, near:true}); }
+    }
+  });
+  return qs;
+}
+let Q = [], qi = 0, score = 0, wrongs = 0, mode = 'lesson', answered = false;
+function startQuiz(){
+  mode = 'lesson';
+  const mine = (L.kana || []).filter(u => NOQ.indexOf(u) < 0);
+  const types = VOICE ? ['show', 'pick', 'listen'] : ['show', 'pick'];
+  const kq = shuffle(mine).slice(0, 10).map((u, i) => kanaQ(u, mine, L.units, types[i % types.length]));
+  let wq = [];
+  if (L.words) {
+    const all = shuffle(wordQs(L, L.words, poolFor(L)));
+    const nearQ = all.filter(q => q.near), rest = all.filter(q => !q.near);
+    wq = nearQ.slice(0, 6).concat(rest).slice(0, Math.max(6, 15 - kq.length));
+  }
+  Q = shuffle(kq.concat(wq)); qi = 0; score = 0; wrongs = 0; view = showQ; render();
+}
+function learnedNow(){ let us = []; LESSONS.forEach(l => { if (S.done[l.id]) us = us.concat(l.kana || []); }); return us; }
+function startReview(){
+  mode = 'review';
+  const ids = shuffle(dueItems()).slice(0, 15), learned = learnedNow(), chars = new Set(learned.join(''));
+  const doneWords = []; LESSONS.forEach(l => { if (S.done[l.id]) (l.words || []).forEach(w => doneWords.push(w)); });
+  const types = VOICE ? ['show', 'pick', 'listen'] : ['show', 'pick'];
+  const qs = [];
+  ids.forEach(id => {
+    const lx = LESSONS.find(l => l.id === ITEM_LESSON[id]);
+    if (id.startsWith('w:')) {
+      const w = (lx.words || []).find(x => 'w:' + x.jp === id); if (!w) return;
+      const ok = s => [...s].every(c => !isKanaChar(c) || chars.has(c) || w.jp.indexOf(c) >= 0);
+      const pool = doneWords.filter(x => ok(x.jp));
+      const sameUnit = pool.filter(x => ITEM_LESSON['w:' + x.jp] && LESSONS.find(l => l.id === ITEM_LESSON['w:' + x.jp]).unit === lx.unit);
+      const cand = wordQs(lx, [w], sameUnit.length >= 4 ? sameUnit : pool);
+      if (cand.length) qs.push(pick(cand));
+    } else if (id.startsWith('l:')) qs.push(kanaQ(id.slice(2), [], learned, pick(types)));
+  });
+  if (!qs.length) { render(view = home); return; }
+  Q = qs; qi = 0; score = 0; wrongs = 0; L = {title:'Review'}; view = showQ; render();
+}
+function showQ(){
+  const q = Q[qi]; answered = false;
+  let h = '<header><button class="icon" onclick="render(view=home)" aria-label="Close">✕</button><h1 style="font-size:17px">' + jx(L.title) + '</h1></header><div class="bar"><i style="width:' + Math.round(qi / Q.length * 100) + '%"></i></div><div class="card">';
+  h += '<div class="q">' + jx(q.prompt) + '</div>';
+  if (q.listen) { h += sayBtns(q.listen); setTimeout(() => say(q.listen), 300); }
+  if (q.show) h += '<div class="glyph ja' + glyphClass(q.show) + '" lang="ja">' + esc(q.show) + '</div>';
+  if (q.showRom) h += '<div class="romq">' + esc(q.showRom) + '</div>';
+  if (q.showEn) h += '<div class="en" style="font-size:22px;margin:16px 0">' + esc(q.showEn) + '</div>';
+  const maxLen = Math.max.apply(null, q.opts.map(o => [...o].length));
+  const kc = q.k ? (maxLen <= 3 ? ' k1' : maxLen <= 6 ? ' k2' : ' k3') : '';
+  const one = q.k ? maxLen > 7 : q.opts.some(o => o.length > 14);
+  h += '<div class="choices' + (one ? ' one' : '') + '">' + q.opts.map((o, i) => '<button class="choice' + (q.k ? ' ja' + kc : '') + '"' + (q.k ? ' lang="ja"' : '') + ' data-i="' + i + '">' + esc(o) + '</button>').join('') + '</div>';
+  h += '<div class="fb" id="fb"></div><button class="big" id="nx" style="display:none">Next</button></div>';
+  $('#app').innerHTML = h;
+  document.querySelectorAll('.choice').forEach(b => b.onclick = () => {
+    if (answered) return;
+    const ok = q.opts[+b.dataset.i] === q.ans;
+    b.classList.add(ok ? 'right' : 'wrong');
+    if (!ok) document.querySelectorAll('.choice').forEach(x => { if (q.opts[+x.dataset.i] === q.ans) x.classList.add('right'); });
+    finish(ok, q.ans, q.sayAfter || q.listen);
+  });
+}
+function finish(ok, right, sayIt){
+  answered = true;
+  const q = Q[qi];
+  if (ok) score++; else { wrongs++; if (mode === 'lesson') Q.push(Object.assign({}, q, {opts:shuffle(q.opts)})); }
+  if (q.id) mark(q.id, ok);
+  save();
+  const fb = $('#fb');
+  fb.className = 'fb ' + (ok ? 'good' : 'bad');
+  fb.innerHTML = (ok ? '✓ Right!' : '✗ Not quite. The answer is <b' + (q.k ? ' class="ja" lang="ja"' : '') + '>' + esc(right) + '</b>.') + (q.note ? ' <span class="muted">(' + jx(q.note) + ')</span>' : '');
+  if (sayIt && canSay(sayIt)) say(sayIt);
+  const nx = $('#nx'); nx.style.display = 'block';
+  nx.onclick = () => { qi++; if (qi < Q.length) render(); else result(); };
+}
+function result(){
+  view = result;
+  const total = score + wrongs, pct = total ? score / total : 1;
+  const stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : 1;
+  if (mode === 'lesson') {
+    S.done[L.id] = Math.max(S.done[L.id] || 0, stars);
+    (L.kana || []).forEach(u => { if (NOQ.indexOf(u) < 0 && !S.cards['l:' + u]) mark('l:' + u, true); });
+    (L.words || []).forEach(w => { if (!S.cards['w:' + w.jp]) mark('w:' + w.jp, true); });
+    save();
+  }
+  const nx = nextLesson();
+  let h = '<div class="card center"><div class="done">' + (mode === 'lesson' ? '★'.repeat(stars) + '☆'.repeat(3 - stars) : '✓') + '</div>' +
+    '<h2>' + (mode === 'lesson' ? 'Lesson done!' : 'Review done!') + '</h2><p>' + score + ' right out of ' + total + '.' +
+    (L.self ? ' You just read Japanese words on your own.' : '') + (L.id === 'h9' ? ' You now know all 46 basic hiragana!' : '') + '</p>' +
+    (mode === 'lesson' ? '<p class="muted">These will come back in Review when it’s time — that is how they stick.</p>' : '') +
+    (nx && mode === 'lesson' ? '<button class="big" onclick="startLesson(\'' + nx.id + '\')">Next: ' + esc(nx.title) + '</button>' : '') +
+    '<button class="big alt" onclick="render(view=home)">Back to all lessons</button></div>';
+  $('#app').innerHTML = h;
+}
+render(view = home);
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('kana_sw.js');
+</script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expiry Keeper — never miss a passport, visa, warranty or return date</title>
+<meta name="description" content="Keep the dates that cost money when you forget them: passport, visa, licence, insurance, warranty, return windows, free trials. Calendar reminders, works offline, no account.">
+<!--
+  Expiry Keeper (밸류스, 2026-11-16 첫 판)
+  손님: 누구나, 특히 외국에 사는 사람. 잊으면 돈이 나가는 날짜(여권·비자·면허·보험·보증·반품 기한·무료 체험·차 검사·약).
+   · 넣기는 빠르게: 종류 고르면 기간·알림이 미리 채워짐(반품 14/30일, 보증 1/2년…).
+   · 첫 화면은 급한 순서. «in 23 days» 같은 쉬운 말.
+   · 정직: 브라우저는 닫혀 있으면 알림을 못 준다 → 달력(.ics, VALARM)이 진짜 알림.
+   · 날짜 계산은 모두 «현지 날짜» 문자열(YYYY-MM-DD)로. UTC 로 밀리지 않게.
+   · 무료: 5개까지 + 달력 내보내기. 유료: 무제한 + 사진 + 백업·복원.
+   · 가입·광고·서버 없음. 자료는 이 기기에만(목록은 localStorage, 사진은 IndexedDB).
+-->
+<link rel="manifest" href="expiry_manifest.json">
+<meta name="theme-color" content="#1F4E79">
+<link rel="icon" href="expiry_icon192.png">
+<script src="nacl.min.js"></script>
+<style>
+:root{--bg:#FBF8F3;--card:#fff;--ink:#2B2622;--ink2:#6B6259;--line:#E6DCCE;--accent:#C0603C;--deep:#1F4E79;--ok:#3E6B43;--okbg:#EAF1E6;--bad:#A8402F;--badbg:#F8E7E3;--warn:#8A5A00;--warnbg:#FBEFD5}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
+main{max-width:560px;margin:0 auto;padding:14px 14px 48px}
+header{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+header h1{font-size:21px;margin:0;flex:1;min-width:0;overflow-wrap:anywhere}
+header h1 small{display:block;font-size:13px;font-weight:400;color:var(--ink2)}
+button{font:inherit;cursor:pointer;color:inherit}
+a{color:var(--deep)}
+.icon{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 10px;font-size:15px;flex:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.muted{color:var(--ink2);font-size:14px}
+.center{text-align:center}
+.big{display:block;width:100%;border:none;border-radius:14px;padding:14px;font-size:17px;font-weight:700;background:var(--deep);color:#fff;margin-top:12px}
+.big.alt{background:#fff;color:var(--deep);border:1px solid var(--deep)}
+.big.danger{background:#fff;color:var(--bad);border:1px solid var(--bad)}
+.big.danger.sure{background:var(--bad);color:#fff}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2 .big{margin-top:10px}
+input[type=text],input[type=search],input[type=date],input[type=number],select,textarea{font:inherit;font-size:16px;width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;color:var(--ink)}
+textarea{resize:vertical}
+label{display:block;font-weight:600;margin:14px 0 6px;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:15px}
+.chip.on{border-color:var(--deep);background:var(--deep);color:#fff}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--deep);border-radius:12px;overflow:hidden}
+.seg button{border:none;background:#fff;color:var(--deep);padding:9px 6px;font-size:15px}
+.seg button.on{background:var(--deep);color:#fff}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin-top:6px}
+.calc{background:#F4EEE5;border-radius:10px;padding:8px 12px;margin-top:8px;font-size:15px}
+.item{display:flex;align-items:stretch;gap:12px;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:0;margin:8px 0;overflow:hidden}
+.item .bar{width:6px;flex:none;background:var(--ok)}
+.item.over .bar{background:var(--bad)}
+.item.soon .bar{background:#D99A1E}
+.item .t{flex:1;min-width:0;padding:10px 0}
+.item .t b{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:16px;overflow-wrap:anywhere}
+.item .t span{font-size:13px;color:var(--ink2)}
+.item .r{text-align:right;padding:10px 12px 10px 0;flex:none;max-width:44%}
+.item .r b{display:block;font-size:15px}
+.pill{display:inline-block;border-radius:999px;padding:1px 9px;font-size:12.5px;font-weight:700;background:var(--okbg);color:var(--ok);white-space:nowrap}
+.pill.over{background:var(--badbg);color:var(--bad)}
+.pill.soon{background:var(--warnbg);color:var(--warn)}
+.bigrel{font-size:30px;font-weight:800;line-height:1.2;margin:6px 0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:15px;margin-top:10px}
+.kv dt{color:var(--ink2)}
+.kv dd{margin:0;overflow-wrap:anywhere}
+.note{white-space:pre-wrap;overflow-wrap:anywhere;background:#F4EEE5;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:15px}
+.thumb{display:block;max-width:100%;max-height:260px;border-radius:12px;border:1px solid var(--line);margin-top:10px}
+.photobox{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.photobox img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.filebtn{display:inline-block;border:1px dashed var(--deep);color:var(--deep);border-radius:12px;padding:9px 14px;font-size:15px;font-weight:600;background:#fff}
+.honest{background:#EEF3F8;border:1px solid #C9D8E8;border-radius:14px;padding:12px 14px;font-size:14.5px;margin:14px 0}
+.honest b{color:var(--deep)}
+.remrow{display:grid;grid-template-columns:1fr 70px 96px;gap:8px;align-items:center;margin:6px 0}
+.remrow span{font-size:15px}
+.remrow input,.remrow select{padding:7px;font-size:15px}
+.lockline{font-size:13px;color:var(--accent);font-weight:600}
+.hist{font-size:14px;color:var(--ink2);margin:4px 0 0;padding-left:18px}
+#viewer{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:9;padding:12px}
+#viewer img{max-width:100%;max-height:100%;border-radius:8px}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#2B2622;color:#fff;border-radius:12px;padding:10px 16px;font-size:15px;display:none;z-index:10;max-width:90%;text-align:center}
+.empty{text-align:center;padding:8px 4px}
+.empty p{margin:6px 0}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<div id="viewer" onclick="this.style.display='none'"><img id="viewimg" alt="Photo"></div>
+<div id="toast"></div>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let view = null;
+function render(v){ if (v) view = v; window.scrollTo(0, 0); view(); }
+function toast(t, ms){ const e = $('#toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(toast._t); toast._t = setTimeout(() => e.style.display = 'none', ms || 2600); }
+
+// ───────── Types and presets ─────────
+// durs: quick lengths from the start date. rem: default "remind me before".
+const TYPES = [
+  {id:'passport', label:'Passport', what:'Passport expires', start:'Issue date', durs:[[10,'y'],[5,'y']], rem:[6,'m'], ph:'e.g. My passport',
+   tip:'Many countries want at least 6 months left on your passport when you arrive, so the reminder starts 6 months early.'},
+  {id:'visa', label:'Visa or residence permit', what:'Visa / permit expires', start:'Start date', durs:[[90,'d'],[1,'y'],[2,'y']], rem:[60,'d'], ph:'e.g. Work visa',
+   tip:'Renewals often take weeks and some offices need an appointment. Leaving the country on an expired permit can mean a fine or a ban.'},
+  {id:'licence', label:"Driver's licence", what:"Driver's licence expires", start:'Issue date', durs:[[5,'y'],[10,'y']], rem:[60,'d'], ph:"e.g. Driver's licence"},
+  {id:'idcard', label:'ID card', what:'ID card expires', start:'Issue date', durs:[[10,'y'],[5,'y']], rem:[60,'d'], ph:'e.g. National ID card'},
+  {id:'insurance', label:'Insurance', what:'Insurance ends', start:'Start date', durs:[[1,'y']], rem:[30,'d'], ph:'e.g. Car insurance',
+   tip:'A month gives you time to compare prices before it renews by itself.'},
+  {id:'warranty', label:'Warranty', what:'Warranty ends', start:'Purchase date', durs:[[1,'y'],[2,'y']], rem:[30,'d'], ph:'e.g. Laptop',
+   tip:'Add a photo of the receipt — shops usually ask for it.'},
+  {id:'return', label:'Return window', what:'Last day to return', start:'Purchase date', durs:[[14,'d'],[30,'d']], rem:[3,'d'], ph:'e.g. Running shoes',
+   tip:'Check the shop’s rules: some count from delivery, not purchase.'},
+  {id:'sub', label:'Subscription or free trial', what:'Renews / trial ends', start:'Start date', durs:[[7,'d'],[14,'d'],[30,'d'],[1,'m'],[1,'y']], rem:[2,'d'], ph:'e.g. Streaming free trial',
+   tip:'Cancel before this date if you don’t want to be charged.'},
+  {id:'car', label:'Car inspection', what:'Car inspection due', start:'Last inspection', durs:[[1,'y'],[2,'y']], rem:[30,'d'], ph:'e.g. Car inspection'},
+  {id:'medicine', label:'Medicine', what:'Medicine expires', start:'Opened on', durs:[[1,'m'],[3,'m'],[6,'m'],[1,'y']], rem:[14,'d'], ph:'e.g. Allergy tablets',
+   tip:'Some medicines expire sooner once opened — check the leaflet.'},
+  {id:'other', label:'Other', what:'Expires', start:'Start date', durs:[[1,'m'],[1,'y']], rem:[14,'d'], ph:'e.g. Gym membership'}
+];
+const TYPE = id => TYPES.find(t => t.id === id) || TYPES[TYPES.length - 1];
+const UNITS = {d:['day','days'], w:['week','weeks'], m:['month','months'], y:['year','years']};
+const MAXN = {d:3650, w:520, m:600, y:100};
+function durText(n, u){ return n + ' ' + UNITS[u][n === 1 ? 0 : 1]; }
+
+// ───────── Local-date maths (YYYY-MM-DD strings, never UTC shifts) ─────────
+const p2 = n => (n < 10 ? '0' : '') + n;
+function dim(y, m){ return [31, (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1]; }
+function pd(s){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); if (!m) return null;
+  const y = +m[1], mo = +m[2], d = +m[3];
+  if (y < 1900 || y > 2999 || mo < 1 || mo > 12 || d < 1 || d > dim(y, mo)) return null;
+  return {y, m:mo, d};
+}
+function fd(o){ return o.y + '-' + p2(o.m) + '-' + p2(o.d); }
+// day number counted from a fixed point; pure arithmetic, so no time zone or DST can touch it
+function dnum(s){ const o = pd(s); let y = o.y, m = o.m; if (m <= 2) { y--; m += 12; }
+  return 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) + Math.floor((153 * (m - 3) + 2) / 5) + o.d; }
+function fromDnum(n){ // inverse of dnum
+  let lo = 1900, hi = 3000;
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (dnum(mid + '-01-01') <= n) lo = mid; else hi = mid; }
+  const y = lo; let m = 1; while (m < 12 && dnum(fd({y, m:m + 1, d:1})) <= n) m++;
+  return fd({y, m, d:n - dnum(fd({y, m, d:1})) + 1});
+}
+function addDays(s, n){ return fromDnum(dnum(s) + n); }
+function addMonths(s, n){ const o = pd(s); const tot = o.y * 12 + (o.m - 1) + n; const y = Math.floor(tot / 12), m = tot - y * 12 + 1;
+  return fd({y, m, d:Math.min(o.d, dim(y, m))}); }
+function addDur(s, n, u){ if (u === 'd') return addDays(s, n); if (u === 'w') return addDays(s, 7 * n); if (u === 'm') return addMonths(s, n); return addMonths(s, 12 * n); }
+function diffDays(a, b){ return dnum(b) - dnum(a); }
+function NOW(){ return window.__now ? new Date(window.__now) : new Date(); }
+function todayStr(){ const n = NOW(); return fd({y:n.getFullYear(), m:n.getMonth() + 1, d:n.getDate()}); }
+function validDate(s){ return !!pd(s); }
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function nice(s){ const o = pd(s); if (!o) return ''; return WD[(dnum(s) + 2) % 7] + ' ' + o.d + ' ' + MON[o.m - 1] + ' ' + o.y; }
+function monthsBetween(a, b){ const A = pd(a), B = pd(b); let m = (B.y - A.y) * 12 + (B.m - A.m); if (B.d < A.d && !(B.d === dim(B.y, B.m))) m--; return m; }
+function span(a, b){ // plain words for the time from a to b (a <= b)
+  const d = diffDays(a, b);
+  if (d < 45) return durText(d, 'd');
+  if (d < 70) { const w = Math.round(d / 7); return durText(w, 'w'); }
+  const m = monthsBetween(a, b);
+  if (m < 24) return durText(m, 'm');
+  const y = Math.floor(m / 12), r = m % 12;
+  return durText(y, 'y') + (r ? ' ' + durText(r, 'm') : '');
+}
+function rel(exp, today){
+  today = today || todayStr(); const d = diffDays(today, exp);
+  if (d === 0) return 'today'; if (d === 1) return 'tomorrow'; if (d === -1) return 'yesterday';
+  return d > 0 ? 'in ' + span(today, exp) : span(exp, today) + ' ago';
+}
+
+// ───────── Storage ─────────
+const KEY = 'vt_expiry_v1';
+let S = {items:[], rem:{}, notify:false, notified:{}, seenTip:false};
+try { const x = JSON.parse(localStorage.getItem(KEY) || 'null'); if (x && Array.isArray(x.items)) S = Object.assign(S, x); } catch (e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); return true; } catch (e) { toast('Could not save — the browser storage is full or blocked.'); return false; } }
+function remOf(type){ const r = S.rem[type]; return r && r.length === 2 ? r : TYPE(type).rem; }
+function remindDate(it){ const r = remOf(it.type); return addDur(it.exp, -r[0], r[1]); }
+function state(it, today){ today = today || todayStr(); const d = diffDays(today, it.exp);
+  if (d < 0) return 'over'; if (today >= remindDate(it)) return 'soon'; return 'fine'; }
+const STATE_TXT = {over:'Overdue', soon:'Due soon', fine:'Fine'};
+const RANK = {over:0, soon:1, fine:2};
+function sorted(list){ const t = todayStr();
+  return list.slice().sort((a, b) => RANK[state(a, t)] - RANK[state(b, t)] || (state(a, t) === 'fine' ? remindDate(a).localeCompare(remindDate(b)) : a.exp.localeCompare(b.exp)) || a.name.localeCompare(b.name)); }
+function newId(){ return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+// Photos live in IndexedDB (they are too big for localStorage)
+let _db = null;
+function idb(){ return _db || (_db = new Promise((res, rej) => { const r = indexedDB.open('vt_expiry', 1);
+  r.onupgradeneeded = () => r.result.createObjectStore('photos'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); })); }
+function ptx(mode, fn){ return idb().then(db => new Promise((res, rej) => { const tx = db.transaction('photos', mode), st = tx.objectStore('photos'); let out;
+  const q = fn(st); if (q) q.onsuccess = () => { out = q.result; }; tx.oncomplete = () => res(out); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); })); }
+const pget = id => ptx('readonly', st => st.get(id)).then(v => v || null);
+const pput = (id, v) => ptx('readwrite', st => { st.put(v, id); });
+const pdel = id => ptx('readwrite', st => { st.delete(id); });
+const pclear = () => ptx('readwrite', st => { st.clear(); });
+function pall(){ return idb().then(db => new Promise((res, rej) => { const out = {}; const tx = db.transaction('photos'); const q = tx.objectStore('photos').openCursor();
+  q.onsuccess = () => { const c = q.result; if (c) { out[c.key] = c.value; c.continue(); } }; tx.oncomplete = () => res(out); tx.onerror = () => rej(tx.error); })); }
+const PHOTO_MAX = 1600;
+function shrink(file){
+  return new Promise((res, rej) => {
+    if (!file || !/^image\//.test(file.type || 'image/')) { rej(new Error('notimage')); return; }
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      try {
+        const w = img.naturalWidth, h = img.naturalHeight, s = Math.min(1, PHOTO_MAX / Math.max(w, h));
+        const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w * s)); c.height = Math.max(1, Math.round(h * s));
+        const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/jpeg', 0.82));
+      } catch (e) { rej(e); } finally { URL.revokeObjectURL(url); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('badimage')); };
+    img.src = url;
+  });
+}
+function showPhoto(src){ $('#viewimg').src = src; $('#viewer').style.display = 'flex'; }
+
+// ───────── License (free: 5 items + calendar; full: unlimited, photos, backup) ─────────
+const FREE_MAX = 5;
+const PUB_B64 = 'z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk=';
+const LKEY = 'vt_expiry_lic';
+let LIC = null;
+try { LIC = JSON.parse(localStorage.getItem(LKEY) || 'null'); } catch (e) {}
+function licensed(){ return !!(LIC && LIC.ok); }
+function b64d(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+  const bin = atob(s), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+function verifyKey(raw){
+  try {
+    raw = (raw || '').trim().replace(/\s+/g, '');
+    if (!raw.startsWith('VALUES.')) return 'bad';
+    const p = raw.split('.'); if (p.length !== 3) return 'bad';
+    if (typeof nacl === 'undefined') return 'nonacl';
+    const payload = b64d(p[1]), sig = b64d(p[2]);
+    if (!nacl.sign.detached.verify(payload, sig, b64d(PUB_B64))) return 'bad';
+    const info = JSON.parse(new TextDecoder().decode(payload));
+    const prods = info.p || [];
+    if (!(prods.indexOf('*') >= 0 || prods.indexOf('expiry') >= 0)) return 'noprod';
+    return info;
+  } catch (e) { return 'bad'; }
+}
+let afterUnlock = null;
+function unlockScreen(why, then){
+  view = () => unlockScreen(why, then); afterUnlock = then || null; window.scrollTo(0, 0);
+  const WHY = {limit:'The free version keeps up to ' + FREE_MAX + ' items. You have reached that.', photo:'Photos of receipts and documents are part of the full version.', backup:'Backup and restore are part of the full version.'};
+  $('#app').innerHTML = '<header><button class="icon" onclick="render(home)" aria-label="Back">←</button><h1>Unlock the full version</h1></header><div class="card">' +
+    (WHY[why] ? '<p><b>' + WHY[why] + '</b></p>' : '') +
+    '<p><b>Free:</b> up to ' + FREE_MAX + ' items, urgency list, search, renew, and calendar reminders (.ics) for every item.</p>' +
+    '<p><b>Full version:</b> unlimited items, a photo for each item (receipt, passport page, policy), and backup and restore to a file — so you can move to a new phone without losing anything.</p>' +
+    '<p class="muted">Online checkout is opening soon. Until then, write to <a href="mailto:ranger7903@nate.com?subject=Expiry%20Keeper%20full%20version">ranger7903@nate.com</a> and we will reply with how to get a key.</p>' +
+    '<label for="keyin"><b>Already have a key?</b> Paste it here (it starts with VALUES.)</label>' +
+    '<textarea id="keyin" rows="3" style="font-size:14px"></textarea>' +
+    '<button class="big" id="kgo">Unlock</button><p id="kmsg" class="muted"></p></div>';
+  $('#kgo').onclick = () => {
+    const r = verifyKey($('#keyin').value), m = $('#kmsg');
+    if (r === 'nonacl') { m.textContent = 'The key checker has not loaded yet. Connect to the internet once, reload, and try again.'; return; }
+    if (r === 'noprod') { m.textContent = 'This key is genuine, but it is for a different Valuestools product.'; return; }
+    if (r === 'bad' || !r) { m.textContent = 'That key doesn’t look right. Please paste the whole key, starting with VALUES.'; return; }
+    LIC = {ok:true, n:r.n || ''}; try { localStorage.setItem(LKEY, JSON.stringify(LIC)); } catch (e) {}
+    m.textContent = 'Unlocked. Thank you!';
+    const go = afterUnlock; setTimeout(() => { if (go) go(); else render(home); }, 900);
+  };
+}
+
+// ───────── Calendar export (.ics, RFC 5545) ─────────
+function icsEsc(s){ return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r\n|\r|\n/g, '\\n'); }
+const _enc = new TextEncoder();
+function fold(line){ // max 75 octets per line, never split a UTF-8 character
+  if (_enc.encode(line).length <= 75) return line;
+  const out = []; let cur = '', len = 0;
+  for (const ch of line) { const b = _enc.encode(ch).length; if (len + b > 75) { out.push(cur); cur = ' '; len = 1; } cur += ch; len += b; }
+  out.push(cur); return out.join('\r\n');
+}
+const icsDate = s => s.replace(/-/g, '');
+function icsStamp(){ const n = new Date(); return n.getUTCFullYear() + p2(n.getUTCMonth() + 1) + p2(n.getUTCDate()) + 'T' + p2(n.getUTCHours()) + p2(n.getUTCMinutes()) + p2(n.getUTCSeconds()) + 'Z'; }
+function trigger(daysBefore){ // alarm at 09:00 local, daysBefore days before the all-day event
+  if (daysBefore <= 0) return 'PT9H';
+  return '-P' + (daysBefore - 1 ? (daysBefore - 1) + 'D' : '') + 'T15H';
+}
+function icsEvent(it, stamp){
+  const t = TYPE(it.type), r = remOf(it.type), rd = remindDate(it), before = diffDays(rd, it.exp);
+  const sum = t.what + ': ' + it.name;
+  const desc = [t.what + ' on ' + nice(it.exp) + '.', 'Reminder set ' + (before > 0 ? durText(r[0], r[1]) + ' before' : 'on the day') + '.']
+    .concat(it.note ? ['', it.note] : []).concat(['', 'From Expiry Keeper (valuestools.kr). Renewed? Update the date in the app and add it to your calendar again.']).join('\n');
+  const L = ['BEGIN:VEVENT', 'UID:' + it.id + '@expiry.valuestools.kr', 'SEQUENCE:' + (it.rev || 0), 'DTSTAMP:' + stamp,
+    'DTSTART;VALUE=DATE:' + icsDate(it.exp), 'DTEND;VALUE=DATE:' + icsDate(addDays(it.exp, 1)),
+    'SUMMARY:' + icsEsc(sum), 'DESCRIPTION:' + icsEsc(desc), 'TRANSP:TRANSPARENT',
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(sum + ' — ' + (before > 0 ? 'in ' + durText(r[0], r[1]) : 'today') + ' (' + nice(it.exp) + ')'), 'TRIGGER:' + trigger(before), 'END:VALARM'];
+  if (before > 1) L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(sum + ' — tomorrow'), 'TRIGGER:' + trigger(1), 'END:VALARM');
+  L.push('END:VEVENT');
+  return L;
+}
+function buildICS(items){
+  const stamp = icsStamp();
+  let L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Valuestools//Expiry Keeper 1.0//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:Expiry Keeper'];
+  items.forEach(it => { L = L.concat(icsEvent(it, stamp)); });
+  L.push('END:VCALENDAR');
+  return L.map(fold).join('\r\n') + '\r\n';
+}
+function download(name, text, mime){
+  const blob = new Blob([text], {type:mime}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+function safeName(s){ return (s || 'item').replace(/[^A-Za-z0-9._ -]+/g, '').trim().replace(/\s+/g, '-').slice(0, 40) || 'item'; }
+function exportICS(id){
+  const list = id ? S.items.filter(i => i.id === id) : sorted(S.items);
+  if (!list.length) { toast('Nothing to export yet.'); return; }
+  download(id ? 'expiry-' + safeName(list[0].name) + '.ics' : 'expiry-all.ics', buildICS(list), 'text/calendar;charset=utf-8');
+  toast(list.length === 1 ? 'Calendar file saved. Open it to add the reminder.' : 'Calendar file with ' + list.length + ' items saved. Open it to add them.', 4000);
+}
+
+// ───────── Notifications while the page is open (a bonus, not the main reminder) ─────────
+function checkNotify(){
+  if (!S.notify || typeof Notification === 'undefined' || Notification.permission !== 'granted') return 0;
+  const t = todayStr(); let n = 0;
+  S.items.forEach(it => { const st = state(it, t); if (st === 'fine') return; const tag = it.exp + '|' + st;
+    if (S.notified[it.id] === tag) return;
+    try { new Notification(TYPE(it.type).what + ': ' + it.name, {body:(st === 'over' ? 'Overdue — ' : 'Due ') + rel(it.exp, t) + ' (' + nice(it.exp) + ')', tag:it.id}); n++; } catch (e) {}
+    S.notified[it.id] = tag; });
+  if (n) save(); return n;
+}
+setInterval(checkNotify, 60 * 60 * 1000);
+
+// ───────── Home ─────────
+let Q = '';
+function matches(it, q){ if (!q) return true; q = q.toLowerCase();
+  return [it.name, it.note, TYPE(it.type).label, nice(it.exp)].some(s => (s || '').toLowerCase().indexOf(q) >= 0); }
+function itemRow(it, t){
+  const st = state(it, t), ty = TYPE(it.type);
+  return '<button class="item ' + st + '" onclick="detail(\'' + it.id + '\')"><i class="bar"></i><span class="t"><b>' + esc(it.name) + '</b><span>' + esc(ty.label) + ' · ' + nice(it.exp) + '</span></span>' +
+    '<span class="r"><b>' + rel(it.exp, t) + '</b><span class="pill ' + st + '">' + STATE_TXT[st] + '</span></span></button>';
+}
+function home(){
+  view = home;
+  const t = todayStr(), all = sorted(S.items), list = all.filter(i => matches(i, Q));
+  let h = '<header><h1>Expiry Keeper<small>Dates you can’t afford to forget</small></h1><button class="icon" onclick="render(settings)" aria-label="Settings">⚙︎ Settings</button></header>';
+  if (!all.length) {
+    h += '<div class="card empty"><p><b>Passport, visa, warranty, a return window, a free trial…</b></p><p class="muted">Add the dates that cost you money when you forget them. Pick one to start:</p><div class="chips" style="justify-content:center;margin-top:10px">' +
+      TYPES.filter(x => x.id !== 'other').map(x => '<button class="chip" onclick="addItem(\'' + x.id + '\')">' + esc(x.label) + '</button>').join('') + '</div></div>';
+  } else {
+    const c = {over:0, soon:0}; all.forEach(i => { const s = state(i, t); if (c[s] != null) c[s]++; });
+    h += '<div class="muted" id="summary">' + (c.over ? '<b style="color:var(--bad)">' + c.over + ' overdue</b> · ' : '') + (c.soon ? '<b style="color:var(--warn)">' + c.soon + ' due soon</b> · ' : '') + all.length + ' item' + (all.length > 1 ? 's' : '') + ', most urgent first</div>';
+    if (all.length > 3 || Q) h += '<input type="search" id="q" placeholder="Search name, type or note" value="' + esc(Q) + '" style="margin-top:10px" aria-label="Search">';
+    h += '<div id="list">' + (list.length ? list.map(i => itemRow(i, t)).join('') : '<p class="muted center">Nothing matches “' + esc(Q) + '”.</p>') + '</div>';
+  }
+  h += '<button class="big" id="addbtn" onclick="addItem()">+ Add a date</button>';
+  if (!licensed()) h += '<div class="center muted" style="margin-top:6px">' + Math.min(S.items.length, FREE_MAX) + ' of ' + FREE_MAX + ' free items used. <a href="javascript:void(0)" onclick="unlockScreen()">Full version</a></div>';
+  else h += '<div class="center muted" style="margin-top:6px">Full version' + (LIC.n ? ' — thank you, ' + esc(LIC.n) : '') + '.</div>';
+  if (all.length) h += '<div class="honest"><b>The reminder that really works:</b> your browser can’t warn you while this page is closed. Put your dates in your phone’s calendar — it will remind you even offline.' +
+    '<button class="big alt" id="icsall" onclick="exportICS()" style="margin-top:10px">Add all ' + all.length + ' to my calendar (.ics)</button></div>';
+  $('#app').innerHTML = h;
+  const q = $('#q'); if (q) { q.oninput = () => { Q = q.value; const t2 = todayStr(), l2 = sorted(S.items).filter(i => matches(i, Q));
+    $('#list').innerHTML = l2.length ? l2.map(i => itemRow(i, t2)).join('') : '<p class="muted center">Nothing matches “' + esc(Q) + '”.</p>'; }; if (Q) { q.focus(); } }
+}
+
+// ───────── Add / edit ─────────
+let F = null;
+function addItem(type){
+  if (!licensed() && S.items.length >= FREE_MAX) { unlockScreen('limit', () => addItem(type)); return; }
+  const ty = TYPE(type || 'passport');
+  F = {id:null, type:ty.id, name:'', mode:'start', exp:'', start:todayStr(), n:ty.durs[0][0], u:ty.durs[0][1], note:'', photo:undefined, hadPhoto:false};
+  if (['passport','visa','licence','idcard','medicine'].indexOf(ty.id) >= 0) { F.mode = 'exp'; }
+  render(form);
+}
+function editItem(id){
+  const it = S.items.find(i => i.id === id); if (!it) return render(home);
+  F = {id, type:it.type, name:it.name, mode:it.start ? 'start' : 'exp', exp:it.exp, start:it.start || todayStr(), n:it.dur ? it.dur[0] : TYPE(it.type).durs[0][0], u:it.dur ? it.dur[1] : TYPE(it.type).durs[0][1], note:it.note || '', photo:undefined, hadPhoto:!!it.photo};
+  render(form);
+}
+function formExp(){ if (F.mode === 'exp') return validDate(F.exp) ? F.exp : '';
+  const n = +F.n; if (!validDate(F.start) || !(n >= 1) || n > MAXN[F.u] || n !== Math.floor(n)) return '';
+  const e = addDur(F.start, n, F.u); return validDate(e) ? e : ''; }
+function form(){
+  view = form; const ty = TYPE(F.type), r = remOf(F.type);
+  let h = '<header><button class="icon" onclick="' + (F.id ? 'detail(\'' + F.id + '\')' : 'render(home)') + '" aria-label="Back">←</button><h1>' + (F.id ? 'Edit' : 'Add a date') + '</h1></header><div class="card">';
+  h += '<label for="ftype">What is it?</label><select id="ftype">' + TYPES.map(x => '<option value="' + x.id + '"' + (x.id === F.type ? ' selected' : '') + '>' + esc(x.label) + '</option>').join('') + '</select>';
+  h += '<label for="fname">Name</label><input type="text" id="fname" maxlength="200" placeholder="' + esc(ty.ph || '') + '" value="' + esc(F.name) + '">';
+  h += '<label>Date</label><div class="seg"><button id="mexp" class="' + (F.mode === 'exp' ? 'on' : '') + '">I know the end date</button><button id="mstart" class="' + (F.mode === 'start' ? 'on' : '') + '">Start date + length</button></div>';
+  if (F.mode === 'exp') {
+    h += '<label for="fexp">Expiry date</label><input type="date" id="fexp" value="' + esc(F.exp) + '" min="1900-01-01" max="2999-12-31">';
+  } else {
+    h += '<label for="fstart">' + esc(ty.start) + '</label><input type="date" id="fstart" value="' + esc(F.start) + '" min="1900-01-01" max="2999-12-31">';
+    h += '<label>Length</label><div class="chips" id="durs">' + ty.durs.map(d => '<button class="chip' + (+F.n === d[0] && F.u === d[1] ? ' on' : '') + '" data-n="' + d[0] + '" data-u="' + d[1] + '">' + durText(d[0], d[1]) + '</button>').join('') + '</div>';
+    h += '<div class="row2" style="margin-top:8px"><input type="number" id="fn" min="1" step="1" value="' + esc(F.n) + '" aria-label="Length number"><select id="fu" aria-label="Length unit">' +
+      ['d','w','m','y'].map(u => '<option value="' + u + '"' + (F.u === u ? ' selected' : '') + '>' + UNITS[u][1] + '</option>').join('') + '</select></div>';
+  }
+  h += '<div class="calc" id="calc"></div>';
+  h += '<p class="muted" style="margin:8px 0 0">Reminder: <b>' + (r[0] ? durText(r[0], r[1]) + ' before' : 'on the day') + '</b> for every ' + esc(ty.label.toLowerCase()) + '. <a href="javascript:void(0)" onclick="render(settings)">Change</a>' + (ty.tip ? '<br>' + esc(ty.tip) : '') + '</p>';
+  h += '<label for="fnote">Note <span class="muted" style="font-weight:400">(optional)</span></label><textarea id="fnote" rows="2" maxlength="2000" placeholder="Policy number, shop, where the document is kept…">' + esc(F.note) + '</textarea>';
+  h += '<label>Photo <span class="muted" style="font-weight:400">(optional — receipt or document)</span></label><div class="photobox" id="pbox"></div>';
+  h += '<div class="err" id="ferr"></div><button class="big" id="fsave">' + (F.id ? 'Save changes' : 'Save') + '</button></div>';
+  $('#app').innerHTML = h;
+  const keep = () => { F.name = $('#fname').value; F.note = $('#fnote').value; if ($('#fexp')) F.exp = $('#fexp').value; if ($('#fstart')) F.start = $('#fstart').value; if ($('#fn')) F.n = $('#fn').value; if ($('#fu')) F.u = $('#fu').value; };
+  $('#ftype').onchange = () => { keep(); const nt = TYPE($('#ftype').value); F.type = nt.id; F.n = nt.durs[0][0]; F.u = nt.durs[0][1]; render(form); };
+  $('#mexp').onclick = () => { keep(); if (F.mode !== 'exp') { const e = formExp(); if (e) F.exp = e; } F.mode = 'exp'; render(form); };
+  $('#mstart').onclick = () => { keep(); F.mode = 'start'; render(form); };
+  const upd = () => { keep(); $('#ferr').textContent = ''; const e = formExp(), c = $('#calc');
+    if (e) { const t = todayStr(); c.innerHTML = 'Ends <b>' + nice(e) + '</b> — ' + rel(e, t) + (diffDays(t, e) < 0 ? ' (already passed)' : ''); }
+    else c.textContent = F.mode === 'exp' ? 'Pick the date printed on the document or receipt.' : 'Pick a start date and a length.';
+    document.querySelectorAll('#durs .chip').forEach(b => b.classList.toggle('on', +b.dataset.n === +F.n && b.dataset.u === F.u)); };
+  ['fexp','fstart','fn','fu'].forEach(id => { const e = $('#' + id); if (e) { e.oninput = upd; e.onchange = upd; } });
+  document.querySelectorAll('#durs .chip').forEach(b => b.onclick = () => { $('#fn').value = b.dataset.n; $('#fu').value = b.dataset.u; upd(); });
+  upd(); photoBox();
+  $('#fsave').onclick = saveForm;
+}
+async function photoBox(){
+  const box = $('#pbox'); if (!box) return;
+  let src = F.photo; if (src === undefined && F.hadPhoto && F.id) { try { src = await pget(F.id); } catch (e) { src = null; } }
+  if (!$('#pbox')) return;
+  if (!licensed()) { box.innerHTML = '<button class="filebtn" onclick="F.name=$(\'#fname\').value;F.note=$(\'#fnote\').value;unlockScreen(\'photo\',()=>render(form))">+ Add photo</button><span class="lockline">Full version</span>'; return; }
+  box.innerHTML = (src ? '<img src="' + src + '" alt="Photo" onclick="showPhoto(this.src)">' : '') +
+    '<label class="filebtn" style="margin:0">' + (src ? 'Change photo' : '+ Add photo') + '<input type="file" id="fphoto" accept="image/*" style="display:none"></label>' +
+    (src ? '<button class="chip" id="prm">Remove photo</button>' : '') + '<span class="muted" id="pmsg"></span>';
+  $('#fphoto').onchange = async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    $('#pmsg').textContent = 'Preparing…';
+    try { F.photo = await shrink(f); F.name = $('#fname').value; F.note = $('#fnote').value; photoBox(); }
+    catch (er) { const m = $('#pmsg'); if (m) m.textContent = 'That file could not be read as a picture. Try a JPEG or PNG photo.'; }
+  };
+  if ($('#prm')) $('#prm').onclick = () => { F.photo = null; photoBox(); };
+}
+async function saveForm(){
+  F.name = $('#fname').value; F.note = $('#fnote').value;
+  const err = $('#ferr'), exp = formExp();
+  if (F.mode === 'start' && (!(+F.n >= 1) || +F.n !== Math.floor(+F.n))) { err.textContent = 'The length must be a whole number, at least 1.'; return; }
+  if (F.mode === 'start' && +F.n > MAXN[F.u]) { err.textContent = 'That length is too long — at most ' + durText(MAXN[F.u], F.u) + '.'; return; }
+  if (!exp) { err.textContent = F.mode === 'exp' ? 'Please pick the expiry date.' : 'Please pick a valid start date.'; return; }
+  if (!F.id && !licensed() && S.items.length >= FREE_MAX) { unlockScreen('limit'); return; }
+  const name = F.name.trim().replace(/\s+/g, ' ').slice(0, 200).trim() || TYPE(F.type).label;
+  let it = F.id && S.items.find(i => i.id === F.id);
+  if (!it) { it = {id:newId(), created:todayStr(), rev:0, hist:[]}; S.items.push(it); }
+  else it.rev = (it.rev || 0) + 1;
+  it.type = F.type; it.name = name; it.exp = exp; it.note = F.note.trim().slice(0, 2000);
+  if (F.mode === 'start') { it.start = F.start; it.dur = [+F.n, F.u]; } else { delete it.start; delete it.dur; }
+  try {
+    if (F.photo) { await pput(it.id, F.photo); it.photo = true; }
+    else if (F.photo === null) { await pdel(it.id); it.photo = false; }
+  } catch (e) { toast('The photo could not be stored on this device.'); }
+  delete S.notified[it.id];
+  if (!save()) return;
+  const isNew = !F.id; F = null;
+  detail(it.id, isNew ? 'Saved. Add it to your calendar so you get the reminder.' : 'Saved.');
+}
+
+// ───────── Item detail, renew, remove ─────────
+let REN = null;
+async function detail(id, msg){
+  const it = S.items.find(i => i.id === id); if (!it) return render(home);
+  view = () => detail(id); window.scrollTo(0, 0);
+  const t = todayStr(), st = state(it, t), ty = TYPE(it.type), r = remOf(it.type), rd = remindDate(it);
+  let h = '<header><button class="icon" onclick="render(home)" aria-label="Back">←</button><h1>' + esc(it.name) + (it.name !== ty.label ? '<small>' + esc(ty.label) + '</small>' : '') + '</h1></header><div class="card">';
+  h += '<span class="pill ' + st + '">' + STATE_TXT[st] + '</span><div class="bigrel">' + (st === 'over' ? 'Ended ' : 'Ends ') + rel(it.exp, t) + '</div>';
+  h += '<dl class="kv"><dt>End date</dt><dd><b>' + nice(it.exp) + '</b></dd>' +
+    '<dt>Reminder</dt><dd>' + nice(rd) + ' (' + (r[0] ? durText(r[0], r[1]) + ' before' : 'on the day') + ')</dd>' +
+    (it.start ? '<dt>' + esc(ty.start) + '</dt><dd>' + nice(it.start) + ' + ' + durText(it.dur[0], it.dur[1]) + '</dd>' : '') + '</dl>';
+  if (it.note) h += '<div class="note">' + esc(it.note) + '</div>';
+  h += '<div id="dphoto"></div>';
+  if (msg) h += '<p class="muted" style="color:var(--ok);font-weight:600">' + esc(msg) + '</p>';
+  h += '<button class="big" id="dics" onclick="exportICS(\'' + it.id + '\')">Add to my calendar (.ics)</button>';
+  h += '<div class="row2"><button class="big alt" id="dren">Renewed</button><button class="big alt" onclick="editItem(\'' + it.id + '\')">Edit</button></div>';
+  h += '<div id="renbox"></div>';
+  if (it.hist && it.hist.length) h += '<p class="muted" style="margin:14px 0 0"><b>Renewal history</b></p><ul class="hist">' + it.hist.slice().reverse().map(x => '<li>' + nice(x.on) + ': ' + nice(x.from) + ' → ' + nice(x.to) + '</li>').join('') + '</ul>';
+  h += '<button class="big danger" id="ddel">Remove</button></div>';
+  $('#app').innerHTML = h;
+  $('#dren').onclick = () => renewBox(it);
+  $('#ddel').onclick = () => { const b = $('#ddel');
+    if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Tap again to remove “' + it.name.slice(0, 30) + '”'; setTimeout(() => { if (b.isConnected) { b.classList.remove('sure'); b.textContent = 'Remove'; } }, 4000); return; }
+    S.items = S.items.filter(i => i.id !== it.id); delete S.notified[it.id]; save(); if (it.photo) pdel(it.id).catch(() => {}); toast('Removed.'); render(home); };
+  if (it.photo) { try { const src = await pget(it.id); const d = $('#dphoto'); if (src && d) d.innerHTML = '<img class="thumb" id="dimg" src="' + src + '" alt="Photo of ' + esc(it.name) + '" onclick="showPhoto(this.src)">'; } catch (e) {} }
+}
+function suggestRenew(it){
+  const d = it.dur || TYPE(it.type).durs[0];
+  const t = todayStr(), fromToday = ['passport','visa','licence','idcard','medicine'].indexOf(it.type) >= 0 || diffDays(it.exp, t) > 31;
+  const base = fromToday ? t : it.exp; // a new passport/ID runs from its issue date; insurance, trials, warranties run on from the old end
+  return {base, n:d[0], u:d[1], exp:addDur(base, d[0], d[1])};
+}
+function renewBox(it){
+  const s = suggestRenew(it), ty = TYPE(it.type);
+  REN = {id:it.id, exp:s.exp};
+  $('#renbox').innerHTML = '<div class="calc" style="margin-top:12px"><b>Renewed? Pick the new end date.</b><br><span class="muted">Quick: from ' + nice(s.base) + ' plus</span>' +
+    '<div class="chips" style="margin:6px 0 8px">' + ty.durs.map(d => '<button class="chip" data-n="' + d[0] + '" data-u="' + d[1] + '">' + durText(d[0], d[1]) + '</button>').join('') + '</div>' +
+    '<input type="date" id="rexp" value="' + s.exp + '" min="1900-01-01" max="2999-12-31"><div class="err" id="rerr"></div>' +
+    '<button class="big" id="rsave" style="margin-top:4px">Save new date</button></div>';
+  document.querySelectorAll('#renbox .chip').forEach(b => b.onclick = () => { $('#rexp').value = addDur(s.base, +b.dataset.n, b.dataset.u); });
+  $('#rsave').onclick = () => {
+    const v = $('#rexp').value;
+    if (!validDate(v)) { $('#rerr').textContent = 'Please pick a valid date.'; return; }
+    if (v <= it.exp) { $('#rerr').textContent = 'The new date should be after the old one (' + nice(it.exp) + ').'; return; }
+    it.hist = it.hist || []; it.hist.push({on:todayStr(), from:it.exp, to:v});
+    if (it.start && it.dur) { // keep "start + length" only if the new date is exactly one more period
+      if (addDur(it.exp, it.dur[0], it.dur[1]) === v) it.start = it.exp; else { delete it.start; delete it.dur; } }
+    it.exp = v; it.rev = (it.rev || 0) + 1; delete S.notified[it.id]; save();
+    detail(it.id, 'Moved to ' + nice(v) + '. Add it to your calendar again so the reminder moves too.');
+  };
+}
+
+// ───────── Settings: reminders, notifications, backup ─────────
+function settings(){
+  view = settings;
+  let h = '<header><button class="icon" onclick="render(home)" aria-label="Back">←</button><h1>Settings</h1></header>';
+  h += '<div class="card"><b>Remind me before</b><p class="muted" style="margin:4px 0 8px">How early you want the warning, for each kind of date. Used in the app and in calendar files.</p>' +
+    TYPES.map(x => { const r = remOf(x.id); return '<div class="remrow"><span>' + esc(x.label) + '</span><input type="number" min="0" step="1" data-t="' + x.id + '" class="rn" value="' + r[0] + '" aria-label="' + esc(x.label) + ' number"><select data-t="' + x.id + '" class="ru" aria-label="' + esc(x.label) + ' unit">' +
+      ['d','w','m'].map(u => '<option value="' + u + '"' + (r[1] === u ? ' selected' : '') + '>' + UNITS[u][1] + '</option>').join('') + '</select></div>'; }).join('') +
+    '<p class="err" id="remerr"></p><button class="chip" id="remreset">Back to the suggested times</button></div>';
+  h += '<div class="card"><b>How reminders work — honestly</b><p class="muted" style="margin:6px 0">A web page cannot wake your phone when it is closed. <b>The reliable reminder is your calendar:</b> use “Add to my calendar” and your calendar app will alert you at 9:00 on the reminder day and again the day before, even with no internet.</p>' +
+    '<p class="muted" style="margin:6px 0">Some calendars ignore alerts inside imported files (Google Calendar web import does). If so, set a notification on the event there, or open the file on your phone instead.</p>' +
+    '<label style="display:flex;gap:10px;align-items:center;font-weight:400"><input type="checkbox" id="ntf"' + (S.notify ? ' checked' : '') + ' style="width:22px;height:22px"> Also notify me while this page is open</label><p class="muted" id="nmsg"></p></div>';
+  h += '<div class="card"><b>Backup and restore</b>' + (licensed() ? '' : ' <span class="lockline">Full version</span>') +
+    '<p class="muted" style="margin:6px 0">Saves everything — items, reminder times and photos — to one file you keep. Use it to move to a new phone or browser.</p>' +
+    '<div class="row2"><button class="big alt" id="bk">Save backup</button><label class="big alt" style="text-align:center;margin:10px 0 0;font-weight:700;font-size:17px">Restore…<input type="file" id="rs" accept=".json,application/json" style="display:none"></label></div><div id="rsbox"></div><p class="muted" id="bmsg"></p></div>';
+  h += '<div class="card"><b>Your data</b><p class="muted" style="margin:6px 0">Everything stays on this device. No account, no server, no tracking. Clearing your browser data deletes it — keep a backup.</p>' +
+    (licensed() ? '<p class="muted">Full version unlocked' + (LIC.n ? ' — ' + esc(LIC.n) : '') + '.</p>' : '<button class="big alt" onclick="unlockScreen()">Unlock the full version</button>') + '</div>';
+  $('#app').innerHTML = h;
+  document.querySelectorAll('.rn,.ru').forEach(e => e.onchange = () => {
+    const t = e.dataset.t, n = $('.rn[data-t="' + t + '"]'), u = $('.ru[data-t="' + t + '"]'), v = +n.value;
+    const lim = {d:3650, w:520, m:120}[u.value];
+    if (!(v >= 0) || v !== Math.floor(v) || v > lim) { $('#remerr').textContent = 'Use a whole number from 0 to ' + lim + ' ' + UNITS[u.value][1] + '.'; n.value = remOf(t)[0]; return; }
+    $('#remerr').textContent = ''; S.rem[t] = [v, u.value]; S.notified = {}; save(); toast('Saved: ' + TYPE(t).label + ' — ' + (v ? durText(v, u.value) + ' before' : 'on the day'));
+  });
+  $('#remreset').onclick = () => { S.rem = {}; S.notified = {}; save(); render(settings); toast('Reminder times reset.'); };
+  $('#ntf').onchange = async () => {
+    const box = $('#ntf'), m = $('#nmsg');
+    if (!box.checked) { S.notify = false; save(); m.textContent = 'Off.'; return; }
+    if (typeof Notification === 'undefined') { box.checked = false; m.textContent = 'This browser has no notifications. The calendar file still works.'; return; }
+    let p = Notification.permission; if (p === 'default') { try { p = await Notification.requestPermission(); } catch (e) {} }
+    if (p !== 'granted') { box.checked = false; S.notify = false; save(); m.textContent = 'Notifications are blocked for this page. The calendar file still works.'; return; }
+    S.notify = true; save(); const n = checkNotify(); m.textContent = 'On. You will be told about due items when you open the app' + (n ? ' (' + n + ' just now)' : '') + '.';
+  };
+  $('#bk').onclick = () => { if (!licensed()) { unlockScreen('backup', () => render(settings)); return; } backup(); };
+  $('#rs').onclick = e => { if (!licensed()) { e.preventDefault(); unlockScreen('backup', () => render(settings)); } };
+  $('#rs').onchange = e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) readBackup(f); };
+}
+async function backup(){
+  let photos = {}; try { photos = await pall(); } catch (e) {}
+  const keep = {}; S.items.forEach(i => { if (i.photo && photos[i.id]) keep[i.id] = photos[i.id]; });
+  const data = {app:'expiry', version:1, saved:new Date().toISOString(), items:S.items, rem:S.rem, photos:keep};
+  download('expiry-backup-' + todayStr() + '.json', JSON.stringify(data), 'application/json');
+  $('#bmsg').textContent = 'Backup saved: ' + S.items.length + ' items, ' + Object.keys(keep).length + ' photos. Keep the file somewhere safe (email it to yourself, or a cloud drive).';
+}
+function checkBackup(d){
+  if (!d || d.app !== 'expiry' || !Array.isArray(d.items)) return 'This file is not an Expiry Keeper backup.';
+  for (const i of d.items) { if (!i || typeof i.id !== 'string' || !validDate(i.exp) || typeof i.name !== 'string') return 'This backup looks damaged (an item has no valid date).'; }
+  return '';
+}
+function readBackup(f){
+  const rd = new FileReader();
+  rd.onload = () => {
+    let d = null; try { d = JSON.parse(rd.result); } catch (e) {}
+    const bad = checkBackup(d), box = $('#rsbox'); $('#bmsg').textContent = '';
+    if (bad) { box.innerHTML = '<p class="err">' + esc(bad) + '</p>'; return; }
+    const np = Object.keys(d.photos || {}).length;
+    box.innerHTML = '<div class="calc"><b>Restore ' + d.items.length + ' item' + (d.items.length === 1 ? '' : 's') + ' and ' + np + ' photo' + (np === 1 ? '' : 's') + '?</b><br>' + (d.saved ? 'Saved ' + esc(String(d.saved).slice(0, 10)) + '. ' : '') +
+      'This replaces the ' + S.items.length + ' item' + (S.items.length === 1 ? '' : 's') + ' on this device.<div class="row2"><button class="big" id="rsyes">Replace</button><button class="big alt" id="rsno">Cancel</button></div></div>';
+    $('#rsno').onclick = () => { box.innerHTML = ''; };
+    $('#rsyes').onclick = () => restore(d);
+  };
+  rd.readAsText(f);
+}
+async function restore(d){
+  try {
+    await pclear();
+    const ph = d.photos || {};
+    for (const id of Object.keys(ph)) { if (typeof ph[id] === 'string' && /^data:image\//.test(ph[id])) await pput(id, ph[id]); }
+    S.items = d.items.map(i => { const o = Object.assign({}, i); if (o.photo && !ph[o.id]) o.photo = false; return o; });
+    S.rem = d.rem && typeof d.rem === 'object' ? d.rem : {}; S.notified = {};
+    save(); toast('Restored ' + S.items.length + ' items.'); render(home);
+  } catch (e) { $('#rsbox').innerHTML = '<p class="err">Restore failed: the browser would not store the photos.</p>'; }
+}
+
+render(home);
+setTimeout(checkNotify, 1500);
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('expiry_sw.js');
+</script>
+</body>
+</html>

@@ -169,6 +169,31 @@
      "영문": "Tile Survive"
     },
     {
+     "열쇠": "kana",
+     "이름": "Kana Steps (영어로 배우는 일본어 글자)",
+     "영문": "Kana Steps"
+    },
+    {
+     "열쇠": "tripsplit",
+     "이름": "Trip Split (여행 경비 나누기)",
+     "영문": "Trip Split"
+    },
+    {
+     "열쇠": "expiry",
+     "이름": "Expiry Keeper (기한 알림)",
+     "영문": "Expiry Keeper"
+    },
+    {
+     "열쇠": "doctorprep",
+     "이름": "Doctor Visit Prep (진료 준비 한 장)",
+     "영문": "Doctor Visit Prep"
+    },
+    {
+     "열쇠": "quietscan",
+     "이름": "Quiet Scan (올리지 않는 문서 스캐너)",
+     "영문": "Quiet Scan"
+    },
+    {
      "열쇠": "hangul",
      "이름": "Hangul Steps (외국인용 한국어)",
      "영문": "Hangul Steps"
