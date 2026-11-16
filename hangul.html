@@ -237,6 +237,42 @@ const COURSE = [
     {ko:'사랑해', r:'saranghae', en:'I love you (casual)'},
     {ko:'미안해', r:'mianhae', en:'Sorry (casual)'}]}
  ]},
+ {unit:'Numbers', blurb:'Korean has two sets of numbers, and you need both. Native numbers (하나, 둘, 셋) count things, people and hours. Sino numbers (일, 이, 삼) are for money, minutes, dates and phone numbers.', lessons:[
+  {id:'n1', title:'Counting: 하나, 둘, 셋', sub:'Native Korean numbers 1–10', intro:'This first set is native Korean. You use it to count things and people, to say your age, and for the hour on a clock. Learn 1 to 10 — that covers most everyday counting.', words:[
+    {ko:'하나', r:'hana', en:'one (1)'}, {ko:'둘', r:'dul', en:'two (2)'}, {ko:'셋', r:'set', en:'three (3)', note:'A final ㅅ sounds like a soft t.'},
+    {ko:'넷', r:'net', en:'four (4)'}, {ko:'다섯', r:'daseot', en:'five (5)'}, {ko:'여섯', r:'yeoseot', en:'six (6)'},
+    {ko:'일곱', r:'ilgop', en:'seven (7)'}, {ko:'여덟', r:'yeodeol', en:'eight (8)', note:'The ㅂ at the bottom is silent.'},
+    {ko:'아홉', r:'ahop', en:'nine (9)'}, {ko:'열', r:'yeol', en:'ten (10)', note:'11 is 열하나 (ten-one), 12 is 열둘.'}]},
+  {id:'n2', title:'How many?', sub:'Counting things and people', intro:'To count something, say the thing, then the number, then a counter word: 커피 두 잔 = coffee · two · cups. Before a counter, 1 to 4 get shorter: 하나 → 한, 둘 → 두, 셋 → 세, 넷 → 네.', words:[
+    {ko:'한 개', r:'han gae', en:'one (thing)', note:'개 counts most things. When you are not sure which counter to use, 개 is fine.'},
+    {ko:'두 개', r:'du gae', en:'two (things)'}, {ko:'세 개', r:'se gae', en:'three (things)'}, {ko:'네 개', r:'ne gae', en:'four (things)'},
+    {ko:'한 명', r:'han myeong', en:'one person', note:'명 counts people.'},
+    {ko:'몇 명이세요?', r:'myeon myeongiseyo?', en:'How many people? (staff asking you)', note:'What you hear at a restaurant door. 몇 is said 면 before 명.'},
+    {ko:'두 명이요', r:'du myeongiyo', en:'Two people.', note:'Your answer — or hold up two fingers and say it.'},
+    {ko:'커피 두 잔 주세요', r:'keopi du jan juseyo', en:'Two coffees, please', note:'잔 counts cups and glasses.'},
+    {ko:'맥주 한 병 주세요', r:'maekju han byeong juseyo', en:'One bottle of beer, please', note:'병 = bottle.'}]},
+  {id:'n3', title:'Money numbers: 일, 이, 삼', sub:'Sino-Korean numbers', intro:'The second set comes from Chinese. It is very regular: 십 is 10, so 십일 is 11, 이십 is 20 (two-ten), and 이십삼 is 23. You use it for money, phone numbers, dates, minutes and floors.', words:[
+    {ko:'일', r:'il', en:'one (1)'}, {ko:'이', r:'i', en:'two (2)'}, {ko:'삼', r:'sam', en:'three (3)'}, {ko:'사', r:'sa', en:'four (4)', note:'Sounds like the word for death, so some buildings write F instead of 4 on the elevator.'},
+    {ko:'오', r:'o', en:'five (5)'}, {ko:'육', r:'yuk', en:'six (6)'}, {ko:'칠', r:'chil', en:'seven (7)'}, {ko:'팔', r:'pal', en:'eight (8)'},
+    {ko:'구', r:'gu', en:'nine (9)'}, {ko:'십', r:'sip', en:'ten (10)'}, {ko:'백', r:'baek', en:'hundred (100)'}, {ko:'천', r:'cheon', en:'thousand (1,000)'},
+    {ko:'만', r:'man', en:'ten thousand (10,000)', note:'Korean groups big numbers by 만 (10,000), not by thousands. This is the key to prices.'}]},
+  {id:'n4', title:'Prices in won', sub:'Hear the price, pay the right note', intro:'Prices use the Sino numbers plus 원 (won). The trick: Korean counts in 만 (10,000). 30,000 won is 삼만 원 — three 만. 15,000 won is 만 오천 원. And nobody says 일 in front of 백, 천 or 만: 1,000 won is just 천 원.', words:[
+    {ko:'백 원', r:'baegwon', en:'100 won'}, {ko:'천 원', r:'cheonwon', en:'1,000 won'}, {ko:'오천 원', r:'ocheonwon', en:'5,000 won'},
+    {ko:'칠천오백 원', r:'chilcheon obaegwon', en:'7,500 won'},
+    {ko:'만 원', r:'manwon', en:'10,000 won', note:'Not 일만 — just 만.'},
+    {ko:'만 오천 원', r:'man ocheonwon', en:'15,000 won', note:'One 만 and five thousand.'},
+    {ko:'삼만 원', r:'sammanwon', en:'30,000 won', note:'Three 만 — not “thirty thousand”.'},
+    {ko:'오만 원', r:'omanwon', en:'50,000 won', note:'The biggest bill.'}]},
+  {id:'n5', title:'Time and dates', sub:'Both number sets in one sentence', intro:'Clock time mixes the two sets: the hour uses native numbers (한 시, 두 시), the minutes use Sino numbers (십 분, 삼십 분). Months are a Sino number + 월, with two small changes: June is 유월 and October is 시월.', words:[
+    {ko:'몇 시예요?', r:'myeot ssiyeyo?', en:'What time is it?'},
+    {ko:'한 시', r:'han si', en:'1 o’clock'}, {ko:'세 시', r:'se si', en:'3 o’clock'}, {ko:'열두 시', r:'yeoldu si', en:'12 o’clock'},
+    {ko:'두 시 반', r:'du si ban', en:'half past two (2:30)', note:'반 = half.'},
+    {ko:'네 시 십 분', r:'ne si sip bun', en:'4:10', note:'Hour in native numbers, minutes in Sino numbers.'},
+    {ko:'일월', r:'irwol', en:'January'},
+    {ko:'유월', r:'yuwol', en:'June', note:'Not 육월 — the ㄱ drops to make it easier to say.'},
+    {ko:'시월', r:'siwol', en:'October', note:'Not 십월.'},
+    {ko:'십이월 이십오 일', r:'sibiwol isibo il', en:'December 25'}]}
+ ]},
  {unit:'Read the signs', blurb:'Words you will see on doors, stations and shops in Korea.', lessons:[
   {id:'s1', title:'Doors and buildings', sub:'Push, pull, in, out', sign:true, words:[
     {ko:'입구', r:'ipgu', en:'Entrance'}, {ko:'출구', r:'chulgu', en:'Exit'}, {ko:'화장실', r:'hwajangsil', en:'Restroom'},
@@ -279,7 +315,7 @@ function unlockScreen(want){
   view = unlockScreen;
   $('#app').innerHTML = '<header><button class="icon" onclick="render(view=home)">←</button><h1>Unlock the full course</h1></header><div class="card">' +
     (want && want.title ? '<p><b>“' + esc(want.title) + '”</b> is part of the full course.</p>' : '') +
-    '<p>The first ' + FREE.length + ' lessons are free — all of Hangul and your first everyday words. The full course adds cafés, taxis, shopping, restaurants, asking for help, K-drama words and reading signs, and every lesson we add later.</p>' +
+    '<p>The first ' + FREE.length + ' lessons are free — all of Hangul and your first everyday words. The full course adds cafés, taxis, shopping, restaurants, asking for help, K-drama words, numbers and prices, telling the time and reading signs, and every lesson we add later.</p>' +
     '<p class="muted">Online checkout is opening soon. Until then, write to <a href="mailto:ranger7903@nate.com?subject=Hangul%20Steps%20full%20course">ranger7903@nate.com</a> and we will reply with how to get a key.</p>' +
     '<label for="keyin"><b>Already have a key?</b> Paste it here (it starts with VALUES.)</label>' +
     '<textarea id="keyin" rows="3" style="width:100%;margin-top:6px;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:8px"></textarea>' +
