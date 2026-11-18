@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plans — VALUES AI Store</title>
+<meta name="description" content="Free rooms stay free. Fixed monthly plans, no points or credits. 밸류스 AI 백화점 구독 값.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./" data-i="back"></a><h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="plans" id="plans"></div>
+    <p class="note" data-i="n1"></p>
+    <p class="note" data-i="n2"></p>
+    <p class="note" data-i="n3"></p>
+  </section>
+  <section>
+    <h2 data-i="single_t"></h2>
+    <div class="tablewrap"><table class="t" id="single"></table></div>
+  </section>
+  <section>
+    <h2 data-i="promise_t"></h2>
+    <ul class="steps">
+      <li data-i="p1"></li><li data-i="p2"></li><li data-i="p3"></li><li data-i="p4"></li>
+    </ul>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Plans — VALUES AI Store",ko:"구독 — 밸류스 AI 백화점"},
+  back:{en:"← All rooms",ko:"← 모든 방"},
+  h1:{en:"Plans",ko:"구독 값"},
+  lead:{en:"One fixed monthly price. No points, no credits, no surprise cuts.",ko:"정해진 달 값 하나. 점수도 크레딧도 없고, 몰래 줄이지 않습니다."},
+  n1:{en:"Paid plans begin on the day the first room that uses an AI brain opens. Until then there is nothing to pay and no card button.",
+      ko:"구독은 AI 두뇌를 쓰는 첫 방이 열리는 날 시작합니다. 그날까지는 낼 돈도, 결제 단추도 없습니다."},
+  n2:{en:"Not included: AI Office Worker and Automation Assistant, which are sold on their own.",ko:"들어 있지 않은 것: AI 사무직원·자동화 비서는 따로 팝니다."},
+  n3:{en:"Windows programs on sale today can still be bought once at today's price on the main shop.",ko:"지금 파는 윈도우 프로그램은 당분간 본 가게에서 지금 값 그대로 한 번 결제로도 사실 수 있습니다."},
+  single_t:{en:"Or pay for just one room",ko:"방 하나만 쓰실 때"},
+  promise_t:{en:"Our promises",ko:"약속"},
+  p1:{en:"Rooms marked 🔒 stay free and need no sign-up.",ko:"🔒 방은 계속 공짜이고 가입도 필요 없습니다."},
+  p2:{en:"If an answer fails, it is not counted.",ko:"답이 안 나오면 횟수로 세지 않습니다."},
+  p3:{en:"Monthly by default. The cancel button sits on your first screen, not hidden in settings.",ko:"달마다가 기본입니다. 끊기 단추는 설정 깊은 곳이 아니라 첫 화면에 둡니다."},
+  p4:{en:"If we ever change a price, we tell you one month before.",ko:"값을 바꿀 때는 한 달 전에 먼저 알려 드립니다."}
+});
+var P = [
+  {key:"free", ko:["공짜","0원","",["🔒 표시 방 전부","가입 없음","손님 화면 안에서만"]], en:["Free","$0","",["Every 🔒 room","No sign-up","Stays in your browser"]]},
+  {key:"ai", ko:["AI 백화점 전부","7,900원","/ 달 · 1년 79,000원",["AI 방 39가지 전부","새 방이 열리면 따라옴","하루 넉넉히 (한 방 100번)"]], en:["AI Store — All","$5.99","/ month · $59 a year",["All 39 AI rooms","New rooms included","Generous daily use (100 per room)"]]},
+  {key:"all", best:1, ko:["밸류스 전부","14,900원","/ 달 · 1년 149,000원",["AI 방 전부","윈도우 프로그램 전부","유료 폰 앱 전부"]], en:["VALUES — Everything","$10.99","/ month · $109 a year",["All AI rooms","Every Windows program","Every paid phone app"]]}
+];
+var S = [
+  {ko:["작은 방","1,900원"],en:["Small room","$1.49"], eko:"예) 답장 세 줄 · 리뷰 답글", een:"e.g. Three-Line Reply, Review Reply"},
+  {ko:["보통 방","2,900원"],en:["Standard room","$1.99"], eko:"예) 이 종이 무슨 뜻이에요 · 여행 한 장", een:"e.g. What Does This Paper Mean?, Trip on One Page"},
+  {ko:["큰 방","4,900원"],en:["Large room","$3.49"], eko:"예) 우리 이야기 노래 · 부모님 이야기 책", een:"e.g. Our Story Song, Parents' Story Book"}
+];
+function draw(){
+  var L = VT.lang;
+  document.getElementById("plans").innerHTML = P.map(function(p){
+    var d = p[L];
+    return '<div class="plan'+(p.best?' best':'')+'"><b>'+d[0]+'</b>'+(p.best?' <span class="tag lock">'+(L==="ko"?"가장 이득":"Best value")+'</span>':'')+
+      '<div class="price">'+d[1]+' <small>'+d[2]+'</small></div><ul>'+d[3].map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul></div>';
+  }).join("");
+  document.getElementById("single").innerHTML = '<tr><th>'+(L==="ko"?"방 크기":"Room size")+'</th><th>'+(L==="ko"?"한 달":"Per month")+'</th><th>'+(L==="ko"?"보기":"Examples")+'</th></tr>'+
+    S.map(function(s){ var d=s[L]; return "<tr><td>"+d[0]+"</td><td>"+d[1]+"</td><td>"+(L==="ko"?s.eko:s.een)+"</td></tr>"; }).join("");
+}
+VT.onLang = draw; VT.mountChrome(); VT.apply(); draw();
+</script>
+</body>
+</html>

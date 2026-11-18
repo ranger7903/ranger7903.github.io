@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forgotten Subscription Finder — VALUES AI Store</title>
+<meta name="description" content="Drop in a card or bank statement. See every charge that repeats, the next date and the yearly cost. Read inside your browser. 잊은 구독 찾기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="subs-engine.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <label class="drop" id="drop" for="file"><span data-i="drop"></span><br><span class="note" data-i="drop_s"></span></label>
+      <input id="file" type="file" accept=".csv,.txt,.tsv,.xlsx,text/csv" multiple class="hidden">
+      <p class="sub" style="margin:14px 0 6px" data-i="or"></p>
+      <textarea id="paste" style="min-height:120px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol><p data-i="tip"></p></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Forgotten Subscription Finder — VALUES AI Store",ko:"잊은 구독 찾기 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"🔁 Forgotten Subscription Finder",ko:"🔁 잊은 구독 찾기"},
+  lead:{en:"Put in a card or bank statement. You will see every charge that repeats, when it comes next and what it costs in a year.",
+        ko:"카드·통장 내역을 넣으세요. 되풀이해 나가는 돈을 다음 날짜, 1년 값과 함께 모아 드려요."},
+  drop:{en:"📂 Choose or drop your statement file",ko:"📂 내역 파일을 고르거나 여기로 끌어다 놓으세요"},
+  drop_s:{en:"CSV or Excel (.xlsx). 3 to 12 months works best. Several files at once is fine.",ko:"CSV 또는 엑셀(.xlsx). 3~12달 치가 가장 좋아요. 여러 파일도 한 번에 돼요."},
+  or:{en:"Or copy the table from Excel or your bank's website and paste it here:",ko:"또는 엑셀·은행 화면의 표를 통째로 복사해 여기에 붙여 넣으세요:"},
+  ph:{en:"Date, merchant, amount… (copy the whole table, headings included)",ko:"날짜, 가맹점, 금액… (제목 줄까지 통째로 복사)"},
+  go:{en:"Find my subscriptions",ko:"구독 찾기"},
+  sample:{en:"Try an example",ko:"예시로 해 보기"},
+  privacy:{en:"🔒 Your statement is read inside this browser only. It is never uploaded, not even to us. Close the page and it is gone.",
+           ko:"🔒 내역은 이 브라우저 안에서만 읽어요. 어디에도, 저희에게도 올라가지 않습니다. 쪽을 닫으면 사라져요."},
+  reading:{en:"Reading…",ko:"읽는 중…"},
+  e_cols:{en:"We couldn't find the date, merchant and amount columns. Please paste the table with its heading row.",ko:"날짜·가맹점·금액 칸을 못 찾았어요. 제목 줄까지 함께 붙여 넣어 주세요."},
+  e_rows:{en:"We found the columns but no charges we could read.",ko:"칸은 찾았는데 읽을 수 있는 결제가 없었어요."},
+  e_xls:{en:"Old .xls files can't be read here. In Excel choose File → Save As → CSV, or copy the table and paste it.",ko:"옛 .xls 파일은 여기서 못 읽어요. 엑셀에서 「다른 이름으로 저장 → CSV」를 고르시거나 표를 복사해 붙여 넣어 주세요."},
+  e_empty:{en:"Choose a file or paste a table first.",ko:"먼저 파일을 고르거나 표를 붙여 넣어 주세요."},
+  found:{en:"{n} repeating charges · about {m} a month · {y} a year",ko:"되풀이 결제 {n}개 · 한 달 약 {m} · 1년 {y}"},
+  found0:{en:"No repeating charges found",ko:"되풀이 결제를 못 찾았어요"},
+  found0_s:{en:"With fewer than 2 months, repeats can't be seen. Try a longer period.",ko:"2달보다 짧으면 되풀이를 알아볼 수 없어요. 더 긴 기간으로 해 보세요."},
+  read_s:{en:"Read {t} charges from {a} to {b}. Columns used: {c}.",ko:"{a} ~ {b} 결제 {t}건을 읽었어요. 쓴 칸: {c}."},
+  c_name:{en:"Where",ko:"어디"},c_amt:{en:"Amount",ko:"얼마"},c_every:{en:"How often",ko:"얼마마다"},c_next:{en:"Next (expected)",ko:"다음 (예상)"},c_year:{en:"Per year",ko:"1년이면"},c_note:{en:"Check",ko:"살펴볼 점"},
+  every_month:{en:"Monthly",ko:"달마다"},every_year:{en:"Yearly",ko:"해마다"},every_week:{en:"Weekly",ko:"주마다"},every_quarter:{en:"Every 3 months",ko:"3달마다"},
+  rise:{en:"Price went up: {a} → {b}",ko:"값이 올랐어요: {a} → {b}"},
+  times:{en:"seen {n} times",ko:"{n}번 보임"},
+  store:{en:"Cancel in the app store",ko:"앱 스토어에서 끊기"},
+  once_t:{en:"Seen once from a subscription company",ko:"구독 회사 이름이 한 번 보였어요"},
+  once_s:{en:"Possibly a yearly plan or a new trial. Worth a look.",ko:"1년 치 결제나 새 무료 체험일 수 있어요. 한 번 살펴보세요."},
+  next_t:{en:"How to stop one",ko:"끊는 법"},
+  s1:{en:"Open the service's own app or website → Account → Subscription or Membership → Cancel.",ko:"그 서비스의 앱이나 홈페이지 → 내 정보 → 구독·멤버십 관리 → 해지."},
+  s2:{en:"If you subscribed through an iPhone or Android, cancel in the app store's subscription page.",ko:"아이폰·안드로이드 앱 안에서 가입했다면 앱 스토어의 구독 쪽에서 끊으세요."},
+  s3:{en:"Can't find it? Ask your card company to stop that merchant's recurring payment.",ko:"못 찾겠으면 카드사에 그 가맹점의 정기결제를 멈춰 달라고 하세요."},
+  letter:{en:"Copy a cancellation message",ko:"해지 요청 글 복사"},
+  letter_txt:{en:"Hello. Please cancel my subscription to {s} and stop all future charges. Please confirm by email. Thank you.",
+              ko:"안녕하세요. {s} 구독 해지를 요청드립니다. 다음 결제부터 청구되지 않게 해 주시고, 해지가 끝나면 메일로 알려 주세요. 감사합니다."},
+  copied:{en:"Copied.",ko:"복사했어요."},
+  csv:{en:"Save this list (CSV)",ko:"이 목록 저장 (CSV)"},
+  how_t:{en:"How it works",ko:"이렇게 찾아요"},
+  h1s:{en:"We find the date, merchant and amount columns on our own, in Korean or English statements.",ko:"한국어·영어 내역 모두 날짜·가맹점·금액 칸을 스스로 찾아요."},
+  h2s:{en:"The same merchant charging a similar amount every week, month, 3 months or year counts as a repeat. Coffee shops with different amounts each time do not.",
+       ko:"같은 곳에서 비슷한 돈이 주·달·3달·해마다 나가면 되풀이로 봐요. 매번 값이 다른 커피·편의점은 빼요."},
+  h3s:{en:"Well-known services (Netflix, YouTube, Coupang WOW, Apple, Google, ChatGPT…) are named for you.",ko:"잘 알려진 서비스(넷플릭스·유튜브·쿠팡 와우·애플·구글·챗GPT…)는 이름을 붙여 드려요."},
+  tip:{en:"Where to get the file: your card company or bank website → statement or transaction history → download (Excel or CSV).",
+       ko:"파일 받는 곳: 카드사·은행 홈페이지 → 이용내역(거래내역) 조회 → 엑셀(또는 CSV) 내려받기."}
+});
+var last=null, lastErr="";
+var KO_SVC={"Gym / fitness":"헬스·운동","Mobile phone":"휴대폰 요금","Insurance":"보험","Coupang WOW":"쿠팡 와우","Coupang Play":"쿠팡 플레이","Naver Plus":"네이버플러스","Millie":"밀리의 서재","Baemin Club":"배민클럽","Yogiyo Pass":"요기패스","Melon":"멜론","Genie":"지니","Ridi":"리디","TVING":"티빙","Wavve":"웨이브","Watcha":"왓챠","Netflix":"넷플릭스","YouTube Premium":"유튜브 프리미엄"};
+function svc(n){ return VT.lang==="ko" && KO_SVC[n] ? KO_SVC[n] : n; }
+function money(v){
+  if(VT.lang==="ko") return Math.round(v).toLocaleString("ko-KR")+"원";
+  return v%1 ? v.toFixed(2) : String(Math.round(v));
+}
+function fmt(d){ var p=d.split("-"); return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString(VT.lang==="ko"?"ko-KR":"en-US",{year:"numeric",month:"short",day:"numeric"}); }
+function roll(next,every){
+  var p=next.split("-"), d=new Date(+p[0],+p[1]-1,+p[2]), t=new Date(); t.setHours(0,0,0,0);
+  var guard=0; while(d<t && guard++<60){ if(every==="month") d=new Date(d.getFullYear(),d.getMonth()+1,d.getDate()); else if(every==="year") d=new Date(d.getFullYear()+1,d.getMonth(),d.getDate()); else if(every==="quarter") d=new Date(d.getFullYear(),d.getMonth()+3,d.getDate()); else d=new Date(+d+7*864e5); }
+  return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
+}
+function show(){
+  var out=document.getElementById("out"), E=VT.esc;
+  if(lastErr){ out.innerHTML='<div class="verdict mid">'+VT.t(lastErr)+'</div>'; out.classList.remove("hidden"); return; }
+  if(!last){ out.classList.add("hidden"); return; }
+  var r=last, h="";
+  var cols=r.header?[r.header[r.cols.d],r.header[r.cols.n],r.header[r.cols.a]].join(" · "):"-";
+  if(r.subs.length) h+='<div class="verdict high">'+VT.t("found").replace("{n}",r.subs.length).replace("{m}",money(r.perMonth)).replace("{y}",money(r.perMonth*12))+'<small>'+E(VT.t("read_s").replace("{t}",r.tx).replace("{a}",fmt(r.span[0])).replace("{b}",fmt(r.span[1])).replace("{c}",cols))+'</small></div>';
+  else h+='<div class="verdict low">'+VT.t("found0")+'<small>'+VT.t("found0_s")+' '+E(VT.t("read_s").replace("{t}",r.tx).replace("{a}",fmt(r.span[0])).replace("{b}",fmt(r.span[1])).replace("{c}",cols))+'</small></div>';
+  if(r.subs.length){
+    h+='<div class="tablewrap" style="margin-top:14px"><table class="t stack"><tr><th>'+VT.t("c_name")+'</th><th>'+VT.t("c_amt")+'</th><th>'+VT.t("c_every")+'</th><th>'+VT.t("c_next")+'</th><th>'+VT.t("c_year")+'</th><th>'+VT.t("c_note")+'</th></tr>'+
+      r.subs.map(function(s,i){
+        var note=[VT.t("times").replace("{n}",s.count)];
+        if(s.rise) note.unshift('<b>'+E(VT.t("rise").replace("{a}",money(s.rise.from)).replace("{b}",money(s.rise.to)))+'</b>');
+        if(s.store) note.push('<a href="'+s.store+'" target="_blank" rel="noopener">'+VT.t("store")+'</a>');
+        note.push('<a href="#" data-l="'+i+'">'+VT.t("letter")+'</a>');
+        var dl=function(k){return ' data-l="'+E(VT.t(k))+'"';};
+        return '<tr><td><b>'+E(svc(s.service)||s.name)+'</b>'+(s.service?'<br><span class="note">'+E(s.name)+'</span>':'')+'</td><td'+dl("c_amt")+' style="white-space:nowrap">'+money(s.amount)+'</td><td'+dl("c_every")+'>'+VT.t("every_"+s.every)+'</td><td'+dl("c_next")+' style="white-space:nowrap">'+fmt(roll(s.next,s.every))+'</td><td'+dl("c_year")+' style="white-space:nowrap"><b>'+money(s.perYear)+'</b></td><td>'+note.join("<br>")+'</td></tr>';
+      }).join("")+'</table></div>';
+  }
+  if(r.once.length){
+    h+='<h2 style="margin-top:18px">'+VT.t("once_t")+'</h2><p class="sub">'+VT.t("once_s")+'</p><ul class="signals">'+
+      r.once.map(function(o){return '<li><b>'+E(svc(o.service))+' · '+money(o.amount)+'</b>'+E(o.name)+' · '+fmt(o.date)+'</li>';}).join("")+'</ul>';
+  }
+  if(r.subs.length||r.once.length) h+='<h2>'+VT.t("next_t")+'</h2><ol class="steps"><li>'+VT.t("s1")+'</li><li>'+VT.t("s2")+'</li><li>'+VT.t("s3")+'</li></ol>';
+  if(r.subs.length) h+='<div class="row no-print"><button class="btn ghost" id="csv" type="button">'+VT.t("csv")+'</button><span class="note" id="cpok"></span></div>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  out.querySelectorAll("[data-l]").forEach(function(a){ a.onclick=function(e){ e.preventDefault(); var s=r.subs[+a.dataset.l];
+    var t=VT.t("letter_txt").replace("{s}",svc(s.service)||s.name); var ok=function(){document.getElementById("cpok")&&(document.getElementById("cpok").textContent=VT.t("copied"));};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,function(){prompt("",t);}); else prompt("",t); }; });
+  var cb=document.getElementById("csv");
+  if(cb) cb.onclick=function(){
+    var L=[[VT.t("c_name"),VT.t("c_amt"),VT.t("c_every"),VT.t("c_next"),VT.t("c_year")]].concat(r.subs.map(function(s){return [svc(s.service)||s.name,s.amount,VT.t("every_"+s.every),roll(s.next,s.every),s.perYear];}));
+    var csv="﻿"+L.map(function(x){return x.map(function(c){c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;}).join(",");}).join("\r\n");
+    var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})); a.download=(VT.lang==="ko"?"구독목록":"subscriptions")+".csv"; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
+  };
+}
+function run(rows){
+  lastErr=""; last=null;
+  var r=SubsEngine.analyse(rows);
+  if(r.error){ lastErr = r.error==="cols"?"e_cols":"e_rows"; } else last=r;
+  show(); document.getElementById("out").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function readFiles(files){
+  var o=document.getElementById("out"); o.innerHTML='<div class="verdict low">'+VT.t("reading")+'</div>'; o.classList.remove("hidden");
+  var all=[], bad=false;
+  Promise.all([].map.call(files,function(f){
+    if(/\.xls$/i.test(f.name)){ bad=true; return Promise.resolve(); }
+    return f.arrayBuffer().then(function(buf){
+      if(/\.xlsx$/i.test(f.name)) return SubsEngine.readXlsx(buf).then(function(rows){ all=all.concat(rows); });
+      all=all.concat(SubsEngine.parseCSV(SubsEngine.decode(buf)));
+    });
+  })).then(function(){
+    if(!all.length){ lastErr= bad?"e_xls":"e_cols"; last=null; show(); return; }
+    run(all);
+  }).catch(function(){ lastErr="e_cols"; last=null; show(); });
+}
+var drop=document.getElementById("drop"), file=document.getElementById("file");
+file.onchange=function(){ if(file.files.length) readFiles(file.files); };
+["dragenter","dragover"].forEach(function(t){ drop.addEventListener(t,function(e){e.preventDefault();drop.classList.add("over");}); });
+["dragleave","drop"].forEach(function(t){ drop.addEventListener(t,function(e){e.preventDefault();drop.classList.remove("over");}); });
+drop.addEventListener("drop",function(e){ if(e.dataTransfer.files.length) readFiles(e.dataTransfer.files); });
+document.getElementById("go").onclick=function(){
+  var t=document.getElementById("paste").value.trim();
+  if(!t){ if(file.files.length) readFiles(file.files); else { lastErr="e_empty"; last=null; show(); } return; }
+  run(SubsEngine.parseCSV(t));
+};
+document.getElementById("sample").onclick=function(){
+  var rows=[VT.lang==="ko"?["이용일자","이용가맹점","이용금액"]:["Date","Description","Amount"]], t=new Date();
+  for(var m=5;m>=0;m--){
+    var b=new Date(t.getFullYear(),t.getMonth()-m-1,1);
+    function d(day){ var x=new Date(b.getFullYear(),b.getMonth(),day); return x.getFullYear()+"."+("0"+(x.getMonth()+1)).slice(-2)+"."+("0"+x.getDate()).slice(-2); }
+    if(VT.lang==="ko"){ rows.push([d(3),"넷플릭스서비시스코리아","17,000"],[d(11),"GOOGLE*YouTubePremium","14,900"],[d(15),"쿠팡(쿠팡와우월회비)","7,890"],[d(7),"스타벅스 역삼점",String(4500+m*600)],[d(19),"GS25 테헤란점",String(1200+m*900)]); }
+    else { rows.push([d(5),"SPOTIFY USA","11.99"],[d(9),"APPLE.COM/BILL","2.99"],[d(22),"HULU",m<2?"9.99":"7.99"],[d(13),"AMAZON MKTPL*"+m+"QX",String(12+m*7.5)]); }
+  }
+  document.getElementById("paste").value=rows.map(function(r){return r.join("\t");}).join("\n");
+  run(rows);
+};
+VT.onLang=show; VT.mountChrome(); VT.apply();
+</script>
+</body>
+</html>

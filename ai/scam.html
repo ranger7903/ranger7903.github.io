@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is This a Scam? — VALUES AI Store</title>
+<meta name="description" content="Paste a text or email and see the warning signs and the real address behind every link. Works inside your browser. 이거 사기예요? 문자·메일의 위험 신호와 링크 진짜 주소.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="scam-engine.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=safety" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+
+  <section id="clicked">
+    <h2 data-i="c_t"></h2>
+    <p class="sub" data-i="c_s"></p>
+    <div class="box"><ol class="steps" id="csteps"></ol></div>
+  </section>
+
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol>
+    <p data-i="limit"></p></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Is This a Scam? — VALUES AI Store",ko:"이거 사기예요? — 밸류스 AI 백화점"},
+  back:{en:"← Scams & Safety",ko:"← 사기·안전"},
+  h1:{en:"🚨 Is This a Scam?",ko:"🚨 이거 사기예요?"},
+  lead:{en:"Paste the text, email or chat message you are unsure about. You will see the warning signs and where each link really goes.",
+        ko:"미심쩍은 문자·메일·카톡을 붙여 넣으세요. 위험 신호와, 링크가 진짜 어디로 가는지 보여 드려요."},
+  label:{en:"The message",ko:"받은 글"},
+  ph:{en:"Paste the whole message here (long-press → Paste on a phone)",ko:"받은 글을 통째로 붙여 넣으세요 (폰은 길게 눌러 → 붙여넣기)"},
+  go:{en:"Check it",ko:"살펴보기"},
+  clear:{en:"Clear",ko:"지우기"},
+  sample:{en:"Try an example",ko:"예시로 해 보기"},
+  privacy:{en:"🔒 Checked inside your browser. The message is not sent anywhere, not even to us.",
+           ko:"🔒 손님 브라우저 안에서만 살펴봅니다. 글은 어디에도, 저희에게도 보내지 않습니다."},
+  empty:{en:"Paste a message first.",ko:"먼저 받은 글을 붙여 넣어 주세요."},
+  v_high:{en:"Very likely a scam",ko:"사기일 가능성이 높아요"},
+  v_high_s:{en:"Don't tap any link, don't reply and don't send money.",ko:"링크를 누르지 말고, 답장하지 말고, 돈을 보내지 마세요."},
+  v_mid:{en:"Be careful",ko:"조심하세요"},
+  v_mid_s:{en:"There is one warning sign. Check through the company's own app or a number you look up yourself.",ko:"위험 신호가 하나 있어요. 그 회사 앱이나 손님이 직접 찾은 번호로 확인하세요."},
+  v_low:{en:"We found no warning signs",ko:"위험 신호를 찾지 못했어요"},
+  v_low_s:{en:"That does not prove it is safe. New tricks appear every week. If it asks for money or a code, check it yourself first.",
+           ko:"그렇다고 안전하다는 뜻은 아닙니다. 새 수법은 매주 나와요. 돈이나 인증번호를 달라면 꼭 직접 확인하세요."},
+  sig_t:{en:"Warning signs we found",ko:"찾은 위험 신호"},
+  link_t:{en:"Where the links really go",ko:"링크가 진짜 가는 곳"},
+  link_ok:{en:"Nothing odd found in this address. Still, open the company's app instead of the link when in doubt.",ko:"이 주소에서 이상한 점은 못 찾았어요. 그래도 미심쩍으면 링크 대신 그 회사 앱을 여세요."},
+  next_t:{en:"What to do now",ko:"이제 할 일"},
+  n1:{en:"Don't tap the link or call the number in the message.",ko:"글 속 링크를 누르거나 글 속 번호로 전화하지 마세요."},
+  n2:{en:"Contact the company or person through a number or app you find yourself.",ko:"손님이 직접 찾은 번호나 앱으로 그 회사·사람에게 확인하세요."},
+  n3:{en:"Report it: in Korea call 118 (KISA spam and phishing help), in the US forward the text to 7726 or report at reportfraud.ftc.gov.",
+      ko:"신고하기: 한국은 118(한국인터넷진흥원 불법스팸·피싱 상담), 미국은 문자를 7726으로 전달하거나 reportfraud.ftc.gov 에 신고하세요."},
+  n4:{en:"Then delete the message.",ko:"그다음 글을 지우세요."},
+  copy:{en:"Copy the result to send to family",ko:"가족에게 보낼 결과 복사하기"},
+  copied:{en:"Copied. Phone numbers and long numbers were hidden.",ko:"복사했어요. 전화번호·긴 숫자는 가려 두었어요."},
+  c_t:{en:"🆘 I already tapped or typed something",ko:"🆘 이미 눌렀거나 입력했어요"},
+  c_s:{en:"Do these in order. Speed matters more than anything.",ko:"이 차례대로 하세요. 무엇보다 빠른 것이 중요해요."},
+  c1:{en:"If you typed card or bank details: call your card company or bank now and ask them to stop the card or account.",
+      ko:"카드·은행 정보를 넣었다면: 지금 바로 카드사·은행에 전화해 카드나 계좌를 멈춰 달라고 하세요."},
+  c2:{en:"If money already left: call the bank and the police (Korea 112, US 911 if urgent) and say it is a scam transfer. Ask for a payment stop.",
+      ko:"돈이 이미 나갔다면: 은행과 경찰(112)에 전화해 「사기 이체」라고 말하고 지급 정지를 요청하세요."},
+  c3:{en:"If you installed an app: turn on flight mode, then remove the app. Ask a phone shop or the maker's service centre to check the phone.",
+      ko:"앱을 깔았다면: 비행기 모드를 켠 뒤 그 앱을 지우세요. 휴대폰 대리점이나 제조사 서비스센터에 점검을 맡기세요."},
+  c4:{en:"If you typed a password: change it on the real site, and on every other site where you used the same one.",
+      ko:"비밀번호를 넣었다면: 진짜 사이트에서 바꾸고, 같은 비밀번호를 쓰던 다른 곳도 다 바꾸세요."},
+  c5:{en:"If you gave a code or ID number: tell your bank and mobile carrier so they can watch for new accounts or phones in your name.",
+      ko:"인증번호·주민번호를 알려 줬다면: 은행과 통신사에 알려 내 이름으로 새 계좌·폰이 생기지 않는지 살피게 하세요."},
+  c6:{en:"Keep the message and screenshots. You will need them for the bank and police.",ko:"받은 글과 화면 사진은 지우지 말고 남겨 두세요. 은행·경찰에 필요해요."},
+  how_t:{en:"How it works",ko:"이렇게 살펴봐요"},
+  h1s:{en:"We look for the signs that scam messages share: rushing you, unusual payment, fake family, parcel or toll problems, fake agencies, prizes, requests for codes, app installs, overseas numbers.",
+       ko:"사기 글에 흔한 신호를 찾아요. 재촉, 이상한 돈 요구, 가족 흉내, 택배·통행료 문제, 기관 흉내, 당첨, 인증번호 요구, 앱 설치, 해외 번호."},
+  h2s:{en:"We pull the real address out of every link and check whether it hides where it goes or borrows a company's name.",
+       ko:"링크마다 진짜 주소를 꺼내, 갈 곳을 숨겼는지 회사 이름을 빌렸는지 봐요."},
+  h3s:{en:"We never say “safe”. We only say what we found.",ko:"「안전합니다」라고 말하지 않아요. 찾은 것만 말씀드려요."},
+  limit:{en:"This room uses rules, not an AI brain, so it works offline and costs nothing. A second opinion from an AI brain is coming.",
+         ko:"이 방은 AI 두뇌가 아니라 정해 둔 규칙으로 살펴봐서 인터넷이 없어도 되고 공짜입니다. AI 두뇌의 두 번째 의견은 곧 붙입니다."}
+});
+var SAMPLE={en:"USPS: Your package is on hold due to an incomplete address. Update within 24 hours or it will be returned: usps-redeliver.top/track",
+            ko:"[Web발신] CJ대한통운 고객님 물품이 도로명 주소 불일치로 보관중입니다. 오늘까지 주소 수정 바랍니다 bit.ly/3xYz12"};
+var last=null;
+function mask(s){ return s.replace(/\+?\d[\d\s-]{6,}\d/g,function(m){return m.replace(/\d(?=[\d\s-]{2})/g,"•");}); }
+function show(){
+  var L=VT.lang, out=document.getElementById("out");
+  if(!last){ out.classList.add("hidden"); return; }
+  var r=last, v=r.level;
+  var h='<div class="verdict '+v+'">'+VT.t("v_"+v)+'<small>'+VT.t("v_"+v+"_s")+'</small></div>';
+  if(r.signals.length){
+    h+='<h2 style="margin-top:18px">'+VT.t("sig_t")+' ('+r.signals.length+')</h2><ul class="signals">'+
+      r.signals.map(function(id){ var t=ScamEngine.signalText(id,L); return "<li><b>"+VT.esc(t[0])+"</b>"+VT.esc(t[1])+"</li>"; }).join("")+"</ul>";
+  }
+  if(r.links.length){
+    h+='<h2>'+VT.t("link_t")+'</h2><ul class="signals">'+r.links.map(function(l){
+      var why=l.why.map(function(w){return "· "+VT.esc(ScamEngine.LINKWHY[w][L==="ko"?1:0]);}).join("<br>");
+      return '<li><b><span class="k">'+VT.esc(l.host)+'</span></b>'+(why||VT.esc(VT.t("link_ok")))+"</li>";
+    }).join("")+"</ul>";
+  }
+  if(v!=="low") h+='<h2>'+VT.t("next_t")+'</h2><ol class="steps"><li>'+VT.t("n1")+'</li><li>'+VT.t("n2")+'</li><li>'+VT.t("n3")+'</li><li>'+VT.t("n4")+'</li></ol>';
+  h+='<div class="row no-print"><button class="btn ghost" id="cp" type="button">'+VT.t("copy")+'</button><span id="cpok" class="note"></span></div>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  document.getElementById("cp").onclick=function(){
+    var txt=VT.t("v_"+v)+"\n"+r.signals.map(function(id){return "- "+ScamEngine.signalText(id,L)[0];}).join("\n")+
+      (r.links.length?"\n"+r.links.map(function(l){return "- "+l.host;}).join("\n"):"")+"\n\n"+mask(document.getElementById("msg").value.slice(0,400))+"\n\nvaluestools.kr/ai/scam.html";
+    var done=function(){document.getElementById("cpok").textContent=VT.t("copied");};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done,function(){prompt("",txt);});
+    else prompt("",txt);
+  };
+}
+function cl(){ document.getElementById("csteps").innerHTML=["c1","c2","c3","c4","c5","c6"].map(function(k){return "<li>"+VT.t(k)+"</li>";}).join(""); }
+document.getElementById("go").onclick=function(){
+  var t=document.getElementById("msg").value.trim();
+  if(!t){ alertBox(); return; }
+  last=ScamEngine.analyse(t); show();
+  document.getElementById("out").scrollIntoView({behavior:"smooth",block:"start"});
+};
+function alertBox(){ var o=document.getElementById("out"); o.innerHTML='<div class="verdict mid">'+VT.t("empty")+'</div>'; o.classList.remove("hidden"); }
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; last=null; show(); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; document.getElementById("go").click(); };
+VT.onLang=function(){ show(); cl(); };
+VT.mountChrome(); VT.apply(); cl();
+</script>
+</body>
+</html>

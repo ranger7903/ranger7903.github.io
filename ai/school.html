@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>School Notices on One Page — VALUES AI Store</title>
+<meta name="description" content="Paste school notices from apps, email or paper. Get dates, things to bring, money and forms on one page, plus a calendar file. 학교 알림 한 장.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="school-engine.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=family" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" style="min-height:220px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol><p data-i="limit"></p></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"School Notices on One Page — VALUES AI Store",ko:"학교 알림 한 장 — 밸류스 AI 백화점"},
+  back:{en:"← Family Care",ko:"← 가족 돌봄"},
+  h1:{en:"🏫 School Notices on One Page",ko:"🏫 학교 알림 한 장"},
+  lead:{en:"Paste everything the school sent this week: app messages, emails, a photo's text. Only the dates, things to bring, money and forms are kept.",
+        ko:"이번 주에 학교에서 온 것을 다 붙여 넣으세요. 앱 알림, 메일, 가정통신문 글. 날짜·준비물·낼 돈·낼 서류만 남겨 드려요."},
+  label:{en:"Notices (as many as you like)",ko:"공지 (몇 개든 괜찮아요)"},
+  ph:{en:"Paste one or many notices here. Same notice twice? We'll merge it.",ko:"공지를 하나든 여러 개든 붙여 넣으세요. 같은 공지가 두 번 와도 하나로 합쳐요."},
+  go:{en:"Make my one page",ko:"한 장으로 만들기"},
+  clear:{en:"Clear",ko:"지우기"},
+  sample:{en:"Try an example",ko:"예시로 해 보기"},
+  privacy:{en:"🔒 Read inside your browser only. Children's names and school details are not sent anywhere.",
+           ko:"🔒 손님 브라우저 안에서만 읽어요. 아이 이름·학교 정보는 어디에도 보내지 않습니다."},
+  empty:{en:"Paste at least one notice first.",ko:"먼저 공지를 하나 이상 붙여 넣어 주세요."},
+  summary:{en:"{e} dates · {m} payments · {b} things to bring · {f} forms · {d} repeats merged",ko:"날짜 {e} · 낼 돈 {m} · 준비물 {b} · 낼 서류 {f} · 겹친 공지 {d}개 합침"},
+  ev_t:{en:"📅 Dates",ko:"📅 날짜"},
+  col_date:{en:"When",ko:"언제"},col_what:{en:"What",ko:"무엇"},
+  due:{en:"Deadline",ko:"마감"}, past:{en:"Passed",ko:"지남"},
+  money_t:{en:"💰 Money to pay",ko:"💰 낼 돈"},
+  bring_t:{en:"🎒 Things to bring",ko:"🎒 준비물"},
+  form_t:{en:"✍️ Forms to sign or return",ko:"✍️ 낼 서류"},
+  none_t:{en:"Nothing found in this part.",ko:"이 칸에는 찾은 것이 없어요."},
+  nodate:{en:"No dates were found. Check that the date is written as numbers, e.g. 11/25 or 11월 25일.",ko:"날짜를 못 찾았어요. 11월 25일, 11. 25.(화)처럼 숫자로 적혀 있는지 봐 주세요."},
+  ics:{en:"Add to my calendar (.ics)",ko:"내 달력에 넣기 (.ics 파일)"},
+  print:{en:"Print",ko:"인쇄"},
+  copy:{en:"Copy as text",ko:"글로 복사"},
+  copied:{en:"Copied.",ko:"복사했어요."},
+  check:{en:"Please check against the original notice before you act. A machine can misread a date.",ko:"움직이시기 전에 원래 공지와 한 번 맞춰 보세요. 기계가 날짜를 잘못 읽을 수도 있어요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"We find every date (11/25, Nov 25, 11월 25일, 11. 25.(화)), the time next to it, and whether it is a deadline.",ko:"날짜(11월 25일, 11. 25.(수), Nov 25, 11/25)와 옆의 시간, 마감인지를 찾아요."},
+  h2s:{en:"We pick out amounts of money, things to bring and forms to sign.",ko:"낼 돈, 준비물, 낼 서류를 골라내요."},
+  h3s:{en:"The same notice sent by app, email and text is merged into one.",ko:"앱·메일·문자로 세 번 온 같은 공지는 하나로 합쳐요."},
+  limit:{en:"This room uses rules, not an AI brain, so it is free and private. Dates written as words only (“next Monday”) are not read yet.",
+         ko:"이 방은 AI 두뇌가 아니라 정해 둔 규칙으로 읽어서 공짜이고 밖으로 나가지 않아요. 「다음 주 월요일」처럼 말로만 적은 날짜는 아직 못 읽어요."}
+});
+function mkSample(){
+  var t=new Date(); function d(n){ var x=new Date(t.getFullYear(),t.getMonth(),t.getDate()+n); return x; }
+  var KW="일월화수목금토", EW=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], EM=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var a=d(7), b=d(3), c=d(10);
+  var ko1=(a.getMonth()+1)+". "+a.getDate()+".("+KW[a.getDay()]+")", ko2=(b.getMonth()+1)+"월 "+b.getDate()+"일("+KW[b.getDay()]+")", ko3=(c.getMonth()+1)+". "+c.getDate()+".("+KW[c.getDay()]+")";
+  var en1=EW[a.getDay()]+", "+EM[a.getMonth()]+" "+a.getDate(), en2=EM[b.getMonth()].slice(0,3)+" "+b.getDate(), en3=EM[c.getMonth()]+" "+c.getDate();
+  return {
+   ko:"[가정통신문] 2학년 현장체험학습 안내\n1. 일시: "+ko1+" 오전 9시 ~ 오후 3시\n2. 준비물: 도시락, 물, 돗자리\n3. 참가비: 15,000원\n4. 참가 동의서는 "+ko2+"까지 담임선생님께 제출해 주세요.\n[하이클래스] 2학년 현장체험학습 안내\n1. 일시: "+ko1+" 오전 9시 ~ 오후 3시\n방과후 수강 신청은 "+ko3+" 오후 6시까지 받습니다. 수강료 3만원.",
+   en:"Dear parents, our class trip to the Science Museum is on "+en1+". Please bring a packed lunch, a water bottle and a jacket.\nThe trip costs $12. Please sign and return the permission slip by "+en2+".\nPicture day is "+en3+" at 9:30 am.\nReminder: Dear parents, our class trip to the Science Museum is on "+en1+". Please bring a packed lunch, a water bottle and a jacket."
+  };
+}
+var last=null;
+function fmtDate(e){
+  var p=e.date.split("-"), d=new Date(+p[0],+p[1]-1,+p[2]);
+  var s=d.toLocaleDateString(VT.lang==="ko"?"ko-KR":"en-US",{month:"short",day:"numeric",weekday:"short"});
+  if(e.end){ var q=e.end.split("-"); s+=" ~ "+new Date(+q[0],+q[1]-1,+q[2]).toLocaleDateString(VT.lang==="ko"?"ko-KR":"en-US",{month:"short",day:"numeric"}); }
+  if(e.time) s+=" "+e.time;
+  return s;
+}
+function money(x){ return x.cur==="KRW" ? x.amount.toLocaleString("ko-KR")+(VT.lang==="ko"?"원":" KRW") : (x.cur==="USD"?"$":x.cur==="GBP"?"£":"€")+x.amount.toFixed(x.amount%1?2:0); }
+function show(){
+  var out=document.getElementById("out"); if(!last){ out.classList.add("hidden"); return; }
+  var r=last, E=VT.esc;
+  var h='<div class="verdict low">'+VT.t("summary").replace("{e}",r.events.length).replace("{m}",r.money.length).replace("{b}",r.bring.length).replace("{f}",r.forms.length).replace("{d}",r.dupes)+
+        '<small>'+VT.t("check")+'</small></div>';
+  h+='<h2 style="margin-top:18px">'+VT.t("ev_t")+'</h2>';
+  h+= r.events.length ? '<div class="tablewrap"><table class="t stack"><tr><th>'+VT.t("col_date")+'</th><th>'+VT.t("col_what")+'</th></tr>'+
+      r.events.map(function(e){ return '<tr'+(e.past?' style="opacity:.55"':'')+'><td style="white-space:nowrap">'+E(fmtDate(e))+(e.due?' <span class="tag lock">⏰ '+VT.t("due")+'</span>':'')+(e.past?' <span class="tag soon">'+VT.t("past")+'</span>':'')+'</td><td>'+E(e.title)+'</td></tr>'; }).join("")+'</table></div>'
+      : '<p class="empty">'+VT.t("nodate")+'</p>';
+  h+='<h2 style="margin-top:18px">'+VT.t("money_t")+'</h2>'+(r.money.length?'<ul class="signals">'+r.money.map(function(x){return '<li><b>'+E(money(x))+'</b>'+E(x.line)+'</li>';}).join("")+'</ul>':'<p class="note">'+VT.t("none_t")+'</p>');
+  h+='<h2>'+VT.t("bring_t")+'</h2>'+(r.bring.length?'<ul class="steps">'+r.bring.map(function(b){return '<li>'+E(b)+'</li>';}).join("")+'</ul>':'<p class="note">'+VT.t("none_t")+'</p>');
+  h+='<h2>'+VT.t("form_t")+'</h2>'+(r.forms.length?'<ul class="signals">'+r.forms.map(function(f){return '<li>'+E(f.line)+'</li>';}).join("")+'</ul>':'<p class="note">'+VT.t("none_t")+'</p>');
+  h+='<div class="row no-print">'+(r.events.length?'<button class="btn" id="ics" type="button">'+VT.t("ics")+'</button>':'')+
+     '<button class="btn ghost" id="pr" type="button">'+VT.t("print")+'</button><button class="btn ghost" id="cp" type="button">'+VT.t("copy")+'</button><span id="cpok" class="note"></span></div>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  var ib=document.getElementById("ics");
+  if(ib) ib.onclick=function(){
+    var blob=new Blob([SchoolEngine.ics(r.events.filter(function(e){return !e.past;}))],{type:"text/calendar;charset=utf-8"});
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=(VT.lang==="ko"?"학교알림":"school-notices")+".ics"; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();},500);
+  };
+  document.getElementById("pr").onclick=function(){ window.print(); };
+  document.getElementById("cp").onclick=function(){
+    var t=[VT.t("ev_t")].concat(r.events.map(function(e){return "- "+fmtDate(e)+(e.due?" ["+VT.t("due")+"]":"")+" "+e.title;}),
+      ["",VT.t("money_t")],r.money.map(function(x){return "- "+money(x)+" "+x.line;}),["",VT.t("bring_t")],r.bring.map(function(b){return "- "+b;}),
+      ["",VT.t("form_t")],r.forms.map(function(f){return "- "+f.line;})).join("\n");
+    var done=function(){document.getElementById("cpok").textContent=VT.t("copied");};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done,function(){prompt("",t);}); else prompt("",t);
+  };
+}
+document.getElementById("go").onclick=function(){
+  var t=document.getElementById("msg").value.trim(), o=document.getElementById("out");
+  if(!t){ o.innerHTML='<div class="verdict mid">'+VT.t("empty")+'</div>'; o.classList.remove("hidden"); return; }
+  last=SchoolEngine.parse(t,new Date()); show(); o.scrollIntoView({behavior:"smooth",block:"start"});
+};
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; last=null; show(); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=mkSample()[VT.lang]; document.getElementById("go").click(); };
+VT.onLang=show; VT.mountChrome(); VT.apply();
+</script>
+</body>
+</html>

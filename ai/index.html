@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VALUES AI Store — one small problem, one button</title>
+<meta name="description" content="Small AI helpers for everyday problems: scam texts, school notices, forgotten subscriptions and more. 밸류스 AI 백화점 — 생활 불편 하나에 단추 하나.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main>
+<header class="hero"><div class="shell">
+  <h1 data-i="h1"></h1>
+  <p data-i="lead"></p>
+  <form class="search" id="f" role="search">
+    <input id="q" type="search" autocomplete="off" data-i-ph="ph" data-i-aria="ph">
+    <button class="btn" type="submit" data-i="find"></button>
+  </form>
+  <div class="chips" id="chips"></div>
+</div></header>
+
+<section id="rooms"><div class="shell">
+  <h2 id="rtitle"></h2>
+  <p class="sub" id="rsub"></p>
+  <div class="grid" id="grid"></div>
+  <div class="empty hidden" id="none" data-i="none"></div>
+</div></section>
+
+<section><div class="shell">
+  <h2 data-i="why_t"></h2>
+  <div class="grid">
+    <div class="card"><span class="ico">👆</span><b data-i="w1t"></b><p data-i="w1"></p></div>
+    <div class="card"><span class="ico">🔒</span><b data-i="w2t"></b><p data-i="w2"></p></div>
+    <div class="card"><span class="ico">🏷️</span><b data-i="w3t"></b><p data-i="w3"></p></div>
+  </div>
+</div></section>
+
+<section><div class="shell">
+  <h2 data-i="plan_t"></h2>
+  <p class="sub" data-i="plan_s"></p>
+  <a class="btn ghost" href="plans.html" data-i="plan_b"></a>
+</div></section>
+</main>
+<script>
+VT.add({
+  title:{en:"VALUES AI Store — one small problem, one button",ko:"밸류스 AI 백화점 — 생활 불편 하나에 단추 하나"},
+  h1:{en:"What's bothering you today?",ko:"무엇이 불편하세요?"},
+  lead:{en:"Small AI helpers for everyday problems. No prompts to write: paste, press one button, done.",
+        ko:"생활 속 작은 불편을 하나씩 풀어 주는 AI 방들입니다. 무엇을 어떻게 물을지 고민할 필요 없이, 붙여 넣고 단추 하나만 누르세요."},
+  ph:{en:"e.g. a strange text, school emails, a charge I don't know",ko:"예) 이상한 문자, 학교 알림, 모르는 결제"},
+  find:{en:"Find",ko:"찾기"},
+  all:{en:"All",ko:"전부"},
+  none:{en:"No room matches yet. Try other words, or tell us at ranger7903@nate.com and we may build it next.",
+        ko:"아직 맞는 방이 없어요. 다른 말로 찾아 보시거나 ranger7903@nate.com 으로 알려 주시면 다음 방으로 만들어 볼게요."},
+  open_t:{en:"Open now",ko:"지금 쓸 수 있는 방"},
+  why_t:{en:"How this store is different",ko:"이 가게가 다른 점"},
+  w1t:{en:"One problem, one button",ko:"불편 하나 = 단추 하나"},
+  w1:{en:"Other AI sites give you a chat box and leave the asking to you. Here each room already knows the question.",
+      ko:"다른 AI는 대화창만 주고 묻는 것은 손님 몫입니다. 여기서는 방마다 물을 것이 이미 정해져 있어요."},
+  w2t:{en:"Your data stays with you",ko:"내 자료는 내 곁에"},
+  w2:{en:"Rooms marked 🔒 work inside your browser. Card statements and school notices never leave your device.",
+      ko:"🔒 표시 방은 손님 브라우저 안에서 일합니다. 카드 내역도 학교 공지도 손님 기기 밖으로 나가지 않아요."},
+  w3t:{en:"Prices you can read",ko:"눈에 보이는 값"},
+  w3:{en:"No points or credits. Free rooms stay free; paid plans are a fixed monthly price we won't quietly shrink.",
+      ko:"점수·크레딧이 없습니다. 공짜 방은 공짜로 두고, 구독은 정해진 달 값이며 몰래 줄이지 않아요."},
+  plan_t:{en:"Plans",ko:"구독"},
+  plan_s:{en:"The three rooms open today are free. Paid plans start when rooms that use an AI brain open.",
+          ko:"오늘 연 세 방은 공짜입니다. AI 두뇌를 쓰는 방이 열리면 구독이 시작돼요."},
+  plan_b:{en:"See the plans",ko:"구독 값 보기"}
+});
+var cur = new URLSearchParams(location.search).get("c") || "all", q = "";
+function draw(){
+  var L = VT.lang, chips = document.getElementById("chips");
+  var list = [{id:"all",ico:"✨",en:VT.t("all"),ko:VT.t("all")}].concat(VT.CATS);
+  chips.innerHTML = list.map(function(c){
+    var n = c.id==="all" ? VT.ROOMS.length : VT.ROOMS.filter(function(r){return r.cat===c.id}).length;
+    return '<button type="button" class="chip" data-c="'+c.id+'" aria-pressed="'+(c.id===cur)+'">'+c.ico+' '+VT.esc(L==="ko"?c.ko:c.en)+' '+n+'</button>';
+  }).join("");
+  chips.querySelectorAll(".chip").forEach(function(b){ b.onclick=function(){ cur=b.dataset.c; q=""; document.getElementById("q").value=""; history.replaceState(null,"",cur==="all"?"./":"?c="+cur); draw(); }; });
+  var words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  var rooms = VT.ROOMS.filter(function(r){
+    if (cur!=="all" && r.cat!==cur) return false;
+    if (!words.length) return true;
+    var c = VT.CATS.filter(function(x){return x.id===r.cat})[0];
+    var hay = (r.en+" "+r.ko+" "+r.den+" "+r.dko+" "+r.kw+" "+c.en+" "+c.ko).toLowerCase();
+    return words.some(function(w){ return hay.indexOf(w) >= 0; });
+  });
+  rooms.sort(function(a,b){ return (a.status==="open"?0:1)-(b.status==="open"?0:1); });
+  var cat = VT.CATS.filter(function(c){return c.id===cur})[0];
+  document.getElementById("rtitle").textContent = q ? (L==="ko"?"「"+q+"」에 맞는 방":"Rooms for “"+q+"”") : cat ? (L==="ko"?cat.ko:cat.en) : (L==="ko"?"모든 방":"All rooms");
+  var open = rooms.filter(function(r){return r.status==="open"}).length;
+  document.getElementById("rsub").textContent = L==="ko" ? ("지금 쓸 수 있는 방 "+open+" · 곧 나올 방 "+(rooms.length-open)) : (open+" open now · "+(rooms.length-open)+" coming soon");
+  document.getElementById("grid").innerHTML = rooms.map(VT.card).join("");
+  document.getElementById("none").classList.toggle("hidden", rooms.length>0);
+}
+document.getElementById("f").onsubmit = function(e){ e.preventDefault(); q = document.getElementById("q").value.trim(); cur="all"; draw(); document.getElementById("rooms").scrollIntoView({behavior:"smooth"}); };
+VT.onLang = draw;
+VT.mountChrome();
+VT.apply(); draw();
+</script>
+</body>
+</html>
