@@ -188,52 +188,56 @@ footer .hand{font-size:16px;color:var(--terra)}
 <script>
 const PADDLE_CLIENT_TOKEN = "live_945afb1a1e3998081592ff13ef5";
 const PADDLE_PRICES = {
-    settle: "pri_01m310rmatd80s3jss4qvcbre3",
-    money: "pri_01m310zz3fnxghrtdf0rqnhhq1",
+    settle: "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+    money: "pri_01m7rtd2tv6grqdew30084cbn3",
   bisu:      "pri_01m40d0s3p0xqzp57e5n8dezj9",
-  garifile:  "pri_01m3h95rnf2rvjem5xb5s6ww8g",
-  pdfgrab:   "pri_01m38evqgk7sk973zxdv3jb2xt",
-  moahwp:    "pri_01m3gevfv9ghh1ev9dyr41paz1",
-  gongmun:   "pri_01m3gf6ry5zffcxv5jqwswbny7",
-  merger:      "pri_01m18rg9v38ev3st8mwvab0518",
-  formfiller:  "pri_01m18rpcj8f4bym71vb7p9kag3",
-  listcompare: "pri_01m18s12xn0t1p4tqr1dnnab21",
-  quick:     "pri_01m0z34ty2ry1w0r0jmq2tqdax",
-  garden:    "pri_01m0z36ex7w1ppywyevsftc4jq",
-  handwrite: "pri_01m0z37mvsesyrn87r2f83d4dn",
-  counter:   "pri_01m0z31dpz4gvc05jvpd45c8qq",
+  garifile:  "pri_01m7rtd2tv6grqdew30084cbn3",
+  pdfgrab:   "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+  moahwp:    "pri_01m7rtd2tv6grqdew30084cbn3",
+  gongmun:   "pri_01m7rtcq03pqeem2qggdtr0zg0",
+  merger:      "pri_01m7rtd2tv6grqdew30084cbn3",
+  formfiller:  "pri_01m7rtd2tv6grqdew30084cbn3",
+  listcompare: "pri_01m7rtd2tv6grqdew30084cbn3",
+  quick:     "pri_01m7rtcq03pqeem2qggdtr0zg0",
+  garden:    "pri_01m7rtcq03pqeem2qggdtr0zg0",
+  handwrite: "pri_01m7rtcq03pqeem2qggdtr0zg0",
+  counter:   "pri_01m7rtcq03pqeem2qggdtr0zg0",
   // 밸류스 예약수첩 — Paddle 에 상품을 만든 뒤 그 가격 열쇠(pri_...)를 여기에 붙여넣으면
   // 바로 결제가 열립니다. 비어 있는 동안에는 "아직 준비 중"이라고 한국어로 안내합니다.
-  booking:   "pri_01m1qy8245q9z3yk0fmge5pw4w",
+  booking:   "pri_01m7rtd2tv6grqdew30084cbn3",
   office:    "pri_01m1rar8c6qmq2krwattq2cmqp",
   // 회의록 만들개 — Paddle 에 상품을 만든 뒤 그 가격 열쇠(pri_...)를 여기에
   // 붙여넣으면 바로 카드 결제가 열립니다. 비어 있는 동안 카드 단추를 아예
   // 내보내지 않고 「메일로 주문」만 보여 줍니다(눌렀는데 「준비 중」이 뜨는
   // 일을 막기 위해서입니다 — 2026-09-27 에 그 탈을 겪었습니다).
-  hoeuirok:  "pri_01m5s3mhh12sac13w182fftf2y",
-  stampcut: "pri_01m7fcj2dsh7fvea9vjz93qzhp",
-  scanlike: "pri_01m7fcm43md9f75avb5jsw0v4p",
-  proofbox: "pri_01m7fcnah7eytxbvj6y344gkgm",
-  songfactory: "pri_01m7fcp3vfe5tqe16qjskrarf9",
-  translator_basic: "pri_01m1rkvg5gbcf9dxwebnhcb0nn",
-  translator_all:   "pri_01m1rky0rg3n16qnt2vhrh6c91",
-  bundle:    "pri_01m0z38eb44de9sn6j4761nhwd"
+  hoeuirok:  "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+  stampcut: "pri_01m7rtcq03pqeem2qggdtr0zg0",
+  scanlike: "pri_01m7rtd2tv6grqdew30084cbn3",
+  proofbox: "pri_01m7rtcq03pqeem2qggdtr0zg0",
+  songfactory: "pri_01m7rtd2tv6grqdew30084cbn3",
+  translator_basic: "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+  translator_all:   "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+  bundle:    "pri_01m7rtd446d3p4m7dp7859h3gk"
 };
+// [2026-11-19] 파는 도구는 모두 «달마다 구독»으로 바꿨다. 칸은 넷 — 작은·보통·큰·전부.
+// 위 표의 값 열쇠는 그 도구가 들어 있는 칸의 «달마다» 값이다. 1년 값은 아래 표에 있다.
+// 어느 도구를 샀는지는 결제창의 customData.tool 로 열쇠 발급소에 알려 준다.
+const PLAN_YEAR = {small:"pri_01m7rtd2ghjhas1egcr0pej0qg",normal:"pri_01m7rtd35cc7xam5tzcbhbcnhj",large:"pri_01m7rtd3sy4ayk26fxgrw2ash6",all:"pri_01m7rtd4ejjm1b7ttq9wea7cgc"};
+const TOOL_PLAN = {garden:["small","garden"],handwrite:["small","handwrite"],counter:["small","register"],proofbox:["small","proofbox"],quick:["small","quick"],gongmun:["small","gongmun"],stampcut:["small","stampcut"],merger:["normal","merge"],formfiller:["normal","formfill"],booking:["normal","reservation"],scanlike:["normal","scanlike"],listcompare:["normal","compare"],moahwp:["normal","moahwp"],garifile:["normal","garifile"],money:["normal","money"],songfactory:["normal","songfactory"],pdfgrab:["large","pdfgrab"],hoeuirok:["large","hoeuirok"],settle:["large","settle"],translator_basic:["large","translator"],translator_all:["large","translator"],bundle:["all","all"]};
 const PADDLE_SUCCESS = { office: "https://valuestools.kr/download.html?paid=1" };
 Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
-function payWithPaddle(key) {
-  const priceId = PADDLE_PRICES[key];
+function payWithPaddle(key, cycle) {
+  var tp = TOOL_PLAN[key];
+  var priceId = (tp && cycle === 'y') ? PLAN_YEAR[tp[0]] : PADDLE_PRICES[key];
   if (!priceId) { alert("이 상품은 아직 카드 결제 준비 중입니다 — 이메일로 문의해주세요."); return; }
   // [2026-09-10] 결제창 글자를 한국어로 못 박는다.
-  // 지금까지는 손님 브라우저 설정을 따라갔다. 그래서 한글 홈페이지를 보다가
-  // 결제를 눌렀는데 결제창만 영어로 뜨는 일이 있었다.
   // [2026-11-06] 결제가 끝나면 «그 자리에서» 받는 곳으로 — 지금은 AI 사무직원만
   var 설정 = { locale: "ko" };
   if (PADDLE_SUCCESS[key]) 설정.successUrl = PADDLE_SUCCESS[key];
-  Paddle.Checkout.open({
-    items: [{ priceId: priceId, quantity: 1 }],
-    settings: 설정
-  });
+  var 열기 = { items: [{ priceId: priceId, quantity: 1 }], settings: 설정 };
+  // [2026-11-19] 구독 칸은 여러 도구가 같은 값을 쓰므로, 어느 도구인지 함께 보낸다
+  if (tp) 열기.customData = { tool: tp[1], plan: tp[0] };
+  Paddle.Checkout.open(열기);
 }
 
 /* [2026-11-11] 값이 맞을 때만 카드 단추를 내보낸다.
@@ -399,9 +403,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "24900",
+       "price": "2900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "2900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -422,9 +436,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "24900",
+       "price": "2900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "2900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -445,9 +469,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "29900",
+       "price": "2900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "2900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -468,9 +502,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "19900",
+       "price": "1900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "1900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -514,9 +558,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "4900",
+       "price": "1900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "1900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -537,9 +591,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "7900",
+       "price": "1900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "1900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -606,9 +670,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "12900",
+       "price": "1900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "1900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -629,9 +703,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "24900",
+       "price": "2900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "2900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -675,9 +759,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "69000",
+       "price": "4900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "4900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -698,9 +792,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "149000",
+       "price": "4900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "4900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -721,9 +825,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "39000",
+       "price": "4900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "4900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -744,9 +858,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "29900",
+       "price": "2900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "2900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -767,9 +891,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "19900",
+       "price": "1900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "1900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -790,9 +924,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "29900",
+       "price": "2900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "2900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -836,9 +980,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "49000",
+       "price": "4900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "4900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -859,9 +1013,19 @@ article.goods.hide{display:none !important}
       "offers": {
        "@type": "Offer",
        "priceCurrency": "KRW",
-       "price": "29900",
+       "price": "2900",
        "availability": "https://schema.org/InStock",
-       "url": "https://valuestools.kr/"
+       "url": "https://valuestools.kr/",
+       "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "2900",
+        "priceCurrency": "KRW",
+        "referenceQuantity": {
+         "@type": "QuantitativeValue",
+         "value": 1,
+         "unitCode": "MON"
+        }
+       }
       },
       "author": {
        "@type": "Organization",
@@ -877,7 +1041,7 @@ article.goods.hide{display:none !important}
 </head>
 <body>
 
-<div class="ribbon">✨ 새로 나왔어요 — <b>도장 오리개</b>(19,000원) · <b>스캔한 것처럼</b>(24,900원) · <b>노래 공장</b>(34,900원) · <b>작업 증거 상자</b>(13,900원), 무료로 먼저 써 보세요 <a href="try.html?lang=ko" style="color:#FFF8F2;text-decoration:underline">써 보기</a> · 📚 <b>밸류스 책방</b> 전자책 열세 권, 맛보기는 거저 드립니다 <a href="책방.html" style="color:#FFF8F2;text-decoration:underline">책방 가기</a></div>
+<div class="ribbon">✨ 새로 나왔어요 — <b>도장 오리개</b>(한 달 1,900원) · <b>스캔한 것처럼</b>(한 달 2,900원) · <b>노래 공장</b>(한 달 2,900원) · <b>작업 증거 상자</b>(한 달 1,900원), 무료로 먼저 써 보세요 <a href="try.html?lang=ko" style="color:#FFF8F2;text-decoration:underline">써 보기</a> · 📚 <b>밸류스 책방</b> 전자책 열세 권, 맛보기는 거저 드립니다 <a href="책방.html" style="color:#FFF8F2;text-decoration:underline">책방 가기</a></div>
 
 <nav><div class="shell">
   <a class="brand" href="#top"><span class="stamp">値</span><b>밸류스</b></a>
@@ -960,7 +1124,7 @@ article.goods.hide{display:none !important}
 
   <div class="promise">
     <div><span class="ico">🏠</span><b>내 컴퓨터 안에서만</b><p>서버도, 전송도 없어요. 인터넷을 꺼도 똑같이 일해요.</p></div>
-    <div><span class="ico">🔁</span><b>낱개 도구는 구독 없음</b><p>한 번 결제하면 평생 쓰세요. v1.x 업데이트도 무료예요. 달마다 내는 것은 자동화 비서와 AI 사무직원 두 가지뿐이에요.</p></div>
+    <div><span class="ico">🔁</span><b>달마다 작은 값 · 언제든 해지</b><p>작은 도구 1,900원 · 보통 도구 2,900원 · 큰 도구 4,900원 · 전부 14,900원. 1년치는 열 달 값이에요. 해지해도 낸 달 끝까지 쓰시고, 업데이트는 늘 따라와요.</p></div>
     <div><span class="ico">🧹</span><b>깔끔한 제거</b><p>윈도우 [설정 &gt; 앱]에서 지우면 흔적 없이 사라져요.</p></div>
     <div><span class="ico">💌</span><b>고쳐 드려요</b><p>안 읽히는 서식은 보내주세요. 확인해서 반영해요.</p></div>
   </div>
@@ -988,9 +1152,10 @@ article.goods.hide{display:none !important}
 <li>인터넷을 안 써요. 원본은 읽기만 하고 건드리지 않아요</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">29,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('moahwp')">결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('moahwp')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('moahwp','y')">1년 결제 · 29,000원</a>
       </div>
 
       <details class="g-reviews">
@@ -1020,9 +1185,10 @@ article.goods.hide{display:none !important}
 <li>공문이 아닌 파일(규정집·서식)에는 잔소리하지 않아요</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">19,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('gongmun')">결제하기</a>
+        <span class="g-price">1,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 19,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('gongmun')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('gongmun','y')">1년 결제 · 19,000원</a>
       </div>
 
       <details class="g-reviews">
@@ -1051,9 +1217,10 @@ article.goods.hide{display:none !important}
 <li>사진으로 찍힌(스캔) PDF는 글자가 없어 못 꺼냅니다 — <b>그대로 말해 줍니다</b></li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">39,000<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('pdfgrab')">결제하기</a>
+        <span class="g-price">4,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 49,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('pdfgrab')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('pdfgrab','y')">1년 결제 · 49,000원</a>
       </div>
 
       <details class="g-reviews">
@@ -1080,9 +1247,10 @@ article.goods.hide{display:none !important}
 <li>결과는 「밸류스 작업함」으로 — 다른 밸류스 도구와 이어져요</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">24,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('merger')">결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('merger')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('merger','y')">1년 결제 · 29,000원</a>
         <a class="mbtn" href="manual_merge.pdf" download>📖 설명서</a>
         <a class="mbtn" href="app/">🖱️ 웹에서 먼저 써보기</a>
       </div>
@@ -1111,9 +1279,10 @@ article.goods.hide{display:none !important}
 <li>결과는 「밸류스 작업함」으로 — 다른 밸류스 도구와 이어져요</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">24,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('formfiller')">결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('formfiller')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('formfiller','y')">1년 결제 · 29,000원</a>
         <a class="mbtn" href="manual_formfill.pdf" download>📖 설명서</a>
       </div>
 
@@ -1141,9 +1310,10 @@ article.goods.hide{display:none !important}
 <li>결과는 「밸류스 작업함」으로 — 다른 밸류스 도구와 이어져요</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">29,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('listcompare')">결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('listcompare')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('listcompare','y')">1년 결제 · 29,000원</a>
         <a class="mbtn" href="manual_compare.pdf" download>📖 설명서</a>
       </div>
 
@@ -1172,9 +1342,10 @@ article.goods.hide{display:none !important}
 <li>인터넷을 쓰지 않습니다. 한국어·영어 화면</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">19,000<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="stampcut" data-won="19000" data-usd="1500" href="javascript:void(0)" onclick="payWithPaddle('stampcut')">카드로 결제하기</a>
+        <span class="g-price">1,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 19,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('stampcut')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('stampcut','y')">1년 결제 · 19,000원</a>
         <a class="btn line" href="try.html?lang=ko#stampcut">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="stampcut">무료로 먼저 써 보실 수 있어요. 품질은 정품과 똑같고, 저장을 3번까지 해 보실 수 있습니다.</span>
       </div>
@@ -1204,9 +1375,10 @@ article.goods.hide{display:none !important}
 <li>진짜 폰 사진으로 더 재 보는 중입니다. 잘 안 펴지는 사진은 메일로 보내 주시면 고쳐 드립니다</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">24,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="scanlike" data-won="24900" data-usd="1900" href="javascript:void(0)" onclick="payWithPaddle('scanlike')">카드로 결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('scanlike')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('scanlike','y')">1년 결제 · 29,000원</a>
         <a class="btn line" href="try.html?lang=ko#scanlike">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="scanlike">무료로 먼저 써 보실 수 있어요. 품질은 정품과 똑같고, 저장을 3번까지 해 보실 수 있습니다.</span>
       </div>
@@ -1239,12 +1411,13 @@ article.goods.hide{display:none !important}
 <li>거래처와 품목·단가는 한 번 적으면 다음부터 기억해요</li>
 <li>만들 때마다 간이장부에 자동 기록 — 월별 합계, 엑셀(CSV) 내보내기</li>
 <li>매출 수첩 — 카드/현금/이체 매출을 그 자리에서 적고 일별·월별로 정리</li>
-<li>전부 내 컴퓨터 안에만 — 서버도, 월 구독도 없어요</li></ul>
+<li>전부 내 컴퓨터 안에만 — 서버에 올리지 않아요</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">12,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('counter')">결제하기</a>
+        <span class="g-price">1,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 19,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('counter')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('counter','y')">1년 결제 · 19,000원</a>
         <a class="mbtn" href="manual_register.pdf" download>📖 설명서</a>
       </div>
 
@@ -1274,9 +1447,10 @@ article.goods.hide{display:none !important}
 <li>전부 내 컴퓨터 안에만 — 문자는 직접 보내야 나가요(자동 발송 없음)</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">24,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('booking')">결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('booking')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('booking','y')">1년 결제 · 29,000원</a>
         <a class="mbtn" href="manual_reservation.pdf" download>📖 설명서</a>
       </div>
 
@@ -1303,12 +1477,13 @@ article.goods.hide{display:none !important}
 <li><b>직원에게 나눠 주기</b> — 파일 하나로 보내면 사무실 안내 문구가 한 번에 맞춰져요</li>
 <li><b>빈칸을 물어봐 줘요</b> — "{?고객명}님, {?날짜} 예약되셨습니다" 처럼 적어 두면 채울 곳을 물어봅니다</li>
 <li>한글·워드·카톡·브라우저 어디서든 — 한컴 상용구는 한글 문서 안에서만 됩니다</li>
-<li>구독 없음 · 내 문장은 내 컴퓨터에만 · {날짜} {커서} 변수까지</li></ul>
+<li>내 문장은 내 컴퓨터에만 · {날짜} {커서} 변수까지</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">19,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('quick')">결제하기</a>
+        <span class="g-price">1,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 19,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('quick')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('quick','y')">1년 결제 · 19,000원</a>
         <a class="mbtn" href="manual_quick.pdf" download>📖 설명서</a>
       </div>
 
@@ -1348,9 +1523,10 @@ article.goods.hide{display:none !important}
 <li>폴더를 통째로 골라 한꺼번에 — 한/영 화면 전환</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">29,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('garifile')">결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('garifile')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('garifile','y')">1년 결제 · 29,000원</a>
         <a class="btn line" href="파일판.html">체험판 먼저 써 보기</a>
         <span class="g-note">체험판은 한 번에 3장까지 가릴 수 있어요 — 가리는 방식은 정품과 똑같고, 장수만 막아요.</span>
       </div>
@@ -1384,12 +1560,13 @@ article.goods.hide{display:none !important}
 <li>회계에 넘길 엑셀용 내역(CSV)도 함께 · 30분/1시간 단위 올림도 골라서</li>
 <li>적힌 기록만 그대로 셉니다 — 없는 시간을 지어내지 않아요</li>
 <li>타이머를 켜고 일하면 새싹이 꽃과 나무로 — 도중에 멈춰도 벌칙 없이 자란 만큼 그대로</li>
-<li>기록은 이 컴퓨터 안에만 · 구독 없음 · 인터넷 없이 동작</li></ul>
+<li>기록은 이 컴퓨터 안에만 · 인터넷 없이 동작</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">4,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('garden')">결제하기</a>
+        <span class="g-price">1,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 19,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('garden')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('garden','y')">1년 결제 · 19,000원</a>
         <a class="mbtn" href="manual_garden.pdf" download>📖 설명서</a>
       </div>
 
@@ -1419,9 +1596,10 @@ article.goods.hide{display:none !important}
 <li>"오늘의 내 한 줄"까지 — 전부 내 컴퓨터에만, 인터넷 없이</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">4,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('handwrite')">결제하기</a>
+        <span class="g-price">1,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 19,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('handwrite')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('handwrite','y')">1년 결제 · 19,000원</a>
         <a class="mbtn" href="manual_handwrite.pdf" download>📖 설명서</a>
         <a class="mbtn" href="drawer.html">📱 모바일판(무료 체험)</a>
       </div>
@@ -1488,7 +1666,7 @@ article.goods.hide{display:none !important}
 <li>사람 이름처럼 직접 적은 말도 같이 가려요</li>
 <li><b>크기 줄이기</b> — 메일에 안 붙던 서류를 사진만 눌러 담아 가볍게 (글자는 그대로)</li>
 <li>합치기 · 나누기 · 돌리기 · 도장 찍기 · 쪽번호 · 사진→PDF 도 그대로</li>
-<li>원본은 절대 안 건드려요 — 광고·구독·인터넷 없음 · 한국어/영어 전환</li></ul>
+<li>원본은 절대 안 건드려요 — 광고·인터넷 없음 · 한국어/영어 전환</li></ul>
       </details>
 <div class="g-buy">
         <span class="g-price" style="color:var(--sage)">무료</span>
@@ -1597,9 +1775,10 @@ article.goods.hide{display:none !important}
 <li>무료판은 노래 한 곡, 정품은 곡 수 제한 없음</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">13,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="proofbox" data-won="13900" data-usd="999" href="javascript:void(0)" onclick="payWithPaddle('proofbox')">카드로 결제하기</a>
+        <span class="g-price">1,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 19,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('proofbox')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('proofbox','y')">1년 결제 · 19,000원</a>
         <a class="btn line" href="try.html?lang=ko#proofbox">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="proofbox">무료로 먼저 써 보실 수 있어요. 노래 한 곡은 무료로 기록합니다.</span>
       </div>
@@ -1619,7 +1798,7 @@ article.goods.hide{display:none !important}
     <div class="g-info">
       <div class="g-head"><span class="g-emoji">🎵</span>
         <h3>밸류스 노래 공장</h3><span class="newtag">새로 나왔어요</span></div>
-      <p class="g-tag">내 컴퓨터에서 가사 있는 노래를 만듭니다 — 내려받기 수 제한 없음, 달마다 내는 돈 없음</p>
+      <p class="g-tag">내 컴퓨터에서 가사 있는 노래를 만듭니다 — 내려받기 수 제한 없음, 노래가 밖으로 나가지 않음</p>
             <details class="g-more"><summary>자세히 보기</summary>
 <p class="g-story">온라인 노래 만들기 서비스들이 한 달에 내려받을 수 있는 곡 수를 막기 시작했습니다. 이 프로그램은 공개된 음악 두뇌(ACE-Step 1.5, MIT 허락)로 <b>내 컴퓨터 안에서</b> 만들어서 제한이 없습니다. 노래 설명(갈래·분위기·악기·목소리)과 가사를 적고 단추를 누르면 됩니다.</p>
       <ul class="g-feats"><li>그래픽카드 없는 2코어 컴퓨터로 재 보니 <b>30초 노래가 4분쯤</b>, 악기만 60초는 10분쯤 걸렸습니다</li>
@@ -1629,9 +1808,10 @@ article.goods.hide{display:none !important}
 <li>무료판은 30초 노래, 정품 키를 넣으면 4분까지. 윈도우 10·11 64비트, 램 8GB</li></ul>
       </details>
 <div class="g-buy">
-        <span class="g-price">34,900<small>원</small></span>
-        <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음</span>
-        <a class="btn fill" data-pay="songfactory" data-won="34900" data-usd="2499" href="javascript:void(0)" onclick="payWithPaddle('songfactory')">카드로 결제하기</a>
+        <span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('songfactory')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('songfactory','y')">1년 결제 · 29,000원</a>
         <a class="btn line" href="try.html?lang=ko#songfactory">무료로 먼저 써 보기</a>
         <span class="g-note" data-pay-note="songfactory">무료로 먼저 써 보실 수 있어요. 30초 노래는 무료로 만듭니다.</span>
       </div>
@@ -1650,18 +1830,17 @@ article.goods.hide{display:none !important}
   <article class="goods" id="p-bundle" data-job="school shop office solo" style="display:block;background:linear-gradient(135deg,#FFF3EA,#FDF8EE);border:2px dashed var(--terra);border-radius:22px;padding:26px 28px">
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:22px">
       <div style="flex:1 1 320px">
-        <div class="g-head"><span class="g-emoji">🧡</span><h3>파는 도구 전부 — 열한 가지</h3></div>
-        <p class="g-tag">낱개로 다 모으면 236,000원, 세트로는 89,000원 — 147,000원 아낍니다</p>
-        <p class="g-story">묶음에 들어 있는 <b>열한 가지</b>는 이렇습니다 — <b>표 뽑개 · 한글 모아담기 · 공문 검사개</b>(새로 나온 셋) · 스마트 자료취합기 · 스마트 서식채우기 · 스마트 명단대조기 · 빠른입력기 · 책상 위 정원 · 마음 서랍 · 밸류스 계산대 · 밸류스 예약수첩.
-          무료로 드리는 세 가지(캡처 색연필 · PDF 반짇고리 · 폴더지킴이)와 「밸류스 단추」도 물론 같이 옵니다.
-          정품 키 하나로 열한 가지가 전부 열리고, 업데이트도 평생 무료로 따라옵니다.</p>
-        <p class="g-note" style="max-width:none;margin-top:8px">※ <b>가려서 보내기 파일판 · 자동화 비서 · 정산 대조기 · 돈 맞추개</b>와 <b>통역책상</b>은 이 묶음에 들어 있지 않습니다. 따로 파는 물건이라 있는 그대로 알려 드립니다.</p>
+        <div class="g-head"><span class="g-emoji">🧡</span><h3>밸류스 전부 — 윈도우 프로그램 스무 가지 + AI 백화점</h3></div>
+        <p class="g-tag">낱개로 다 구독하면 한 달 59,000원, 전부로는 14,900원입니다</p>
+        <p class="g-story">아래 «달마다 결제»로 파는 <b>스무 가지가 전부</b> 열립니다 — 표 뽑개 · 회의록 만들개 · 정산 대조기 · 통역책상(열다섯 말) · 스마트 자료취합기 · 스마트 서식채우기 · 스마트 명단대조기 · 한글 모아담기 · 가려서 보내기 파일판 · 돈 맞추개 · 예약수첩 · 스캔한 것처럼 · 노래 공장 · 빠른입력기 · 공문 검사개 · 도장 오리개 · 작업 증거 상자 · 밸류스 계산대 · 책상 위 정원 · 마음 서랍.
+          <a href="ai/?lang=ko">AI 백화점</a>의 방도 전부 함께 쓰십니다. 무료로 드리는 세 가지(캡처 색연필 · PDF 반짇고리 · 폴더지킴이)와 「밸류스 단추」도 물론 같이 옵니다.</p>
+        <p class="g-note" style="max-width:none;margin-top:8px">※ <b>자동화 비서 · AI 사무직원</b>은 따로 파는 큰 물건이라 이 묶음에 들어 있지 않습니다. 있는 그대로 알려 드립니다.</p>
       </div>
-      <div style="flex:0 0 auto;text-align:center;min-width:210px">
-        <div style="font-size:14px;color:var(--ink3);text-decoration:line-through">236,000원</div>
-        <span class="g-price" style="font-size:34px">89,000<small>원</small></span>
-        <div class="g-note" style="margin:4px 0 12px">한 번 결제 · 평생 사용 · 구독 없음</div>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('bundle')">결제하기</a>
+      <div style="flex:1 1 210px;text-align:center;min-width:0">
+        <span class="g-price" style="font-size:34px">14,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <div class="g-note" style="margin:4px 0 12px">달마다 결제 · 언제든 해지<br>1년이면 149,000원 <span style="white-space:nowrap">(두 달 덤)</span></div>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('bundle')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('bundle','y')" style="margin-top:8px;display:inline-block">1년 결제 · 149,000원</a>
       </div>
     </div>
   </article>
@@ -1780,9 +1959,10 @@ article.goods.hide{display:none !important}
       ③ 한 줄을 <b>여러 비목으로 쪼개는 일</b>은 아직 못 합니다.<br>
       ④ 정산보고서의 「재원계획대비실적」·「사업성과」 장은 손대지 않습니다. 나라에서 정한 양식이 없는 자유 양식이라서입니다.
     </p>
-    <div class="g-buy"><span class="g-price">49,000<small>원</small></span>
-      <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음 · 윈도우용</span>
-      <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('settle')">결제하기</a>
+    <div class="g-buy"><span class="g-price">4,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지 · 윈도우용<br>1년이면 49,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('settle')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('settle','y')">1년 결제 · 49,000원</a>
       <a class="mbtn" href="mailto:ranger7903@nate.com?subject=%EC%A0%95%EC%82%B0%20%EB%8C%80%EC%A1%B0%EA%B8%B0%20%EB%AC%B8%EC%9D%98">💌 먼저 물어보기</a></div>
     <details class="g-reviews">
       <summary>💬 쓰신 분들의 한 줄 — 눌러서 보기 · 남기기</summary>
@@ -1822,9 +2002,10 @@ article.goods.hide{display:none !important}
       ④ 보낸 이름도 다르고 금액도 딱 맞지 않으면 붙이지 못하고 「모르는 입금」으로 남깁니다.<br>
       ⑤ 파일을 <b>끌어다 놓는 것은 아직 안 됩니다.</b> 「고르기」 단추로 고르셔야 합니다.
     </p>
-    <div class="g-buy"><span class="g-price">29,900<small>원</small></span>
-      <span class="g-note">한 번 결제 · 평생 사용 · 구독 없음 · 윈도우용</span>
-      <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('money')">결제하기</a>
+    <div class="g-buy"><span class="g-price">2,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <span class="g-note">달마다 결제 · 언제든 해지 · 윈도우용<br>1년이면 29,000원 <span style="white-space:nowrap">(두 달 덤)</span></span>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('money')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('money','y')">1년 결제 · 29,000원</a>
       <a class="mbtn" href="mailto:ranger7903@nate.com?subject=%EB%8F%88%20%EB%A7%9E%EC%B6%94%EA%B0%9C%20%EB%AC%B8%EC%9D%98">💌 먼저 물어보기</a></div>
     <details class="g-reviews">
       <summary>💬 쓰신 분들의 한 줄 — 눌러서 보기 · 남기기</summary>
@@ -1854,10 +2035,11 @@ article.goods.hide{display:none !important}
 <li>윈도우용입니다 (맥·리눅스판은 아직 없습니다)</li></ul>
       </div>
       <div style="flex:1 1 260px;text-align:center;min-width:0;max-width:100%">
-        <div style="font-size:13px;color:var(--ink-2);margin-bottom:2px">한 번 결제 · 평생 사용</div>
-        <span class="g-price" style="font-size:32px">39,000<small>원</small></span>
-        <div class="g-note" style="margin:8px 0 12px">받아쓰기를 사람에게 맡기면<br><b>한 시간에 6만 원</b>부터입니다</div>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('hoeuirok')">카드로 결제하기</a>
+        <div style="font-size:13px;color:var(--ink-2);margin-bottom:2px">달마다 결제 · 언제든 해지</div>
+        <span class="g-price" style="font-size:32px">4,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <div class="g-note" style="margin:8px 0 12px">1년이면 49,000원 <span style="white-space:nowrap">(두 달 덤)</span><br>받아쓰기를 사람에게 맡기면 <b>한 시간에 6만 원</b>부터입니다</div>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('hoeuirok')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('hoeuirok','y')" style="margin-top:8px;display:inline-block">1년 결제 · 49,000원</a>
         <div class="g-note" style="margin-top:10px;line-height:1.6">결제하시면 <b>정품 키가 바로 메일로</b> 갑니다.</div>
         <div class="g-note" style="margin-top:10px;line-height:1.6">결제가 끝나면 위 차림표의 <b>「업데이트 받는 곳」</b>에서 키를 넣어 바로 내려받으실 수 있습니다. (약 136MB)</div>
         <div class="g-note" style="margin-top:10px;line-height:1.6;color:#5f5648;border:1px solid #e6dcce;background:#faf6ef;border-radius:10px;padding:9px 11px;text-align:left"><b>내 컴퓨터로 될까요?</b><br>윈도우 10·11 이면 됩니다. 램이 4GB 보다 작으면 「가벼움」만 쓰시는 것이 좋습니다. 10분 녹음에 4~6분쯤 걸리니, 한 시간 회의는 커피 한 잔 드시는 동안 끝납니다.</div>
@@ -1895,13 +2077,11 @@ article.goods.hide{display:none !important}
 <li>전부 내 컴퓨터 안에서 — 대화가 밖으로 한 발짝도 안 나가요</li></ul>
       </div>
       <div style="flex:1 1 260px;text-align:center;min-width:0;max-width:100%">
-        <div style="font-size:13px;color:var(--ink-2);margin-bottom:2px">한국어 ↔ 영어 기본판</div>
-        <span class="g-price" style="font-size:32px">69,000<small>원</small></span>
-        <div style="font-size:13px;color:var(--ink-2);margin:10px 0 2px">열다섯 가지 말 전부<br><span style="font-size:11px">(통역 열 말 + 받아쓰기 다섯 말)</span></div>
-        <span class="g-price" style="font-size:32px">149,000<small>원</small></span>
-        <div class="g-note" style="margin:8px 0 12px">한 번 결제 · 평생 사용<br>말은 나중에 더 넣을 수 있어요</div>
-        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('translator_basic')">기본판 결제하기</a>
-        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('translator_all')" style="margin-top:8px;display:inline-block">열다섯 말 전부 결제하기</a>
+        <div style="font-size:13px;color:var(--ink-2);margin-bottom:2px">열다섯 가지 말 전부<br><span style="font-size:11px">(통역 열 말 + 받아쓰기 다섯 말)</span></div>
+        <span class="g-price" style="font-size:32px">4,900<small>원</small></span><small style="font-size:14px;color:var(--ink-2)"> / 달</small>
+        <div class="g-note" style="margin:8px 0 12px">달마다 결제 · 언제든 해지<br>1년이면 49,000원 <span style="white-space:nowrap">(두 달 덤)</span></div>
+        <a class="btn fill" href="javascript:void(0)" onclick="payWithPaddle('translator_basic')">달마다 결제하기</a>
+        <a class="btn line" href="javascript:void(0)" onclick="payWithPaddle('translator_basic','y')" style="margin-top:8px;display:inline-block">1년 결제 · 49,000원</a>
         <div class="g-note" style="margin-top:10px;line-height:1.6">결제하시면 <b>정품 키가 바로 메일로</b> 갑니다.<br>위 차림표의 <b>「업데이트 받는 곳」</b>에서 키를 넣으시면 그 자리에서 바로 내려받으실 수 있습니다. (약 280MB)</div>
         <div class="g-note" style="margin-top:10px;line-height:1.6;color:#5f5648;border:1px solid #e6dcce;background:#faf6ef;border-radius:10px;padding:9px 11px;text-align:left"><b>말마다 얼마나 되는지, 재 보고 적었습니다.</b><br>스무 개 말을 <b>사람이 옮긴 글과 하나하나 견주어</b> 재 봤습니다. 그래서 위에 통역까지 되는 열 말과 <b>받아쓰기 전용</b>인 다섯 말을 나눠 적어 두었습니다. 혹시 이 다섯 말 때문에 사셨다면 언제든 물러 드립니다.</div>
       </div>
@@ -2211,7 +2391,7 @@ article.goods.hide{display:none !important}
       · <b>통역책상</b> — 처음 한 번 번역 두뇌를 받을 때 · <b>AI 사무직원</b> — 영수증 사진 읽기를 처음 쓸 때 글자 읽기 두뇌(약 95MB)를 받을 때, 여쭌 뒤에만 (받은 뒤에는 인터넷 없이 됩니다)<br>
       · <b>자동화 비서</b> — 메일을 읽어 올 때와, 켜 두신 알림(카카오톡·메일)을 보낼 때. 메일을 간추리는 일은 이 컴퓨터 안에서 합니다</p></details>
   <details><summary>구독인가요?</summary>
-    <p>자동화 비서와 AI 사무직원 두 가지만 달마다 내는 구독이에요. 나머지는 한 번 결제하면 기간 제한 없이 쓰실 수 있고, 같은 버전대(v1.x) 업데이트는 무료로 드려요.</p></details>
+    <p>네, 2026년 11월 19일부터 파는 프로그램은 모두 달마다 내는 구독이에요. 작은 도구 1,900원 · 보통 도구 2,900원 · 큰 도구 4,900원 · 전부 14,900원이고, 1년치로 내시면 열 달 값이에요. 해지는 결제 메일의 「구독 관리」에서 언제든 하실 수 있고, 해지해도 이미 낸 기간 끝까지 쓰세요.</p></details>
   <details><summary>회사 컴퓨터 여러 대에 설치하고 싶어요.</summary>
     <p>기본은 컴퓨터 1대 기준이에요. 여러 대나 기관 단위로 쓰실 때는 <a href="기관구매.html">학교·기관 구매 쪽</a>에서 대수를 적으시면 <b>견적서가 그 자리에서 바로 나와요.</b> 스무 대가 넘으면 기관 단위로 값을 다시 매겨 드려요.</p></details>
   <details><summary>한글(HWP) 파일도 되나요?</summary>

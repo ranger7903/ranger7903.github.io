@@ -250,7 +250,7 @@ footer{margin:50px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
 try { Paddle.Initialize({ token: "live_945afb1a1e3998081592ff13ef5" }); } catch (e) {}
 (function(){
 'use strict';
-var 빼는것 = { office:1, bisu:1 };          // 매달 내는 것은 견적서에서 뺀다 (품의가 복잡해집니다)
+var 빼는것 = { office:1, bisu:1, translator_all:1 };          // 매달 내는 것은 견적서에서 뺀다 (품의가 복잡해집니다)
 var 상품 = [], 고름 = {};
 
 function 돈(n){ return n.toLocaleString('ko-KR') + '원'; }
@@ -274,7 +274,8 @@ fetch('prices.json', {cache:'no-store'})
       var v = m[k];
       if (v['무료'] || !v['원'] || 빼는것[k]) return;
       if (!v['paddle']) return;
-      상품.push({ 열쇠:k, 이름:v['이름'], 원:v['원'], 값ID:v['paddle'] });
+      // [2026-11-19] 파는 도구가 모두 구독이 되었다. 학교·기관은 품의가 쉬운 «1년 이용»으로 견적한다.
+      상품.push({ 열쇠:k, 이름:v['이름'] + (v['1년원'] ? ' (1년 이용)' : ''), 원:(v['1년원'] || v['원']), 값ID:(v['paddle_1년'] || v['paddle']), 도구:(v['설치파일'] === '*' ? 'all' : v['설치파일']) });
     });
     상품.sort(function(a,b){ return b.원 - a.원; });
     그리기();
@@ -286,7 +287,7 @@ fetch('prices.json', {cache:'no-store'})
   });
 
 function 그리기(){
-  var h = '<table><thead><tr><th>물건</th><th class="num" style="width:110px">값 (한 대)</th>' +
+  var h = '<table><thead><tr><th>물건</th><th class="num" style="width:110px">1년 값 (한 대)</th>' +
           '<th style="width:150px">대수</th><th class="num" style="width:120px">금액</th></tr></thead><tbody>';
   상품.forEach(function(p){
     h += '<tr><td>' + 막기(p.이름) + '</td>' +
@@ -335,7 +336,7 @@ function 찾기(열쇠){
 }
 function 줄들(){
   return 상품.filter(function(p){ return (고름[p.열쇠]||0) > 0; })
-             .map(function(p){ return {이름:p.이름, 값:p.원, 수:고름[p.열쇠], 합:p.원*고름[p.열쇠], 값ID:p.값ID}; });
+             .map(function(p){ return {이름:p.이름, 값:p.원, 수:고름[p.열쇠], 합:p.원*고름[p.열쇠], 값ID:p.값ID, 도구:p.도구}; });
 }
 function 더하기(){
   var L = 줄들();
@@ -403,7 +404,7 @@ document.getElementById('만들기').addEventListener('click', function(){
        '· <b>공급자는 간이과세자이므로 세금계산서가 발급되지 않습니다.</b> ' +
        '카드 영수증과 거래명세서를 드립니다.<br>' +
        '· 수량은 설치할 컴퓨터 대수이며, 정품 키 하나로 그 대수만큼 설치합니다.<br>' +
-       '· 한 번 사시면 기간 제한 없이 쓰실 수 있고, 같은 판(v1.x) 업데이트는 무료입니다.<br>' +
+       '· <b>1년 이용 구독</b>입니다. 1년 뒤 같은 값으로 이어지며, 결제 메일의 「구독 관리」에서 언제든 해지하실 수 있습니다. 업데이트는 늘 무료로 따라옵니다.<br>' +
        '· 결제는 카드(법인카드 가능)로 합니다. 결제 대행: Paddle. 결제가 끝나면 정품 키가 결제 메일로 바로 갑니다.' +
        '</div>';
 
@@ -419,9 +420,15 @@ document.getElementById('결제버튼').addEventListener('click', function(){
   var L = 줄들();
   if (!L.length) return;
   if (!window.Paddle || !Paddle.Checkout) { alert('결제창을 불러오지 못했습니다. 잠시 뒤 새로고침해 주십시오.'); return; }
+  // [2026-11-19] 구독은 결제 한 번에 한 가지씩이다(어느 도구인지를 결제창이 하나만 실어 보낸다).
+  if (L.length > 1) {
+    alert('구독은 한 번 결제에 한 가지씩 됩니다.\n\n여러 가지를 쓰신다면 「밸류스 전부」(1년 149,000원, 한 대) 하나로 모두 열리니 그쪽이 더 쌉니다.\n그렇지 않으면 한 가지만 남기고 결제하신 뒤, 다음 것을 다시 고르셔서 결제해 주십시오.');
+    return;
+  }
   Paddle.Checkout.open({
     items: L.map(function(x){ return { priceId: x.값ID, quantity: x.수 }; }),
-    settings: { locale: 'ko' }
+    settings: { locale: 'ko' },
+    customData: { tool: L[0].도구 }
   });
 });
 })();

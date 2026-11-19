@@ -207,8 +207,8 @@ VALUES (registered name 사재기)<br>
 try { Paddle.Initialize({ token: "live_945afb1a1e3998081592ff13ef5" }); } catch (e) {}
 (function(){
 'use strict';
-var skip = { office:1, bisu:1 };
-var EN = { translator_all:'Interpreter Desk (all fifteen languages)', bundle:'Desk Set (eleven desk tools in one bundle)', translator_basic:'Interpreter Desk (Korean ↔ English)', settle:'Grant Settlement Checker', pdfgrab:'Table Grabber', hoeuirok:'Minutes Maker', listcompare:'Smart List Compare', moahwp:'Korean Form Gatherer', garifile:'Redact for Files', money:'Receivables Matcher', merger:'Smart Data Merger', formfiller:'Smart Form Filler', booking:'Booking Notebook', quick:'Quick Typer', gongmun:'Official Letter Checker', counter:'VALUES Counter', garden:'Desk Garden', handwrite:'Heart Drawer (PC)' };
+var skip = { office:1, bisu:1, translator_all:1 };
+var EN = { translator_all:'Interpreter Desk (all fifteen languages)', bundle:'VALUES Everything (all twenty Windows tools + AI Store)', translator_basic:'Interpreter Desk (all fifteen languages)', settle:'Grant Settlement Checker', pdfgrab:'Table Grabber', hoeuirok:'Minutes Maker', listcompare:'Smart List Compare', moahwp:'Korean Form Gatherer', garifile:'Redact for Files', money:'Receivables Matcher', merger:'Smart Data Merger', formfiller:'Smart Form Filler', booking:'Booking Notebook', quick:'Quick Typer', gongmun:'Official Letter Checker', counter:'VALUES Counter', garden:'Desk Garden', handwrite:'Heart Drawer (PC)' };
 var items = [], picked = {};
 function won(n){ return '₩' + n.toLocaleString('en-US'); }
 function today(){ return new Date().toISOString().slice(0,10); }
@@ -221,7 +221,8 @@ fetch('prices.json', {cache:'no-store'}).then(function(r){ return r.json(); }).t
     var v = m[k];
     if (v['무료'] || !v['원'] || skip[k]) return;
     if (!v['paddle']) return;
-    items.push({ key:k, name:(EN[k] || v['이름']), won:v['원'], pid:v['paddle'] });
+    // [2026-11-19] Every paid tool is now a plan; schools and offices get the yearly price.
+    items.push({ key:k, name:(EN[k] || v['이름']) + (v['1년원'] ? ' (1 year)' : ''), won:(v['1년원'] || v['원']), pid:(v['paddle_1년'] || v['paddle']), tool:(v['설치파일'] === '*' ? 'all' : v['설치파일']) });
   });
   items.sort(function(a,b){ return b.won - a.won; });
   draw();
@@ -263,7 +264,7 @@ function set(key,n){
 }
 function find(key){ for(var i=0;i<items.length;i++) if(items[i].key===key) return items[i]; return {won:0,name:''}; }
 function lines(){ return items.filter(function(p){return (picked[p.key]||0)>0;})
-  .map(function(p){ return {name:p.name, unit:p.won, qty:picked[p.key], amt:p.won*picked[p.key], pid:p.pid}; }); }
+  .map(function(p){ return {name:p.name, unit:p.won, qty:picked[p.key], amt:p.won*picked[p.key], pid:p.pid, tool:p.tool}; }); }
 function sum(){
   var L=lines(), t=L.reduce(function(s,x){return s+x.amt;},0);
   document.getElementById('sumbox').style.display = L.length?'block':'none';
@@ -308,7 +309,7 @@ document.getElementById('make').addEventListener('click', function(){
        '· <b>The supplier is a simplified taxpayer; no Korean tax invoice is issued.</b> ' +
        'A card receipt and a statement of account are provided instead.<br>' +
        '· Quantity is the number of computers; one licence key covers that many computers.<br>' +
-       '· One payment, no subscription. Updates within the same version line (v1.x) are free.<br>' +
+       '· <b>A one-year plan.</b> It renews at the same price after a year; cancel any time from the payment email (Manage subscription). Updates are always included.<br>' +
        '· Payment by card (company cards accepted), processed by Paddle. The licence key is emailed as soon as payment is done.</div>';
   document.getElementById('quotebody').innerHTML = h;
   document.getElementById('paper').classList.add('on');
@@ -319,7 +320,8 @@ document.getElementById('print').addEventListener('click', function(){ window.pr
 document.getElementById('paybtn').addEventListener('click', function(){
   var L=lines(); if(!L.length) return;
   if(!window.Paddle || !Paddle.Checkout){ alert('The checkout did not load. Please refresh the page.'); return; }
-  Paddle.Checkout.open({ items: L.map(function(x){ return { priceId:x.pid, quantity:x.qty }; }), settings:{ locale:'en' } });
+  if(L.length>1){ alert('Plans are paid one tool at a time.\n\nIf you need several, VALUES Everything (one year, one computer) opens them all and costs less. Otherwise keep one tool, pay, then choose the next.'); return; }
+  Paddle.Checkout.open({ items: L.map(function(x){ return { priceId:x.pid, quantity:x.qty }; }), settings:{ locale:'en' }, customData:{ tool: L[0].tool } });
 });
 })();
 </script>

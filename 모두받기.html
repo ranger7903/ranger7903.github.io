@@ -140,7 +140,15 @@
     var e = document.getElementById('err');
     e.textContent = msg; e.style.display = 'block';
   }
-  function b64d(s) {
+  function 쓸날(info){ // 2026-11-19 구독 키에는 u(쓸 수 있는 마지막 날)가 있다
+  if(!info || !info.u) return null;
+  var d = (typeof info.u === 'number') ? new Date(info.u > 1e12 ? info.u : info.u*1000) : new Date(String(info.u).slice(0,10)+'T23:59:59+09:00');
+  if(isNaN(d.getTime())) return null;
+  var k = new Date(d.getTime()+9*3600000).toISOString().slice(0,10);
+  return {날:k, 지남: Date.now() > d.getTime()};
+}
+
+function b64d(s) {
     s = s.replace(/-/g, '+').replace(/_/g, '/');
     while (s.length % 4) s += '=';
     var bin = atob(s), u = new Uint8Array(bin.length);
@@ -179,13 +187,15 @@
     } catch (e) {
       탈('이름표를 읽지 못했어요. 메일의 글자 전체를 다시 복사해 주세요.'); return;
     }
+    var 날 = 쓸날(info);
+    if (날 && 날.지남) { 탈('이 이름표는 ' + 날.날 + '까지 쓰는 것이에요. 구독이 이어지고 있으면 새 이름표가 메일로 갔을 거예요. 없으면 ranger7903@nate.com 으로 알려 주세요.'); return; }
 
     var 전부 = (info.p && info.p.indexOf('*') >= 0);
     var 내것 = 전부 ? Object.keys(NAMES) : (info.p || []);
     if (내것.indexOf('button') < 0) 내것 = 내것.concat(['button']);   // 단추는 누구에게나
 
     document.getElementById('hello').textContent =
-      (info.n || '고객') + '님의 프로그램입니다.' + (전부 ? ' (책상 세트)' : '');
+      (info.n || '고객') + '님의 프로그램입니다.' + (전부 ? ' (책상 세트)' : '') + (날 ? ' · ' + 날.날 + '까지 쓰는 이름표' : '');
 
     fetch('tools.manifest.json', { cache: 'no-store' })
       .then(function (r) { return r.json(); })

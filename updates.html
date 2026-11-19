@@ -47,7 +47,7 @@ textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12
 <nav><div class="shell"><a class="brand" href="./"><span class="stamp">値</span><b>밸류스</b></a></div></nav>
 <div class="shell">
 <h1>업데이트 받는 곳</h1>
-<p class="sub">한 번 데려간 도구는 v1.x 업데이트가 평생 무료예요.<br>정품 이름표(구매 시 메일로 드린 키)만 있으면 이 자리에서 바로 내려받으실 수 있습니다.</p>
+<p class="sub">구독하시는 동안 업데이트는 모두 무료예요.<br>정품 이름표(결제하면 메일로 드리는 키)만 있으면 이 자리에서 바로 내려받으실 수 있습니다.<br>다음 결제가 되면 새 이름표를 메일로 다시 보내 드려요.</p>
 
 <!-- ── 파란 경고창 미리 알려 드리기 (2026-09-15) ─────────────
      손님이 경고를 «만나고 나서» 놀라지 않도록, 내려받기 전에 먼저 보여 준다.
@@ -156,6 +156,15 @@ function b64d(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4)s+='
   var bin=atob(s), u=new Uint8Array(bin.length);
   for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return u; }
 
+
+function 쓸날(info){ // 2026-11-19 구독 키에는 u(쓸 수 있는 마지막 날)가 있다
+  if(!info || !info.u) return null;
+  var d = (typeof info.u === 'number') ? new Date(info.u > 1e12 ? info.u : info.u*1000) : new Date(String(info.u).slice(0,10)+'T23:59:59+09:00');
+  if(isNaN(d.getTime())) return null;
+  var k = new Date(d.getTime()+9*3600000).toISOString().slice(0,10);
+  return {날:k, 지남: Date.now() > d.getTime()};
+}
+
 function showErr(msg){ var e=document.getElementById('err');
   e.textContent=msg; e.style.display='block'; }
 
@@ -221,6 +230,8 @@ document.getElementById('check').onclick = function(){
     }
     info = JSON.parse(new TextDecoder().decode(payload));
   }catch(e){ showErr('키를 읽지 못했어요. 메일의 키 전체를 다시 복사해 주세요.'); return; }
+  var 날 = 쓸날(info);
+  if(날 && 날.지남){ showErr('이 키는 ' + 날.날 + '까지 쓰는 키예요. 구독이 이어지고 있으면 새 키가 메일로 갔을 거예요. 메일함을 찾아보시고, 없으면 ranger7903@nate.com 으로 알려 주세요.'); return; }
 
   // 「파는 도구 전부」 세트에 들어 있는 열네 가지. 통역책상·AI 사무직원은
   // 따로 파는 물건이라 세트 키('*')로는 열리지 않는다.
@@ -232,7 +243,7 @@ document.getElementById('check').onclick = function(){
   // 「밸류스 단추」는 다른 도구를 한 자리에서 여는 열쇠고리라, 어떤 키를 가진 분께든 드린다
   if(mine.indexOf('button') < 0) mine = mine.concat(['button']);
   document.getElementById('hello').textContent =
-    (info.n || '고객') + '님, 반가워요! 🧡' + (all ? ' (파는 도구 전부)' : '');
+    (info.n || '고객') + '님, 반가워요! 🧡' + (all ? ' (파는 도구 전부)' : '') + (날 ? ' · ' + 날.날 + '까지 쓰는 키' : '');
 
   fetch('tools.manifest.json', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(m){
     MANIFEST = m;
