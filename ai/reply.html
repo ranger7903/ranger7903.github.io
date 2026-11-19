@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three-Line Reply — VALUES AI Store</title>
+<meta name="description" content="Paste an email, choose yes, no or ask more, and get two polite reply drafts. 답장 세 줄.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=work" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" style="min-height:200px" data-i-ph="ph"></textarea>
+      <p class="sub" style="margin:12px 0 6px" data-i="mode_q"></p>
+      <div class="row" style="margin-top:0" role="radiogroup">
+        <label><input type="radio" name="mode" value="accept" checked> <span data-i="m_accept"></span></label>
+        <label><input type="radio" name="mode" value="decline"> <span data-i="m_decline"></span></label>
+        <label><input type="radio" name="mode" value="ask"> <span data-i="m_ask"></span></label>
+      </div>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Three-Line Reply — VALUES AI Store",ko:"답장 세 줄 — 밸류스 AI 백화점"},
+  back:{en:"← Work & Office",ko:"← 일·사무"},
+  h1:{en:"✉️ Three-Line Reply",ko:"✉️ 답장 세 줄"},
+  lead:{en:"Paste the email or message you got, choose yes, no or ask more, and get two polite drafts you can paste back.",
+        ko:"받은 메일이나 메시지를 붙여 넣고 수락·거절·더 물어보기를 고르면, 바로 붙일 수 있는 공손한 답장 초안 두 개를 드려요."},
+  label:{en:"The email or message you got",ko:"받은 메일·메시지"},
+  ph:{en:"Paste it here (up to 4,000 characters).",ko:"여기에 붙여 넣으세요 (4,000글자까지)."},
+  mode_q:{en:"How do you want to answer?",ko:"어떻게 답할까요?"},
+  m_accept:{en:"Yes, accept",ko:"수락"}, m_decline:{en:"No, decline",ko:"거절"}, m_ask:{en:"Ask more first",ko:"더 물어보기"},
+  go:{en:"Write my replies",ko:"답장 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Paste the message first.",ko:"먼저 받은 글을 붙여 넣어 주세요."},
+  d1:{en:"Draft 1 · warmer",ko:"초안 1 · 따뜻하게"}, d2:{en:"Draft 2 · shorter",ko:"초안 2 · 짧게"}, tip:{en:"Before you send",ko:"보내기 전에"},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"We send your message to an AI with one job: write two short polite replies in your chosen direction.",ko:"받은 글을 AI 에게 보내, 고르신 방향으로 짧고 공손한 답장 두 개만 쓰게 해요."},
+  h2s:{en:"It does not invent dates, prices or promises. Where something is missing it leaves a blank like [date].",ko:"날짜·값·약속을 지어내지 않아요. 빠진 것은 [날짜]처럼 빈칸으로 남겨요."},
+  h3s:{en:"You copy, edit and send it yourself. We never send anything for you.",ko:"복사해서 고쳐 쓰고 직접 보내세요. 저희가 대신 보내지 않아요."}
+});
+var SAMPLE={ko:"안녕하세요, 마케팅팀 김지은입니다.\n다음 주 목요일 오후 3시에 신제품 홍보 협업 관련 회의를 하고 싶은데 시간 괜찮으실까요?\n장소는 저희 회사 3층 회의실이고, 1시간 정도 걸릴 것 같습니다.\n가능 여부 알려 주시면 감사하겠습니다.",
+            en:"Hi Sam,\nWould you be free to join a 30-minute call next Tuesday at 10 am to talk about the spring catalogue?\nWe would also like your rough price for 200 printed copies.\nThanks,\nLaura"};
+function mode(){ var r=document.querySelector('input[name="mode"]:checked'); return r?r.value:"accept"; }
+function E(s){ return VT.esc(s).replace(/\n/g,"<br>"); }
+VTB.mount({
+  room:"reply",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t,opt:{mode:mode()}}:"empty"; },
+  render:function(a){
+    return [0,1].map(function(i){ return '<div class="box" style="margin-top:12px"><b>'+VT.t(i?"d2":"d1")+'</b><p style="margin:8px 0 0">'+E(a.drafts[i])+'</p>'+
+      '<div class="row"><button class="btn ghost" type="button" data-copy="'+VT.esc(a.drafts[i])+'">'+VT.t("b_copy")+'</button><span class="note"></span></div></div>'; }).join("")+
+      '<p class="note"><b>'+VT.t("tip")+':</b> '+VT.esc(a.tip)+'</p>';
+  },
+  copy:function(a){ return a.drafts[0]; }
+});
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

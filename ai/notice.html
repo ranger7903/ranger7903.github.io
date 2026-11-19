@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notices in My Language — VALUES AI Store</title>
+<meta name="description" content="Paste a notice and choose a language. Get a plain explanation plus dates, things to bring and money pulled out. 우리말 공지 풀어 주기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=family" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" style="min-height:200px" data-i-ph="ph"></textarea>
+      <label for="to" class="sub" style="display:block;margin-top:12px" data-i="to_q"></label>
+      <select id="to" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px;max-width:100%"></select>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Notices in My Language — VALUES AI Store",ko:"우리말 공지 풀어 주기 — 밸류스 AI 백화점"},
+  back:{en:"← Family Care",ko:"← 가족 돌봄"},
+  h1:{en:"🌏 Notices in My Language",ko:"🌏 우리말 공지 풀어 주기"},
+  lead:{en:"Paste a notice from a school, landlord or office and choose a language. Get it explained in plain words, with dates, things to bring and money pulled out.",
+        ko:"학교·집주인·관공서 공지를 붙여 넣고 말을 고르세요. 그 말로 쉽게 풀어 드리고, 날짜·준비물·낼 돈만 따로 뽑아 드려요."},
+  label:{en:"The notice",ko:"공지"},
+  ph:{en:"Paste the notice here (up to 4,000 characters).",ko:"공지를 붙여 넣으세요 (4,000글자까지)."},
+  to_q:{en:"Explain it in",ko:"이 말로 풀어 주세요"},
+  go:{en:"Explain it",ko:"풀어 주기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Paste the notice first.",ko:"먼저 공지를 붙여 넣어 주세요."},
+  plain:{en:"In plain words",ko:"쉽게 풀면"}, dates:{en:"📅 Dates",ko:"📅 날짜"}, bring:{en:"🎒 To bring or prepare",ko:"🎒 준비물"},
+  money:{en:"💰 Money",ko:"💰 낼 돈"}, todo:{en:"✍️ To do",ko:"✍️ 할 일"}, none:{en:"None in this notice.",ko:"이 공지에는 없어요."},
+  check:{en:"Please check numbers and dates against the original notice.",ko:"숫자와 날짜는 원래 공지와 한 번 맞춰 보세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Numbers, dates and amounts are copied exactly; nothing that is not in the notice is added.",ko:"숫자·날짜·금액은 적힌 그대로 옮기고, 공지에 없는 것은 보태지 않아요."},
+  h2s:{en:"Explanation languages: Korean, English, Chinese, Vietnamese, Japanese, Thai, Filipino, Russian, Uzbek, Mongolian, Nepali, Khmer, Indonesian, Spanish, French.",
+       ko:"풀어 줄 수 있는 말: 한국어·영어·중국어·베트남어·일본어·태국어·필리핀어·러시아어·우즈베크어·몽골어·네팔어·크메르어·인도네시아어·스페인어·프랑스어."}
+});
+var TO=[["ko","한국어","Korean"],["en","English","English"],["zh","中文 (중국어)","中文 (Chinese)"],["vi","Tiếng Việt (베트남어)","Tiếng Việt (Vietnamese)"],
+  ["ja","日本語 (일본어)","日本語 (Japanese)"],["th","ไทย (태국어)","ไทย (Thai)"],["tl","Filipino (필리핀어)","Filipino"],["ru","Русский (러시아어)","Русский (Russian)"],
+  ["uz","Oʻzbek (우즈베크어)","Oʻzbek (Uzbek)"],["mn","Монгол (몽골어)","Монгол (Mongolian)"],["ne","नेपाली (네팔어)","नेपाली (Nepali)"],["km","ខ្មែរ (크메르어)","ខ្មែរ (Khmer)"],
+  ["id","Bahasa Indonesia (인도네시아어)","Bahasa Indonesia"],["es","Español (스페인어)","Español (Spanish)"],["fr","Français (프랑스어)","Français (French)"]];
+function fillTo(){ var s=document.getElementById("to"), v=s.value||(VT.lang==="ko"?"vi":"en");
+  s.innerHTML=TO.map(function(x){ return '<option value="'+x[0]+'">'+VT.esc(VT.lang==="ko"?x[1]:x[2])+'</option>'; }).join(""); s.value=v; }
+var SAMPLE={ko:"[가정통신문] 겨울방학 돌봄교실 신청 안내\n방학 기간: 12월 29일(월) ~ 2월 27일(금)\n신청 기간: 12월 1일(월) ~ 12월 5일(금) 오후 4시까지\n간식비: 월 20,000원 (스쿨뱅킹 자동 이체)\n준비물: 실내화, 개인 물병\n신청서는 학교 누리집에서 내려받아 담임선생님께 제출해 주세요.",
+            en:"Dear tenants,\nThe water will be shut off on Thursday, March 12 from 9 am to 2 pm for pipe repairs.\nPlease store some water in advance.\nThe repair fee of $15 per unit will be added to the April rent.\nIf you need help, reply to this message by March 10."};
+function list(a){ return a.length?'<ul class="steps">'+a.map(function(x){return '<li>'+VT.esc(x)+'</li>';}).join("")+'</ul>':'<p class="note">'+VT.t("none")+'</p>'; }
+VTB.mount({
+  room:"notice",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t,opt:{to:document.getElementById("to").value}}:"empty"; },
+  render:function(a){
+    return '<p class="note">'+VT.t("check")+'</p><div class="box" style="margin-top:8px"><b>'+VT.t("plain")+'</b><p style="margin:8px 0 0">'+VT.esc(a.plain).replace(/\n/g,"<br>")+'</p></div>'+
+      '<h2 style="margin-top:18px">'+VT.t("dates")+'</h2>'+(a.dates.length?'<ul class="signals">'+a.dates.map(function(d){return '<li><b>'+VT.esc(d.when)+'</b>'+VT.esc(d.what)+'</li>';}).join("")+'</ul>':'<p class="note">'+VT.t("none")+'</p>')+
+      '<h2>'+VT.t("money")+'</h2>'+(a.money.length?'<ul class="signals">'+a.money.map(function(m){return '<li><b>'+VT.esc(m.amount)+'</b>'+VT.esc(m.what)+'</li>';}).join("")+'</ul>':'<p class="note">'+VT.t("none")+'</p>')+
+      '<h2>'+VT.t("bring")+'</h2>'+list(a.bring)+'<h2>'+VT.t("todo")+'</h2>'+list(a.todo);
+  },
+  copy:function(a){ return a.plain+"\n\n"+a.dates.map(function(d){return "- "+d.when+" "+d.what;}).join("\n")+"\n"+a.money.map(function(m){return "- "+m.amount+" "+m.what;}).join("\n")+"\n"+a.bring.concat(a.todo).map(function(x){return "- "+x;}).join("\n"); },
+  onLang:fillTo
+});
+fillTo();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

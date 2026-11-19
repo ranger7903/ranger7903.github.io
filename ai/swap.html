@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can I Swap This? — VALUES AI Store</title>
+<meta name="description" content="Missing an ingredient? What to use instead, how much, and how the taste changes. 이걸로 바꿔도 돼요?">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=home" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="miss" class="sub" data-i="l_miss"></label>
+      <input id="miss" type="text" style="width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px" data-i-ph="ph_miss">
+      <label for="dish" class="sub" style="display:block;margin-top:12px" data-i="l_dish"></label>
+      <input id="dish" type="text" style="width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px" data-i-ph="ph_dish">
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Can I Swap This? — VALUES AI Store",ko:"이걸로 바꿔도 돼요? — 밸류스 AI 백화점"},
+  back:{en:"← Home & Kitchen",ko:"← 집·살림"},
+  h1:{en:"🔄 Can I Swap This?",ko:"🔄 이걸로 바꿔도 돼요?"},
+  lead:{en:"Tell us what is missing. Get what to use instead, how much, and how the taste changes.",
+        ko:"없는 재료를 알려 주세요. 대신 쓸 것과 양, 맛이 어떻게 달라지는지 알려 드려요."},
+  l_miss:{en:"What are you missing? (and how much the recipe needs)",ko:"없는 재료 (레시피에 든 양도 적으면 좋아요)"},
+  ph_miss:{en:"e.g. 1 cup buttermilk",ko:"예) 맛술 2큰술"},
+  l_dish:{en:"What are you making? (optional)",ko:"만들 요리 (안 적어도 돼요)"},
+  ph_dish:{en:"e.g. pancakes",ko:"예) 불고기"},
+  go:{en:"Find a swap",ko:"대신 쓸 것 찾기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Tell us the missing ingredient first.",ko:"먼저 없는 재료를 적어 주세요."},
+  c_use:{en:"Use instead",ko:"대신 쓸 것"}, c_amt:{en:"How much",ko:"양"}, c_taste:{en:"How it changes",ko:"맛·식감"}, tip:{en:"Tip",ko:"한마디"},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Two or three swaps you are likely to have at home, with amounts.",ko:"집에 있을 법한 것으로 두세 가지, 양까지."},
+  h2s:{en:"For allergies, babies or medical diets, please check with a professional; the answer adds a caution.",ko:"알레르기·아기·식이요법이 걸리면 전문가께 꼭 확인하세요. 답에도 주의 한마디를 붙여요."}
+});
+var SAMPLE={ko:["맛술 2큰술","불고기"], en:["1 cup buttermilk","pancakes"]};
+VTB.mount({
+  room:"swap",
+  payload:function(){
+    var m=document.getElementById("miss").value.trim(), d=document.getElementById("dish").value.trim();
+    if(!m) return "empty";
+    return {text:(VT.lang==="ko"?"없는 재료: ":"Missing: ")+m+(d?"\n"+(VT.lang==="ko"?"만들 요리: ":"Dish: ")+d:"")};
+  },
+  render:function(a){
+    return '<div class="tablewrap" style="margin-top:12px"><table class="t stack"><tr><th>'+VT.t("c_use")+'</th><th>'+VT.t("c_amt")+'</th><th>'+VT.t("c_taste")+'</th></tr>'+
+      a.options.map(function(o){ return '<tr><td><b>'+VT.esc(o.use)+'</b></td><td>'+VT.esc(o.amount)+'</td><td>'+VT.esc(o.taste)+'</td></tr>'; }).join("")+'</table></div>'+
+      '<p class="note"><b>'+VT.t("tip")+':</b> '+VT.esc(a.tip)+'</p>';
+  },
+  copy:function(a){ return a.options.map(function(o){return "- "+o.use+" ("+o.amount+"): "+o.taste;}).join("\n")+"\n"+a.tip; }
+});
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("miss").value=""; document.getElementById("dish").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("miss").value=SAMPLE[VT.lang][0]; document.getElementById("dish").value=SAMPLE[VT.lang][1]; };
+</script>
+</body>
+</html>

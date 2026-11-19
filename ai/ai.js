@@ -43,8 +43,8 @@
     nav_plans: { en: "Plans", ko: "구독" },
     nav_programs: { en: "Windows programs", ko: "윈도우 프로그램" },
     nav_lang: { en: "한국어", ko: "English" },
-    foot_line: { en: "Rooms marked 🔒 read your text or file only inside your own browser. Nothing is sent to us.",
-                 ko: "🔒 표시가 있는 방은 손님 브라우저 안에서만 읽습니다. 저희 쪽으로 아무것도 보내지 않습니다." },
+    foot_line: { en: "Rooms marked 🔒 read your text or file only inside your own browser. Nothing is sent to us. Rooms without 🔒 send your text to an AI company to make the answer; we do not store it.",
+                 ko: "🔒 표시가 있는 방은 손님 브라우저 안에서만 읽습니다. 저희 쪽으로 아무것도 보내지 않습니다. 🔒 가 없는 방은 답을 만들려고 글을 AI 회사로 보내며, 밸류스는 저장하지 않습니다." },
     foot_biz: { en: "Business info (Korean)", ko: "사업자 정보" },
     foot_terms: { en: "Terms", ko: "이용약관" },
     foot_priv: { en: "Privacy", ko: "개인정보 처리방침" },
@@ -100,20 +100,20 @@
     R("lease", "money", "🏠", "Before You Sign a Lease", "집 계약 전 점검", "Marks the lines to check in a property record and makes a checklist.", "등기부등본에서 살펴볼 줄을 표시하고 확인표를 만들어 드려요.", "lease rent deed 전세 등기부 계약", "soon"),
     R("fridge", "home", "🥕", "Fridge-Photo Dinner", "냉장고 한 장 밥상", "One photo of your fridge, three dishes you can make right now.", "냉장고 사진 한 장으로 지금 만들 요리 세 가지.", "fridge cook recipe dinner 냉장고 요리 반찬 저녁", "soon"),
     R("week", "home", "🗓️", "Zero-Leftover Week", "남는 것 없는 일주일 밥", "A week of meals that uses up the half onion too, plus a shopping list.", "양파 반 개까지 다 쓰는 일주일 식단과 장볼 목록.", "meal plan grocery 식단 장보기", "soon"),
-    R("swap", "home", "🔄", "Can I Swap This?", "이걸로 바꿔도 돼요?", "What to use instead of a missing ingredient.", "없는 재료 대신 쓸 것을 바로 알려 드려요.", "substitute ingredient 대체 재료 양념", "soon"),
+    R("swap", "home", "🔄", "Can I Swap This?", "이걸로 바꿔도 돼요?", "What to use instead of a missing ingredient.", "없는 재료 대신 쓸 것을 바로 알려 드려요.", "substitute ingredient 대체 재료 양념", "open", "swap.html"),
     R("school", "family", "🏫", "School Notices on One Page", "학교 알림 한 장", "Paste notices from apps, email or paper. Get dates, things to bring, money and forms on one page.", "앱·메일·가정통신문을 붙여 넣으면 날짜·준비물·낼 돈·낼 서류만 한 장으로.", "school notice newsletter parent 학교 가정통신문 알림 준비물 학부모", "open", "school.html", true),
-    R("notice", "family", "🌏", "Notices in My Language", "우리말 공지 풀어 주기", "The same notice, explained in the parent's own language.", "같은 공지를 부모님 나라 말로 쉽게 풀어 드려요.", "translate notice 번역 공지 다문화", "soon"),
+    R("notice", "family", "🌏", "Notices in My Language", "우리말 공지 풀어 주기", "The same notice, explained in the parent's own language.", "같은 공지를 부모님 나라 말로 쉽게 풀어 드려요.", "translate notice 번역 공지 다문화", "open", "notice.html"),
     R("care", "family", "💊", "Parent Care on One Page", "부모님 돌봄 한 장", "Medicines and appointments from photos, shared with your siblings.", "약봉지·처방전 사진으로 약 목록과 진료 달력을, 형제와 함께.", "parent care medicine 부모님 돌봄 약 진료", "soon"),
     R("careshare", "family", "🤝", "Share the Caring", "돌봄 나누기표", "Who does what this week, and a one-line weekly update.", "누가 무엇을 맡는지와 주마다 한 줄 보고.", "siblings share 형제 나누기", "soon"),
     R("speak", "learn", "🗣️", "Practice Tomorrow's Conversation", "내일 쓸 말 연습", "Pick a real situation and practise it with an AI partner.", "실제로 해야 할 말을 골라 AI와 미리 주고받아요.", "speaking practice conversation 회화 말하기 연습", "soon"),
     R("myvideo", "learn", "🎬", "Learn From Videos You Love", "좋아하는 영상으로", "Two-language subtitles side by side, slow replay, your own word list.", "두 말 자막을 나란히, 천천히 다시 듣기, 내 낱말장.", "subtitle video 자막 영상", "soon"),
     R("korean", "learn", "🇰🇷", "Korean for Daily Life", "한국 생활 한국어", "Bank, clinic, immigration office, landlord: practise before you go.", "은행·병원·출입국·집주인과 할 말을 미리 연습.", "korean foreigner student 한국어 유학생 외국인", "soon"),
-    R("grammar", "learn", "✏️", "One-Line Grammar Fix", "문법 한 줄 풀이", "Why your sentence is wrong, in one line, with three better ones.", "왜 틀렸는지 한 줄, 비슷한 바른 문장 세 개.", "grammar 문법 교정", "soon"),
-    R("reply", "work", "✉️", "Three-Line Reply", "답장 세 줄", "Paste an email, choose yes, no or ask more. Get a polite draft.", "메일을 붙여 넣고 수락·거절·더 묻기를 고르면 예의 바른 초안.", "email reply draft 메일 답장 회신", "soon"),
+    R("grammar", "learn", "✏️", "One-Line Grammar Fix", "문법 한 줄 풀이", "Why your sentence is wrong, in one line, with three better ones.", "왜 틀렸는지 한 줄, 비슷한 바른 문장 세 개.", "grammar 문법 교정", "open", "grammar.html"),
+    R("reply", "work", "✉️", "Three-Line Reply", "답장 세 줄", "Paste an email, choose yes, no or ask more. Get a polite draft.", "메일을 붙여 넣고 수락·거절·더 묻기를 고르면 예의 바른 초안.", "email reply draft 메일 답장 회신", "open", "reply.html"),
     R("meeting", "work", "📝", "Meeting on One Page", "회의 끝 한 장", "Decisions, owners and deadlines from your notes or recording.", "메모·녹음에서 정한 것·할 사람·기한을 한 장으로.", "meeting minutes 회의록", "soon"),
     R("table", "work", "📊", "Move That Table", "표 옮기기", "Tables inside PDFs, photos or emails, into a spreadsheet.", "PDF·사진·메일 속 표를 엑셀로.", "pdf table excel 표 엑셀", "soon"),
     R("gongmun", "work", "🏛️", "Official Letter Check", "공문 한 번 보기", "Checks dates, attachment numbers and spelling before you send.", "보내기 전 날짜·붙임 번호·맞춤법을 점검.", "official letter 공문 기안", "soon"),
-    R("review", "shop", "⭐", "Review Reply Helper", "리뷰 답글 대신 쓰기", "Paste a review, get two calm short replies. You choose and post.", "리뷰를 붙여 넣으면 차분하고 짧은 답글 두 가지. 사장님이 골라 붙여요.", "review reply 리뷰 답글 별점", "soon"),
+    R("review", "shop", "⭐", "Review Reply Helper", "리뷰 답글 대신 쓰기", "Paste a review, get two calm short replies. You choose and post.", "리뷰를 붙여 넣으면 차분하고 짧은 답글 두 가지. 사장님이 골라 붙여요.", "review reply 리뷰 답글 별점", "open", "review.html"),
     R("reviewmonth", "shop", "📈", "This Month's Reviews", "이번 달 리뷰 한 장", "Three praises, three complaints and one thing to fix.", "칭찬 3 · 불만 3 · 고칠 것 1.", "review summary 리뷰 요약", "soon"),
     R("shopmini", "shop", "🧑‍🍳", "Shop Assistant Taster", "가게 비서 맛보기", "Replies to customer questions, linked to the full Windows Shop Assistant.", "손님 문의 답장, 윈도우 「가게 비서」로 이어져요.", "shop assistant 가게 비서", "soon"),
     R("trip", "travel", "🗺️", "Trip on One Page", "여행 한 장", "A plan that fits your energy and walking distance, with official links.", "체력과 걷는 거리에 맞춘 일정표, 곳마다 공식 링크.", "trip itinerary 여행 일정", "soon"),
@@ -135,8 +135,10 @@
 
   VT.card = function (r) {
     var L = VT.lang, name = L === "ko" ? r.ko : r.en, desc = L === "ko" ? r.dko : r.den;
+    // 2026-11-19 AI 두뇌 방(🔒 아님)은 공짜가 아니라 맛보기 하루 3번
     var tags = r.status === "open"
-      ? '<span class="tag open">' + (L === "ko" ? "지금 쓰기 · 공짜" : "Open now · Free") + "</span>"
+      ? '<span class="tag open">' + (r.local ? (L === "ko" ? "지금 쓰기 · 공짜" : "Open now · Free")
+                                         : (L === "ko" ? "지금 쓰기 · 맛보기 하루 3번" : "Open now · 3 free tries a day")) + "</span>"
       : '<span class="tag soon">' + (L === "ko" ? "곧 나와요" : "Coming soon") + "</span>";
     if (r.local) tags += '<span class="tag lock">' + (L === "ko" ? "🔒 내 화면 안에서만" : "🔒 Stays in your browser") + "</span>";
     var inner = '<span class="ico">' + r.ico + "</span><b>" + VT.esc(name) + "</b><p>" + VT.esc(desc) + '</p><span class="meta">' + tags + "</span>";

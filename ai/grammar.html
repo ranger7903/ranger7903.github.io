@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One-Line Grammar Fix — VALUES AI Store</title>
+<meta name="description" content="Why your sentence is wrong, in one line, with three better ones. 문법 한 줄 풀이.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=learn" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" style="min-height:90px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"One-Line Grammar Fix — VALUES AI Store",ko:"문법 한 줄 풀이 — 밸류스 AI 백화점"},
+  back:{en:"← Learning & Languages",ko:"← 공부·외국어"},
+  h1:{en:"✏️ One-Line Grammar Fix",ko:"✏️ 문법 한 줄 풀이"},
+  lead:{en:"Type one sentence you are not sure about, in any language. See why it is wrong in one line, and three better ways to say it.",
+        ko:"자신 없는 문장 하나를 넣으세요(어느 나라 말이든). 왜 틀렸는지 한 줄과, 더 나은 문장 세 개를 드려요."},
+  label:{en:"Your sentence",ko:"내 문장"},
+  ph:{en:"e.g. I has went to school yesterday.",ko:"예) 어제 학교에 갔었을 거예요."},
+  go:{en:"Check it",ko:"풀이 보기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Type a sentence first.",ko:"먼저 문장을 넣어 주세요."},
+  fixed:{en:"Corrected",ko:"고친 문장"}, why:{en:"Why",ko:"왜"}, better:{en:"Three better ways",ko:"더 나은 문장 세 개"},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"The explanation is in the language of this page; the sentences stay in the language you wrote.",ko:"풀이는 이 페이지 말로, 문장은 쓰신 그 나라 말로 드려요."},
+  h2s:{en:"One short line on purpose: the main mistake, not a lecture.",ko:"일부러 한 줄로만: 강의가 아니라 가장 큰 실수 하나."}
+});
+var SAMPLE={ko:"I has went to school yesterday.", en:"She don't like apples, isn't it?"};
+VTB.mount({
+  room:"grammar",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){
+    return '<div class="box" style="margin-top:12px"><b>'+VT.t("fixed")+'</b><p style="margin:6px 0 0;font-size:18px">'+VT.esc(a.fixed)+'</p>'+
+      '<p style="margin:10px 0 0"><b>'+VT.t("why")+':</b> '+VT.esc(a.why)+'</p></div>'+
+      '<h2 style="margin-top:18px">'+VT.t("better")+'</h2><ul class="signals">'+a.better.map(function(b){ return '<li>'+VT.esc(b)+'</li>'; }).join("")+'</ul>';
+  },
+  copy:function(a){ return a.fixed+"\n\n"+a.why+"\n\n"+a.better.map(function(b){return "- "+b;}).join("\n"); }
+});
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

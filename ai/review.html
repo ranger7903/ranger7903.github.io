@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review Reply Helper — VALUES AI Store</title>
+<meta name="description" content="Paste a customer review and get two calm, short replies. You choose and post. 리뷰 답글 대신 쓰기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=shop" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Review Reply Helper — VALUES AI Store",ko:"리뷰 답글 대신 쓰기 — 밸류스 AI 백화점"},
+  back:{en:"← Small Shop",ko:"← 가게"},
+  h1:{en:"⭐ Review Reply Helper",ko:"⭐ 리뷰 답글 대신 쓰기"},
+  lead:{en:"Paste one customer review. Get two calm, short replies. You pick one and post it yourself.",
+        ko:"손님 리뷰 하나를 붙여 넣으면 차분하고 짧은 답글 두 개를 드려요. 사장님이 골라 직접 올리세요."},
+  label:{en:"The review",ko:"리뷰"},
+  ph:{en:"Paste the review text here (star rating too, if you like).",ko:"리뷰 글을 붙여 넣으세요 (별점도 같이 넣어도 돼요)."},
+  go:{en:"Write two replies",ko:"답글 두 개 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Paste the review first.",ko:"먼저 리뷰를 붙여 넣어 주세요."},
+  mood:{en:"This review feels",ko:"리뷰 느낌"}, r1:{en:"Reply 1 · warm",ko:"답글 1 · 따뜻하게"}, r2:{en:"Reply 2 · brief",ko:"답글 2 · 짧게"}, tip:{en:"For you",ko:"사장님께"},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"The AI thanks the customer, answers the points they raised, and never argues or blames.",ko:"AI 가 손님께 고마움을 전하고, 짚은 점에 답하고, 따지거나 탓하지 않게 써요."},
+  h2s:{en:"It never promises refunds or coupons you did not mention.",ko:"말씀하지 않은 환불·쿠폰은 약속하지 않아요."},
+  h3s:{en:"We never post anything for you. Copy, check and post it yourself.",ko:"저희가 대신 올리지 않아요. 복사해서 확인하고 직접 올리세요."}
+});
+var SAMPLE={ko:"★★☆☆☆ 음식은 맛있었는데 배달이 50분이나 걸려서 국물이 다 식었어요. 그리고 젓가락이 안 왔어요. 다음엔 좀 신경 써 주세요.",
+            en:"★★☆☆☆ The pasta was tasty but it took 50 minutes to arrive and it was cold. Also no cutlery in the bag. Please do better."};
+function E(s){ return VT.esc(s).replace(/\n/g,"<br>"); }
+VTB.mount({
+  room:"review",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){
+    return '<p class="note" style="margin-top:12px"><b>'+VT.t("mood")+':</b> '+VT.esc(a.mood)+'</p>'+
+      [0,1].map(function(i){ return '<div class="box" style="margin-top:12px"><b>'+VT.t(i?"r2":"r1")+'</b><p style="margin:8px 0 0">'+E(a.replies[i])+'</p>'+
+      '<div class="row"><button class="btn ghost" type="button" data-copy="'+VT.esc(a.replies[i])+'">'+VT.t("b_copy")+'</button><span class="note"></span></div></div>'; }).join("")+
+      '<p class="note"><b>'+VT.t("tip")+':</b> '+VT.esc(a.tip)+'</p>';
+  },
+  copy:function(a){ return a.replies[0]; }
+});
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

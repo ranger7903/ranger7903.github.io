@@ -1,0 +1,124 @@
+/* 밸류스 AI 백화점 — AI 두뇌를 쓰는 방이 함께 쓰는 조각 (2026-11-19)
+ * 이름표 칸(이 브라우저에만 기억) · 남은 횟수 · 두뇌 일꾼 부르기 · 복사하기 · 다시 쓰기
+ * 쓰는 법: VTB.mount({room, payload: () => ({text, opt}) 또는 문자열(오류 열쇠), render: answer => html, copy: answer => 글}) */
+(function () {
+  "use strict";
+  var API = "https://values-ai-brain.ranger7903.workers.dev";
+  var KEYSTORE = "vt_ai_key";
+  VT.add({
+    b_privacy: {
+      en: "🌐 Your text is sent to an AI company (Anthropic) to make the answer. VALUES does not store it. Anthropic does not train its AI on it and deletes it within 30 days (longer only if it needs a usage-policy check).",
+      ko: "🌐 붙여 넣은 글은 AI 회사(Anthropic)로 보내 답을 만들고, 밸류스는 저장하지 않습니다. Anthropic 은 이 글로 AI 를 학습시키지 않고 30일 안에 지웁니다(이용 정책 위반 확인이 필요한 글만 더 오래 둘 수 있음)."
+    },
+    b_trial: { en: "Free tries left today: {n} of 3 (all AI rooms together)", ko: "오늘 남은 맛보기: {n}/3번 (AI 방 모두 합쳐서)" },
+    b_sub: { en: "Today in this room: {n}/100", ko: "오늘 이 방 {n}/100" },
+    b_owner: { en: "Owner test mode", ko: "사장님 시험 중" },
+    b_key_q: { en: "Have a subscription license key?", ko: "구독 이름표가 있으신가요?" },
+    b_key_ph: { en: "Paste the key from your email (starts with VALUES.)", ko: "메일로 받은 이름표(VALUES.로 시작)를 붙여 넣으세요" },
+    b_key_save: { en: "Use this key", ko: "이 이름표 쓰기" },
+    b_key_del: { en: "Remove key", ko: "이름표 지우기" },
+    b_key_on: { en: "🔑 Using your license key on this browser.", ko: "🔑 이 브라우저에 넣어 둔 이름표로 쓰고 있어요." },
+    b_key_note: { en: "The key is kept only in this browser. The 'VALUES Everything' subscription includes the AI rooms.", ko: "이름표는 이 브라우저에만 기억해요. 「밸류스 전부」 구독에 AI 방이 들어 있어요." },
+    b_thinking: { en: "Writing… (a few seconds)", ko: "만드는 중… (몇 초)" },
+    b_copy: { en: "Copy", ko: "복사하기" },
+    b_copied: { en: "Copied.", ko: "복사했어요." },
+    b_again: { en: "Write again", ko: "다시 쓰기" },
+    b_again_note: { en: "Writing again counts as one more try (a failed try is never counted).", ko: "다시 쓰기도 한 번으로 세요(실패한 것은 세지 않아요)." },
+    b_check: { en: "An AI wrote this. Please read it once before you use it.", ko: "AI 가 쓴 초안이에요. 쓰시기 전에 한 번 읽어 봐 주세요." },
+    b_net: { en: "Could not reach the AI helper. Check your internet and try again. This try was not counted.", ko: "AI 일꾼에 닿지 못했어요. 인터넷을 확인하고 다시 해 주세요. 이번은 세지 않았어요." },
+    b_plans: { en: "See plans", ko: "구독 보기" }
+  });
+
+  function getKey() { try { return localStorage.getItem(KEYSTORE) || ""; } catch (e) { return ""; } }
+  function setKey(k) { try { if (k) localStorage.setItem(KEYSTORE, k); else localStorage.removeItem(KEYSTORE); } catch (e) {} }
+  function fill(s, o) { return String(s).replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
+
+  function call(path, body) {
+    return fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, code: "net" }; }); });
+  }
+
+  var VTB = window.VTB = {};
+  VTB.mount = function (cfg) {
+    var wrap = document.getElementById("brain");
+    wrap.innerHTML =
+      '<p class="privacy" style="margin:0 0 12px" data-i="b_privacy"></p>' +
+      '<p class="note" id="bLeft" style="font-weight:700;color:var(--ink-2)"></p>' +
+      '<details id="bKeyBox" class="box" style="padding:12px 16px;margin-top:10px"><summary data-i="b_key_q" style="cursor:pointer"></summary>' +
+      '<div id="bKeyOff"><input id="bKey" type="text" autocomplete="off" spellcheck="false" style="width:100%;margin-top:10px;font:inherit;font-size:14px;padding:10px;border:1px solid var(--line);border-radius:10px;box-sizing:border-box" data-i-ph="b_key_ph">' +
+      '<div class="row"><button class="btn" type="button" id="bKeySave" data-i="b_key_save"></button><a class="note" href="./plans.html" data-i="b_plans"></a></div></div>' +
+      '<div id="bKeyOn" class="hidden"><p class="note" data-i="b_key_on"></p><button class="btn ghost" type="button" id="bKeyDel" data-i="b_key_del"></button></div>' +
+      '<p class="note" data-i="b_key_note"></p></details>';
+    var last = null, lastAnswer = null, busy = false;
+    var out = document.getElementById("out");
+
+    function showLeft(left) {
+      var el = document.getElementById("bLeft");
+      if (!left) { el.textContent = ""; return; }
+      if (left.kind === "owner") el.textContent = VT.t("b_owner");
+      else if (left.kind === "sub") el.textContent = fill(VT.t("b_sub"), { n: left.used });
+      else el.textContent = fill(VT.t("b_trial"), { n: Math.max(0, left.limit - left.used) });
+      last = left;
+    }
+    function keyUI() {
+      var k = getKey();
+      document.getElementById("bKeyOff").classList.toggle("hidden", !!k);
+      document.getElementById("bKeyOn").classList.toggle("hidden", !k);
+      if (k) document.getElementById("bKeyBox").open = true;
+    }
+    function refreshLeft() {
+      var body = { room: cfg.room }; var k = getKey(); if (k) body.key = k;
+      call("/left", body).then(function (j) {
+        if (j.ok) showLeft(j.left);
+        else if (j.msg) { document.getElementById("bLeft").textContent = j.msg[VT.lang] || j.msg.en; }
+      }).catch(function () {});
+    }
+    function err(m) {
+      out.innerHTML = '<div class="verdict mid">' + VT.esc(m) + "</div>";
+      out.classList.remove("hidden");
+    }
+    function draw() {
+      if (!lastAnswer) return;
+      out.innerHTML = '<div class="verdict low">' + VT.esc(VT.t("b_check")) + "</div>" + cfg.render(lastAnswer) +
+        '<div class="row no-print"><button class="btn" type="button" id="bCopy">' + VT.t("b_copy") + '</button>' +
+        '<button class="btn ghost" type="button" id="bAgain">' + VT.t("b_again") + '</button><span class="note" id="bCopied"></span></div>' +
+        '<p class="note">' + VT.t("b_again_note") + "</p>";
+      out.classList.remove("hidden");
+      document.getElementById("bCopy").onclick = function () { copyText(cfg.copy(lastAnswer), document.getElementById("bCopied")); };
+      document.getElementById("bAgain").onclick = function () { VTB.ask(); };
+      out.querySelectorAll("[data-copy]").forEach(function (b) {
+        b.onclick = function () { copyText(b.getAttribute("data-copy"), b.nextElementSibling); };
+      });
+    }
+    function copyText(t, okEl) {
+      var done = function () { if (okEl) okEl.textContent = VT.t("b_copied"); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function () { prompt("", t); });
+      else prompt("", t);
+    }
+    VTB.ask = function () {
+      if (busy) return;
+      var p = cfg.payload();
+      if (typeof p === "string") { err(VT.t(p)); return; }
+      var body = { room: cfg.room, text: p.text, lang: VT.lang };
+      if (p.opt) body.opt = p.opt;
+      var k = getKey(); if (k) body.key = k;
+      busy = true;
+      var go = document.getElementById("go"); if (go) go.disabled = true;
+      out.innerHTML = '<div class="verdict low">' + VT.t("b_thinking") + "</div>"; out.classList.remove("hidden");
+      call("/ask", body).then(function (j) {
+        if (j.left) showLeft(j.left);
+        if (j.ok) { lastAnswer = j.answer; draw(); }
+        else err(j.msg ? (j.msg[VT.lang] || j.msg.en) : VT.t("b_net"));
+      }).catch(function () { err(VT.t("b_net")); })
+        .then(function () { busy = false; if (go) go.disabled = false; });
+    };
+    document.getElementById("bKeySave").onclick = function () {
+      var v = document.getElementById("bKey").value.trim();
+      if (!v) return;
+      setKey(v); keyUI(); refreshLeft();
+    };
+    document.getElementById("bKeyDel").onclick = function () { setKey(""); document.getElementById("bKey").value = ""; keyUI(); refreshLeft(); };
+    VT.onLang = function () { showLeft(last); draw(); if (cfg.onLang) cfg.onLang(); };
+    VT.mountChrome(); VT.apply(); keyUI(); refreshLeft();
+  };
+})();
