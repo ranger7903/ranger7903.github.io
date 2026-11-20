@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cancel This Subscription — VALUES AI Store</title>
+<meta name="description" content="A clear cancellation message that stops future charges and asks for written confirmation. 해지 편지.">
+<link rel="canonical" href="https://valuestools.kr/ai/cancel.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="해지 편지 · Cancel This Subscription — 밸류스 AI 백화점">
+<meta property="og:description" content="앞으로의 결제를 멈추고 해지를 글로 확인받는 짧은 글. A clear message that stops future charges and asks for written confirmation.">
+<meta property="og:url" content="https://valuestools.kr/ai/cancel.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/cancel.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" style="min-height:200px" data-i-ph="ph"></textarea>
+      <p class="sub" style="margin:12px 0 6px" data-i="mode_q"></p>
+      <div class="row" style="margin-top:0" role="radiogroup">
+        <label><input type="radio" name="mode" value="email" checked> <span data-i="m_email"></span></label>
+        <label><input type="radio" name="mode" value="chat"> <span data-i="m_chat"></span></label>
+        <label><input type="radio" name="mode" value="letter"> <span data-i="m_letter"></span></label>
+      </div>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Cancel This Subscription — VALUES AI Store",ko:"해지 편지 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"✂️ Cancel This Subscription",ko:"✂️ 해지 편지"},
+  lead:{en:"Name the service and how you pay. Get a cancellation message that asks them to stop all future charges, confirm in writing and return what is owed.",ko:"서비스 이름과 결제 방법을 적으세요. 앞으로의 결제를 모두 멈추고, 해지를 글로 확인해 주고, 돌려받을 돈이 있으면 돌려 달라는 해지 글을 써 드려요."},
+  label:{en:"Which service? (name, plan, how you pay, when you joined, anything they said)",ko:"어떤 서비스예요? (이름, 요금제, 결제 방법, 가입한 때, 업체가 한 말)"},
+  ph:{en:"Write it in your own words (up to 4,000 characters).",ko:"편하게 적으세요 (4,000글자까지)."},
+  mode_q:{en:"Where will you send it?",ko:"어디로 보내실 거예요?"},
+  m_email:{en:"Email",ko:"메일"},
+  m_chat:{en:"Chat or app message",ko:"채팅·앱 문의"},
+  m_letter:{en:"Paper letter",ko:"종이 편지"},
+  go:{en:"Write my letter",ko:"편지 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write what happened first.",ko:"먼저 있었던 일을 적어 주세요."},
+  subj:{en:"Subject",ko:"제목"}, letter:{en:"Letter",ko:"편지"}, todo:{en:"Do these too",ko:"함께 할 일"}, tip:{en:"Before you send",ko:"보내기 전에"},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"We send what you wrote to an AI with one job: write a short cancellation request that leaves no room for doubt, plus the steps to check the charges really stop.",ko:"적어 주신 글을 AI 에게 보내, 오해할 틈이 없는 짧은 해지 요청 글과 결제가 정말 멈췄는지 확인하는 차례를 쓰게 해요."},
+  h2s:{en:"It does not invent dates, amounts, order numbers or laws. Where something is missing it leaves a blank like [order number].",ko:"날짜·금액·주문번호·법 조항을 지어내지 않아요. 빠진 것은 [주문번호]처럼 빈칸으로 남겨요."},
+  h3s:{en:"You copy, fill the blanks and send it yourself. We never send anything for you.",ko:"복사해서 빈칸을 채우고 직접 보내세요. 저희가 대신 보내지 않아요."}
+});
+var SAMPLE={ko:"헬스장 월 회원권을 쓰고 있어요. 매달 15일에 카드로 59,000원이 나가요. 이번 달 말로 끊고 싶은데 앱에는 해지 단추가 없고 전화만 하라고 되어 있어요.",en:"I pay $14.99 a month for a streaming plan, charged to my card on the 3rd. I want to cancel at the end of this billing month, but the app only says to contact support."};
+function mode(){ var r=document.querySelector('input[name="mode"]:checked'); return r?r.value:"email"; }
+function E(s){ return VT.esc(s).replace(/\n/g,"<br>"); }
+VTB.mount({
+  room:"cancel",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t,opt:{mode:mode()}}:"empty"; },
+  render:function(a){
+    var full=a.subject+"\n\n"+a.letter;
+    return '<div class="box" style="margin-top:12px"><b>'+VT.t("subj")+'</b><p style="margin:6px 0 0">'+E(a.subject)+'</p>'+
+      '<b style="display:block;margin-top:12px">'+VT.t("letter")+'</b><p style="margin:6px 0 0">'+E(a.letter)+'</p>'+
+      '<div class="row"><button class="btn ghost" type="button" data-copy="'+VT.esc(full)+'">'+VT.t("b_copy")+'</button><span class="note"></span></div></div>'+
+      (a.checklist&&a.checklist.length?'<h2 style="margin-top:18px">'+VT.t("todo")+'</h2><ol class="steps">'+a.checklist.map(function(x){return "<li>"+VT.esc(x)+"</li>";}).join("")+"</ol>":"")+
+      '<p class="note"><b>'+VT.t("tip")+':</b> '+VT.esc(a.tip||"")+'</p>';
+  },
+  copy:function(a){ return a.subject+"\n\n"+a.letter; }
+});
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

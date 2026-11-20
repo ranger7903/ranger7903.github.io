@@ -97,6 +97,8 @@
     R("clicked", "safety", "🆘", "I Clicked It — Now What?", "눌렀어요, 어떻게 해요?", "Step-by-step what to do first if you already tapped or typed something.", "이미 눌렀거나 입력했을 때 무엇부터 할지 차례대로.", "clicked hacked stolen 눌렀어요 해킹 돈 빠짐", "open", "scam.html#clicked", true),
     R("askfam", "safety", "👪", "Ask My Family", "자녀에게 물어보기", "One button sends the message and the warning signs to your family.", "단추 하나로 문자와 위험 신호를 가족에게 보내요.", "family parent 가족 부모님 자녀", "open", "askfam.html", true),
     R("subs", "money", "🔁", "Forgotten Subscription Finder", "잊은 구독 찾기", "Drop in your card statement. See every charge that repeats, with next date and yearly cost.", "카드 내역 파일을 넣으면 달마다 나가는 돈을 다음 날짜·1년 값과 함께 모아 드려요.", "subscription recurring charge cancel card statement 구독 정기결제 해지 카드 내역 자동결제", "open", "subs.html", true),
+    R("complaint", "money", "📮", "Refund or Complaint Letter", "환불·항의 편지", "Turn what went wrong into a calm, firm letter with one clear request.", "있었던 일을 차분히 적고 원하는 것 하나를 분명히 말하는 편지.", "refund complaint letter return broken 환불 항의 교환 고장 불량", "open", "complaint.html"),
+    R("cancel", "money", "✂️", "Cancel This Subscription", "해지 편지", "A clear message that stops future charges and asks for written confirmation.", "앞으로의 결제를 멈추고 해지를 글로 확인받는 짧은 글.", "cancel subscription membership 해지 탈퇴 구독 회원권 자동결제", "open", "cancel.html"),
     R("paper", "money", "📄", "What Does This Paper Mean?", "이 종이 무슨 뜻이에요", "A photo of a bill or statement, explained line by line in plain words.", "고지서·명세서 사진을 줄마다 쉬운 말로 풀어 드려요.", "bill statement explain 고지서 명세서 관리비 병원비", "open", "paper.html"),
     R("lease", "money", "🏠", "Before You Sign a Lease", "집 계약 전 점검", "Marks the lines to check in a property register or lease, with a checklist.", "등기부등본·계약서에서 살펴볼 줄을 짚고 확인표를 만들어 드려요.", "lease rent deed 전세 등기부 계약", "open", "lease.html"),
     R("fridge", "home", "🥕", "Fridge-Photo Dinner", "냉장고 한 장 밥상", "One photo of your fridge, three dishes you can make right now.", "냉장고 사진 한 장으로 지금 만들 요리 세 가지.", "fridge cook recipe dinner 냉장고 요리 반찬 저녁", "open", "fridge.html"),
@@ -152,7 +154,8 @@
 
   /* ── 방과 방 잇기: 이 방 다음에 해 보면 좋은 방 (2026-11-21) ── */
   VT.NEXT = {
-    scam: ["clicked", "askfam"], askfam: ["scam", "clicked"], subs: ["paper", "tripcost"], paper: ["lease", "subs"], lease: ["paper", "subs"],
+    complaint: ["paper", "cancel"], cancel: ["subs", "complaint"],
+    scam: ["clicked", "askfam"], askfam: ["scam", "clicked"], subs: ["cancel", "paper"], paper: ["lease", "complaint"], lease: ["paper", "subs"],
     fridge: ["week", "swap"], week: ["fridge", "swap"], swap: ["fridge", "week"],
     school: ["notice", "careshare"], notice: ["school", "korean"], care: ["careshare", "paper"], careshare: ["care", "askfam"],
     speak: ["grammar", "korean"], korean: ["speak", "notice"], grammar: ["speak", "reply"],

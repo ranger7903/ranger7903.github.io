@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Refund or Complaint Letter — VALUES AI Store</title>
+<meta name="description" content="Turn what went wrong into a calm, firm refund or complaint letter with one clear request and a reply date. 환불·항의 편지.">
+<link rel="canonical" href="https://valuestools.kr/ai/complaint.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="환불·항의 편지 · Refund or Complaint Letter — 밸류스 AI 백화점">
+<meta property="og:description" content="있었던 일을 차분히 적고 원하는 것 하나를 분명히 말하는 편지. Turn what went wrong into a calm, firm letter with one clear request.">
+<meta property="og:url" content="https://valuestools.kr/ai/complaint.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/complaint.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" style="min-height:200px" data-i-ph="ph"></textarea>
+      <p class="sub" style="margin:12px 0 6px" data-i="mode_q"></p>
+      <div class="row" style="margin-top:0" role="radiogroup">
+        <label><input type="radio" name="mode" value="refund" checked> <span data-i="m_refund"></span></label>
+        <label><input type="radio" name="mode" value="replace"> <span data-i="m_replace"></span></label>
+        <label><input type="radio" name="mode" value="repair"> <span data-i="m_repair"></span></label>
+        <label><input type="radio" name="mode" value="apology"> <span data-i="m_apology"></span></label>
+      </div>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Refund or Complaint Letter — VALUES AI Store",ko:"환불·항의 편지 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"📮 Refund or Complaint Letter",ko:"📮 환불·항의 편지"},
+  lead:{en:"Tell us what went wrong in your own words. Get a calm, firm letter that states the facts, asks for one clear fix and gives a reply date.",ko:"무엇이 잘못됐는지 편하게 적으세요. 있었던 일을 차분히 적고, 원하는 것 하나를 분명히 말하고, 답을 받을 날짜까지 넣은 단단한 편지를 써 드려요."},
+  label:{en:"What happened? (what you bought, when, what went wrong, what they said)",ko:"무슨 일이 있었나요? (무엇을 언제 샀고, 무엇이 잘못됐고, 업체가 뭐라 했는지)"},
+  ph:{en:"Write it in your own words (up to 4,000 characters).",ko:"편하게 적으세요 (4,000글자까지)."},
+  mode_q:{en:"What do you want?",ko:"무엇을 원하세요?"},
+  m_refund:{en:"Money back",ko:"환불"},
+  m_replace:{en:"A replacement",ko:"교환"},
+  m_repair:{en:"A repair",ko:"수리"},
+  m_apology:{en:"An answer and apology",ko:"답변과 사과"},
+  go:{en:"Write my letter",ko:"편지 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write what happened first.",ko:"먼저 있었던 일을 적어 주세요."},
+  subj:{en:"Subject",ko:"제목"}, letter:{en:"Letter",ko:"편지"}, todo:{en:"Do these too",ko:"함께 할 일"}, tip:{en:"Before you send",ko:"보내기 전에"},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"We send what you wrote to an AI with one job: turn it into a short, polite but firm letter with the facts in order and one clear request.",ko:"적어 주신 글을 AI 에게 보내, 있었던 일을 차례대로 적고 원하는 것 하나를 분명히 말하는 짧고 단단한 편지로 바꾸게 해요."},
+  h2s:{en:"It does not invent dates, amounts, order numbers or laws. Where something is missing it leaves a blank like [order number].",ko:"날짜·금액·주문번호·법 조항을 지어내지 않아요. 빠진 것은 [주문번호]처럼 빈칸으로 남겨요."},
+  h3s:{en:"You copy, fill the blanks and send it yourself. We never send anything for you.",ko:"복사해서 빈칸을 채우고 직접 보내세요. 저희가 대신 보내지 않아요."}
+});
+var SAMPLE={ko:"10월 28일 온라인 가게에서 89,000원짜리 전기 주전자를 샀어요. 11월 3일 받았는데 두 번 쓰고 전원이 안 들어와요. 고객센터에 두 번 문의했지만 「확인 중」이라는 말만 듣고 열흘째 답이 없어요.",en:"I bought a kettle for $59 from an online shop on Oct 28. It arrived on Nov 3 and stopped working after two uses. I contacted support twice and was told they are checking. No answer for ten days."};
+function mode(){ var r=document.querySelector('input[name="mode"]:checked'); return r?r.value:"refund"; }
+function E(s){ return VT.esc(s).replace(/\n/g,"<br>"); }
+VTB.mount({
+  room:"complaint",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t,opt:{mode:mode()}}:"empty"; },
+  render:function(a){
+    var full=a.subject+"\n\n"+a.letter;
+    return '<div class="box" style="margin-top:12px"><b>'+VT.t("subj")+'</b><p style="margin:6px 0 0">'+E(a.subject)+'</p>'+
+      '<b style="display:block;margin-top:12px">'+VT.t("letter")+'</b><p style="margin:6px 0 0">'+E(a.letter)+'</p>'+
+      '<div class="row"><button class="btn ghost" type="button" data-copy="'+VT.esc(full)+'">'+VT.t("b_copy")+'</button><span class="note"></span></div></div>'+
+      (a.checklist&&a.checklist.length?'<h2 style="margin-top:18px">'+VT.t("todo")+'</h2><ol class="steps">'+a.checklist.map(function(x){return "<li>"+VT.esc(x)+"</li>";}).join("")+"</ol>":"")+
+      '<p class="note"><b>'+VT.t("tip")+':</b> '+VT.esc(a.tip||"")+'</p>';
+  },
+  copy:function(a){ return a.subject+"\n\n"+a.letter; }
+});
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>
