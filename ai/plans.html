@@ -18,12 +18,14 @@
 <link rel="stylesheet" href="ai.css">
 <script src="ai.js"></script>
 <script src="../세기.js" defer></script>
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 </head>
 <body>
 <span hidden data-i-title="title"></span>
 <main class="shell">
   <div class="room-head"><a class="back" href="./" data-i="back"></a><h1 data-i="h1"></h1><p data-i="lead"></p></div>
   <section>
+    <div class="verdict low hidden" id="paid" data-i="paid"></div>
     <div class="plans" id="plans"></div>
     <p class="note" data-i="n1"></p>
     <p class="note" data-i="n2"></p>
@@ -46,21 +48,26 @@ VT.add({
   back:{en:"← All rooms",ko:"← 모든 방"},
   h1:{en:"Plans",ko:"구독 값"},
   lead:{en:"One fixed monthly price. No points, no credits, no surprise cuts.",ko:"정해진 달 값 하나. 점수도 크레딧도 없고, 몰래 줄이지 않습니다."},
-  n1:{en:"Right now: 3 free tries a day in the AI rooms for everyone, and generous use (100 a day per room) with the VALUES Everything subscription. The AI Store plan button is not open yet.",
-      ko:"지금은 맛보기 하루 3번, 「밸류스 전부」 구독자는 넉넉히(방 하나에 하루 100번) 쓰실 수 있어요. AI 백화점 구독 결제 단추는 아직 열지 않았어요."},
+  n1:{en:"Everyone gets 3 free tries a day in the AI rooms. With a plan you can use each room up to 100 times a day. After paying, your plan key arrives by email: paste it once into any AI room under \u201cHave a subscription license key?\u201d.",
+      ko:"누구나 AI 방 맛보기를 하루 3번 쓸 수 있어요. 구독하시면 방마다 하루 100번까지 쓰실 수 있어요. 결제하면 메일로 구독 이름표가 와요. 아무 AI 방에서나 「구독 이름표가 있으신가요?」를 눌러 한 번만 붙여 넣으시면 됩니다."},
   n2:{en:"Not included: AI Office Worker and Automation Assistant, which are sold on their own.",ko:"들어 있지 않은 것: AI 사무직원·자동화 비서는 따로 팝니다."},
   n3:{en:"Windows programs are monthly subscriptions too. You can subscribe to one tool at a time, or take all twenty with <a href=\"../en.html#everything\">VALUES Everything on the main shop</a>.",ko:"윈도우 프로그램도 달마다 내는 구독입니다. 도구 하나씩 구독하셔도 되고, <a href=\"../index.html#p-bundle\">본 가게의 「밸류스 전부」</a>로 스무 가지를 한꺼번에 쓰셔도 됩니다."},
-  single_t:{en:"Or pay for just one room",ko:"방 하나만 쓰실 때"},
+  single_t:{en:"Or pay for just one room (coming soon)",ko:"방 하나만 쓰실 때 (곧 열려요)"},
   promise_t:{en:"Our promises",ko:"약속"},
   p1:{en:"Rooms marked 🔒 stay free and need no sign-up.",ko:"🔒 방은 계속 공짜이고 가입도 필요 없습니다."},
   p2:{en:"If an answer fails, it is not counted.",ko:"답이 안 나오면 횟수로 세지 않습니다."},
-  p3:{en:"Monthly by default. The cancel button sits on your first screen, not hidden in settings.",ko:"달마다가 기본입니다. 끊기 단추는 설정 깊은 곳이 아니라 첫 화면에 둡니다."},
-  p4:{en:"If we ever change a price, we tell you one month before.",ko:"값을 바꿀 때는 한 달 전에 먼저 알려 드립니다."}
+  p3:{en:"Monthly by default. You can cancel any time with one click from \u201cManage subscription\u201d in your payment receipt email.",ko:"달마다가 기본입니다. 끊기는 결제 영수증 메일의 「구독 관리」에서 언제든 한 번에 됩니다."},
+  p4:{en:"If we ever change a price, we tell you one month before.",ko:"값을 바꿀 때는 한 달 전에 먼저 알려 드립니다."},
+  buy_m:{en:"Subscribe monthly",ko:"달마다 구독하기"}, buy_y:{en:"Pay yearly ($59)",ko:"1년 한 번에 (79,000원)"},
+  buy_all:{en:"See it in the main shop",ko:"본 가게에서 보기"},
+  paid:{en:"Thank you. Your plan key is on its way by email (check spam too). Open any AI room, press \u201cHave a subscription license key?\u201d and paste it once.",
+        ko:"고맙습니다. 구독 이름표가 메일로 가고 있어요(스팸함도 봐 주세요). 아무 AI 방에서 「구독 이름표가 있으신가요?」를 눌러 한 번만 붙여 넣으세요."},
+  nopay:{en:"Card payment could not start. Please write to ranger7903@nate.com.",ko:"카드 결제를 열지 못했어요. ranger7903@nate.com 으로 알려 주세요."}
 });
 var P = [
   {key:"free", ko:["공짜","0원","",["🔒 표시 방 전부","가입 없음","손님 화면 안에서만"]], en:["Free","$0","",["Every 🔒 room","No sign-up","Stays in your browser"]]},
-  {key:"ai", ko:["AI 백화점 전부","7,900원","/ 달 · 1년 79,000원",["AI 방 39가지 전부","새 방이 열리면 따라옴","하루 넉넉히 (한 방 100번)"]], en:["AI Store — All","$5.99","/ month · $59 a year",["All 39 AI rooms","New rooms included","Generous daily use (100 per room)"]]},
-  {key:"all", best:1, ko:["밸류스 전부","14,900원","/ 달 · 1년 149,000원",["AI 방 전부","윈도우 프로그램 전부","유료 폰 앱 전부"]], en:["VALUES — Everything","$10.99","/ month · $109.90 a year",["All AI rooms","Every Windows program","Every paid phone app"]]}
+  {key:"ai", ko:["AI 백화점 전부","7,900원","/ 달 · 1년 79,000원",["AI 두뇌를 쓰는 방 전부","새 방이 열리면 따라옴","방마다 하루 100번"]], en:["AI Store — All","$5.99","/ month · $59 a year",["Every room that uses an AI brain","New rooms included","Up to 100 uses per room a day"]]},
+  {key:"all", best:1, ko:["밸류스 전부","14,900원","/ 달 · 1년 149,000원",["AI 백화점 구독 전부","윈도우 프로그램 스무 가지","유료 폰 앱 전부"]], en:["VALUES — Everything","$10.99","/ month · $109.90 a year",["All AI rooms","Every Windows program","Every paid phone app"]]}
 ];
 var S = [
   {ko:["작은 방","1,900원"],en:["Small room","$1.49"], eko:"예) 답장 세 줄 · 리뷰 답글", een:"e.g. Three-Line Reply, Review Reply"},
@@ -72,11 +79,24 @@ function draw(){
   document.getElementById("plans").innerHTML = P.map(function(p){
     var d = p[L];
     return '<div class="plan'+(p.best?' best':'')+'"><b>'+d[0]+'</b>'+(p.best?' <span class="tag lock">'+(L==="ko"?"가장 이득":"Best value")+'</span>':'')+
-      '<div class="price">'+d[1]+' <small>'+d[2]+'</small></div><ul>'+d[3].map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul></div>';
+      '<div class="price">'+d[1]+' <small>'+d[2]+'</small></div><ul>'+d[3].map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul>'+
+      (p.key==="ai"?'<div class="row"><button class="btn" type="button" data-buy="m">'+VT.t("buy_m")+'</button><button class="btn ghost" type="button" data-buy="y">'+VT.t("buy_y")+'</button></div>':'')+
+      (p.key==="all"?'<div class="row"><a class="btn ghost" href="'+(L==="ko"?"../index.html#p-bundle":"../en.html#everything")+'">'+VT.t("buy_all")+'</a></div>':'')+'</div>';
   }).join("");
+  [].forEach.call(document.querySelectorAll("[data-buy]"),function(b){ b.onclick=function(){ buy(b.getAttribute("data-buy")); }; });
   document.getElementById("single").innerHTML = '<tr><th>'+(L==="ko"?"방 크기":"Room size")+'</th><th>'+(L==="ko"?"한 달":"Per month")+'</th><th>'+(L==="ko"?"보기":"Examples")+'</th></tr>'+
     S.map(function(s){ var d=s[L]; return "<tr><td>"+d[0]+"</td><td>"+d[1]+"</td><td>"+(L==="ko"?s.eko:s.een)+"</td></tr>"; }).join("");
 }
+/* [2026-11-21] AI 백화점 구독 결제 — 결제창은 Paddle, 이름표는 열쇠 발급소가 메일로 보낸다(p: ["ai"]) */
+var AI_PRICE = { m: "pri_01m7xm594gj081c5y9gwwbz9pd", y: "pri_01m7xm5kafgd80qjpaesegm6pk" };
+var payReady = false;
+try { Paddle.Initialize({ token: "live_945afb1a1e3998081592ff13ef5" }); payReady = true; } catch (e) {}
+function buy(c){
+  if (!payReady || !window.Paddle) { alert(VT.t("nopay")); return; }
+  Paddle.Checkout.open({ items: [{ priceId: AI_PRICE[c], quantity: 1 }], customData: { tool: "ai", plan: "aistore" },
+    settings: { locale: VT.lang === "ko" ? "ko" : "en", successUrl: "https://valuestools.kr/ai/plans.html?paid=1" } });
+}
+if (/[?&]paid=1/.test(location.search)) document.getElementById("paid").classList.remove("hidden");
 VT.onLang = draw; VT.mountChrome(); VT.apply(); draw();
 </script>
 </body>

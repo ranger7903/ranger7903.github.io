@@ -18,7 +18,7 @@
     b_key_save: { en: "Use this key", ko: "이 이름표 쓰기" },
     b_key_del: { en: "Remove key", ko: "이름표 지우기" },
     b_key_on: { en: "🔑 Using your license key on this browser.", ko: "🔑 이 브라우저에 넣어 둔 이름표로 쓰고 있어요." },
-    b_key_note: { en: "The key is kept only in this browser. The 'VALUES Everything' subscription includes the AI rooms.", ko: "이름표는 이 브라우저에만 기억해요. 「밸류스 전부」 구독에 AI 방이 들어 있어요." },
+    b_key_note: { en: "The key is kept only in this browser. Keys from the AI Store plan or the 'VALUES Everything' plan both work here.", ko: "이름표는 이 브라우저에만 기억해요. 「AI 백화점 구독」이나 「밸류스 전부」 구독 이름표를 넣으시면 됩니다." },
     b_thinking: { en: "Writing… (a few seconds)", ko: "만드는 중… (몇 초)" },
     b_copy: { en: "Copy", ko: "복사하기" },
     b_copied: { en: "Copied.", ko: "복사했어요." },
@@ -27,11 +27,27 @@
     b_check: { en: "An AI wrote this. Please read it once before you use it.", ko: "AI 가 쓴 초안이에요. 쓰시기 전에 한 번 읽어 봐 주세요." },
     b_net: { en: "Could not reach the AI helper. Check your internet and try again. This try was not counted.", ko: "AI 일꾼에 닿지 못했어요. 인터넷을 확인하고 다시 해 주세요. 이번은 세지 않았어요." },
     b_plans: { en: "See plans", ko: "구독 보기" },
-    b_more: { en: "Free tries come back tomorrow. With a subscription you can use each room up to 100 times a day.", ko: "맛보기는 내일 다시 생겨요. 구독하시면 방마다 하루 100번까지 쓰실 수 있어요." }
+    b_more: { en: "Free tries come back tomorrow. The AI Store plan ($5.99 a month) lets you use each room up to 100 times a day.", ko: "맛보기는 내일 다시 생겨요. AI 백화점 구독(달마다 7,900원)이면 방마다 하루 100번까지 쓰실 수 있어요." }
   });
 
   function getKey() { try { return localStorage.getItem(KEYSTORE) || ""; } catch (e) { return ""; } }
   function setKey(k) { try { if (k) localStorage.setItem(KEYSTORE, k); else localStorage.removeItem(KEYSTORE); } catch (e) {} }
+  /* [2026-11-21] 구독 이름표가 끝났으면 열쇠 발급소에서 새 이름표를 저절로 받아 온다(윈도우 프로그램과 같은 길).
+     보내는 것은 이름표 전체가 아니라 그 지문(SHA-256 앞 24글자)뿐이다. */
+  var RENEW = "https://sparkling-bird-2599.ranger7903.workers.dev/renew";
+  var renewTried = false;
+  function renewKey() {
+    var k = getKey();
+    if (!k || renewTried || !(window.crypto && crypto.subtle)) return Promise.resolve(false);
+    renewTried = true;
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(k)).then(function (h) {
+      var id = Array.prototype.map.call(new Uint8Array(h), function (b) { return ("0" + b.toString(16)).slice(-2); }).join("").slice(0, 24);
+      return fetch(RENEW, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify({ id: id }) });
+    }).then(function (r) { return r.ok ? r.json() : {}; }).then(function (j) {
+      if (j && typeof j.key === "string" && /^VALUES\./.test(j.key) && j.key !== k) { setKey(j.key); return true; }
+      return false;
+    }).catch(function () { return false; });
+  }
   function fill(s, o) { return String(s).replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
 
   function call(path, body) {
@@ -152,6 +168,7 @@
     function refreshLeft() {
       var body = { room: cfg.room }; var k = getKey(); if (k) body.key = k;
       call("/left", body).then(function (j) {
+        if (!j.ok && j.code === "key_expired") return renewKey().then(function (got) { if (got) refreshLeft(); else if (j.msg) document.getElementById("bLeft").textContent = j.msg[VT.lang] || j.msg.en; });
         if (j.ok) showLeft(j.left);
         else if (j.msg) { document.getElementById("bLeft").textContent = j.msg[VT.lang] || j.msg.en; }
       }).catch(function () {});
@@ -189,7 +206,15 @@
       busy = true;
       var go = document.getElementById("go"); if (go) go.disabled = true;
       out.innerHTML = '<div class="verdict low">' + VT.t("b_thinking") + "</div>"; out.classList.remove("hidden");
+      var again = false;
       call("/ask", body).then(function (j) {
+        if (!j.ok && j.code === "key_expired") return renewKey().then(function (got) {
+          if (got) { again = true; busy = false; VTB.ask(); return "retry"; }
+          return j;
+        });
+        return j;
+      }).then(function (j) {
+        if (j === "retry") return;
         if (j.left) showLeft(j.left);
         if (j.ok) { lastAnswer = j.answer; draw(); }
         else {
@@ -201,7 +226,7 @@
               '<span class="note">' + VT.esc(VT.t("b_more")) + "</span></div>");
         }
       }).catch(function () { err(VT.t("b_net")); })
-        .then(function () { busy = false; if (go) go.disabled = false; });
+        .then(function () { if (again) return; busy = false; if (go) go.disabled = false; });
     };
     document.getElementById("bKeySave").onclick = function () {
       var v = document.getElementById("bKey").value.trim();
