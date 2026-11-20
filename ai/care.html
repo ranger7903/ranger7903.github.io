@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parent Care on One Page — VALUES AI Store</title>
+<meta name="description" content="Take a photo of a medicine bag, prescription or hospital paper. Get a medicine list and the next visit on one page, and a message to send to your brothers and sisters. 부모님 돌봄 한 장.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=family" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <div id="photo" style="margin-top:4px"></div>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Parent Care on One Page — VALUES AI Store",ko:"부모님 돌봄 한 장 — 밸류스 AI 백화점"},
+  back:{en:"← Family Care",ko:"← 가족 돌봄"},
+  h1:{en:"💊 Parent Care on One Page",ko:"💊 부모님 돌봄 한 장"},
+  lead:{en:"Take a photo of a medicine bag, prescription or hospital paper. Get a medicine list and the next visit on one page, and a message to send to your brothers and sisters.",ko:"약봉지·처방전·병원 안내문을 찍어 올리세요. 약 목록과 다음 진료를 한 장으로 정리하고, 형제자매에게 보낼 글도 만들어 드려요."},
+  label:{en:"Or paste the text (optional)",ko:"또는 글 붙여 넣기 (사진만 올려도 돼요)"},
+  ph:{en:"What is printed on the bag or paper …",ko:"약봉지나 안내문에 적힌 글 …"},
+  go:{en:"Make the page",ko:"한 장으로 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"One photo or pasted text. Photos are made smaller in your browser and count as one try.",ko:"사진 한 장이나 붙여 넣은 글로 해요. 사진은 이 브라우저에서 줄여 보내고, 한 번으로 세요."}, h2s:{en:"It only copies what is printed. It never changes a dose or gives medical advice.",ko:"적힌 것만 옮겨요. 약 양을 바꾸거나 의료 판단을 하지 않아요."}, h3s:{en:"Anything hard to read is marked \"?\". Always check with the pharmacist or doctor.",ko:"읽기 어려운 곳은 「?」로 표시해요. 꼭 약사·의사에게 확인하세요."},
+  empty:{en:"Please add a photo or write something first.",ko:"먼저 사진을 올리거나 글을 적어 주세요."},meds:{en:"💊 Medicines",ko:"💊 약 목록"}, c_when:{en:"When",ko:"언제"}, c_how:{en:"How much",ko:"얼마나"}, c_note:{en:"Note",ko:"참고"},visits:{en:"📅 Next visits",ko:"📅 다음 진료"}, unclear:{en:"❓ Hard to read — please check",ko:"❓ 읽기 어려웠던 곳 — 꼭 확인"}, share_l:{en:"✉️ Message for the family",ko:"✉️ 형제자매에게 보낼 글"}, tip:{en:"Please note",ko:"꼭 확인"}
+});
+var SAMPLE={en:"Sunshine Pharmacy — Patient: Kim Soon-ja\nAmlodipine 5 mg tablet: 1 tablet once a day after breakfast, 30 days (blood pressure)\nMetformin 500 mg tablet: 1 tablet twice a day after breakfast and dinner, 30 days\nNext visit: Dec 18, 2026, Internal medicine, 10:30",ko:"햇살약국 / 환자: 김순자 님\n암로디핀정 5mg 1일 1회 아침 식후 1정 30일분 (혈압약)\n메트포르민정 500mg 1일 2회 아침·저녁 식후 1정 30일분\n다음 진료: 2026년 12월 18일 내과 오전 10:30"};
+var SPEC=[{k:"meds",t:"cards",label:"meds",cols:[["name"],["when","c_when"],["how","c_how"],["note","c_note"]]},{k:"visits",t:"cards",label:"visits",cols:[["when"],["what"]]},{k:"unclear",t:"list",label:"unclear"},{k:"share",t:"copies",labels:["share_l"]},{k:"tip",t:"note",label:"tip"}];
+
+VTB.mount({
+  room:"care",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); if(!t&&!VTB.photo) return "empty"; var p={text:t}; if(VTB.photo) p.image=VTB.photo; return p; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+VTB.photoBox(document.getElementById("photo")); VT.apply();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

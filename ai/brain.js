@@ -7,8 +7,8 @@
   var KEYSTORE = "vt_ai_key";
   VT.add({
     b_privacy: {
-      en: "🌐 Your text is sent to an AI company (Anthropic) to make the answer. VALUES does not store it. Anthropic does not train its AI on it and deletes it within 30 days (longer only if it needs a usage-policy check).",
-      ko: "🌐 붙여 넣은 글은 AI 회사(Anthropic)로 보내 답을 만들고, 밸류스는 저장하지 않습니다. Anthropic 은 이 글로 AI 를 학습시키지 않고 30일 안에 지웁니다(이용 정책 위반 확인이 필요한 글만 더 오래 둘 수 있음)."
+      en: "🌐 Your text (and photo, if you add one) is sent to an AI company (Anthropic) to make the answer. VALUES does not store it. Anthropic does not train its AI on it and deletes it within 30 days (longer only if it needs a usage-policy check).",
+      ko: "🌐 붙여 넣은 글(사진을 올리면 사진도)은 AI 회사(Anthropic)로 보내 답을 만들고, 밸류스는 저장하지 않습니다. Anthropic 은 이것으로 AI 를 학습시키지 않고 30일 안에 지웁니다(이용 정책 위반 확인이 필요한 것만 더 오래 둘 수 있음)."
     },
     b_trial: { en: "Free tries left today: {n} of 3 (all AI rooms together)", ko: "오늘 남은 맛보기: {n}/3번 (AI 방 모두 합쳐서)" },
     b_sub: { en: "Today in this room: {n}/100", ko: "오늘 이 방 {n}/100" },
@@ -39,7 +39,41 @@
   }
 
   var VTB = window.VTB = {};
-  VT.add({ v_none: { en: "Nothing here.", ko: "없어요." }, v_me: { en: "🙋 You", ko: "🙋 나" }, v_them: { en: "🧑 Them", ko: "🧑 상대" } });
+  VT.add({ v_none: { en: "Nothing here.", ko: "없어요." }, v_me: { en: "🙋 You", ko: "🙋 나" }, v_them: { en: "🧑 Them", ko: "🧑 상대" },
+    p_add: { en: "📷 Add a photo", ko: "📷 사진 올리기" }, p_del: { en: "Remove photo", ko: "사진 빼기" },
+    p_note: { en: "One photo. It is made smaller in your browser before sending. Cover names, ID or account numbers you do not want to send.",
+      ko: "사진은 한 장이에요. 보내기 전에 이 브라우저에서 작게 줄여요. 보내고 싶지 않은 이름·주민번호·계좌번호는 가리고 찍어 주세요." },
+    p_bad: { en: "That file could not be opened as a photo.", ko: "이 파일은 사진으로 열 수 없어요." } });
+
+  /* 사진 한 장 (2026-11-20 오후) — 긴 변을 줄여 JPG 로 만든 뒤 VTB.photo = {type, data(base64)} 에 둔다 */
+  VTB.photo = null;
+  VTB.photoBox = function (el) {
+    el.innerHTML = '<div class="row" style="margin-top:0"><label class="btn ghost" style="cursor:pointer"><span data-i="p_add"></span>' +
+      '<input id="pFile" type="file" accept="image/*" style="display:none"></label>' +
+      '<button class="btn ghost hidden" type="button" id="pDel" data-i="p_del"></button></div>' +
+      '<img id="pPrev" alt="" class="hidden" style="display:block;max-width:100%;max-height:260px;margin-top:10px;border-radius:10px;border:1px solid var(--line)">' +
+      '<p class="note" id="pNote" data-i="p_note"></p>';
+    var f = document.getElementById("pFile"), prev = document.getElementById("pPrev"), del = document.getElementById("pDel");
+    function clear() { VTB.photo = null; f.value = ""; prev.classList.add("hidden"); prev.removeAttribute("src"); del.classList.add("hidden"); }
+    del.onclick = clear;
+    f.onchange = function () {
+      var file = f.files && f.files[0]; if (!file) return;
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () {
+        var max = 1400, w = img.naturalWidth, h = img.naturalHeight, s = Math.min(1, max / Math.max(w, h));
+        if (w * s * h * s > 1150000) s = Math.sqrt(1150000 / (w * h)); // AI 가 보는 크기(약 115만 화소)보다 크게 보내지 않는다
+        var c = document.createElement("canvas"); c.width = Math.max(1, Math.round(w * s)); c.height = Math.max(1, Math.round(h * s));
+        var g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+        var d = c.toDataURL("image/jpeg", 0.85);
+        URL.revokeObjectURL(url);
+        VTB.photo = { type: "image/jpeg", data: d.slice(d.indexOf(",") + 1) };
+        prev.src = d; prev.classList.remove("hidden"); del.classList.remove("hidden");
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); clear(); alert(VT.t("p_bad")); };
+      img.src = url;
+    };
+    VTB.photoClear = clear;
+  };
 
   /* 답 보여 주기 틀 (2026-11-20) — 방마다 spec 만 적으면 된다.
    * spec 한 줄: {k:답 칸, t:"text"|"note"|"list"|"cards"|"copies"|"dialog", label:낱말 열쇠, cols:[[칸,낱말 열쇠],…], labels:[…]} */
@@ -149,6 +183,7 @@
       if (typeof p === "string") { err(VT.t(p)); return; }
       var body = { room: cfg.room, text: p.text, lang: VT.lang };
       if (p.opt) body.opt = p.opt;
+      if (p.image) body.image = p.image;
       var k = getKey(); if (k) body.key = k;
       busy = true;
       var go = document.getElementById("go"); if (go) go.disabled = true;

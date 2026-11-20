@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting on One Page — VALUES AI Store</title>
+<meta name="description" content="Paste your rough meeting notes, or take a photo of the notes or whiteboard. Get decisions, who does what by when, and open questions on one page. 회의 끝 한 장.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=work" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <div id="photo" style="margin-top:4px"></div>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Meeting on One Page — VALUES AI Store",ko:"회의 끝 한 장 — 밸류스 AI 백화점"},
+  back:{en:"← Work & Office",ko:"← 일·사무"},
+  h1:{en:"📝 Meeting on One Page",ko:"📝 회의 끝 한 장"},
+  lead:{en:"Paste your rough meeting notes, or take a photo of the notes or whiteboard. Get decisions, who does what by when, and open questions on one page.",ko:"회의 메모를 대충 붙여 넣거나, 메모·화이트보드를 찍어 올리세요. 정한 것·할 사람·기한·남은 질문을 한 장으로 드려요."},
+  label:{en:"Meeting notes",ko:"회의 메모"},
+  ph:{en:"Rough notes are fine …",ko:"대충 적은 메모도 괜찮아요 …"},
+  go:{en:"Make one page",ko:"한 장으로 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"One photo or pasted text. Photos are made smaller in your browser and count as one try.",ko:"사진 한 장이나 붙여 넣은 글로 해요. 사진은 이 브라우저에서 줄여 보내고, 한 번으로 세요."}, h2s:{en:"Names and deadlines are never made up. Missing ones are marked \"?\".",ko:"사람 이름과 기한은 지어내지 않아요. 없으면 「?」로 남겨요."}, h3s:{en:"Recordings are not supported yet. Use notes or a photo.",ko:"녹음 파일은 아직 받지 않아요. 메모나 사진으로 해 주세요."},
+  summary:{en:"In short",ko:"한마디로"}, decisions:{en:"✅ Decided",ko:"✅ 정한 것"}, todos:{en:"📌 Who does what",ko:"📌 할 일"}, c_who:{en:"Who",ko:"누가"}, c_by:{en:"By",ko:"언제까지"},open:{en:"❓ Still open",ko:"❓ 아직 못 정한 것"},empty:{en:"Please add a photo or write something first.",ko:"먼저 사진을 올리거나 글을 적어 주세요."},
+});
+var SAMPLE={en:"Weekly marketing meeting\n- Spring sale starts Mar 3, decided\n- Mina: banner draft by Friday\n- Price for bundle? not decided, ask finance\n- Joon will book the photo studio next week\n- Newsletter moved to every other Tuesday",ko:"주간 마케팅 회의\n- 봄 세일 3월 3일 시작으로 확정\n- 미나: 배너 시안 금요일까지\n- 묶음 상품 가격? 미정, 재무팀에 물어보기\n- 준호가 다음 주에 촬영 스튜디오 예약\n- 소식지는 격주 화요일로 바꿈"};
+var SPEC=[{k:"summary",t:"text",label:"summary"},{k:"decisions",t:"list",label:"decisions"},{k:"todos",t:"cards",label:"todos",cols:[["what"],["who","c_who"],["by","c_by"]]},{k:"open",t:"list",label:"open"}];
+
+VTB.mount({
+  room:"meeting",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); if(!t&&!VTB.photo) return "empty"; var p={text:t}; if(VTB.photo) p.image=VTB.photo; return p; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+VTB.photoBox(document.getElementById("photo")); VT.apply();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

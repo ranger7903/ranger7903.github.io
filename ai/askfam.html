@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask My Family — VALUES AI Store</title>
+<meta name="description" content="Got a message you are not sure about? One button sends it, with the warning signs and the links made safe, to your family. 자녀에게 물어보기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="scam-engine.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=safety" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <label for="msg" class="sub" data-i="label"></label>
+      <textarea id="msg" data-i-ph="ph"></textarea>
+      <label for="who" class="sub" style="display:block;margin-top:12px" data-i="who_q"></label>
+      <input id="who" type="text" autocomplete="off" style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;box-sizing:border-box" data-i-ph="who_ph">
+      <label for="tel" class="sub" style="display:block;margin-top:12px" data-i="tel_q"></label>
+      <input id="tel" type="tel" autocomplete="off" inputmode="tel" style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;box-sizing:border-box" data-i-ph="tel_ph">
+      <p class="note" data-i="tel_note"></p>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Ask My Family — VALUES AI Store",ko:"자녀에게 물어보기 — 밸류스 AI 백화점"},
+  back:{en:"← Scams & Safety",ko:"← 사기·안전"},
+  h1:{en:"👪 Ask My Family",ko:"👪 자녀에게 물어보기"},
+  lead:{en:"Got a text or message you are not sure about? Paste it, and one button sends it to your family with the warning signs. Links are made safe so nobody taps them by mistake.",
+        ko:"미심쩍은 문자나 카톡을 받으셨나요? 붙여 넣고 단추 하나만 누르면 위험 신호와 함께 가족에게 보내져요. 링크는 잘못 눌리지 않게 바꿔서 보내요."},
+  label:{en:"The message you got",ko:"받은 글"},
+  ph:{en:"Paste the whole message here (long-press → Paste on a phone)",ko:"받은 글을 통째로 붙여 넣으세요 (폰은 길게 눌러 → 붙여넣기)"},
+  who_q:{en:"Who are you asking? (optional)",ko:"누구에게 물어볼까요? (안 써도 돼요)"},
+  who_ph:{en:"e.g. Minji",ko:"예: 큰아들, 민지"},
+  tel_q:{en:"Their phone number, for the text-message button (optional)",ko:"문자 단추에 쓸 가족 전화번호 (안 써도 돼요)"},
+  tel_ph:{en:"e.g. 010-1234-5678",ko:"예: 010-1234-5678"},
+  tel_note:{en:"The name and number are kept only in this browser, so you do not have to type them again.",ko:"이름과 번호는 다음에 다시 안 쓰시게 이 브라우저에만 기억해요."},
+  go:{en:"Check and make the message",ko:"살펴보고 보낼 글 만들기"},
+  clear:{en:"Clear",ko:"지우기"},
+  sample:{en:"Try an example",ko:"예시로 해 보기"},
+  privacy:{en:"🔒 Checked inside your browser. Nothing is sent to VALUES. The message goes only to the person you choose.",
+           ko:"🔒 이 브라우저 안에서만 살펴봐요. 밸류스로는 아무것도 보내지 않고, 고르신 가족에게만 가요."},
+  empty:{en:"Paste a message first.",ko:"먼저 받은 글을 붙여 넣어 주세요."},
+  v_high:{en:"Very likely a scam — don't tap anything yet",ko:"사기일 가능성이 높아요 — 아직 아무것도 누르지 마세요"},
+  v_mid:{en:"There is a warning sign — ask before you tap",ko:"위험 신호가 있어요 — 누르기 전에 물어보세요"},
+  v_low:{en:"No warning signs found — asking is still a good idea",ko:"위험 신호는 못 찾았어요 — 그래도 물어보면 좋아요"},
+  preview:{en:"The message that will be sent",ko:"보낼 글"},
+  send:{en:"📤 Send to family",ko:"📤 가족에게 보내기"},
+  sms:{en:"💬 Send as a text message",ko:"💬 문자로 보내기"},
+  copy:{en:"Copy",ko:"복사하기"},
+  copied:{en:"Copied. Paste it in your family chat.",ko:"복사했어요. 가족 단톡방에 붙여 넣으세요."},
+  m_hi:{en:"Hi{w}, I got this message. Is it real? I have not tapped the link or replied.",ko:"{w}이런 문자를 받았는데 진짜인지 봐 줄래? 링크는 안 눌렀고 답장도 안 했어."},
+  m_sig:{en:"Warning signs found:",ko:"찾은 위험 신호:"},
+  m_none:{en:"(No warning signs were found, but I want to be sure.)",ko:"(위험 신호는 안 나왔는데 확실히 하고 싶어서.)"},
+  m_links:{en:"Link addresses (made safe — don't tap):",ko:"링크 주소 (눌리지 않게 바꿈):"},
+  m_got:{en:"The message:",ko:"받은 글:"},
+  m_by:{en:"Checked with VALUES 'Is This a Scam?'",ko:"밸류스 「이거 사기예요?」로 살펴봄"},
+  wait:{en:"While you wait for an answer: don't tap the link, don't call the number in the message, don't send money or codes.",
+        ko:"답을 기다리는 동안: 링크를 누르지 말고, 글 속 번호로 전화하지 말고, 돈이나 인증번호를 보내지 마세요."},
+  how_t:{en:"How it works",ko:"이렇게 해요"},
+  h1s:{en:"The same rules as 'Is This a Scam?' look for warning signs, right in your browser. No AI and no cost.",ko:"「이거 사기예요?」와 같은 규칙으로 이 브라우저에서 위험 신호를 찾아요. AI 를 쓰지 않아 공짜예요."},
+  h2s:{en:"Links are changed (hxxps, [.]) so they cannot be tapped by mistake. Phone numbers and long numbers are hidden.",ko:"링크는 잘못 눌리지 않게 바꾸고(hxxps, [.]), 전화번호·긴 숫자는 가려서 보내요."},
+  h3s:{en:"'Send to family' opens your phone's share menu (KakaoTalk, Messages …). On a computer, use Copy.",ko:"「가족에게 보내기」는 폰의 공유 창(카카오톡·문자 등)을 열어요. 컴퓨터에서는 복사하기를 쓰세요."}
+});
+var SAMPLE={en:"USPS: Your package is on hold due to an incomplete address. Update within 24 hours or it will be returned: usps-redeliver.top/track",
+            ko:"[Web발신] 엄마 나 폰 액정 깨져서 임시폰이야. 급하게 문화상품권 사야 되는데 이 번호로 연락 줘 bit.ly/3xYz12"};
+var STORE="vt_askfam";
+function mask(s){ return s.replace(/\+?\d[\d\s-]{6,}\d/g,function(m){return m.replace(/\d(?=[\d\s-]{2})/g,"•");}); }
+function defang(s){ return s.replace(/https?:\/\//gi,function(m){ return m.replace(/t/gi,"x"); })
+  .replace(/\b((?:[a-z0-9-]+\.)+[a-z]{2,})(?=[\/\s?#:]|$)/gi,function(h){ return h.replace(/\./g,"[.]"); }); }
+function fill(s,o){ return String(s).replace(/\{(\w+)\}/g,function(_,k){ return o[k]; }); }
+var last=null;
+function compose(){
+  var L=VT.lang, r=last, who=document.getElementById("who").value.trim();
+  var w=who?(L==="ko"?who+", ":" "+who):"";
+  var t=fill(VT.t("m_hi"),{w:w})+"\n\n";
+  if(r.signals.length) t+=VT.t("m_sig")+"\n"+r.signals.map(function(id){ return "- "+ScamEngine.signalText(id,L)[0]; }).join("\n")+"\n\n";
+  else t+=VT.t("m_none")+"\n\n";
+  if(r.links.length) t+=VT.t("m_links")+"\n"+r.links.map(function(l){ return "- "+defang(l.host); }).join("\n")+"\n\n";
+  var m=document.getElementById("msg").value.trim(); if(m.length>500) m=m.slice(0,500)+"…";
+  t+=VT.t("m_got")+"\n"+defang(mask(m))+"\n\n— "+VT.t("m_by");
+  return t;
+}
+function save(){ try{ localStorage.setItem(STORE,JSON.stringify({who:document.getElementById("who").value.trim(),tel:document.getElementById("tel").value.trim()})); }catch(e){} }
+function load(){ try{ var o=JSON.parse(localStorage.getItem(STORE)||"{}"); if(o.who) document.getElementById("who").value=o.who; if(o.tel) document.getElementById("tel").value=o.tel; }catch(e){} }
+function show(){
+  var out=document.getElementById("out");
+  if(!last){ out.classList.add("hidden"); return; }
+  var txt=compose(), tel=document.getElementById("tel").value.replace(/[^\d+]/g,"");
+  var h='<div class="verdict '+last.level+'">'+VT.t("v_"+last.level)+'<small>'+VT.t("wait")+'</small></div>'+
+    '<h2 style="margin-top:18px">'+VT.t("preview")+'</h2><div class="box" style="margin-top:8px;white-space:pre-wrap;word-break:break-word" id="pv">'+VT.esc(txt)+'</div>'+
+    '<div class="row no-print">'+(navigator.share?'<button class="btn" type="button" id="sh">'+VT.t("send")+'</button>':'')+
+    (tel?'<a class="btn'+(navigator.share?' ghost':'')+'" id="sm" href="sms:'+VT.esc(tel)+'?body='+encodeURIComponent(txt)+'">'+VT.t("sms")+'</a>':'')+
+    '<button class="btn ghost" type="button" id="cp">'+VT.t("copy")+'</button><span id="cpok" class="note"></span></div>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  if(navigator.share) document.getElementById("sh").onclick=function(){ navigator.share({text:txt}).catch(function(){}); };
+  document.getElementById("cp").onclick=function(){
+    var done=function(){ document.getElementById("cpok").textContent=VT.t("copied"); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done,function(){ prompt("",txt); }); else prompt("",txt);
+  };
+}
+document.getElementById("go").onclick=function(){
+  var t=document.getElementById("msg").value.trim(), o=document.getElementById("out");
+  if(!t){ o.innerHTML='<div class="verdict mid">'+VT.t("empty")+'</div>'; o.classList.remove("hidden"); return; }
+  save(); last=ScamEngine.analyse(t); show(); o.scrollIntoView({behavior:"smooth",block:"start"});
+};
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; last=null; show(); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; document.getElementById("go").click(); };
+document.getElementById("who").oninput=document.getElementById("tel").oninput=function(){ if(last) show(); };
+VT.onLang=function(){ show(); };
+VT.mountChrome(); VT.apply(); load();
+</script>
+</body>
+</html>

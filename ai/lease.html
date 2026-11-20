@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before You Sign a Lease — VALUES AI Store</title>
+<meta name="description" content="Take a photo of the property register (in Korea, 등기부등본) or the lease, or paste its text. The lines to look at are marked, with a checklist for before you sign. 집 계약 전 점검.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <div id="photo" style="margin-top:4px"></div>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Before You Sign a Lease — VALUES AI Store",ko:"집 계약 전 점검 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"🏠 Before You Sign a Lease",ko:"🏠 집 계약 전 점검"},
+  lead:{en:"Take a photo of the property register (in Korea, 등기부등본) or the lease, or paste its text. The lines to look at are marked, with a checklist for before you sign.",ko:"등기부등본이나 계약서를 찍어 올리거나 글을 붙여 넣으세요. 살펴볼 줄을 짚어 드리고, 도장 찍기 전에 할 일 확인표를 만들어 드려요."},
+  label:{en:"Or paste the text (optional)",ko:"또는 글 붙여 넣기 (사진만 올려도 돼요)"},
+  ph:{en:"Paste the 갑구·을구 parts or the contract clauses …",ko:"갑구·을구 부분이나 계약서 조항을 붙여 넣으세요 …"},
+  go:{en:"Mark what to check",ko:"살펴볼 곳 짚기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"One photo is one page. For a long register, check the ownership part (갑구) and other rights part (을구) one at a time.",ko:"사진 한 장은 한 쪽이에요. 긴 등기부는 갑구·을구를 한 번씩 나눠 넣으세요."}, h2s:{en:"It points to what to look at. It never says a deal is safe and is not legal advice.",ko:"살펴볼 곳을 짚어 줄 뿐, 「안전하다」고 말하지 않아요. 법률 상담이 아니에요."}, h3s:{en:"Get a fresh copy on the day you sign, and ask a licensed agent or legal professional for the final check.",ko:"계약하는 날 새로 떼어 다시 보고, 마지막 확인은 공인중개사·법무사에게 받으세요."},
+  empty:{en:"Please add a photo or write something first.",ko:"먼저 사진을 올리거나 글을 적어 주세요."},summary:{en:"In short",ko:"한마디로"}, marks:{en:"🔎 Lines to look at",ko:"🔎 살펴볼 줄"}, checklist:{en:"✅ Before you sign",ko:"✅ 도장 찍기 전에"}, tip:{en:"Please note",ko:"꼭 확인"}
+});
+var SAMPLE={en:"Lease agreement (excerpt)\n3. The deposit is 50,000,000 won, paid to the landlord's account on signing.\n7. The tenant pays for all repairs, including the boiler and roof.\n9. The landlord may enter the home at any time without notice.\n11. If the tenant leaves early, the whole deposit is kept by the landlord.",ko:"【갑구】 소유권에 관한 사항\n1 소유권이전 2019년3월5일 매매 소유자 박○○\n2 가압류 2026년9월2일 청구금액 금35,000,000원 채권자 ○○캐피탈\n【을구】 소유권 이외의 권리에 관한 사항\n1 근저당권설정 2019년3월5일 채권최고액 금312,000,000원 근저당권자 ○○은행"};
+var SPEC=[{k:"summary",t:"text",label:"summary"},{k:"marks",t:"cards",label:"marks",cols:[["part"],["quote"],["why"]]},{k:"checklist",t:"list",label:"checklist"},{k:"tip",t:"note",label:"tip"}];
+
+VTB.mount({
+  room:"lease",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); if(!t&&!VTB.photo) return "empty"; var p={text:t}; if(VTB.photo) p.image=VTB.photo; return p; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+VTB.photoBox(document.getElementById("photo")); VT.apply();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

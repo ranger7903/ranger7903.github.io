@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Does This Paper Mean? — VALUES AI Store</title>
+<meta name="description" content="Take a photo of a bill, statement or receipt, or paste its text. Every line is explained in plain words, with the things worth checking. 이 종이 무슨 뜻이에요.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <div id="photo" style="margin-top:4px"></div>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"What Does This Paper Mean? — VALUES AI Store",ko:"이 종이 무슨 뜻이에요 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"📄 What Does This Paper Mean?",ko:"📄 이 종이 무슨 뜻이에요"},
+  lead:{en:"Take a photo of a bill, statement or receipt, or paste its text. Every line is explained in plain words, with the things worth checking.",ko:"고지서·명세서·영수증을 찍어 올리거나 글을 붙여 넣으세요. 줄마다 쉬운 말로 풀고, 한 번 확인해 볼 것도 알려 드려요."},
+  label:{en:"Or paste the text (optional)",ko:"또는 글 붙여 넣기 (사진만 올려도 돼요)"},
+  ph:{en:"e.g. a maintenance bill, hospital receipt, card statement …",ko:"예: 관리비 고지서, 병원 영수증, 카드 명세서 …"},
+  go:{en:"Explain it",ko:"풀어 주세요"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"One photo or pasted text. Photos are made smaller in your browser and count as one try.",ko:"사진 한 장이나 붙여 넣은 글로 해요. 사진은 이 브라우저에서 줄여 보내고, 한 번으로 세요."}, h2s:{en:"Numbers are copied exactly as written. Nothing is recalculated or guessed.",ko:"숫자는 적힌 그대로 옮겨요. 새로 계산하거나 짐작하지 않아요."}, h3s:{en:"Cover ID or account numbers before taking the photo. Ask the sender if anything is unclear.",ko:"찍기 전에 주민번호·계좌번호는 가려 주세요. 이상한 줄은 보낸 곳에 직접 물어보세요."},
+  empty:{en:"Please add a photo or write something first.",ko:"먼저 사진을 올리거나 글을 적어 주세요."},kind:{en:"What it is",ko:"무슨 종이"}, summary:{en:"In short",ko:"한마디로"}, lines:{en:"🧾 Line by line",ko:"🧾 줄마다 풀이"}, check:{en:"🔎 Worth checking",ko:"🔎 한 번 확인해 볼 것"}, tip:{en:"Tip",ko:"한마디"}
+});
+var SAMPLE={en:"Apartment maintenance fee — November 2026\nGeneral management 38,200\nCleaning 12,500\nElevator 4,800\nLong-term repair reserve 21,000\nHeating 64,300\nElectricity (household) 41,870\nWater 18,900\nLate fee 1,250\nTotal due 202,820   Due date: Dec 25, 2026",ko:"2026년 11월분 관리비 고지서\n일반관리비 38,200\n청소비 12,500\n승강기유지비 4,800\n장기수선충당금 21,000\n난방비 64,300\n세대전기료 41,870\n세대수도료 18,900\n연체료 1,250\n납기내 금액 202,820원  납기일 2026.12.25"};
+var SPEC=[{k:"kind",t:"note",label:"kind"},{k:"summary",t:"text",label:"summary"},{k:"lines",t:"cards",label:"lines",cols:[["item"],["amount"],["plain"]]},{k:"check",t:"list",label:"check"},{k:"tip",t:"note",label:"tip"}];
+
+VTB.mount({
+  room:"paper",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); if(!t&&!VTB.photo) return "empty"; var p={text:t}; if(VTB.photo) p.image=VTB.photo; return p; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+VTB.photoBox(document.getElementById("photo")); VT.apply();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

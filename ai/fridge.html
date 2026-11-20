@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fridge-Photo Dinner — VALUES AI Store</title>
+<meta name="description" content="Take one photo inside your fridge (or list what is there). Get three dishes you can make right now, with short steps. 냉장고 한 장 밥상.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=home" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <div id="photo" style="margin-top:4px"></div>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Fridge-Photo Dinner — VALUES AI Store",ko:"냉장고 한 장 밥상 — 밸류스 AI 백화점"},
+  back:{en:"← Home & Kitchen",ko:"← 집·살림"},
+  h1:{en:"🥕 Fridge-Photo Dinner",ko:"🥕 냉장고 한 장 밥상"},
+  lead:{en:"Take one photo inside your fridge (or list what is there). Get three dishes you can make right now, with short steps.",ko:"냉장고 안을 한 장 찍어 올리거나 있는 것을 적어 주세요. 지금 바로 만들 요리 세 가지를 짧은 만드는 법과 함께 드려요."},
+  label:{en:"Anything to add? (people, allergies, what is not in the photo)",ko:"더 적을 것 (먹는 사람, 알레르기, 사진에 안 보이는 재료)"},
+  ph:{en:"e.g. 2 people, no spicy food, there is also rice",ko:"예: 2명, 매운 것 못 먹음, 밥도 있어요"},
+  go:{en:"What can I make?",ko:"뭐 해 먹을까요?"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"One photo or pasted text. Photos are made smaller in your browser and count as one try.",ko:"사진 한 장이나 붙여 넣은 글로 해요. 사진은 이 브라우저에서 줄여 보내고, 한 번으로 세요."}, h2s:{en:"Only ingredients it can clearly see are used, plus basics like salt, oil and soy sauce.",ko:"또렷이 보이는 재료와 소금·기름·간장 같은 기본 양념만 써요."}, h3s:{en:"Allergies you mention are respected. Still check what you use.",ko:"적어 주신 알레르기는 지켜요. 그래도 재료는 한 번 보세요."},
+  empty:{en:"Please add a photo or write something first.",ko:"먼저 사진을 올리거나 글을 적어 주세요."},seen:{en:"👀 What I see",ko:"👀 보이는 재료"}, dishes:{en:"🍳 Three dishes",ko:"🍳 요리 세 가지"}, c_uses:{en:"Uses",ko:"쓰는 재료"}, tip:{en:"Tip",ko:"한마디"}
+});
+var SAMPLE={en:"Eggs (4), half a block of tofu, 1 zucchini, kimchi, green onions, a little ham. 2 people.",ko:"계란 4개, 두부 반 모, 애호박 1개, 김치, 대파, 햄 조금. 2명."};
+var SPEC=[{k:"seen",t:"list",label:"seen"},{k:"dishes",t:"cards",label:"dishes",cols:[["name"],["time"],["uses","c_uses"],["steps"]]},{k:"tip",t:"note",label:"tip"}];
+
+VTB.mount({
+  room:"fridge",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); if(!t&&!VTB.photo) return "empty"; var p={text:t}; if(VTB.photo) p.image=VTB.photo; return p; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+VTB.photoBox(document.getElementById("photo")); VT.apply();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

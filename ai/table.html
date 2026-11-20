@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Move That Table — VALUES AI Store</title>
+<meta name="description" content="Take a photo or screenshot of a table, or paste it from an email. Get clean rows and columns to download for Excel or paste into a spreadsheet. 표 옮기기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=work" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <div id="photo" style="margin-top:4px"></div>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Move That Table — VALUES AI Store",ko:"표 옮기기 — 밸류스 AI 백화점"},
+  back:{en:"← Work & Office",ko:"← 일·사무"},
+  h1:{en:"📊 Move That Table",ko:"📊 표 옮기기"},
+  lead:{en:"Take a photo or screenshot of a table, or paste it from an email. Get clean rows and columns to download for Excel or paste into a spreadsheet.",ko:"표를 찍거나 화면을 캡처해 올리거나, 메일 속 표를 붙여 넣으세요. 엑셀로 받거나 표 프로그램에 바로 붙여 넣을 수 있게 줄과 칸을 맞춰 드려요."},
+  label:{en:"Or paste the table text (optional)",ko:"또는 표 글 붙여 넣기 (사진만 올려도 돼요)"},
+  ph:{en:"Paste a table from an email or web page …",ko:"메일이나 웹 페이지의 표를 붙여 넣으세요 …"},
+  go:{en:"Make the table",ko:"표로 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"One photo or pasted text. Photos are made smaller in your browser and count as one try.",ko:"사진 한 장이나 붙여 넣은 글로 해요. 사진은 이 브라우저에서 줄여 보내고, 한 번으로 세요."}, h2s:{en:"Cells are copied exactly as written. Unreadable cells become \"?\".",ko:"칸은 적힌 그대로 옮기고, 못 읽은 칸은 「?」로 남겨요."}, h3s:{en:"PDF files are not supported yet. Take a screenshot of the page instead.",ko:"PDF 파일은 아직 받지 않아요. 그 쪽을 화면 캡처해서 올려 주세요."},
+  empty:{en:"Please add a photo or write something first.",ko:"먼저 사진을 올리거나 글을 적어 주세요."},t_csv:{en:"⬇️ Download for Excel (CSV)",ko:"⬇️ 엑셀로 받기 (CSV)"}, t_tsv:{en:"Copy to paste into a spreadsheet",ko:"표 프로그램에 붙여 넣게 복사"}, notes:{en:"Note",ko:"한마디"}, t_rows:{en:"rows",ko:"줄"}
+});
+var SAMPLE={en:"Name   Dept   Start date   Phone ext.\nKim Mina   Sales   2024-03-02   2041\nLee Joon   Design   2025-01-15   2107\nPark Sora   Finance   2023-11-20   2230",ko:"이름   부서   입사일   내선\n김미나   영업   2024-03-02   2041\n이준호   디자인   2025-01-15   2107\n박소라   재무   2023-11-20   2230"};
+var SPEC=[{k:"notes",t:"note",label:"notes"}];
+
+function cell(s){ s=String(s==null?"":s); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+function csvOf(a){ return [a.columns].concat(a.rows).map(function(r){ return r.map(cell).join(","); }).join("\r\n"); }
+function tsvOf(a){ return [a.columns].concat(a.rows).map(function(r){ return r.map(function(x){ return String(x).replace(/[\t\r\n]+/g," "); }).join("\t"); }).join("\n"); }
+function tableHtml(a){
+  window.LAST_TABLE=a;
+  var h='<h2 style="margin-top:18px">'+VT.esc(a.title)+' <span class="note">('+a.rows.length+' '+VT.t("t_rows")+')</span></h2>'+
+    '<div class="tablewrap" style="overflow-x:auto;margin-top:8px"><table style="border-collapse:collapse;font-size:14px;min-width:100%">'+
+    '<thead><tr>'+a.columns.map(function(c){ return '<th style="border:1px solid var(--line);padding:6px 8px;background:var(--paper-2,#f4f1ea);text-align:left;white-space:nowrap">'+VT.esc(c)+'</th>'; }).join("")+'</tr></thead><tbody>'+
+    a.rows.map(function(r){ return '<tr>'+r.map(function(x){ return '<td style="border:1px solid var(--line);padding:6px 8px;'+(String(x).length>24?'min-width:220px':'white-space:nowrap')+'">'+VT.esc(x)+'</td>'; }).join("")+'</tr>'; }).join("")+
+    '</tbody></table></div><div class="row no-print"><button class="btn" type="button" onclick="dlCsv()">'+VT.t("t_csv")+'</button>'+
+    '<button class="btn ghost" type="button" onclick="cpTsv(this)">'+VT.t("t_tsv")+'</button><span class="note"></span></div>';
+  return h;
+}
+function dlCsv(){ var a=window.LAST_TABLE; if(!a) return;
+  var b=new Blob(["﻿"+csvOf(a)],{type:"text/csv;charset=utf-8"}), u=URL.createObjectURL(b), l=document.createElement("a");
+  l.href=u; l.download=(String(a.title||"table").replace(/[\\\/:*?"<>|]+/g," ").trim().slice(0,40)||"table")+".csv"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(function(){ URL.revokeObjectURL(u); },2000); }
+function cpTsv(btn){ var t=tsvOf(window.LAST_TABLE), ok=function(){ btn.nextElementSibling.textContent=VT.t("b_copied"); };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,function(){ prompt("",t); }); else prompt("",t); }
+VTB.mount({
+  room:"table",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); if(!t&&!VTB.photo) return "empty"; var p={text:t}; if(VTB.photo) p.image=VTB.photo; return p; },
+  render:function(a){ return tableHtml(a)+VTB.view(SPEC,a); },
+  copy:function(a){ return tsvOf(a); }
+});
+VTB.photoBox(document.getElementById("photo")); VT.apply();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>
