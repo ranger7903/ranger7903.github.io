@@ -321,5 +321,20 @@
     "발급기": "https://sparkling-bird-2599.ranger7903.workers.dev/",
     "공개키_b64": "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk="
   },
-  "_구독": "2026-11-19 부터 파는 도구는 모두 달마다 구독. 칸 네 개(작은 1,900 · 보통 2,900 · 큰 4,900 · 전부 14,900원), 1년은 열 달 값. paddle 은 달마다 값, paddle_1년 은 1년 값. 어느 도구인지는 결제창 customData.tool 로 열쇠 발급소에 간다."
+  "_구독": "2026-11-19 부터 파는 도구는 모두 달마다 구독. 칸 네 개(작은 1,900 · 보통 2,900 · 큰 4,900 · 전부 14,900원), 1년은 열 달 값. paddle 은 달마다 값, paddle_1년 은 1년 값. 어느 도구인지는 결제창 customData.tool 로 열쇠 발급소에 간다.",
+  "AI백화점": {
+    "_설명": "2026-11-21 AI 백화점 구독. 결제는 ai/plans.html, 이름표는 열쇠 발급소 SUB_PRICE_TO_PRODUCT 가 p:[\"ai\"] 로 만든다. 아침 점검 대상(상품)에는 넣지 않는다(본 가게 index.html 에서 팔지 않으므로).",
+    "이름": "밸류스 AI 백화점 구독 · VALUES AI Store Plan",
+    "paddle_상품": "pro_01m7xm4j06f6pzw2j3vcnqqvfn",
+    "달마다": {
+      "원": 7900,
+      "달러": 5.99,
+      "paddle": "pri_01m7xm594gj081c5y9gwwbz9pd"
+    },
+    "1년": {
+      "원": 79000,
+      "달러": 59.0,
+      "paddle": "pri_01m7xm5kafgd80qjpaesegm6pk"
+    }
+  }
 }
