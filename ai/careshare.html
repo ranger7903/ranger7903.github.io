@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Share the Caring — VALUES AI Store</title>
+<meta name="description" content="Write who is in the family, where they live, how much time they have, and what care is needed. Get a fair split and a one-line weekly update form. 돌봄 나누기표.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=family" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Share the Caring — VALUES AI Store",ko:"돌봄 나누기표 — 밸류스 AI 백화점"},
+  back:{en:"← Family Care",ko:"← 가족 돌봄"},
+  h1:{en:"🤝 Share the Caring",ko:"🤝 돌봄 나누기표"},
+  lead:{en:"Write who is in the family, where they live, how much time they have, and what care is needed. Get a fair split and a one-line weekly update form.",ko:"가족이 누구인지, 어디 사는지, 시간이 얼마나 되는지, 어떤 돌봄이 필요한지 적어 주세요. 고르게 나눈 표와 주마다 쓰는 한 줄 보고 틀을 드려요."},
+  label:{en:"Family and care needed",ko:"가족과 필요한 돌봄"},
+  ph:{en:"Who, where, time, and the tasks …",ko:"누가, 어디서, 시간은, 할 일은 …"},
+  go:{en:"Share it fairly",ko:"고르게 나누기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"People far away get tasks they can do from home: calls, paperwork, booking.",ko:"멀리 사는 사람은 집에서 할 수 있는 일(전화·서류·예약)을 맡아요."}, h2s:{en:"No medical advice is given.",ko:"의료 판단은 하지 않아요."}, h3s:{en:"Share the table in your family chat and adjust it together.",ko:"가족 단톡방에 올려 함께 고쳐 쓰세요."},
+  rows:{en:"👥 Who does what",ko:"👥 누가 무엇을"}, unassigned:{en:"❓ Still needs someone",ko:"❓ 아직 맡을 사람 없음"}, weekly:{en:"✍️ Weekly one-line update",ko:"✍️ 주마다 한 줄 보고"}, tip:{en:"Tip",ko:"한마디"}
+});
+var SAMPLE={en:"Mom (78) lives alone in Daejeon, needs a hospital visit every 2 weeks and help with groceries.\nMe: Seoul, weekends free.\nBrother: Daejeon, works shifts.\nSister: Busan, busy, good with paperwork and money.",ko:"어머니(78) 대전에 혼자 사심, 2주마다 병원, 장보기 도움 필요.\n나: 서울, 주말 가능.\n남동생: 대전, 교대 근무.\n여동생: 부산, 바쁨, 서류·돈 관리 잘함."};
+var SPEC=[{k:"rows",t:"cards",label:"rows",cols:[["who"],["tasks"]]},{k:"unassigned",t:"list",label:"unassigned"},{k:"weekly",t:"text",label:"weekly"},{k:"tip",t:"note",label:"tip"}];
+
+VTB.mount({
+  room:"careshare",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

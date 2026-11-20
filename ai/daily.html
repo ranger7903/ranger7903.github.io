@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Small Romance Today — VALUES AI Store</title>
+<meta name="description" content="Today's sunset time, moon and seasonal term, worked out in your browser, plus one small thing to do today. 오늘의 낭만 한 줄.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=romance" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="city" class="sub" style="display:block;margin-top:12px" data-i="city_q"></label><select id="city" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px;max-width:100%"></select><div id="facts" class="box" style="margin-top:12px"></div>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:120px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"One Small Romance Today — VALUES AI Store",ko:"오늘의 낭만 한 줄 — 밸류스 AI 백화점"},
+  back:{en:"← Letters & Memories",ko:"← 낭만·추억"},
+  h1:{en:"🌅 One Small Romance Today",ko:"🌅 오늘의 낭만 한 줄"},
+  lead:{en:"Today's sunset time, moon and seasonal term, worked out in your browser, plus one small thing to do today.",ko:"오늘 해 지는 시각·달 모양·절기를 이 브라우저에서 계산하고, 오늘 해 볼 작은 일 하나를 드려요."},
+  label:{en:"A word about your day (optional)",ko:"오늘 하루 한마디 (안 써도 돼요)"},
+  ph:{en:"e.g. tired after work, with my partner tonight",ko:"예: 퇴근하고 지쳤어요, 오늘 저녁은 둘이 있어요"},
+  go:{en:"Today's line",ko:"오늘의 한 줄"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Sunset and moon are calculated in your browser (a few minutes off at most).",ko:"해 지는 시각과 달 모양은 이 브라우저에서 계산해요(몇 분쯤 다를 수 있어요)."}, h2s:{en:"Weather is not checked. Look outside before you go.",ko:"날씨는 보지 않아요. 나가기 전에 하늘을 한 번 보세요."}, h3s:{en:"Your note is optional. Leave it empty if you like.",ko:"한마디는 안 써도 돼요."},
+  city_q:{en:"Where are you?",ko:"어디세요?"}, f_sun:{en:"🌇 Sunset",ko:"🌇 해 지는 시각"}, f_moon:{en:"🌙 Moon",ko:"🌙 달"}, f_term:{en:"🍃 Season",ko:"🍃 절기"},line:{en:"Today",ko:"오늘"}, todo:{en:"✨ One thing to do",ko:"✨ 오늘 해 볼 일"}, why:{en:"Why",ko:"왜냐면"}, nosun:{en:"no sunset today",ko:"오늘은 해가 지지 않아요"},m0:{en:"New moon",ko:"그믐·삭"},m1:{en:"Waxing crescent",ko:"초승달"},m2:{en:"First quarter",ko:"상현달"},m3:{en:"Waxing gibbous",ko:"차오르는 달"},m4:{en:"Full moon",ko:"보름달"},m5:{en:"Waning gibbous",ko:"기우는 달"},m6:{en:"Last quarter",ko:"하현달"},m7:{en:"Waning crescent",ko:"그믐달"}
+});
+var SAMPLE={en:"Tired after work, but we have the evening free together.",ko:"퇴근하고 좀 지쳤지만 오늘 저녁은 둘이 시간이 있어요."};
+var SPEC=[{k:"line",t:"text",label:"line"},{k:"todo",t:"text",label:"todo"},{k:"why",t:"note",label:"why"}];
+var TERMS=[["sohan", 1, 5, "소한", "Minor Cold"], ["daehan", 1, 20, "대한", "Major Cold"], ["ipchun", 2, 4, "입춘", "Start of Spring"], ["usu", 2, 19, "우수", "Rain Water"], ["gyeongchip", 3, 5, "경칩", "Awakening of Insects"], ["chunbun", 3, 20, "춘분", "Spring Equinox"], ["cheongmyeong", 4, 5, "청명", "Clear and Bright"], ["gogu", 4, 20, "곡우", "Grain Rain"], ["ipha", 5, 5, "입하", "Start of Summer"], ["soman", 5, 21, "소만", "Grain Buds"], ["mangjong", 6, 6, "망종", "Grain in Ear"], ["haji", 6, 21, "하지", "Summer Solstice"], ["soseo", 7, 7, "소서", "Minor Heat"], ["daeseo", 7, 23, "대서", "Major Heat"], ["ipchu", 8, 7, "입추", "Start of Autumn"], ["cheoseo", 8, 23, "처서", "End of Heat"], ["baekro", 9, 7, "백로", "White Dew"], ["chubun", 9, 23, "추분", "Autumn Equinox"], ["hallo", 10, 8, "한로", "Cold Dew"], ["sanggang", 10, 23, "상강", "Frost's Descent"], ["ipdong", 11, 7, "입동", "Start of Winter"], ["soseol", 11, 22, "소설", "Minor Snow"], ["daeseol", 12, 7, "대설", "Major Snow"], ["dongji", 12, 22, "동지", "Winter Solstice"]];
+function termNow(d){ d=d||new Date(); var m=d.getMonth()+1, day=d.getDate(), cur=TERMS[TERMS.length-1];
+  TERMS.forEach(function(t){ if(m>t[1]||(m===t[1]&&day>=t[2])) cur=t; }); return cur; }
+function termName(t){ return VT.lang==="ko"? t[3]+" ("+t[1]+"월 "+t[2]+"일 무렵)" : t[4]+" · "+t[3]+" (around "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][t[1]-1]+" "+t[2]+")"; }
+var CITIES=[["seoul", "서울", "Seoul", 37.5665, 126.978, "Asia/Seoul"], ["busan", "부산", "Busan", 35.1796, 129.0756, "Asia/Seoul"], ["jeju", "제주", "Jeju", 33.4996, 126.5312, "Asia/Seoul"], ["daejeon", "대전", "Daejeon", 36.3504, 127.3845, "Asia/Seoul"], ["gwangju", "광주", "Gwangju", 35.1595, 126.8526, "Asia/Seoul"], ["tokyo", "도쿄", "Tokyo", 35.6762, 139.6503, "Asia/Tokyo"], ["taipei", "타이베이", "Taipei", 25.033, 121.5654, "Asia/Taipei"], ["hanoi", "하노이", "Hanoi", 21.0278, 105.8342, "Asia/Ho_Chi_Minh"], ["bangkok", "방콕", "Bangkok", 13.7563, 100.5018, "Asia/Bangkok"], ["sydney", "시드니", "Sydney", -33.8688, 151.2093, "Australia/Sydney"], ["london", "런던", "London", 51.5074, -0.1278, "Europe/London"], ["paris", "파리", "Paris", 48.8566, 2.3522, "Europe/Paris"], ["newyork", "뉴욕", "New York", 40.7128, -74.006, "America/New_York"], ["la", "LA", "Los Angeles", 34.0522, -118.2437, "America/Los_Angeles"], ["toronto", "토론토", "Toronto", 43.6532, -79.3832, "America/Toronto"]];
+function sunset(lat,lon,d){ // NOAA 간단식 — 해 지는 UTC 시각(Date) 또는 null
+  var rad=Math.PI/180, J=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate(),12)/864e5+2440587.5, n=Math.round(J-2451545.0009+lon/360);
+  var Js=2451545.0009-lon/360+n, M=(357.5291+0.98560028*(Js-2451545))%360, C=1.9148*Math.sin(M*rad)+0.02*Math.sin(2*M*rad)+0.0003*Math.sin(3*M*rad);
+  var L=(M+102.9372+C+180)%360, Jt=Js+0.0053*Math.sin(M*rad)-0.0069*Math.sin(2*L*rad), dec=Math.asin(Math.sin(L*rad)*Math.sin(23.44*rad));
+  var cw=(Math.sin(-0.833*rad)-Math.sin(lat*rad)*Math.sin(dec))/(Math.cos(lat*rad)*Math.cos(dec)); if(cw<-1||cw>1) return null;
+  var Jset=Jt+Math.acos(cw)/rad/360; return new Date((Jset-2440587.5)*864e5); }
+function moon(d){ var p=((d.getTime()/864e5+2440587.5-2451550.1)/29.530588853)%1; if(p<0)p+=1;
+  return {k:"m"+(Math.floor(p*8+0.5)%8), lit:Math.round((1-Math.cos(2*Math.PI*p))/2*100)}; }
+function cityNow(){ var id=document.getElementById("city").value; return CITIES.filter(function(c){return c[0]===id;})[0]||CITIES[0]; }
+function facts(){ var c=cityNow(), now=new Date(), s=sunset(c[3],c[4],now), m=moon(now), t=termNow(now);
+  var st=s? new Intl.DateTimeFormat(VT.lang==="ko"?"ko-KR":"en-US",{hour:"2-digit",minute:"2-digit",timeZone:c[5]}).format(s) : VT.t("nosun");
+  var day=new Intl.DateTimeFormat(VT.lang==="ko"?"ko-KR":"en-US",{dateStyle:"full",timeZone:c[5]}).format(now);
+  return {city:VT.lang==="ko"?c[1]:c[2], day:day, sun:st, moon:VT.t(m.k)+" ("+m.lit+"%)", term:termName(t)}; }
+function showFacts(){ var f=facts(); document.getElementById("facts").innerHTML='<b>'+VT.esc(f.day)+' · '+VT.esc(f.city)+'</b>'+
+  '<p style="margin:8px 0 0">'+VT.t("f_sun")+': '+VT.esc(f.sun)+'<br>'+VT.t("f_moon")+': '+VT.esc(f.moon)+'<br>'+VT.t("f_term")+': '+VT.esc(f.term)+'</p>'; }
+function fillCity(){ var tz=""; try{ tz=Intl.DateTimeFormat().resolvedOptions().timeZone; }catch(e){}
+  var s=document.getElementById("city"), v=s.value||(CITIES.filter(function(c){return c[5]===tz;})[0]||CITIES[0])[0];
+  s.innerHTML=CITIES.map(function(c){ return '<option value="'+c[0]+'">'+VT.esc(VT.lang==="ko"?c[1]:c[2])+'</option>'; }).join(""); s.value=v; showFacts(); }
+VTB.mount({
+  room:"daily",
+  payload:function(){ var f=facts(), note=document.getElementById("msg").value.trim(); return {text:"Date: "+f.day+"\nPlace: "+f.city+"\nSunset: "+f.sun+"\nMoon: "+f.moon+"\nSeasonal term: "+f.term+(note?"\nNote about my day: "+note:"")}; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); },
+  onLang:fillCity
+});
+fillCity(); document.getElementById("city").onchange=showFacts;
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

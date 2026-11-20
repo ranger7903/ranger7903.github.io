@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Letter to the Sky — VALUES AI Store</title>
+<meta name="description" content="A letter to someone who has passed away, or a pet you miss. Write who it is for and the memories you want to keep. The AI only helps you put it into words. 하늘로 보내는 편지.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=romance" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"A Letter to the Sky — VALUES AI Store",ko:"하늘로 보내는 편지 — 밸류스 AI 백화점"},
+  back:{en:"← Letters & Memories",ko:"← 낭만·추억"},
+  h1:{en:"🕊️ A Letter to the Sky",ko:"🕊️ 하늘로 보내는 편지"},
+  lead:{en:"A letter to someone who has passed away, or a pet you miss. Write who it is for and the memories you want to keep. The AI only helps you put it into words.",ko:"떠난 분이나 그리운 반려동물에게 쓰는 편지예요. 누구에게 쓰는지와 남기고 싶은 기억을 적어 주세요. AI 는 말로 옮기는 것만 거들어요."},
+  label:{en:"Who it is for, and your memories",ko:"누구에게, 그리고 기억"},
+  ph:{en:"Who, memories, and what you want to say …",ko:"누구에게, 기억, 하고 싶은 말 …"},
+  go:{en:"Help me write it",ko:"편지로 엮어 주기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Only your memories and words are used. Nothing is made up.",ko:"적어 주신 기억과 말만 써요. 지어내지 않아요."}, h2s:{en:"Nothing you write is kept by VALUES.",ko:"쓰신 글은 밸류스에 남지 않아요."}, h3s:{en:"If today feels too heavy, you can call 109 (Korea, 24 hours) any time.",ko:"오늘이 너무 무거우시면 언제든 109(24시간 상담)에 전화하실 수 있어요."},
+  letter:{en:"💌 Your letter",ko:"💌 편지"}, tip:{en:"",ko:""}
+});
+var SAMPLE={en:"To my dad. He taught me to ride a bike on the river path and always hummed old songs while cooking ramen on Sundays. I never told him thank you for driving me to every exam.",ko:"아빠에게. 강변에서 자전거를 가르쳐 주셨고, 일요일마다 라면 끓이며 옛날 노래를 흥얼거리셨다. 시험 날마다 태워다 주신 것, 고맙다는 말을 못 했다."};
+var SPEC=[{k:"letter",t:"copies",labels:["letter"]},{k:"tip",t:"text"}];
+
+VTB.mount({
+  room:"skyletter",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

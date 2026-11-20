@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>True Trip Cost — VALUES AI Store</title>
+<meta name="description" content="Paste your bookings and prices. Every cost is pulled out and added up by currency, and costs people often forget are listed separately. 진짜 총비용 계산기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=travel" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"True Trip Cost — VALUES AI Store",ko:"진짜 총비용 계산기 — 밸류스 AI 백화점"},
+  back:{en:"← Travel",ko:"← 여행"},
+  h1:{en:"💵 True Trip Cost",ko:"💵 진짜 총비용 계산기"},
+  lead:{en:"Paste your bookings and prices. Every cost is pulled out and added up by currency, and costs people often forget are listed separately.",ko:"예약 내역과 가격을 붙여 넣으세요. 돈이 드는 것을 모두 뽑아 통화별로 더하고, 흔히 빠뜨리는 비용은 따로 알려 드려요."},
+  label:{en:"Bookings and prices",ko:"예약 내역과 가격"},
+  ph:{en:"Flights, hotel, tours, passes … with prices.",ko:"항공권, 숙소, 투어, 교통 패스 … 가격과 함께."},
+  go:{en:"Add it all up",ko:"다 더해 보기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"The AI only pulls out the numbers. The adding up is done in your browser.",ko:"AI 는 숫자만 뽑고, 더하기는 이 브라우저가 해요."}, h2s:{en:"Often-forgotten costs are estimates and are not added to the total.",ko:"흔히 빠뜨리는 비용은 어림값이라 합계에 넣지 않아요."}, h3s:{en:"Check each line against your booking emails.",ko:"줄마다 예약 메일과 한 번 맞춰 보세요."},
+  items:{en:"🧾 Costs found",ko:"🧾 찾은 비용"}, total:{en:"Total",ko:"합계"}, missing:{en:"🤔 Often forgotten (estimates, not added)",ko:"🤔 흔히 빠뜨리는 것 (어림값, 합계에 안 넣음)"}, notes:{en:"Note",ko:"한마디"}
+});
+var SAMPLE={en:"Flights Seoul–Osaka for 2 people: 389,000 KRW total\nHotel in Osaka: 12,000 JPY per night, 3 nights\nUniversal Studios tickets: 9,800 JPY each, 2 people\nAirport limousine bus one way: 1,800 JPY each",ko:"인천-오사카 왕복 항공 2명 합계 389,000원\n오사카 호텔 1박 12,000엔 × 3박\n유니버설 스튜디오 입장권 1인 9,800엔, 2명\n공항 리무진 편도 1인 1,800엔"};
+var SPEC=[{k:"missing",t:"list",label:"missing"},{k:"notes",t:"note",label:"notes"}];
+
+function money(n,c){ try{ return new Intl.NumberFormat(VT.lang==="ko"?"ko-KR":"en-US",{style:"currency",currency:c,maximumFractionDigits:2}).format(n); }catch(e){ return n.toLocaleString()+" "+c; } }
+function itemsHtml(a){
+  var sum={}, li=a.items.map(function(x){ var c=String(x.currency||"").toUpperCase().slice(0,3)||"?"; var n=Number(x.amount)||0; sum[c]=(sum[c]||0)+n;
+    return '<li><b>'+VT.esc(money(n,c))+'</b>'+VT.esc(x.what)+'</li>'; }).join("");
+  var tot=Object.keys(sum).map(function(c){ return money(sum[c],c); }).join(" + ");
+  return '<div class="verdict low" style="margin-top:12px">'+VT.t("total")+': '+VT.esc(tot||"0")+'</div><h2 style="margin-top:18px">'+VT.t("items")+'</h2><ul class="signals">'+li+'</ul>';
+}
+VTB.mount({
+  room:"tripcost",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){ return itemsHtml(a)+VTB.view(SPEC,a); },
+  copy:function(a){ return a.items.map(function(x){ return "- "+x.what+": "+x.amount+" "+x.currency; }).join("\n")+"\n\n"+VTB.plain(SPEC,a); }
+});
+
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

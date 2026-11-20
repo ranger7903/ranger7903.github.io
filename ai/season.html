@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seasonal Postcard — VALUES AI Store</title>
+<meta name="description" content="For each of the 24 seasonal terms, three short poem drafts for a postcard. Change the words and send it to a friend. 계절 엽서.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=romance" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="term" class="sub" style="display:block;margin-top:12px" data-i="term_q"></label><select id="term" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px;max-width:100%"></select>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Seasonal Postcard — VALUES AI Store",ko:"계절 엽서 — 밸류스 AI 백화점"},
+  back:{en:"← Letters & Memories",ko:"← 낭만·추억"},
+  h1:{en:"🍂 Seasonal Postcard",ko:"🍂 계절 엽서"},
+  lead:{en:"For each of the 24 seasonal terms, three short poem drafts for a postcard. Change the words and send it to a friend.",ko:"24절기마다 엽서에 쓸 짧은 시 초안 세 편. 고쳐서 친구에게 보내세요."},
+  label:{en:"Who it is for, and anything to mention",ko:"누구에게, 그리고 넣고 싶은 이야기"},
+  ph:{en:"e.g. to my old school friend who just moved to Jeju",ko:"예: 제주로 이사 간 옛 친구에게"},
+  go:{en:"Write three drafts",ko:"초안 세 편 쓰기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"The seasonal term is picked from today's date. You can change it.",ko:"절기는 오늘 날짜로 골라 두었어요. 바꿔도 돼요."}, h2s:{en:"Dates are approximate (they move by a day some years).",ko:"절기 날짜는 해마다 하루쯤 달라질 수 있어요."}, h3s:{en:"The drafts are new. Famous poems are never copied.",ko:"새로 쓴 초안이에요. 유명한 시를 베끼지 않아요."},
+  term_q:{en:"Season (24 seasonal terms)",ko:"절기"}, p1:{en:"Draft 1",ko:"초안 1"}, p2:{en:"Draft 2",ko:"초안 2"}, p3:{en:"Draft 3",ko:"초안 3"}, line:{en:"Closing line",ko:"맺는 한 줄"}
+});
+var SAMPLE={en:"To my old school friend who just moved to Jeju. We used to walk home together under the ginkgo trees.",ko:"제주로 이사 간 고등학교 친구에게. 은행나무 길을 같이 걸어 하교하던 친구."};
+var SPEC=[{k:"poems",t:"copies",labels:["p1","p2","p3"]},{k:"line",t:"text",label:"line"}];
+var TERMS=[["sohan", 1, 5, "소한", "Minor Cold"], ["daehan", 1, 20, "대한", "Major Cold"], ["ipchun", 2, 4, "입춘", "Start of Spring"], ["usu", 2, 19, "우수", "Rain Water"], ["gyeongchip", 3, 5, "경칩", "Awakening of Insects"], ["chunbun", 3, 20, "춘분", "Spring Equinox"], ["cheongmyeong", 4, 5, "청명", "Clear and Bright"], ["gogu", 4, 20, "곡우", "Grain Rain"], ["ipha", 5, 5, "입하", "Start of Summer"], ["soman", 5, 21, "소만", "Grain Buds"], ["mangjong", 6, 6, "망종", "Grain in Ear"], ["haji", 6, 21, "하지", "Summer Solstice"], ["soseo", 7, 7, "소서", "Minor Heat"], ["daeseo", 7, 23, "대서", "Major Heat"], ["ipchu", 8, 7, "입추", "Start of Autumn"], ["cheoseo", 8, 23, "처서", "End of Heat"], ["baekro", 9, 7, "백로", "White Dew"], ["chubun", 9, 23, "추분", "Autumn Equinox"], ["hallo", 10, 8, "한로", "Cold Dew"], ["sanggang", 10, 23, "상강", "Frost's Descent"], ["ipdong", 11, 7, "입동", "Start of Winter"], ["soseol", 11, 22, "소설", "Minor Snow"], ["daeseol", 12, 7, "대설", "Major Snow"], ["dongji", 12, 22, "동지", "Winter Solstice"]];
+function termNow(d){ d=d||new Date(); var m=d.getMonth()+1, day=d.getDate(), cur=TERMS[TERMS.length-1];
+  TERMS.forEach(function(t){ if(m>t[1]||(m===t[1]&&day>=t[2])) cur=t; }); return cur; }
+function termName(t){ return VT.lang==="ko"? t[3]+" ("+t[1]+"월 "+t[2]+"일 무렵)" : t[4]+" · "+t[3]+" (around "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][t[1]-1]+" "+t[2]+")"; }
+function fillTerm(){ var s=document.getElementById("term"), v=s.value||termNow()[0];
+  s.innerHTML=TERMS.map(function(t){ return '<option value="'+t[0]+'">'+VT.esc(termName(t))+'</option>'; }).join(""); s.value=v; }
+VTB.mount({
+  room:"season",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t,opt:{term:document.getElementById("term").value}}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); },
+  onLang:fillTerm
+});
+fillTerm();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

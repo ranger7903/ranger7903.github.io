@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Official Letter Check — VALUES AI Store</title>
+<meta name="description" content="Paste a draft letter or official document before you send it. Get a list of problems with dates, attachment numbers, spelling and missing parts, each with a fix. 공문 한 번 보기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=work" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Official Letter Check — VALUES AI Store",ko:"공문 한 번 보기 — 밸류스 AI 백화점"},
+  back:{en:"← Work & Office",ko:"← 일·사무"},
+  h1:{en:"🏛️ Official Letter Check",ko:"🏛️ 공문 한 번 보기"},
+  lead:{en:"Paste a draft letter or official document before you send it. Get a list of problems with dates, attachment numbers, spelling and missing parts, each with a fix.",ko:"보내기 전에 공문이나 문서 초안을 붙여 넣으세요. 날짜·붙임 번호·맞춤법·빠진 곳을 고칠 말과 함께 짚어 드려요."},
+  label:{en:"The draft",ko:"초안"},
+  ph:{en:"Paste the document text here (up to 4,000 characters).",ko:"문서 글을 붙여 넣으세요 (4,000글자까지)."},
+  go:{en:"Check it",ko:"점검하기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Weekdays written next to dates are checked in your browser against the real calendar.",ko:"날짜 옆에 적은 요일은 이 브라우저에서 실제 달력과 맞춰 봐요."}, h2s:{en:"The AI checks date format, attachment numbering, the ending mark, spelling and missing basics.",ko:"AI 가 날짜 쓰는 법·붙임 번호·「끝.」 표시·맞춤법·빠진 항목을 봐요."}, h3s:{en:"Rules differ between offices. Treat this as a second pair of eyes, not the final word.",ko:"기관마다 규칙이 조금씩 달라요. 마지막 판단이 아니라 한 번 더 보는 눈으로 써 주세요."},
+  summary:{en:"Overall",ko:"전체"}, issues:{en:"Things to fix",ko:"고칠 곳"}, c_problem:{en:"Problem",ko:"문제"}, c_fix:{en:"Fix",ko:"고칠 말"}, tip:{en:"Tip",ko:"한마디"},wd_t:{en:"📅 Weekday check (calendar)",ko:"📅 요일 맞춰 보기 (달력)"}, wd_ok:{en:"matches",ko:"맞아요"}, wd_bad:{en:"is actually",ko:"실제로는"}, wd_none:{en:"No date with a weekday was found.",ko:"요일이 붙은 날짜가 없어요."}
+});
+var SAMPLE={en:"To: All branch managers\nSubject: Year-end inventory check\n1. Please complete the inventory check by Friday, December 12, 2026 (Thursday).\n2. Send the result form (Attachment 2) to the head office.\nAttachment 1. Inventory form 1 copy",ko:"수신 각 부서장\n제목 2026년 연말 재고 점검 실시 알림\n1. 2026.12. 12.(목)까지 재고 점검을 완료해 주시기 바랍니다.\n2. 점검 결과는 붙임 2 서식에 작성하여 총무팀으로 제출해 주십시요.\n붙임 1. 재고 점검표 1부"};
+var SPEC=[{k:"summary",t:"text",label:"summary"},{k:"issues",t:"cards",label:"issues",cols:[["where"],["problem","c_problem"],["fix","c_fix"]]},{k:"tip",t:"note",label:"tip"}];
+
+var WD={"일":0,"월":1,"화":2,"수":3,"목":4,"금":5,"토":6,"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6};
+var MON={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+function weekdays(t){
+  var out=[], m, re1=/(\d{4})\s*[.\-\/년]\s*(\d{1,2})\s*[.\-\/월]\s*(\d{1,2})\s*일?\.?\s*\(\s*([월화수목금토일])\s*\)/g;
+  while((m=re1.exec(t))) out.push([m[0],+m[1],+m[2],+m[3],WD[m[4]]]);
+  var re2=/\b(Sun|Mon|Tue|Wed|Thu|Fri|Sat)[a-z]*,?\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})/gi;
+  while((m=re2.exec(t))) out.push([m[0],+m[4],MON[m[2].slice(0,3).toLowerCase()],+m[3],WD[m[1].slice(0,3).toLowerCase()]]);
+  var re3=/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})\s*\(\s*(Sun|Mon|Tue|Wed|Thu|Fri|Sat)[a-z]*\s*\)/gi;
+  while((m=re3.exec(t))) out.push([m[0],+m[3],MON[m[1].slice(0,3).toLowerCase()],+m[2],WD[m[4].slice(0,3).toLowerCase()]]);
+  return out;
+}
+function wdHtml(){
+  var t=document.getElementById("msg").value, w=weekdays(t), N=VT.lang==="ko"?["일","월","화","수","목","금","토"]:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  if(!w.length) return '<h2 style="margin-top:18px">'+VT.t("wd_t")+'</h2><p class="note">'+VT.t("wd_none")+'</p>';
+  return '<h2 style="margin-top:18px">'+VT.t("wd_t")+'</h2><ul class="signals">'+w.map(function(x){
+    var real=new Date(Date.UTC(x[1],x[2]-1,x[3])).getUTCDay(), ok=real===x[4];
+    return '<li style="border-left:5px solid var('+(ok?'--sage':'--red')+')"><b>'+VT.esc(x[0])+'</b>'+(ok?'✓ '+VT.t("wd_ok"):'✗ '+VT.t("wd_bad")+' '+N[real])+'</li>';
+  }).join("")+'</ul>';
+}
+VTB.mount({
+  room:"gongmun",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){ return wdHtml()+VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Week of Meals, Nothing Wasted — VALUES AI Store</title>
+<meta name="description" content="Tell us what is in your fridge and cupboard and how many people eat. Get seven days of meals that use it all up, and a short shopping list. 남는 것 없는 일주일 밥.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=home" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"A Week of Meals, Nothing Wasted — VALUES AI Store",ko:"남는 것 없는 일주일 밥 — 밸류스 AI 백화점"},
+  back:{en:"← Home & Kitchen",ko:"← 집·살림"},
+  h1:{en:"🥘 A Week of Meals, Nothing Wasted",ko:"🥘 남는 것 없는 일주일 밥"},
+  lead:{en:"Tell us what is in your fridge and cupboard and how many people eat. Get seven days of meals that use it all up, and a short shopping list.",ko:"냉장고·찬장에 있는 것과 먹는 사람 수를 적어 주세요. 있는 재료를 다 쓰는 일주일 식단과 짧은 장볼 목록을 드려요."},
+  label:{en:"What you have",ko:"있는 재료"},
+  ph:{en:"e.g. half an onion, 2 carrots, tofu, eggs, rice … 2 people, no spicy food",ko:"예: 양파 반 개, 당근 2개, 두부, 계란, 쌀 … 2명, 매운 것 못 먹음"},
+  go:{en:"Plan the week",ko:"일주일 짜기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Things that spoil fast are used first.",ko:"빨리 상하는 것부터 써요."}, h2s:{en:"Leftovers from one day are used on another.",ko:"하루 남은 것은 다른 날에 이어 써요."}, h3s:{en:"Allergies or diets you mention are respected. Still check the labels.",ko:"적어 주신 알레르기·식단을 지켜요. 그래도 재료 표시는 한 번 보세요."},
+  days:{en:"🗓️ Seven days",ko:"🗓️ 일주일"}, shop:{en:"🛒 To buy",ko:"🛒 살 것"}, useup:{en:"♻️ Where each one goes",ko:"♻️ 재료가 쓰이는 날"}, tip:{en:"Tip",ko:"한마디"}
+});
+var SAMPLE={en:"Half an onion, 2 carrots, 1 block of tofu, 6 eggs, half a cabbage, 300 g pork, rice, soy sauce. 2 adults, dinners only.",ko:"양파 반 개, 당근 2개, 두부 한 모, 계란 6개, 양배추 반 통, 돼지고기 300g, 쌀, 간장. 어른 2명, 저녁만."};
+var SPEC=[{k:"days",t:"cards",label:"days",cols:[["day"],["meals"]]},{k:"shop",t:"list",label:"shop"},{k:"useup",t:"list",label:"useup"},{k:"tip",t:"note",label:"tip"}];
+
+VTB.mount({
+  room:"week",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop Assistant Taster — VALUES AI Store</title>
+<meta name="description" content="Paste a customer's question. Add your shop facts (hours, prices, rules) below it if you like. Get two short replies to send. 가게 비서 맛보기.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=shop" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Shop Assistant Taster — VALUES AI Store",ko:"가게 비서 맛보기 — 밸류스 AI 백화점"},
+  back:{en:"← Small Shop",ko:"← 가게"},
+  h1:{en:"🧑‍🍳 Shop Assistant Taster",ko:"🧑‍🍳 가게 비서 맛보기"},
+  lead:{en:"Paste a customer's question. Add your shop facts (hours, prices, rules) below it if you like. Get two short replies to send.",ko:"손님 문의를 붙여 넣으세요. 아래에 가게 정보(영업시간·가격·규칙)를 함께 적으면 더 정확해요. 보낼 답장 두 가지를 드려요."},
+  label:{en:"Customer question (and your shop facts)",ko:"손님 문의 (와 가게 정보)"},
+  ph:{en:"Customer: …\n\nMy shop: hours, prices, rules …",ko:"손님: …\n\n우리 가게: 영업시간, 가격, 규칙 …"},
+  go:{en:"Write two replies",ko:"답장 두 개 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Only the facts you wrote are used. Missing facts become [blanks] for you to fill.",ko:"적어 주신 가게 정보만 써요. 없는 정보는 [빈칸]으로 남겨 드려요."}, h2s:{en:"It never promises refunds, discounts or dates you did not give.",ko:"말씀하지 않은 환불·할인·날짜는 약속하지 않아요."}, h3s:{en:"The full Windows Shop Assistant is being prepared.",ko:"윈도우용 「가게 비서」 전체 판은 준비 중이에요."},
+  kind:{en:"Type of question",ko:"문의 종류"}, r1:{en:"Reply 1 · friendly",ko:"답장 1 · 친절하게"}, r2:{en:"Reply 2 · brief",ko:"답장 2 · 짧게"}, tip:{en:"Check before sending",ko:"보내기 전에"}
+});
+var SAMPLE={en:"Customer: Hi, are you open on Sunday? And can I bring my dog inside?\n\nMy shop: Open Tue–Sun 10am–7pm, closed Monday. Dogs welcome on the terrace only.",ko:"손님: 안녕하세요 일요일에도 하나요? 강아지 데리고 들어가도 되나요?\n\n우리 가게: 화~일 오전 10시~오후 7시, 월요일 휴무. 강아지는 테라스 자리만 가능."};
+var SPEC=[{k:"kind",t:"note",label:"kind"},{k:"replies",t:"copies",labels:["r1","r2"]},{k:"tip",t:"note",label:"tip"}];
+
+VTB.mount({
+  room:"shopmini",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

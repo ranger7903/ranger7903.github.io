@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Korean for Daily Life — VALUES AI Store</title>
+<meta name="description" content="Bank, clinic, immigration office, landlord: choose the place, write what you need to do in any language, and get polite Korean to practise before you go. 한국 생활 한국어.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=learn" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="place" class="sub" style="display:block;margin-top:12px" data-i="place_q"></label><select id="place" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px;max-width:100%"></select>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Korean for Daily Life — VALUES AI Store",ko:"한국 생활 한국어 — 밸류스 AI 백화점"},
+  back:{en:"← Learning & Languages",ko:"← 공부·외국어"},
+  h1:{en:"🇰🇷 Korean for Daily Life",ko:"🇰🇷 한국 생활 한국어"},
+  lead:{en:"Bank, clinic, immigration office, landlord: choose the place, write what you need to do in any language, and get polite Korean to practise before you go.",ko:"은행·병원·출입국·집주인 — 곳을 고르고 해야 할 일을 아무 말로나 적으면, 미리 연습할 공손한 한국어를 드려요."},
+  label:{en:"What you need to do (any language)",ko:"해야 할 일 (어떤 말이든)"},
+  ph:{en:"e.g. open a bank account, I have a student visa",ko:"예: 통장을 만들고 싶어요, 유학 비자예요"},
+  go:{en:"Make my Korean sheet",ko:"한국어 연습장 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Korean is written in polite, easy style (해요체), with romanization.",ko:"공손하고 쉬운 해요체로, 로마자 읽기와 함께 드려요."}, h2s:{en:"Documents and rules can differ by office. Check with them.",ko:"서류와 규칙은 기관마다 다를 수 있어요. 꼭 확인하세요."}, h3s:{en:"Show the phone screen to staff if you get stuck.",ko:"막히면 휴대폰 화면을 직원에게 보여 주세요."},
+  place_q:{en:"Where?",ko:"어디서요?"}, turns:{en:"💬 The conversation",ko:"💬 주고받을 대화"}, phrases:{en:"⭐ Key phrases",ko:"⭐ 꼭 쓸 말"},words:{en:"📌 Words you may hear",ko:"📌 들을 수 있는 낱말"}, bring:{en:"🎒 Bring",ko:"🎒 챙길 것"}, tip:{en:"Tip",ko:"한마디"}
+});
+var SAMPLE={en:"I want to open a bank account. I am a student with a D-2 visa and I have my alien registration card.",ko:"I want to open a bank account. I am a student with a D-2 visa and I have my alien registration card."};
+var SPEC=[{k:"turns",t:"dialog",label:"turns"},{k:"phrases",t:"cards",label:"phrases",cols:[["say"],["roman"],["meaning"]]},{k:"words",t:"cards",label:"words",cols:[["say"],["roman"],["meaning"]]},{k:"bring",t:"list",label:"bring"},{k:"tip",t:"note",label:"tip"}];
+var PLACES=[["bank", "Bank", "은행"], ["hospital", "Hospital / clinic", "병원"], ["pharmacy", "Pharmacy", "약국"], ["immigration", "Immigration office", "출입국"], ["landlord", "Landlord / real-estate agent", "집주인·부동산"], ["phone", "Phone call", "전화"], ["work", "Work", "직장"], ["school", "School / kindergarten", "학교·어린이집"], ["other", "Everyday life", "생활"]];
+function fillPlace(){ var s=document.getElementById("place"), v=s.value||"bank";
+  s.innerHTML=PLACES.map(function(x){ return '<option value="'+x[0]+'">'+VT.esc(VT.lang==="ko"?x[2]:x[1]+" · "+x[2])+'</option>'; }).join(""); s.value=v; }
+VTB.mount({
+  room:"korean",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t,opt:{place:document.getElementById("place").value}}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); },
+  onLang:fillPlace
+});
+fillPlace();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

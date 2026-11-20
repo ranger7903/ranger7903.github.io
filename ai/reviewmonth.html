@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This Month's Reviews — VALUES AI Store</title>
+<meta name="description" content="Paste this month's reviews all at once. Get three praises, three complaints and the one thing to fix next month. 이번 달 리뷰 한 장.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=shop" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"This Month's Reviews — VALUES AI Store",ko:"이번 달 리뷰 한 장 — 밸류스 AI 백화점"},
+  back:{en:"← Small Shop",ko:"← 가게"},
+  h1:{en:"📈 This Month's Reviews",ko:"📈 이번 달 리뷰 한 장"},
+  lead:{en:"Paste this month's reviews all at once. Get three praises, three complaints and the one thing to fix next month.",ko:"이번 달 리뷰를 한꺼번에 붙여 넣으세요. 칭찬 3 · 불만 3 · 다음 달에 고칠 것 1 을 한 장으로 드려요."},
+  label:{en:"The reviews",ko:"리뷰 모음"},
+  ph:{en:"Paste many reviews here, one after another (up to 4,000 characters).",ko:"리뷰를 여러 개 이어서 붙여 넣으세요 (4,000글자까지)."},
+  go:{en:"Make the summary",ko:"한 장으로 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Only what customers wrote is used. Nothing is guessed.",ko:"손님이 쓴 것만 써요. 짐작해서 보태지 않아요."}, h2s:{en:"Names and phone numbers in reviews are left out.",ko:"리뷰 속 이름·전화번호는 빼고 정리해요."}, h3s:{en:"Over 4,000 characters? Split the month into two halves.",ko:"4,000글자가 넘으면 한 달을 두 번에 나눠 넣으세요."},
+  summary:{en:"Overall",ko:"전체 느낌"}, praise:{en:"👍 Praise",ko:"👍 칭찬"}, complaints:{en:"👎 Complaints",ko:"👎 불만"}, fix:{en:"🔧 Fix next month",ko:"🔧 다음 달에 고칠 것"}
+});
+var SAMPLE={en:"★★★★★ Great coffee, friendly staff.\n★★☆☆☆ Waited 20 minutes for a latte.\n★★★★☆ Love the croissants, but the music is too loud.\n★★★☆☆ Tables were sticky.\n★★★★★ Best croissant in town!\n★★☆☆☆ Slow service on Saturday morning.",ko:"★★★★★ 커피 맛있고 사장님 친절해요\n★★☆☆☆ 라떼 하나 20분 기다렸어요\n★★★★☆ 크루아상 맛있는데 음악이 너무 커요\n★★★☆☆ 테이블이 끈적했어요\n★★★★★ 크루아상 최고!\n★★☆☆☆ 토요일 아침에 너무 느려요"};
+var SPEC=[{k:"summary",t:"text",label:"summary"},{k:"praise",t:"list",label:"praise"},{k:"complaints",t:"list",label:"complaints"},{k:"fix",t:"text",label:"fix"}];
+
+VTB.mount({
+  room:"reviewmonth",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); }
+});
+
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

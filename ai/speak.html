@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice Tomorrow's Conversation — VALUES AI Store</title>
+<meta name="description" content="Describe a real situation you face soon. Get a practice sheet: the conversation both ways, key phrases, and what to say if they surprise you. 내일 쓸 말 연습.">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="../세기.js" defer></script>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=learn" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="to" class="sub" style="display:block;margin-top:12px" data-i="to_q"></label><select id="to" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px;max-width:100%"></select>
+      <label for="msg" class="sub" style="display:block;margin-top:12px" data-i="label"></label>
+      <textarea id="msg" style="min-height:180px" data-i-ph="ph"></textarea>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Practice Tomorrow's Conversation — VALUES AI Store",ko:"내일 쓸 말 연습 — 밸류스 AI 백화점"},
+  back:{en:"← Learning & Languages",ko:"← 공부·외국어"},
+  h1:{en:"🗣️ Practice Tomorrow's Conversation",ko:"🗣️ 내일 쓸 말 연습"},
+  lead:{en:"Describe a real situation you face soon. Get a practice sheet: the conversation both ways, key phrases, and what to say if they surprise you.",ko:"곧 겪을 실제 상황을 적어 주세요. 주고받을 대화, 꼭 쓸 말, 상대가 뜻밖의 말을 할 때 받아칠 말까지 연습장을 만들어 드려요."},
+  label:{en:"The situation",ko:"상황"},
+  ph:{en:"e.g. returning a jacket at a shop in London, I have the receipt",ko:"예: 일본 호텔에서 체크인할 때 방을 금연실로 바꿔 달라고 하기"},
+  go:{en:"Make my practice sheet",ko:"연습장 만들기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  empty:{en:"Please write something first.",ko:"먼저 글을 적어 주세요."},
+  how_t:{en:"How it works",ko:"이렇게 만들어요"},
+  h1s:{en:"Read the \"you\" lines out loud two or three times.",ko:"「나」 줄을 소리 내어 두세 번 읽어 보세요."}, h2s:{en:"Reading help in brackets is only a guide. Listen to real speakers too.",ko:"괄호 속 읽는 법은 길잡이예요. 실제 발음도 들어 보세요."}, h3s:{en:"One practice sheet counts as one try.",ko:"연습장 하나가 한 번으로 세요."},
+  to_q:{en:"Language to speak",ko:"쓸 말"}, turns:{en:"💬 The conversation",ko:"💬 주고받을 대화"}, phrases:{en:"⭐ Key phrases",ko:"⭐ 꼭 쓸 말"},if_they:{en:"😮 If they say…",ko:"😮 상대가 이렇게 말하면"}, c_reply:{en:"You say",ko:"이렇게 받아요"}, tip:{en:"Tip",ko:"한마디"}
+});
+var SAMPLE={en:"Returning a jacket at a clothing shop. It is too small, I have the receipt, and I bought it 5 days ago.",ko:"미국 호텔에서 체크인할 때, 예약한 방을 금연실로 바꿀 수 있는지 묻고 늦게 체크아웃해도 되는지 묻기"};
+var SPEC=[{k:"turns",t:"dialog",label:"turns"},{k:"phrases",t:"cards",label:"phrases",cols:[["say"],["meaning"]]},{k:"if_they",t:"cards",label:"if_they",cols:[["they"],["meaning"],["reply","c_reply"]]},{k:"tip",t:"note",label:"tip"}];
+var LANGS=[["en", "English", "영어"], ["ja", "日本語", "일본어"], ["zh", "中文", "중국어"], ["es", "Español", "스페인어"], ["fr", "Français", "프랑스어"], ["de", "Deutsch", "독일어"], ["vi", "Tiếng Việt", "베트남어"], ["th", "ไทย", "태국어"], ["id", "Bahasa Indonesia", "인도네시아어"], ["ko", "한국어", "한국어"]];
+function fillTo(){ var s=document.getElementById("to"), v=s.value||(VT.lang==="ko"?"en":"ko");
+  s.innerHTML=LANGS.map(function(x){ return '<option value="'+x[0]+'">'+VT.esc(VT.lang==="ko"?x[1]+" ("+x[2]+")":x[1])+'</option>'; }).join(""); s.value=v; }
+VTB.mount({
+  room:"speak",
+  payload:function(){ var t=document.getElementById("msg").value.trim(); return t?{text:t,opt:{to:document.getElementById("to").value}}:"empty"; },
+  render:function(a){ return VTB.view(SPEC,a); },
+  copy:function(a){ return VTB.plain(SPEC,a); },
+  onLang:fillTo
+});
+fillTo();
+document.getElementById("go").onclick=function(){ VTB.ask(); };
+document.getElementById("clear").onclick=function(){ document.getElementById("msg").value=""; document.getElementById("out").classList.add("hidden"); };
+document.getElementById("sample").onclick=function(){ document.getElementById("msg").value=SAMPLE[VT.lang]; };
+</script>
+</body>
+</html>

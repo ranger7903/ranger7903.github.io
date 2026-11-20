@@ -39,6 +39,54 @@
   }
 
   var VTB = window.VTB = {};
+  VT.add({ v_none: { en: "Nothing here.", ko: "없어요." }, v_me: { en: "🙋 You", ko: "🙋 나" }, v_them: { en: "🧑 Them", ko: "🧑 상대" } });
+
+  /* 답 보여 주기 틀 (2026-11-20) — 방마다 spec 만 적으면 된다.
+   * spec 한 줄: {k:답 칸, t:"text"|"note"|"list"|"cards"|"copies"|"dialog", label:낱말 열쇠, cols:[[칸,낱말 열쇠],…], labels:[…]} */
+  function E(s) { return VT.esc(s == null ? "" : s).replace(/\n/g, "<br>"); }
+  function lab(x) { return x ? VT.t(x) : ""; }
+  VTB.view = function (spec, a) {
+    return spec.map(function (s) {
+      var v = a[s.k];
+      if (s.t === "copies" && typeof v === "string") v = [v];
+      var h = s.label ? '<h2 style="margin-top:18px">' + lab(s.label) + "</h2>" : "";
+      if (s.t === "text") return '<div class="box" style="margin-top:12px">' + (s.label ? "<b>" + lab(s.label) + "</b>" : "") + '<p style="margin:8px 0 0">' + E(v) + "</p></div>";
+      if (s.t === "note") return '<p class="note" style="margin-top:12px"><b>' + lab(s.label) + ":</b> " + E(v) + "</p>";
+      if (!v || !v.length) return h + '<p class="note">' + VT.t("v_none") + "</p>";
+      if (s.t === "list") return h + '<ul class="steps">' + v.map(function (x) { return "<li>" + E(x) + "</li>"; }).join("") + "</ul>";
+      if (s.t === "cards") return h + '<ul class="signals">' + v.map(function (o) {
+        return "<li>" + s.cols.map(function (c, i) {
+          var t = E(o[c[0]]);
+          if (i === 0) return "<b>" + t + "</b>";
+          return c[1] ? '<span class="note" style="display:block">' + lab(c[1]) + ": " + t + "</span>" : "<span style=\"display:block\">" + t + "</span>";
+        }).join("") + "</li>";
+      }).join("") + "</ul>";
+      if (s.t === "copies") return v.map(function (x, i) {
+        return '<div class="box" style="margin-top:12px"><b>' + lab((s.labels || [])[i]) + '</b><p style="margin:8px 0 0">' + E(x) + "</p>" +
+          '<div class="row"><button class="btn ghost" type="button" data-copy="' + VT.esc(x) + '">' + VT.t("b_copy") + '</button><span class="note"></span></div></div>';
+      }).join("");
+      if (s.t === "dialog") return h + '<ul class="signals">' + v.map(function (o) {
+        var me = o.who === "me";
+        return '<li style="' + (me ? "border-left:5px solid var(--sage)" : "border-left:5px solid var(--mustard)") + '"><span class="note">' + VT.t(me ? "v_me" : "v_them") + "</span>" +
+          "<b>" + E(o.say) + "</b>" + (o.roman ? '<span class="note" style="display:block">' + E(o.roman) + "</span>" : "") +
+          '<span style="display:block">' + E(o.meaning) + "</span></li>";
+      }).join("") + "</ul>";
+      return "";
+    }).join("");
+  };
+  VTB.plain = function (spec, a) {
+    return spec.map(function (s) {
+      var v = a[s.k];
+      if (v == null) return "";
+      if (typeof v === "string") return (s.label ? lab(s.label) + ": " : "") + v;
+      var head = s.label ? lab(s.label) + "\n" : "";
+      return head + v.map(function (o) {
+        if (typeof o === "string") return "- " + o;
+        if (s.t === "dialog") return (o.who === "me" ? VT.t("v_me") : VT.t("v_them")) + ": " + o.say + (o.roman ? " (" + o.roman + ")" : "") + " — " + o.meaning;
+        return "- " + s.cols.map(function (c) { return o[c[0]]; }).join(" / ");
+      }).join("\n");
+    }).filter(Boolean).join("\n\n");
+  };
   VTB.mount = function (cfg) {
     var wrap = document.getElementById("brain");
     wrap.innerHTML =
