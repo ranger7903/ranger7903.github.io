@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions for Two — VALUES AI Store</title>
+<meta name="description" content="One question a day for two people. Each of you answers first, then you see each other's answer. No app, no sign-up. 둘만의 질문.">
+<link rel="canonical" href="https://valuestools.kr/ai/couple.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="둘만의 질문 · Questions for Two — 밸류스 AI 백화점">
+<meta property="og:description" content="각자 먼저 답해야 서로 보이는 하루 질문. 앱도 가입도 없이 링크 하나로. A daily question. Each answers first, then you see each other&#x27;s. No app, no sign-up, one link.">
+<meta property="og:url" content="https://valuestools.kr/ai/couple.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/couple.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="../세기.js" defer></script>
+<style>
+.q{font-size:clamp(20px,3.6vw,26px);font-weight:800;line-height:1.45;margin:6px 0 4px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+.two .box{box-shadow:none}
+.ans{white-space:pre-wrap;margin:6px 0 0}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button[aria-pressed="true"]{background:var(--terra);color:#fff;border-color:var(--terra)}
+input.nm{width:100%;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--cream);color:var(--ink)}
+</style>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=romance" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <p class="sub" id="qday"></p>
+      <p class="q" id="q"></p>
+      <div class="row" style="margin-top:4px"><button class="btn ghost" id="other" type="button" data-i="other"></button></div>
+    </div>
+
+    <div class="box" style="margin-top:12px" id="modeBox">
+      <div class="seg" role="group">
+        <button class="btn ghost" type="button" id="mApart" data-i="m_apart"></button>
+        <button class="btn ghost" type="button" id="mTogether" data-i="m_together"></button>
+      </div>
+      <div id="stage"></div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Questions for Two — VALUES AI Store",ko:"둘만의 질문 — 밸류스 AI 백화점"},
+  back:{en:"← Letters & Memories",ko:"← 낭만·추억"},
+  h1:{en:"💬 Questions for Two",ko:"💬 둘만의 질문"},
+  lead:{en:"One question a day. Each of you answers first, then you see each other's answer. No app to install, no sign-up.",
+        ko:"하루에 질문 하나. 각자 먼저 답해야 서로의 답이 보여요. 앱 설치도 가입도 없어요."},
+  qday:{en:"Today's question",ko:"오늘의 질문"}, qpick:{en:"Another question",ko:"다른 질문"},
+  other:{en:"Give me another question",ko:"다른 질문 주세요"},
+  m_apart:{en:"📩 We are apart (send a link)",ko:"📩 떨어져 있어요 (링크 보내기)"},
+  m_together:{en:"📱 Together on one phone",ko:"📱 한 폰으로 둘이"},
+  my_name:{en:"My name (optional)",ko:"내 이름 (안 써도 돼요)"},
+  my_ans:{en:"My answer",ko:"내 답"},
+  ans_ph:{en:"Write freely. Your partner sees it only after answering too.",ko:"편하게 쓰세요. 상대도 답을 써야 보여요."},
+  make_link:{en:"Make a link for my partner",ko:"상대에게 보낼 링크 만들기"},
+  link_ready:{en:"Send this link to your partner. They will see your answer after they write theirs.",ko:"이 링크를 상대에게 보내세요. 상대가 답을 쓰면 내 답이 보여요."},
+  copy:{en:"Copy the link",ko:"링크 복사하기"}, send:{en:"Send",ko:"보내기"}, copied:{en:"Copied.",ko:"복사했어요."},
+  waiting:{en:"{n} answered this question. Write yours, then you will see theirs.",ko:"{n}님이 이 질문에 답했어요. 내 답을 쓰면 {n}님의 답이 보여요."},
+  someone:{en:"Your partner",ko:"상대"},
+  reveal:{en:"Show both answers",ko:"둘의 답 보기"},
+  back_link:{en:"Send this link back so they can see your answer too.",ko:"이 링크를 다시 보내면 상대도 내 답을 볼 수 있어요."},
+  p1:{en:"First person",ko:"첫 번째 사람"}, p2:{en:"Second person",ko:"두 번째 사람"},
+  next_person:{en:"Done. Hand the phone over",ko:"다 썼어요. 폰 넘기기"},
+  hidden:{en:"✔ The first answer is hidden.",ko:"✔ 첫 번째 답은 가려 두었어요."},
+  empty:{en:"Please write an answer first.",ko:"먼저 답을 써 주세요."},
+  bad:{en:"This link looks broken. Ask your partner to send it again.",ko:"링크가 깨진 것 같아요. 상대에게 다시 보내 달라고 하세요."},
+  again:{en:"Answer another question",ko:"다른 질문에도 답하기"},
+  privacy:{en:"🔒 Answers are not stored by us. They live only inside the link you send.",ko:"🔒 답은 저희가 저장하지 않아요. 보내는 링크 안에만 들어 있어요."},
+  how_t:{en:"How it works",ko:"이렇게 써요"},
+  h1s:{en:"Apart: write your answer and send the link. Your partner answers first, then sees yours, and sends a link back.",
+       ko:"떨어져 있을 때: 내 답을 쓰고 링크를 보내요. 상대가 먼저 답을 쓰면 내 답이 보이고, 상대가 링크를 다시 보내 줘요."},
+  h2s:{en:"Together: one writes and the answer is hidden, then the other writes, then both appear at once.",
+       ko:"함께 있을 때: 한 사람이 쓰면 가려지고, 다른 사람이 쓰면 둘의 답이 한꺼번에 보여요."},
+  h3s:{en:"Your answer is packed into the link itself, so nothing is kept on a server. Anyone who has the link can open it, so send it only to your partner.",
+       ko:"답은 링크 안에 담겨서 어떤 서버에도 남지 않아요. 링크를 가진 사람은 열 수 있으니 상대에게만 보내세요."}
+});
+var QS=[
+["What small thing did I do recently that made you smile?","요즘 내가 한 작은 일 중에 웃음이 났던 건 뭐예요?"],
+["Where would you go with me if we had a free day tomorrow?","내일 하루가 통째로 비면 나랑 어디 가고 싶어요?"],
+["What is a song that reminds you of us?","우리를 떠올리게 하는 노래 한 곡은?"],
+["What was your first impression of me?","나를 처음 봤을 때 첫인상은 어땠어요?"],
+["What is one thing you want us to try this year?","올해 우리가 꼭 해 보고 싶은 것 하나는?"],
+["When do you feel most loved by me?","내가 언제 가장 사랑받는다고 느껴요?"],
+["What is a food that tastes better when we eat it together?","같이 먹으면 더 맛있는 음식은?"],
+["What childhood memory would you like me to know?","나에게 들려주고 싶은 어릴 적 기억은?"],
+["What is something you are proud of this week?","이번 주에 스스로 대견했던 일은?"],
+["What should I never forget about you?","내가 절대 잊으면 안 되는 당신에 대한 것은?"],
+["What is your favourite photo of us, and why?","우리 사진 중 가장 좋아하는 한 장과 그 까닭은?"],
+["If we wrote a book about us, what would the title be?","우리 이야기를 책으로 쓴다면 제목은?"],
+["What is a habit of mine you secretly like?","남몰래 좋아하는 내 버릇은?"],
+["What worries you lately that you have not said out loud?","요즘 마음에 걸리는데 말 못 한 것이 있나요?"],
+["What does a perfect lazy Sunday look like for you?","가장 완벽하게 늘어지는 일요일은 어떤 모습이에요?"],
+["Which day with me would you live again?","나랑 보낸 날 중 하루를 다시 산다면 어느 날?"],
+["What is one thing I could do this week to make your days easier?","이번 주에 내가 무엇을 하면 당신 하루가 편해질까요?"],
+["What made you laugh the hardest this month?","이번 달에 가장 크게 웃었던 일은?"],
+["Where do you see us in five years?","5년 뒤 우리는 어떤 모습일까요?"],
+["What is a small promise you want us to keep?","우리 둘이 지켰으면 하는 작은 약속 하나는?"],
+["What do you want to learn together?","같이 배워 보고 싶은 것은?"],
+["What smell reminds you of me?","나를 떠오르게 하는 냄새는?"],
+["What was the moment you knew you liked me?","나를 좋아한다고 알게 된 순간은?"],
+["Which of my friends or family do you feel close to, and why?","내 가족이나 친구 중 정이 가는 사람과 그 까닭은?"],
+["What is a dream you have not told many people?","남에게 잘 말하지 않은 꿈이 있나요?"],
+["What do I do that makes you feel safe?","내가 하는 일 중 마음이 놓이게 하는 것은?"],
+["If we had a family motto, what would it be?","우리 집 가훈을 정한다면?"],
+["What is the best gift you have ever received?","지금까지 받은 가장 좋은 선물은?"],
+["What do you want to hear from me more often?","나에게서 더 자주 듣고 싶은 말은?"],
+["What season feels most like us?","우리와 가장 닮은 계절은?"],
+["What is a trip you still think about?","아직도 떠오르는 여행이 있나요?"],
+["What tiny luxury makes your day better?","하루를 낫게 하는 작은 사치는?"],
+["What is something new you noticed about me lately?","요즘 새로 알게 된 내 모습은?"],
+["What do you want our home to feel like?","우리 집이 어떤 느낌이었으면 해요?"],
+["How do you like to be comforted when you are sad?","속상할 때 어떻게 달래 주면 좋아요?"],
+["What is a movie we should watch together soon?","곧 같이 봐야 할 영화 한 편은?"],
+["What is one thing you would like to thank me for?","나에게 고맙다고 말하고 싶은 것 하나는?"],
+["What were you like at fifteen?","열다섯 살 때 당신은 어떤 아이였어요?"],
+["Which of our arguments taught you something?","우리가 다툰 일 중 배운 것이 있었던 일은?"],
+["What does a good morning look like for you?","좋은 아침이란 어떤 아침이에요?"],
+["What would you cook for me if time and money were no object?","시간도 돈도 걱정 없다면 나에게 무슨 요리를 해 주고 싶어요?"],
+["What do you hope never changes between us?","우리 사이에서 변하지 않았으면 하는 것은?"],
+["What is a place you want to show me?","나에게 꼭 보여 주고 싶은 곳은?"],
+["What is the kindest thing a stranger has done for you?","모르는 사람에게 받은 가장 따뜻한 친절은?"],
+["What makes you feel most like yourself?","언제 가장 나답다고 느껴요?"],
+["What is something you want to do for your parents?","부모님께 해 드리고 싶은 일은?"],
+["What do you want to celebrate this month?","이번 달에 축하하고 싶은 일은?"],
+["Which three words describe us?","우리를 세 낱말로 말하면?"],
+["What would you write in a letter to us ten years from now?","10년 뒤 우리에게 편지를 쓴다면 첫 줄은?"],
+["What do you need more of right now: rest, fun or talk?","지금 더 필요한 건 쉼, 재미, 대화 중 무엇이에요?"],
+["What is a sound that makes you calm?","마음이 차분해지는 소리는?"],
+["What is something you would like us to stop doing?","우리가 그만했으면 하는 것 하나는?"],
+["Which compliment from me do you remember?","기억에 남는 내 칭찬은?"],
+["What is your favourite way to spend a rainy evening together?","비 오는 저녁을 둘이 보내는 가장 좋은 방법은?"],
+["What is one goal you want my help with?","내가 도와줬으면 하는 목표 하나는?"],
+["What tradition do you want us to start?","우리끼리 새로 만들고 싶은 전통은?"],
+["When did you last feel really proud of me?","최근에 내가 정말 자랑스러웠던 때는?"],
+["What do you want to do on our next anniversary?","다음 기념일에 하고 싶은 것은?"],
+["What is the most beautiful sky you have seen?","지금까지 본 하늘 중 가장 아름다웠던 하늘은?"],
+["What would make tomorrow a good day?","내일을 좋은 날로 만들 한 가지는?"]];
+function dayIndex(){ var n=new Date(); return Math.floor(Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())/864e5)%QS.length; }
+var qi=dayIndex(), isToday=true, mode="apart", got=null;
+function qText(i){ return QS[i][VT.lang==="ko"?1:0]; }
+function enc(o){ var s=JSON.stringify(o), b=new TextEncoder().encode(s), t=""; b.forEach(function(x){t+=String.fromCharCode(x);});
+  return btoa(t).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
+function dec(s){ s=s.replace(/-/g,"+").replace(/_/g,"/"); while(s.length%4) s+="="; var t=atob(s), b=new Uint8Array(t.length);
+  for(var i=0;i<t.length;i++) b[i]=t.charCodeAt(i); return JSON.parse(new TextDecoder().decode(b)); }
+function linkFor(o){ return location.origin+location.pathname+"#a="+enc(o); }
+function fill(s,o){ return String(s).replace(/\{(\w+)\}/g,function(_,k){return o[k];}); }
+function showQ(){ document.getElementById("qday").textContent=isToday?VT.t("qday"):VT.t("qpick"); document.getElementById("q").textContent=qText(qi); }
+function field(id,ph){ return '<label class="sub" for="'+id+'" style="display:block;margin-top:6px">'+VT.t(ph)+'</label><textarea id="'+id+'" style="min-height:110px" data-i-ph="ans_ph" placeholder="'+VT.esc(VT.t("ans_ph"))+'"></textarea>'; }
+function nameField(id){ return '<label class="sub" for="'+id+'" style="display:block">'+VT.t("my_name")+'</label><input class="nm" id="'+id+'" maxlength="20">'; }
+function out(h){ var o=document.getElementById("out"); o.innerHTML=h; o.classList.remove("hidden"); o.scrollIntoView({behavior:"smooth",block:"start"}); }
+function err(m){ out('<div class="verdict mid">'+VT.esc(m)+"</div>"); }
+function both(a,b){ return '<div class="two"><div class="box"><b>'+VT.esc(a.n||VT.t("p1"))+'</b><p class="ans">'+VT.esc(a.a)+'</p></div><div class="box"><b>'+VT.esc(b.n||VT.t("p2"))+'</b><p class="ans">'+VT.esc(b.a)+"</p></div></div>"; }
+function linkBox(url,msgKey){ return '<p>'+VT.t(msgKey)+'</p><input class="nm" readonly id="lk" value="'+VT.esc(url)+'"><div class="row"><button class="btn" id="cpl" type="button">'+VT.t("copy")+'</button><button class="btn ghost" id="shl" type="button">'+VT.t("send")+'</button><span class="note" id="cpok"></span></div>'; }
+function wireLink(url){
+  document.getElementById("cpl").onclick=function(){ var ok=function(){document.getElementById("cpok").textContent=VT.t("copied");};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok,function(){prompt("",url);}); else prompt("",url); };
+  document.getElementById("shl").onclick=function(){ if(navigator.share) navigator.share({title:VT.t("h1"),text:qText(qi),url:url}).catch(function(){}); else document.getElementById("cpl").click(); }; }
+function stage(){
+  document.getElementById("mApart").setAttribute("aria-pressed",mode==="apart"); document.getElementById("mTogether").setAttribute("aria-pressed",mode==="together");
+  var st=document.getElementById("stage"), h="", keep={};
+  st.querySelectorAll("textarea,input").forEach(function(x){ keep[x.id]=x.value; });
+  if(got&&!got.b){ /* 상대가 보낸 링크를 연 사람 */
+    h='<div class="verdict low">'+VT.esc(fill(VT.t("waiting"),{n:got.a.n||VT.t("someone")}))+"</div>"+nameField("n2")+field("a2","my_ans")+
+      '<div class="row"><button class="btn" id="rev" type="button">'+VT.t("reveal")+'</button></div>';
+  } else if(mode==="apart"){
+    h=nameField("n1")+field("a1","my_ans")+'<div class="row"><button class="btn" id="mk" type="button">'+VT.t("make_link")+"</button></div>";
+  } else {
+    h='<div id="tStep">'+'<b>'+VT.t("p1")+'</b>'+field("t1","my_ans")+'<div class="row"><button class="btn" id="tn" type="button">'+VT.t("next_person")+"</button></div></div>";
+  }
+  h+='<p class="note" style="margin-top:10px">'+VT.t("privacy")+"</p>";
+  st.innerHTML=h;
+  Object.keys(keep).forEach(function(k){ var x=document.getElementById(k); if(x) x.value=keep[k]; });
+  var mk=document.getElementById("mk"); if(mk) mk.onclick=function(){ var a=document.getElementById("a1").value.trim(); if(!a) return err(VT.t("empty"));
+    var url=linkFor({q:qi,a:{n:document.getElementById("n1").value.trim(),a:a}}); out(linkBox(url,"link_ready")); wireLink(url); };
+  var rv=document.getElementById("rev"); if(rv) rv.onclick=function(){ var a=document.getElementById("a2").value.trim(); if(!a) return err(VT.t("empty"));
+    var b={n:document.getElementById("n2").value.trim(),a:a}, url=linkFor({q:qi,a:got.a,b:b});
+    out(both(got.a,b)+'<div class="box" style="margin-top:12px">'+linkBox(url,"back_link")+"</div>"); wireLink(url); };
+  var tn=document.getElementById("tn"); if(tn) tn.onclick=function(){ var a1=document.getElementById("t1").value.trim(); if(!a1) return err(VT.t("empty"));
+    document.getElementById("out").classList.add("hidden");
+    document.getElementById("tStep").innerHTML='<p class="note">'+VT.t("hidden")+'</p><b>'+VT.t("p2")+'</b>'+field("t2","my_ans")+'<div class="row"><button class="btn" id="tr" type="button">'+VT.t("reveal")+"</button></div>";
+    document.getElementById("tr").onclick=function(){ var a2=document.getElementById("t2").value.trim(); if(!a2) return err(VT.t("empty")); out(both({a:a1},{a:a2})); }; };
+}
+function readHash(){ var m=/#a=([A-Za-z0-9_-]+)/.exec(location.hash); if(!m) return;
+  try{ var o=dec(m[1]); if(typeof o.q!=="number"||!QS[o.q]||!o.a||typeof o.a.a!=="string") throw 0; qi=o.q; isToday=false; got=o;
+    if(o.b) setTimeout(function(){ out(both(o.a,o.b)); },0);
+  }catch(e){ setTimeout(function(){ err(VT.t("bad")); },0); } }
+document.getElementById("other").onclick=function(){ qi=(qi+1+Math.floor(Math.random()*(QS.length-1)))%QS.length; isToday=false; got=null;
+  history.replaceState(null,"",location.pathname+location.search); document.getElementById("out").classList.add("hidden"); showQ(); stage(); };
+document.getElementById("mApart").onclick=function(){ mode="apart"; if(got&&got.b) got=null; stage(); };
+document.getElementById("mTogether").onclick=function(){ mode="together"; got=null; stage(); };
+VT.onLang=function(){ showQ(); stage(); };
+readHash(); VT.mountChrome(); VT.apply(); showQ(); stage();
+</script>
+</body>
+</html>

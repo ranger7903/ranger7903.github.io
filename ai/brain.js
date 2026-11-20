@@ -26,7 +26,8 @@
     b_again_note: { en: "Writing again counts as one more try (a failed try is never counted).", ko: "다시 쓰기도 한 번으로 세요(실패한 것은 세지 않아요)." },
     b_check: { en: "An AI wrote this. Please read it once before you use it.", ko: "AI 가 쓴 초안이에요. 쓰시기 전에 한 번 읽어 봐 주세요." },
     b_net: { en: "Could not reach the AI helper. Check your internet and try again. This try was not counted.", ko: "AI 일꾼에 닿지 못했어요. 인터넷을 확인하고 다시 해 주세요. 이번은 세지 않았어요." },
-    b_plans: { en: "See plans", ko: "구독 보기" }
+    b_plans: { en: "See plans", ko: "구독 보기" },
+    b_more: { en: "Free tries come back tomorrow. With a subscription you can use each room up to 100 times a day.", ko: "맛보기는 내일 다시 생겨요. 구독하시면 방마다 하루 100번까지 쓰실 수 있어요." }
   });
 
   function getKey() { try { return localStorage.getItem(KEYSTORE) || ""; } catch (e) { return ""; } }
@@ -191,7 +192,14 @@
       call("/ask", body).then(function (j) {
         if (j.left) showLeft(j.left);
         if (j.ok) { lastAnswer = j.answer; draw(); }
-        else err(j.msg ? (j.msg[VT.lang] || j.msg.en) : VT.t("b_net"));
+        else {
+          err(j.msg ? (j.msg[VT.lang] || j.msg.en) : VT.t("b_net"));
+          /* 맛보기를 다 쓴 손님에게 구독 길을 바로 보여 준다 (2026-11-21) */
+          var l = j.left || last;
+          if (l && l.kind === "trial" && l.used >= l.limit && !getKey())
+            out.insertAdjacentHTML("beforeend", '<div class="row"><a class="btn" href="./plans.html">' + VT.t("b_plans") + '</a>' +
+              '<span class="note">' + VT.esc(VT.t("b_more")) + "</span></div>");
+        }
       }).catch(function () { err(VT.t("b_net")); })
         .then(function () { busy = false; if (go) go.disabled = false; });
     };

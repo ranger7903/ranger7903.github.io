@@ -68,7 +68,7 @@
     S("reply", ["Tries to start a chat with a stranger","'Wrong number' friendly chats often turn into investment or romance scams."],
       ["모르는 사람이 말을 걸어와요","「잘못 보냈어요」로 시작한 다정한 대화가 투자·연애 사기로 이어지는 일이 많습니다."],
       [/(잘못\s*(보냈|보낸|연락)|번호\s*(를|가)?\s*잘못|혹시\s*[가-힣]{1,4}\s*(씨|님)\s*(맞|아니)|(Y|예|네)\s*(를|라고)?\s*(답장|회신|보내))/,
-       /\b(wrong\s+number|is\s+this\s+[a-z]+\?|sorry,?\s+i\s+(thought|must\s+have)|reply\s+(y|yes|stop)\s+to|text\s+back)\b/i]),
+       /\b(wrong\s+number|is\s+this\s+[a-z]+\?|sorry,?\s+i\s+(thought|must\s+have)|reply\s+(y|yes)\s+to|text\s+back)\b/i]),
     S("intl", ["Sent from or asks you to call an overseas number","An unexpected overseas number is worth a second look."],
       ["해외 번호이거나 해외로 전화하래요","생각지 못한 해외 번호는 한 번 더 의심해 보세요."],
       [/\[(국제|해외)\s*발신\]|\[Web발신\][^\n]{0,5}\+(?!82)\d|(?:^|\s)\+(?!82\b)(?!1\b)\d{1,3}[\s-]?\d{2,}|(?:^|\s)00[1-9]\d{0,2}[\s-]\d/])
@@ -125,6 +125,30 @@
     for (var k = 0; k < TEXT.length; k++) if (TEXT[k].id === id) return TEXT[k][i];
     return [id, ""];
   }
-  var api = { analyse: analyse, signalText: signalText, LINKWHY: LINKWHY, hostOf: hostOf };
+  /* 「답장해도 돼요?」 (2026-11-21) — 찾은 신호로 답장 여부 한 줄 */
+  var REPLY = {
+    code: ["No. Never send a code or password by reply.", "Even a real company never asks for a verification code by text or email.",
+           "아니요. 인증번호·비밀번호는 답장으로 절대 보내지 마세요.", "진짜 회사도 문자나 메일로 인증번호를 달라고 하지 않아요."],
+    stranger: ["No. Don't start a chat with a stranger.", "A friendly 'wrong number' message is a common start of investment and romance scams. Just delete it.",
+           "아니요. 모르는 사람과 대화를 시작하지 마세요.", "「잘못 보냈어요」로 시작하는 다정한 말은 투자·연애 사기의 흔한 시작이에요. 그냥 지우세요."],
+    family: ["Not to this number. Call the old number first.", "Call your family member on the number you already have, or ask something only they would know.",
+           "이 번호로는 하지 마세요. 예전 번호로 먼저 전화하세요.", "원래 알던 번호로 전화하거나, 가족만 아는 것을 물어보세요."],
+    no: ["No. Don't reply at all.", "A reply tells them your number is real, and more scam messages will follow.",
+           "아니요. 답장하지 마세요.", "답장하면 진짜 쓰는 번호라고 알려 주는 셈이라 사기 문자가 더 와요."],
+    stop: ["Only if you know the company.", "If it is a shop you signed up with, replying STOP or using the opt-out is fine. If you don't know them, even STOP is a reply. Just delete it.",
+           "아는 회사일 때만 하세요.", "가입한 가게 광고라면 수신거부를 해도 돼요. 모르는 곳이면 수신거부도 답장이니 그냥 지우세요."],
+    check: ["Not yet. Check first.", "Contact them through their own app or a number you look up yourself, then decide.",
+           "아직은 하지 마세요. 먼저 확인하세요.", "그 회사 앱이나 직접 찾은 번호로 확인한 뒤에 정하세요."],
+    ok: ["Yes, if you know who sent it.", "We found no warning signs. If the number is new to you, think once more before replying.",
+           "보낸 사람을 안다면 해도 돼요.", "위험 신호를 찾지 못했어요. 처음 보는 번호라면 답장 전에 한 번 더 생각하세요."]
+  };
+  var STOP_RE = /(수신\s*거부|무료\s*거부|080[\s-]?\d{3,4}[\s-]?\d{4}|\breply\s+stop\b|\btext\s+stop\b|\bstop\s+to\s+(opt|end|unsubscribe|cancel)|\bunsubscribe\b)/i;
+  function replyAdvice(r, text) {
+    var has = function (id) { return r.signals.indexOf(id) >= 0; };
+    var k = has("secret") ? "code" : has("reply") ? "stranger" : has("family") ? "family" : r.level === "high" ? "no"
+          : STOP_RE.test(String(text || "")) ? "stop" : r.level === "mid" ? "check" : "ok";
+    return { key: k, en: [REPLY[k][0], REPLY[k][1]], ko: [REPLY[k][2], REPLY[k][3]] };
+  }
+  var api = { replyAdvice: replyAdvice, analyse: analyse, signalText: signalText, LINKWHY: LINKWHY, hostOf: hostOf };
   if (typeof module !== "undefined" && module.exports) module.exports = api; else root.ScamEngine = api;
 })(this);

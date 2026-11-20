@@ -74,6 +74,7 @@
     var prev = VT.onLang;
     VT.onLang = function () { fixProg(); if (prev) prev(); };
     fixProg();
+    VT.mountNext();
   };
 
   /* ── 진열장 목록 ── status: open = 지금 쓸 수 있음 · soon = 곧 나옴 */
@@ -92,7 +93,7 @@
     return { id: id, cat: cat, ico: ico, en: en, ko: ko, den: den, dko: dko, kw: kw, status: status || "soon", href: href || "", local: !!local };
   }
   VT.ROOMS = [
-    R("scam", "safety", "🚨", "Is This a Scam?", "이거 사기예요?", "Paste a text or email. See the warning signs and the real address behind every link.", "문자·메일을 붙여 넣으면 위험 신호와 링크의 진짜 주소를 보여 드려요.", "scam fraud text sms phishing link 사기 문자 스미싱 링크 택배 피싱 메일", "open", "scam.html", true),
+    R("scam", "safety", "🚨", "Is This a Scam?", "이거 사기예요?", "Paste a text or email. See the warning signs, the real address behind every link, and whether to reply.", "문자·메일을 붙여 넣으면 위험 신호와 링크의 진짜 주소, 답장해도 되는지 알려 드려요.", "scam fraud text sms phishing link reply 답장 사기 문자 스미싱 링크 택배 피싱 메일", "open", "scam.html", true),
     R("clicked", "safety", "🆘", "I Clicked It — Now What?", "눌렀어요, 어떻게 해요?", "Step-by-step what to do first if you already tapped or typed something.", "이미 눌렀거나 입력했을 때 무엇부터 할지 차례대로.", "clicked hacked stolen 눌렀어요 해킹 돈 빠짐", "open", "scam.html#clicked", true),
     R("askfam", "safety", "👪", "Ask My Family", "자녀에게 물어보기", "One button sends the message and the warning signs to your family.", "단추 하나로 문자와 위험 신호를 가족에게 보내요.", "family parent 가족 부모님 자녀", "open", "askfam.html", true),
     R("subs", "money", "🔁", "Forgotten Subscription Finder", "잊은 구독 찾기", "Drop in your card statement. See every charge that repeats, with next date and yearly cost.", "카드 내역 파일을 넣으면 달마다 나가는 돈을 다음 날짜·1년 값과 함께 모아 드려요.", "subscription recurring charge cancel card statement 구독 정기결제 해지 카드 내역 자동결제", "open", "subs.html", true),
@@ -121,11 +122,11 @@
     R("around", "travel", "📍", "Around My Stay", "숙소 둘레 한 장", "Cash machines, shops, pharmacies and food within 10 minutes' walk.", "걸어서 10분 안의 현금인출기·편의점·약국·식당.", "hotel nearby 숙소 주변", "soon"),
     R("slowletter", "romance", "💌", "Slow Letter", "느린 편지", "A letter that arrives on the day you choose. Sealed until then.", "내가 고른 날에 도착하는 편지. 그날까지 봉인돼요.", "letter future 편지 미래 1년 뒤", "soon"),
     R("rolling", "romance", "🎉", "Group Card", "함께 쓰는 롤링페이퍼", "One link, many writers, opens on the day.", "링크 하나로 여러 사람이 쓰고, 정한 날 열려요.", "group card graduation 롤링페이퍼 졸업 퇴임", "soon"),
-    R("nightsky", "romance", "🌌", "The Night Sky That Day", "그날 밤하늘", "The stars and moon over your place on your date.", "그날 그곳의 별자리와 달 모양.", "stars sky anniversary 별자리 밤하늘 기념일", "soon"),
+    R("nightsky", "romance", "🌌", "The Night Sky That Day", "그날 밤하늘", "Pick a date, time and place. See the stars, moon and planets that were over you, as a picture.", "날짜·시각·장소를 고르면 그때 머리 위에 있던 별과 달과 행성을 그림으로 그려 드려요.", "stars sky anniversary birthday constellation moon 별자리 밤하늘 기념일 생일 달", "open", "nightsky.html", true),
     R("daily", "romance", "🌅", "One Small Romance Today", "오늘의 낭만 한 줄", "Sunset time, the moon, the seasonal term and one small thing to do today.", "해 지는 시각·달·절기와 오늘 해 볼 작은 일 하나.", "sunset moon season 노을 달 절기", "open", "daily.html"),
     R("song", "romance", "🎵", "Our Story Song", "우리 이야기 노래", "Your story turned into lyrics and a song.", "우리 이야기를 노랫말과 노래로.", "song lyrics 노래 노랫말", "soon"),
     R("parentbook", "romance", "📖", "Parents' Story Book", "부모님 이야기 책", "One question a week, answered by voice, a book after a year.", "매주 질문 하나, 목소리로 답하면 1년 뒤 책.", "memoir parents 부모님 자서전 이야기 책", "soon"),
-    R("couple", "romance", "💬", "Questions for Two", "둘만의 질문", "A daily question both of you answer before you see each other's.", "둘 다 답해야 서로 보이는 하루 질문.", "couple questions 연인 질문", "soon"),
+    R("couple", "romance", "💬", "Questions for Two", "둘만의 질문", "A daily question. Each answers first, then you see each other's. No app, no sign-up, one link.", "각자 먼저 답해야 서로 보이는 하루 질문. 앱도 가입도 없이 링크 하나로.", "couple questions partner relationship 연인 부부 질문 대화", "open", "couple.html", true),
     R("memorymap", "romance", "🗾", "Memory Map", "추억 지도", "Your photo folder becomes a map and timeline, on your own computer.", "사진 폴더로 지도와 연표를, 내 컴퓨터 안에서.", "photo map memory 사진 지도 추억", "soon"),
     R("skyletter", "romance", "🕊️", "Letter to the Sky", "하늘로 보내는 편지", "A letter to someone who has passed. The AI only helps you write.", "떠난 분께 쓰는 편지. AI는 쓰는 것만 거들어요.", "grief letter 그리움 편지", "open", "skyletter.html"),
     R("season", "romance", "🍂", "Season Postcard", "계절 엽서", "A short seasonal verse you edit and send to friends.", "절기마다 짧은 시 초안, 고쳐서 친구에게.", "season postcard 계절 엽서", "open", "season.html"),
@@ -144,6 +145,33 @@
     var inner = '<span class="ico">' + r.ico + "</span><b>" + VT.esc(name) + "</b><p>" + VT.esc(desc) + '</p><span class="meta">' + tags + "</span>";
     return r.status === "open"
       ? '<a class="card" href="' + r.href + '">' + inner + "</a>"
-      : '<div class="card soon" aria-disabled="true">' + inner + "</div>";
+      : '<div class="card soon">' + inner + '<a class="note" style="text-decoration:underline" href="mailto:ranger7903@nate.com?subject=' +
+        encodeURIComponent((L === "ko" ? "[AI 백화점] 나오면 알려 주세요: " : "[AI Store] Tell me when it opens: ") + name) + '">' +
+        (L === "ko" ? "🔔 나오면 알려 주세요" : "🔔 Tell me when it opens") + "</a></div>";
+  };
+
+  /* ── 방과 방 잇기: 이 방 다음에 해 보면 좋은 방 (2026-11-21) ── */
+  VT.NEXT = {
+    scam: ["clicked", "askfam"], askfam: ["scam", "clicked"], subs: ["paper", "tripcost"], paper: ["lease", "subs"], lease: ["paper", "subs"],
+    fridge: ["week", "swap"], week: ["fridge", "swap"], swap: ["fridge", "week"],
+    school: ["notice", "careshare"], notice: ["school", "korean"], care: ["careshare", "paper"], careshare: ["care", "askfam"],
+    speak: ["grammar", "korean"], korean: ["speak", "notice"], grammar: ["speak", "reply"],
+    reply: ["meeting", "gongmun"], meeting: ["reply", "table"], table: ["meeting", "gongmun"], gongmun: ["reply", "grammar"],
+    review: ["reviewmonth", "shopmini"], reviewmonth: ["review", "shopmini"], shopmini: ["review", "reviewmonth"],
+    tripcost: ["speak", "nightsky"], daily: ["nightsky", "couple"], nightsky: ["couple", "daily"], couple: ["nightsky", "skyletter"],
+    skyletter: ["season", "nightsky"], season: ["daily", "couple"]
+  };
+  VT.mountNext = function () {
+    var file = (location.pathname.split("/").pop() || "index.html").replace(/\?.*$/, "");
+    var me = VT.ROOMS.filter(function (r) { return r.href === file; })[0];
+    if (!me || !VT.NEXT[me.id]) return;
+    var sec = document.createElement("section"); sec.className = "no-print"; sec.id = "vtNext";
+    var main = document.querySelector("main"); if (!main) return; main.appendChild(sec);
+    var drawNext = function () {
+      var L = VT.lang, list = VT.NEXT[me.id].map(function (id) { return VT.ROOMS.filter(function (r) { return r.id === id && r.status === "open"; })[0]; }).filter(Boolean);
+      sec.innerHTML = list.length ? "<h2>" + (L === "ko" ? "이어서 해 보면 좋은 방" : "Try next") + '</h2><div class="grid">' + list.map(VT.card).join("") + "</div>" : "";
+    };
+    var prev = VT.onLang; VT.onLang = function () { if (prev) prev(); drawNext(); };
+    drawNext();
   };
 })();

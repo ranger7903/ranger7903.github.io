@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Is This a Scam? — VALUES AI Store</title>
 <meta name="description" content="Paste a text or email and see the warning signs and the real address behind every link. Works inside your browser. 이거 사기예요? 문자·메일의 위험 신호와 링크 진짜 주소.">
+<link rel="canonical" href="https://valuestools.kr/ai/scam.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="이거 사기예요? · Is This a Scam? — 밸류스 AI 백화점">
+<meta property="og:description" content="문자·메일을 붙여 넣으면 위험 신호와 링크의 진짜 주소, 답장해도 되는지 알려 드려요. Paste a text or email. See the warning signs, the real address behind every link, and whether to reply.">
+<meta property="og:url" content="https://valuestools.kr/ai/scam.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/scam.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="ai.css">
 <script src="ai.js"></script>
 <script src="scam-engine.js"></script>
@@ -46,8 +56,8 @@ VT.add({
   title:{en:"Is This a Scam? — VALUES AI Store",ko:"이거 사기예요? — 밸류스 AI 백화점"},
   back:{en:"← Scams & Safety",ko:"← 사기·안전"},
   h1:{en:"🚨 Is This a Scam?",ko:"🚨 이거 사기예요?"},
-  lead:{en:"Paste the text, email or chat message you are unsure about. You will see the warning signs and where each link really goes.",
-        ko:"미심쩍은 문자·메일·카톡을 붙여 넣으세요. 위험 신호와, 링크가 진짜 어디로 가는지 보여 드려요."},
+  lead:{en:"Paste the text, email or chat message you are unsure about. You will see the warning signs, where each link really goes, and whether it is OK to reply.",
+        ko:"미심쩍은 문자·메일·카톡을 붙여 넣으세요. 위험 신호와 링크가 진짜 가는 곳, 그리고 답장해도 되는지 알려 드려요."},
   label:{en:"The message",ko:"받은 글"},
   ph:{en:"Paste the whole message here (long-press → Paste on a phone)",ko:"받은 글을 통째로 붙여 넣으세요 (폰은 길게 눌러 → 붙여넣기)"},
   go:{en:"Check it",ko:"살펴보기"},
@@ -63,6 +73,7 @@ VT.add({
   v_low:{en:"We found no warning signs",ko:"위험 신호를 찾지 못했어요"},
   v_low_s:{en:"That does not prove it is safe. New tricks appear every week. If it asks for money or a code, check it yourself first.",
            ko:"그렇다고 안전하다는 뜻은 아닙니다. 새 수법은 매주 나와요. 돈이나 인증번호를 달라면 꼭 직접 확인하세요."},
+  rq:{en:"💬 Can I reply?",ko:"💬 답장해도 돼요?"},
   sig_t:{en:"Warning signs we found",ko:"찾은 위험 신호"},
   link_t:{en:"Where the links really go",ko:"링크가 진짜 가는 곳"},
   link_ok:{en:"Nothing odd found in this address. Still, open the company's app instead of the link when in doubt.",ko:"이 주소에서 이상한 점은 못 찾았어요. 그래도 미심쩍으면 링크 대신 그 회사 앱을 여세요."},
@@ -105,6 +116,8 @@ function show(){
   if(!last){ out.classList.add("hidden"); return; }
   var r=last, v=r.level;
   var h='<div class="verdict '+v+'">'+VT.t("v_"+v)+'<small>'+VT.t("v_"+v+"_s")+'</small></div>';
+  var ra=ScamEngine.replyAdvice(r,document.getElementById("msg").value)[L==="ko"?"ko":"en"];
+  h+='<div class="box" style="margin-top:12px;box-shadow:none"><b>'+VT.t("rq")+'</b><p style="margin:6px 0 0;font-weight:700">'+VT.esc(ra[0])+'</p><p class="note" style="margin:4px 0 0">'+VT.esc(ra[1])+'</p></div>';
   if(r.signals.length){
     h+='<h2 style="margin-top:18px">'+VT.t("sig_t")+' ('+r.signals.length+')</h2><ul class="signals">'+
       r.signals.map(function(id){ var t=ScamEngine.signalText(id,L); return "<li><b>"+VT.esc(t[0])+"</b>"+VT.esc(t[1])+"</li>"; }).join("")+"</ul>";
