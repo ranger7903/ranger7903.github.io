@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not making the same mistake twice · VALUES</title>
+<meta name="description" content="Five boxes, fifteen minutes: turning something that went wrong into one rule you will actually use next time.">
+<link rel="canonical" href="https://valuestools.kr/failure-guide-en.html">
+<link rel="alternate" hreflang="en" href="https://valuestools.kr/failure-guide-en.html">
+<link rel="alternate" hreflang="ko" href="https://valuestools.kr/failure-guide.html">
+<meta property="og:title" content="Not making the same mistake twice">
+<meta property="og:description" content="Five boxes, fifteen minutes: turning something that went wrong into one rule you will actually use next time.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/failure-guide-en.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Segoe UI",system-ui,sans-serif;font-size:16.5px;line-height:1.85;overflow-wrap:break-word}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+<body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="en.html"><span class="stamp">値</span>VALUES</a>
+  <nav style="margin-left:auto">
+    <a href="en.html">Tools</a>
+    <a href="books.html">Books</a>
+    <a href="free-en.html">Free downloads</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>🧱 Not making the same mistake twice</h1>
+
+<p class="lede">We trip in the same place six months later because <b>what we learned had nowhere to stay</b>. Here is how to turn something that went wrong into <b>one line you can use next time</b>, in five boxes and fifteen minutes.</p>
+<h2>Why the same mistake comes back</h2>
+<p>When something goes wrong we usually do one of two things: cover it up, or find out whose fault it was. Neither helps next time. Cover it and you forget; blame and everyone hides. Not because people are bad — because <b>there is no place for the lesson to live</b>.</p>
+<h2>Ray Dalio’s one line</h2>
+<p>Ray Dalio, who built one of the world’s largest hedge funds, wrote in <i>Principles</i>:</p>
+<div class="card warm"><p style="margin:0;font-size:19px"><b>Pain + Reflection = Progress</b></p></div>
+<p>Pain on its own does not make anyone better. <b>Looking at</b> the pain does. What he actually did was modest: each time something went wrong, he wrote it down and turned it into a rule he could use next time. The collection later became the book.</p>
+<h2>Five boxes, fifteen minutes</h2>
+<p>The day after is best. A week later, memory has already shifted to the comfortable version.</p>
+<h3>1. What happened — facts only</h3>
+<div class="ex"><span class="no">Bad:</span>  The contact was sloppy, so delivery was late.
+<span class="yes">Good:</span> Material due 12 Sep arrived 19 Sep. Delivery moved 20 Sep → 27 Sep.</div>
+<h3>2. What did I know at the time?</h3>
+<p>Not what you know now — only what you had then. Skip this and all that is left is useless self-blame: “how did I not know?”</p>
+<div class="ex">Knew then: I'd heard they were busy. Didn't ask how busy.</div>
+<h3>3. Where did it turn — exactly one place</h3>
+<div class="ex">Turning point: on 5 Sep I didn't ask “when can you send it?”</div>
+<h3>4. One line for next time — “When …, I …”</h3>
+<p>This box is the whole point. Write a rule, not a feeling.</p>
+<div class="ex"><span class="no">Bad:</span>  Be more careful next time.
+<span class="yes">Good:</span> When I hand work to someone else, I ask them to name the date
+      they can deliver, there and then.</div>
+<p>“Do better” changes nothing. A rule has <b>when, what and how</b> in it.</p>
+<h3>5. Where will this rule live?</h3>
+<p>Written and filed, it won’t be read. Put it <b>where the situation happens again</b>: a line in your email template, your start-of-job checklist, a calendar reminder.</p>
+<h2>In a team — just two rules</h2>
+<ul><li><b>No names in the rules.</b> Not “make sure Sam isn’t late” but “when handing over work, have the other person name the date.” The moment names appear, everyone hides.</li>
+<li><b>Delete rules as they pile up.</b> Past thirty, nobody reads them. Twice a year, remove the ones nobody uses.</li></ul>
+<h2>On your own — once a month is plenty</h2>
+<p>Writing every time wears you out. Write only when you feel <b>“hang on, this happened before.”</b> That feeling is the sign it is repeating. Ten lines a year is a lot: the shapes of our mistakes are fewer than we think.</p>
+
+<div class="tool">
+<b>To be straight with you</b>
+<p>We do not sell a tool for this. A sheet of paper is enough, so we are not going to pretend otherwise.
+If you would use a small program for it, send us one line — if people ask, we build it; if not, we don't.</p>
+<a class="btn" href="mailto:ranger7903@nate.com?subject=Guide%20idea">✉️ Send one line</a>
+</div><div class="tool">
+<b>If you want to read further</b>
+<p>Our bookshop has books that take this idea at full length. <b>Every sample is free</b> — read the opening first, then decide.</p>
+<p class="small">No sign-up, no email address. Tap and it downloads.</p>
+<a class="btn" href="books.html">📖 The VALUES Bookshop — free samples</a>
+</div>
+
+<h2 style="font-size:18px">Where this comes from</h2>
+<p class="small">· Ray Dalio, <i>Principles</i> — “Pain + Reflection = Progress” and turning mistakes into principles<br>· Writing facts first and not blaming people is the same idea as the blameless incident reviews long used in aviation and medicine<br>
+Everyone’s situation is different. The numbers here are examples — swap in your own.</p>
+
+<p class="small" style="margin-top:34px">
+VALUES is a small shop that makes tools to take work off your desk ·
+<a href="en.html#guides">More guides</a> ·
+<a href="en.html">The tool shelf</a> ·
+<a href="books.html">Bookshop</a> ·
+<a href="free-en.html">Free downloads</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">Seller information</a>
+</p>
+
+</main>
+<footer>© VALUES · valuestools.kr</footer>
+</body></html>

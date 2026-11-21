@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stuck on a big decision · VALUES</title>
+<meta name="description" content="Six boxes on one sheet of paper, built around the regret-minimisation question Jeff Bezos asked himself in 1994.">
+<link rel="canonical" href="https://valuestools.kr/regret-guide-en.html">
+<link rel="alternate" hreflang="en" href="https://valuestools.kr/regret-guide-en.html">
+<link rel="alternate" hreflang="ko" href="https://valuestools.kr/regret-guide.html">
+<meta property="og:title" content="Stuck on a big decision">
+<meta property="og:description" content="Six boxes on one sheet of paper, built around the regret-minimisation question Jeff Bezos asked himself in 1994.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/regret-guide-en.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Segoe UI",system-ui,sans-serif;font-size:16.5px;line-height:1.85;overflow-wrap:break-word}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+<body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="en.html"><span class="stamp">値</span>VALUES</a>
+  <nav style="margin-left:auto">
+    <a href="en.html">Tools</a>
+    <a href="books.html">Books</a>
+    <a href="free-en.html">Free downloads</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>⚖️ Stuck on a big decision</h1>
+
+<p class="lede">If you have circled the same decision for days, the problem may not be that the answer is hard — it may be that you have <b>no way to weigh it</b>. Six boxes on one sheet of paper will usually give you a direction today.</p>
+<h2>Why thinking harder doesn’t settle it</h2>
+<p>Weighed only in your head, it goes round in circles: yes in the morning, no by evening, because the day’s mood rocks the scale. And most of us weigh the wrong thing. We weigh “what if it goes wrong?” — when what hurts most later is often <b>“I never tried.”</b></p>
+<h2>The question Jeff Bezos used</h2>
+<p>In 1994 Jeff Bezos was deciding whether to leave a secure job to start what became Amazon. He later described his method in interviews: <b>imagine you are eighty, looking back. Which path would you regret least?</b></p>
+<p>He did not weigh the chance of failure. He weighed how eighty-year-old him would feel about never having tried — and says the answer came quickly. It is usually called <b>regret minimisation</b>: not a way to compute odds, but a way to choose <b>the side that will hurt less later</b>.</p>
+<h2>Six boxes on paper</h2>
+<p>Getting it out of your head and onto paper is the whole trick. Written down, it stops wobbling.</p>
+<h3>1. What exactly are you deciding — in one sentence</h3>
+<div class="ex">“Should I leave my job and start my own business?”</div>
+<p>“How should I live?” is too big. Shrink it to something with a yes or no answer.</p>
+<h3>2. Eighty-year-old you looks back — two lines</h3>
+<div class="ex">Tried, and it didn't work:  “Well, I tried. I was terrified at the time.”
+Never tried:                “I wish I'd given it a go.”</div>
+<p>Put the two side by side and see which one hurts more.</p>
+<h3>3. Can it be undone?</h3>
+<ul><li>Reversible (you could get a job again, cancel the contract) → <b>try it sooner</b></li>
+<li>Irreversible (all your savings, selling the house) → <b>slowly, and find out more first</b></li></ul>
+<h3>4. If the worst happens, what happens to me — in numbers</h3>
+<div class="ex">Worst case: not established within a year. Eight months of savings gone.
+            After that, I'd need to find a job again.</div>
+<p>Vague fear feels huge. Written in numbers, it is usually smaller than you thought.</p>
+<h3>5. What would make the decision easier to know?</h3>
+<div class="ex">To find out: (1) talk to two people who have done it
+             (2) add up what the first six months would cost</div>
+<p>Often you can’t decide not for lack of courage but because something is unknown. Write it down and the decision becomes a list of things to find out.</p>
+<h3>6. By when will you decide?</h3>
+<div class="ex">Decision day: 15 November. Open this sheet again with both questions answered.</div>
+<p>Without a date, “thinking about it” lasts for years. Put a day in the calendar.</p>
+<div class="card warm"><b>And the most important thing</b><p style="margin-bottom:0">Keep the sheet. Six months or a year later, add one line: <b>“did it turn out as I expected?”</b> After a few of these you will see which way you tend to be wrong — “I always make the worst case too big” — and the next decision gets easier.</p></div>
+<h2>It works for small things too</h2>
+<table><tr><th style="width:40%">The question</th><th>Seen from eighty</th></tr>
+<tr><td>Go to this gathering or not?</td><td>At eighty you won’t remember → whichever is easier</td></tr>
+<tr><td>Message this person first?</td><td>It will keep nagging if you don’t → message</td></tr>
+<tr><td>Take the expensive course?</td><td>See whether “never learning it” bothers you more than the money</td></tr></table>
+<p>If eighty-year-old you won’t even remember it, it isn’t worth the worry. Knowing that alone frees up a lot of time.</p>
+
+<div class="tool">
+<b>To be straight with you</b>
+<p>We do not sell a tool for this. A sheet of paper is enough, so we are not going to pretend otherwise.
+If you would use a small program for it, send us one line — if people ask, we build it; if not, we don't.</p>
+<a class="btn" href="mailto:ranger7903@nate.com?subject=Guide%20idea">✉️ Send one line</a>
+</div><div class="tool">
+<b>If you want to read further</b>
+<p>Our bookshop has books that take this idea at full length. <b>Every sample is free</b> — read the opening first, then decide.</p>
+<p class="small">No sign-up, no email address. Tap and it downloads.</p>
+<a class="btn" href="books.html">📖 The VALUES Bookshop — free samples</a>
+</div>
+
+<h2 style="font-size:18px">Where this comes from</h2>
+<p class="small">· Jeff Bezos’s “regret minimization framework”, from his interviews describing the 1994 decision (e.g. Academy of Achievement, 2001)<br>· The split between reversible and irreversible decisions follows Bezos’s “one-way door / two-way door” in his shareholder letters<br>This page does not tell you which choice is right — only an order for deciding. For decisions involving large sums, talk to a professional.<br>
+Everyone’s situation is different. The numbers here are examples — swap in your own.</p>
+
+<p class="small" style="margin-top:34px">
+VALUES is a small shop that makes tools to take work off your desk ·
+<a href="en.html#guides">More guides</a> ·
+<a href="en.html">The tool shelf</a> ·
+<a href="books.html">Bookshop</a> ·
+<a href="free-en.html">Free downloads</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">Seller information</a>
+</p>
+
+</main>
+<footer>© VALUES · valuestools.kr</footer>
+</body></html>

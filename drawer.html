@@ -104,6 +104,7 @@ dialog .btn{font-size:14px;padding:11px}
 </dialog>
 
 <script>
+const PASSAGES_EN = [{"day": 1, "from": "Before you begin", "text": "A skill is a hand for holding a person, not a ruler for measuring one."}, {"day": 2, "from": "Prologue", "text": "He hadn’t managed to ask why that time either."}, {"day": 3, "from": "Chapter 2", "text": "What changed me wasn’t technique either — it was one person who taught me the thing underneath."}, {"day": 4, "from": "Chapter 4", "text": "You’ve learned to ask a proper question."}, {"day": 5, "from": "Chapter 5", "text": "That small success became the courage for a bigger one."}, {"day": 6, "from": "Chapter 5", "text": "He understood then, all the way down, that humour is not a skill you equip."}, {"day": 7, "from": "Chapter 7", "text": "That day he won not her head but her heart."}, {"day": 8, "from": "Chapter 8", "text": "Everybody I met applauded my performance, and I thought the applause was love."}, {"day": 9, "from": "Chapter 8", "text": "On the second mountain, the person you meet is not a target to be worked out."}, {"day": 10, "from": "Chapter 9", "text": "For the first time he forgot to use a technique and simply fell into what one person was saying."}, {"day": 11, "from": "Chapter 10", "text": "For the first time Hyejin looked properly at the person in front of her, thought seriously, and answered."}, {"day": 12, "from": "Chapter 11", "text": "Hyejin said, “You’re the first person who’s ever asked me that.”"}, {"day": 13, "from": "Chapter 12", "text": "She wanted to stand beside him and watch how his clumsy anxiety, meeting honest effort, turned into something firm enough to trust."}, {"day": 14, "from": "Chapter 13", "text": "Among all those tentative messages, one person says: I definitely want it."}, {"day": 15, "from": "Chapter 16", "text": "She could see in his eyes how much courage it had taken to say it."}, {"day": 16, "from": "Chapter 16", "text": "The beginning of every problem has to be looked for in yourself."}, {"day": 17, "from": "Chapter 17", "text": "She looked at what a person did, how he stood, what he endured."}, {"day": 18, "from": "Chapter 17", "text": "An ordinary evening filling up with love."}, {"day": 19, "from": "Chapter 18", "text": "He had not even asked what kind of day she had endured to arrive at those photographs."}, {"day": 20, "from": "Chapter 19", "text": "Did you ask her how she spent that day?"}, {"day": 21, "from": "Chapter 19", "text": "The thing he had felt most wronged by, he had done to the person he loved most."}, {"day": 22, "from": "Chapter 24", "text": "And she had to be honest about herself, too."}, {"day": 23, "from": "Chapter 25", "text": "It was that no other kind of success has ever filled me the way those ordinary hours with Hyejin did."}, {"day": 24, "from": "Chapter 27", "text": "Afraid of showing you the real me and finding out you wouldn’t look."}, {"day": 25, "from": "Chapter 27", "text": "Hyejin, you are that kind of scene to me."}, {"day": 26, "from": "Epilogue", "text": "Back then I believed love was a kind of talent."}, {"day": 27, "from": "Epilogue", "text": "And last, that love is not a flame that burns on its own."}, {"day": 28, "from": "Afterword", "text": "The mark is not for comparing yourself with anybody else."}, {"day": 29, "from": "Afterword", "text": "write down one good thing about a person you met today."}, {"day": 30, "from": "Afterword", "text": "Only what that person does, what that person puts up with, what that person likes."}];
 const PASSAGES = [{"day": 1, "from": "프롤로그", "text": "언제나 결과는 똑같았다. 하지만 오늘의 그는, '왜?'라고 묻기로 했다."}, {"day": 2, "from": "제1장", "text": "뭐라도 해야 했다. 그 마음이, 모든 변화의 첫 문장이 된다."}, {"day": 3, "from": "제2장", "text": "여자를 얻는 비법 같은 게 아닙니다. 저는 그냥, 저 자신을 바꾸고 싶습니다."}, {"day": 4, "from": "제2장", "text": "그 가짜 기술들은 잊어버리게. 그건 맛없는 인스턴트 에피타이저 같은 거니까."}, {"day": 5, "from": "제2장", "text": "그의 침묵은 어떤 위로보다 더 깊게 마음을 울렸다. 들어주는 것만으로 시작되는 위로가 있다."}, {"day": 6, "from": "제3장", "text": "모든 문제의 시작은 항상 '나'에게서 찾아야 하네. 상대를 탓하는 건 쉽지만, 나를 돌아보는 건 용기다."}, {"day": 7, "from": "제3장", "text": "절망의 끝에서, 아주 작은 불씨 하나가 피어나는 기분이었다."}, {"day": 8, "from": "제5장", "text": "작은 성공은, 더 큰 도전을 위한 용기가 되어주었다."}, {"day": 9, "from": "제5장", "text": "수많은 관계 속에서도 외로웠던 건, 내 진짜 모습이 아닌 연기가 사랑받고 있었기 때문이다."}, {"day": 10, "from": "제6장", "text": "정상에서 더 높은 곳을 바라볼 줄 알게 된 것. 스스로에게 질문을 던지기 시작한 것. 그게 두 번째 산을 오를 자격이다."}, {"day": 11, "from": "제6장", "text": "지금부터가 끝이 아니라 진짜 시작이야."}, {"day": 12, "from": "제7장", "text": "힘들 때는 없으세요? 항상 밝아 보이는 사람에게 먼저 물어봐 주는 것. 관심은 거기서 시작된다."}, {"day": 13, "from": "제9장", "text": "예전에 실패했던 자리에서 다시 시도해 보는 것. 그것이 성장을 확인하는 가장 정직한 방법이다."}, {"day": 14, "from": "제10장", "text": "질투를 드러내는 대신, 상대의 혼란을 먼저 공감해 주는 사람. 그런 사람은 흔치 않다."}, {"day": 15, "from": "제11장", "text": "이기려 들지 말 것. 명확하고 진심이 담긴 행동만이 마음을 얻는다."}, {"day": 16, "from": "제12장", "text": "멋있어 보이려는 어색함 없이, 생각과 감정을 솔직하게 이야기하는 것. 진솔함은 가장 오래가는 매력이다."}, {"day": 17, "from": "제13장", "text": "제 인생에 버그가 많다고 했었죠. 당신을 만나면서 그 버그들이 하나씩 사라져가는 기분이에요."}, {"day": 18, "from": "제15장", "text": "사소한 취향 차이를 문제로 여기지 않고, 함께 해결책을 찾는 즐거운 과정으로 여길 것."}, {"day": 19, "from": "제15장", "text": "관계에 안주해서 자신의 성장을 멈춰선 안 돼. 각자가 계속 자랄 때, 서로에게 질리지 않는 최고의 파트너가 된다."}, {"day": 20, "from": "제17장", "text": "자동차가 도로를 이탈했다고 여행이 끝난 것은 아니다. 함께 고치는 법을 배우면 된다."}, {"day": 21, "from": "제18장", "text": "변명 없이 온전히 잘못을 인정할 때, 분노는 힘을 잃고 대화가 시작된다."}, {"day": 22, "from": "제18장", "text": "세상에서 가장 어려운 사과는, 자신의 가장 부끄러운 부분을 꺼내 보이는 일이다."}, {"day": 23, "from": "제19장", "text": "관계에도 사계절이 있다. 겨울이 왔다는 건 끝이 아니라, 봄을 준비하라는 신호다."}, {"day": 24, "from": "제20장", "text": "평화를 지키고 싶다는 간절함이, 오히려 솔직한 감정을 주저하게 만들 때가 있다."}, {"day": 25, "from": "제21장", "text": "기술의 문제가 아니었다. 마음의 문제였다."}, {"day": 26, "from": "제23장", "text": "성장을 증명하는 방법은 화려한 말이 아니라, 직접 찍고 인화한 사진 같은 시간이다."}, {"day": 27, "from": "제25장", "text": "다시 문을 여는 가게처럼, 관계에도 두 번째 개업이 필요하다."}, {"day": 28, "from": "에필로그", "text": "K는 비법을 알려주지 않았다. 사람과 관계의 본질을 꿰뚫어 보는 하나의 렌즈를 선물해 주었을 뿐이다."}, {"day": 29, "from": "에필로그", "text": "사랑은 저절로 타오르는 불꽃이 아니라, 서로의 노력으로 온기를 지켜가는 단골 맛집과 같다."}, {"day": 30, "from": "에필로그", "text": "당신도, 당신만의 멋진 지도를 그려나가시길 진심으로 응원합니다."}];
 const LX = {
  ko: { app:'마음 서랍', copy:'아래에 천천히, 따라 써 보세요',
@@ -123,7 +124,7 @@ const LX = {
    save:'🖋 Put into the drawer', arch:'📖 Past pages', exp:'Export my records (.txt)',
    typing_ph:'Type the sentence here', myline_ph:'One line is enough',
    foot:'Everything stays on this phone · works offline<br>\n  <a href="https://valuestools.kr/en.html">VALUES — a little tool shop</a>',
-   day:(d,r)=>'Sentence #'+d+(r>1?' · round '+r:''), from:f=>'— “Love Lessons” '+f+' (Korean passages)',
+   day:(d,r)=>'Sentence #'+d+(r>1?' · round '+r:''), from:f=>'— Lessons in Love, '+f,
    stat:(s,n)=>s+'-day streak<br>'+n+' pages kept',
    done:"Today's page is already in the drawer. Feel free to write more :)",
    saved:'Safely tucked into the drawer. See you tomorrow 🌙',
@@ -192,12 +193,14 @@ function todayStr(){ const d=new Date();
 
 function current(){
   const n = log.length;
-  const idx = n % PASSAGES.length;
-  return { p: PASSAGES[idx], round: Math.floor(n / PASSAGES.length) + 1, locked: !licensed() && idx >= FREE_DAYS };
+  const P = lang==='en' ? PASSAGES_EN : PASSAGES;
+  const idx = n % P.length;
+  return { p: P[idx], round: Math.floor(n / P.length) + 1, locked: !licensed() && idx >= FREE_DAYS };
 }
 
 function accuracy(a, b){
-  a=(a||'').replace(/\s+/g,''); b=(b||'').replace(/\s+/g,'');
+  const q=x=>(x||'').replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/\s+/g,'');
+  a=q(a); b=q(b);
   if(!b.length) return 0;
   let same=0; const n=Math.min(a.length,b.length);
   for(let i=0;i<n;i++) if(a[i]===b[i]) same++;
@@ -231,7 +234,7 @@ function refresh(){
   arch.innerHTML = '';
   for(const e of [...log].reverse().slice(0,30)){
     const d=document.createElement('div'); d.className='entry';
-    d.innerHTML = '<div class="m">'+e.date+' · '+e.day+'일째 ('+e.from+')</div>'
+    d.innerHTML = '<div class="m">'+e.date+' · '+(lang==='en' ? 'day '+e.day : e.day+'일째')+' ('+e.from+')</div>'
       + '<div class="t">“'+e.text+'”</div>'
       + (e.my ? '<div class="my">↳ '+e.my+'</div>' : '');
     arch.appendChild(d);
@@ -277,7 +280,7 @@ function applyKey(){
 
 function exportTxt(){
   let out = '마음 서랍 — 내 필사 기록\n\n';
-  for(const e of log) out += e.date+' · '+e.day+'일째 ('+e.from+')\n“'+e.text+'”\n'+(e.my?'↳ '+e.my+'\n':'')+'\n';
+  for(const e of log) out += e.date+' · '+(lang==='en' ? 'day '+e.day : e.day+'일째')+' ('+e.from+')\n“'+e.text+'”\n'+(e.my?'↳ '+e.my+'\n':'')+'\n';
   const blob = new Blob([out], {type:'text/plain;charset=utf-8'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);

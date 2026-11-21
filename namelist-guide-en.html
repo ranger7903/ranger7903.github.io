@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparing two name lists in Excel · VALUES</title>
+<meta name="description" content="Who is missing, who appears twice — one COUNTIF line, and the four reasons names that look identical refuse to match.">
+<link rel="canonical" href="https://valuestools.kr/namelist-guide-en.html">
+<link rel="alternate" hreflang="en" href="https://valuestools.kr/namelist-guide-en.html">
+<link rel="alternate" hreflang="ko" href="https://valuestools.kr/namelist-guide.html">
+<meta property="og:title" content="Comparing two name lists in Excel">
+<meta property="og:description" content="Who is missing, who appears twice — one COUNTIF line, and the four reasons names that look identical refuse to match.">
+<meta property="og:image" content="https://valuestools.kr/og.png">
+<meta property="og:url" content="https://valuestools.kr/namelist-guide-en.html">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF3E7; --cream-2:#FFFBF3; --cream-3:#F5E8D6;
+  --line:#EAD9BE; --ink:#3D3226; --ink-2:#7A6A52; --ink-3:#A8927A;
+  --terra:#D97757; --terra-soft:#FBE4D3; --sage:#8CAA7E;
+  --shadow:0 2px 4px rgba(80,60,30,.05), 0 18px 46px -30px rgba(80,60,30,.5);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --cream:#1C1712; --cream-2:#241E17; --cream-3:#2D251C;
+  --line:#40342A; --ink:#F2E9DA; --ink-2:#C4B49F; --ink-3:#91826D;
+  --terra:#E89574; --terra-soft:#3A2721; --sage:#9CBB8F;
+  --shadow:0 2px 4px rgba(0,0,0,.5), 0 18px 46px -30px rgba(0,0,0,.95);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gothic A1","Segoe UI",system-ui,sans-serif;font-size:16.5px;line-height:1.85;overflow-wrap:break-word}
+.shell{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--terra)}
+header.top{border-bottom:1px solid var(--line);background:var(--cream-2)}
+header.top .shell{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700}
+.stamp{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;
+  background:var(--terra);color:#fff;font-family:"Gowun Batang",serif}
+header.top nav a{margin-left:14px;font-size:14px;text-decoration:none}
+h1{font-family:"Gowun Batang",serif;font-size:31px;line-height:1.35;margin:32px 0 8px}
+h2{font-family:"Gowun Batang",serif;font-size:22px;margin:38px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:17px;margin:22px 0 4px}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 4px;padding-left:20px}
+li{margin:5px 0}
+.lede{font-size:17.5px;color:var(--ink-2)}
+.card{background:var(--cream-2);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.warm{background:var(--terra-soft);border-color:var(--terra)}
+.ex{font-family:"Malgun Gothic","Gothic A1",monospace;background:var(--cream-3);
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+.ex b{color:var(--terra)}
+.no{color:#B04A2E;font-weight:700}
+.yes{color:#4A7A3C;font-weight:700}
+.small{font-size:14px;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--cream-3)}
+.tool{background:var(--cream-2);border:1px solid var(--line);border-left:4px solid var(--terra);
+  border-radius:12px;padding:16px 20px;margin:28px 0 10px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;background:var(--terra);
+  color:#fff;text-decoration:none;font-weight:600;margin-top:8px}
+footer{margin:48px 0 40px;font-size:13.5px;color:var(--ink-2);text-align:center}
+</style>
+<body>
+
+<header class="top"><div class="shell">
+  <a class="brand" href="en.html"><span class="stamp">値</span>VALUES</a>
+  <nav style="margin-left:auto">
+    <a href="en.html">Tools</a>
+    <a href="books.html">Books</a>
+    <a href="free-en.html">Free downloads</a>
+  </nav>
+</div></header>
+
+<main class="shell">
+
+<h1>🧾 Comparing two name lists in Excel</h1>
+
+<p class="lede">Sign-ups against payments, last year against this year — finding who is missing and who is on both. Here is how with <b>plain Excel</b>.</p>
+<h2>1 — The fastest way: one COUNTIF line</h2>
+<p>Next to list A, put this in an empty cell and drag it down:</p>
+<div class="ex">=IF(COUNTIF(B:B, A2)&gt;0, "found", "missing")</div>
+<p>A2 is the name to check; B:B is the column holding the other list. Rows that say <b>missing</b> are people not on the other list.</p>
+<p><b>Do it the other way round too.</b> Looking from one side tells you half the story — “in A but not in B” and “in B but not in A” are different people.</p>
+<p>To see only those rows: select the column → <b>Data</b> → <b>Filter</b> → tick only “missing”.</p>
+<h2>2 — If you just want to see it in colour</h2>
+<div class="ex">Put both lists side by side → select both name columns
+→ <b>Home</b> → <b>Conditional Formatting</b> → <b>Highlight Cells Rules</b> → <b>Duplicate Values</b></div>
+<p>Shared names light up. Quick — but it does not count them for you.</p>
+<h2>3 — Why it usually says “no match” anyway</h2>
+<p>To your eye they are the same name; to Excel they are not. It is nearly always one of these four:</p>
+<table><tr><th style="width:38%">Cause</th><th>Example</th></tr>
+<tr><td>An invisible space</td><td><code>John Smith&nbsp;</code> with one space at the end — the most common</td></tr>
+<tr><td>Spacing inside the name</td><td>Mary-Jo ↔ Mary Jo ↔ MaryJo</td></tr>
+<tr><td>Brackets or titles attached</td><td>John Smith (Year 3) ↔ John Smith · Dr. Lee ↔ Lee</td></tr>
+<tr><td>Numbers stored as text</td><td>Student ID 20250001 is a number on one side and text on the other</td></tr></table>
+<h3>Clean first</h3>
+<div class="ex">=TRIM(A2)                          removes spaces at the ends
+=SUBSTITUTE(TRIM(A2), " ", "")      removes the spaces in the middle too
+=LOWER(...)                         ignores capital letters</div>
+<p>Compare the cleaned columns and far more will match. Then turn the cleaned results into values (Copy → Paste Special → <b>Values</b>), or sorting will scramble them.</p>
+<h2>4 — What is left: things only a person can tell</h2>
+<ul><li><b>Two people, same name</b> — two John Smiths in one class. A name alone cannot separate them.</li>
+<li><b>One letter different</b> — Catherine ↔ Katherine. Typo or another person? A machine cannot decide.</li>
+<li><b>A changed surname</b> — marriage, a name change.</li></ul>
+<p>From here a person has to look. That is why a good tool does not quietly merge things — it <b>puts the look-alikes side by side so you can choose</b>.</p>
+
+<div class="tool">
+<b>If you do this every week</b>
+<p>We sell a small Windows program: give it two lists and it separates who is missing and who is on both. It does the cleaning above for you, and anything that still does not match is shown side by side — “are these the same person?” — so you decide. It never merges on its own.</p>
+<p class="small">No internet needed, nothing leaves your computer. A monthly subscription you can cancel any time.</p>
+<a class="btn" href="en.html#p-compare">📋 Smart List Compare — $1.99 / month</a>
+</div>
+
+<h2 style="font-size:18px">Where this comes from</h2>
+<p class="small">Formulas work in any recent version of Excel; in some regions Excel uses ; instead of , between arguments.<br>
+Everyone’s situation is different. The numbers here are examples — swap in your own.</p>
+
+<p class="small" style="margin-top:34px">
+VALUES is a small shop that makes tools to take work off your desk ·
+<a href="en.html#guides">More guides</a> ·
+<a href="en.html">The tool shelf</a> ·
+<a href="books.html">Bookshop</a> ·
+<a href="free-en.html">Free downloads</a> ·
+<a href="%EC%82%AC%EC%97%85%EC%9E%90%EC%A0%95%EB%B3%B4.html">Seller information</a>
+</p>
+
+</main>
+<footer>© VALUES · valuestools.kr</footer>
+</body></html>
