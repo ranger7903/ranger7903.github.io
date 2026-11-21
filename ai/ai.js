@@ -125,6 +125,7 @@
     R("slowletter", "romance", "💌", "Slow Letter", "느린 편지", "A letter that arrives on the day you choose. Sealed until then.", "내가 고른 날에 도착하는 편지. 그날까지 봉인돼요.", "letter future 편지 미래 1년 뒤", "soon"),
     R("rolling", "romance", "🎉", "Group Card", "함께 쓰는 롤링페이퍼", "One link, many writers, opens on the day.", "링크 하나로 여러 사람이 쓰고, 정한 날 열려요.", "group card graduation 롤링페이퍼 졸업 퇴임", "soon"),
     R("nightsky", "romance", "🌌", "The Night Sky That Day", "그날 밤하늘", "Pick a date, time and place. See the stars, moon and planets that were over you, as a picture.", "날짜·시각·장소를 고르면 그때 머리 위에 있던 별과 달과 행성을 그림으로 그려 드려요.", "stars sky anniversary birthday constellation moon 별자리 밤하늘 기념일 생일 달", "open", "nightsky.html", true),
+    R("saju", "romance", "🔮", "Saju Meets the Stars", "사주와 별자리", "Your Korean Four Pillars and your sun sign, worked out in your browser and read together by an AI.", "사주 네 기둥과 별자리를 계산하고, AI 가 둘을 엮어 풀어 드려요.", "saju fortune horoscope zodiac astrology four pillars 사주 운세 별자리 띠 오행 팔자", "open", "saju.html"),
     R("daily", "romance", "🌅", "One Small Romance Today", "오늘의 낭만 한 줄", "Sunset time, the moon, the seasonal term and one small thing to do today.", "해 지는 시각·달·절기와 오늘 해 볼 작은 일 하나.", "sunset moon season 노을 달 절기", "open", "daily.html"),
     R("song", "romance", "🎵", "Our Story Song", "우리 이야기 노래", "Your story turned into lyrics and a song.", "우리 이야기를 노랫말과 노래로.", "song lyrics 노래 노랫말", "soon"),
     R("parentbook", "romance", "📖", "Parents' Story Book", "부모님 이야기 책", "One question a week, answered by voice, a book after a year.", "매주 질문 하나, 목소리로 답하면 1년 뒤 책.", "memoir parents 부모님 자서전 이야기 책", "soon"),
@@ -154,6 +155,7 @@
 
   /* ── 방과 방 잇기: 이 방 다음에 해 보면 좋은 방 (2026-11-21) ── */
   VT.NEXT = {
+    saju: ["nightsky", "daily"],
     complaint: ["paper", "cancel"], cancel: ["subs", "complaint"],
     scam: ["clicked", "askfam"], askfam: ["scam", "clicked"], subs: ["cancel", "paper"], paper: ["lease", "complaint"], lease: ["paper", "subs"],
     fridge: ["week", "swap"], week: ["fridge", "swap"], swap: ["fridge", "week"],
@@ -161,7 +163,7 @@
     speak: ["grammar", "korean"], korean: ["speak", "notice"], grammar: ["speak", "reply"],
     reply: ["meeting", "gongmun"], meeting: ["reply", "table"], table: ["meeting", "gongmun"], gongmun: ["reply", "grammar"],
     review: ["reviewmonth", "shopmini"], reviewmonth: ["review", "shopmini"], shopmini: ["review", "reviewmonth"],
-    tripcost: ["speak", "nightsky"], daily: ["nightsky", "couple"], nightsky: ["couple", "daily"], couple: ["nightsky", "skyletter"],
+    tripcost: ["speak", "nightsky"], daily: ["nightsky", "couple"], nightsky: ["saju", "couple"], couple: ["nightsky", "skyletter"],
     skyletter: ["season", "nightsky"], season: ["daily", "couple"]
   };
   VT.mountNext = function () {

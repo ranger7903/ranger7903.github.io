@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saju Meets the Stars — VALUES AI Store</title>
+<meta name="description" content="Your Korean Four Pillars (Saju) and your Western sun sign, worked out in your browser and read together by an AI. 사주와 별자리.">
+<link rel="canonical" href="https://valuestools.kr/ai/saju.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="사주와 별자리 · Saju Meets the Stars — 밸류스 AI 백화점">
+<meta property="og:description" content="생년월일과 태어난 시간으로 사주 네 기둥과 별자리를 계산하고, 둘을 엮어 풀어 드려요. Your Four Pillars and your sun sign, read together.">
+<meta property="og:url" content="https://valuestools.kr/ai/saju.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/saju.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="brain.js"></script>
+<script src="saju-calc.js"></script>
+<script src="../세기.js" defer></script>
+<style>
+.f3{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.f3 input[type=number],.f3 input[type=time],.nm{font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;box-sizing:border-box;background:#fff}
+.f3 input[type=number]{width:5.5em}
+.nm{width:100%}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;text-align:center}
+.pillars div{border:1px solid var(--line);border-radius:12px;padding:10px 4px;background:#fff}
+.pillars small{display:block;color:var(--ink-2);font-size:13px}
+.pillars b{display:block;font-size:26px;letter-spacing:2px;margin:4px 0}
+.els{margin-top:12px}
+.els div{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:14px}
+.els span.bar{height:10px;border-radius:6px;background:var(--mustard,#e0a83a)}
+.els span.lab{width:6.5em;flex:none}
+</style>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=romance" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div id="brain"></div>
+    <div class="box" style="margin-top:12px">
+      <label for="nm" class="sub" style="display:block" data-i="name_q"></label>
+      <input id="nm" class="nm" maxlength="20" autocomplete="off" data-i-ph="name_ph">
+      <p class="sub" style="margin:14px 0 6px" data-i="birth_q"></p>
+      <div class="f3">
+        <input id="by" type="number" inputmode="numeric" min="1900" max="2100" aria-label="year"><span data-i="u_y"></span>
+        <input id="bm" type="number" inputmode="numeric" min="1" max="12" aria-label="month"><span data-i="u_m"></span>
+        <input id="bd" type="number" inputmode="numeric" min="1" max="31" aria-label="day"><span data-i="u_d"></span>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label><input type="radio" name="cal" value="solar" checked> <span data-i="solar"></span></label>
+        <label><input type="radio" name="cal" value="lunar"> <span data-i="lunar"></span></label>
+        <label id="leapBox" class="hidden"><input type="checkbox" id="leap"> <span data-i="leap"></span></label>
+      </div>
+      <p class="sub" style="margin:14px 0 6px" data-i="time_q"></p>
+      <div class="f3">
+        <input id="bt" type="time" aria-label="time">
+        <label><input type="checkbox" id="noTime"> <span data-i="no_time"></span></label>
+      </div>
+      <p class="sub" style="margin:14px 0 6px" data-i="focus_q"></p>
+      <div class="row" style="margin-top:0" role="radiogroup">
+        <label><input type="radio" name="focus" value="general" checked> <span data-i="f_general"></span></label>
+        <label><input type="radio" name="focus" value="love"> <span data-i="f_love"></span></label>
+        <label><input type="radio" name="focus" value="work"> <span data-i="f_work"></span></label>
+        <label><input type="radio" name="focus" value="money"> <span data-i="f_money"></span></label>
+        <label><input type="radio" name="focus" value="study"> <span data-i="f_study"></span></label>
+      </div>
+      <label for="msg" class="sub" style="display:block;margin-top:14px" data-i="label"></label>
+      <textarea id="msg" style="min-height:80px" data-i-ph="ph"></textarea>
+      <div id="chart"></div>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+        <button class="btn ghost" id="sample" type="button" data-i="sample"></button>
+      </div>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li><li data-i="h4s"></li></ol></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Saju Meets the Stars — VALUES AI Store",ko:"사주와 별자리 — 밸류스 AI 백화점"},
+  back:{en:"← Letters & Memories",ko:"← 낭만·추억"},
+  h1:{en:"🔮 Saju Meets the Stars",ko:"🔮 사주와 별자리"},
+  lead:{en:"Enter your birthday and birth time. Your Korean Four Pillars (Saju) and your Western sun sign are worked out in your browser, and an AI reads the two together.",
+        ko:"생년월일과 태어난 시간을 넣으세요. 사주 네 기둥과 서양 별자리를 이 브라우저에서 계산하고, AI 가 둘을 엮어 풀어 드려요."},
+  name_q:{en:"Name or nickname (optional)",ko:"이름이나 별명 (안 써도 돼요)"}, name_ph:{en:"e.g. Mina",ko:"예: 민지"},
+  birth_q:{en:"Birthday",ko:"생년월일"}, u_y:{en:"y",ko:"년"}, u_m:{en:"m",ko:"월"}, u_d:{en:"d",ko:"일"},
+  solar:{en:"Solar (normal calendar)",ko:"양력"}, lunar:{en:"Lunar",ko:"음력"}, leap:{en:"Leap month",ko:"윤달"},
+  time_q:{en:"Birth time (Korea time)",ko:"태어난 시간 (한국 시각)"}, no_time:{en:"I don't know",ko:"몰라요"},
+  focus_q:{en:"What would you like to hear about?",ko:"무엇이 궁금하세요?"},
+  f_general:{en:"Overall",ko:"전체"}, f_love:{en:"Love",ko:"연애·관계"}, f_work:{en:"Work",ko:"일·직장"}, f_money:{en:"Money habits",ko:"돈 쓰는 습관"}, f_study:{en:"Study",ko:"공부·성장"},
+  label:{en:"A question or what is on your mind (optional)",ko:"궁금한 것이나 요즘 마음에 있는 것 (안 써도 돼요)"},
+  ph:{en:"e.g. Thinking about changing jobs next year.",ko:"예: 내년에 이직을 고민하고 있어요."},
+  go:{en:"Read my chart",ko:"풀이 보기"}, clear:{en:"Clear",ko:"지우기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  bad_date:{en:"Please enter a real birthday (year 1900–2100).",ko:"생년월일을 바르게 넣어 주세요 (1900~2100년)."},
+  bad_lunar:{en:"That lunar date could not be found. Check the month, day and leap month.",ko:"그 음력 날짜를 찾지 못했어요. 월·일·윤달을 확인해 주세요."},
+  c_t:{en:"Your chart (calculated in this browser)",ko:"내 사주와 별자리 (이 브라우저에서 계산)"},
+  p_h:{en:"Hour",ko:"시주"}, p_d:{en:"Day",ko:"일주"}, p_m:{en:"Month",ko:"월주"}, p_y:{en:"Year",ko:"년주"}, p_unk:{en:"unknown",ko:"모름"},
+  dm:{en:"Day Master",ko:"일간(나를 뜻하는 글자)"}, animal:{en:"Zodiac animal",ko:"띠"}, sign:{en:"Sun sign",ko:"별자리"}, solar_is:{en:"Solar date",ko:"양력으로"},
+  yang:{en:"Yang",ko:"양"}, yin:{en:"Yin",ko:"음"},
+  headline:{en:"In one line",ko:"한 줄로"}, r_saju:{en:"🀄 Your Saju",ko:"🀄 사주로 본 나"}, r_stars:{en:"✨ Your stars",ko:"✨ 별자리로 본 나"},
+  r_blend:{en:"🔮 The two together",ko:"🔮 둘을 합쳐 보면"}, r_str:{en:"💪 Strengths",ko:"💪 강점"}, r_care:{en:"🌱 Go gently with",ko:"🌱 살펴볼 것"},
+  r_year:{en:"📅 This year",ko:"📅 올해 흐름"}, r_adv:{en:"👣 Try this",ko:"👣 이렇게 해 보세요"}, r_lucky:{en:"🍀 Lucky",ko:"🍀 행운"},
+  fun:{en:"For fun and reflection. It does not decide anything for you.",ko:"재미와 돌아보기를 위한 풀이예요. 무엇도 대신 정해 주지 않아요."},
+  how_t:{en:"How it works",ko:"이렇게 풀어요"},
+  h1s:{en:"The four pillars use the solar terms (the year turns at Ipchun, around 4 February) and the sun sign uses the sun's real position at your birth. All worked out in your browser.",
+       ko:"사주 네 기둥은 절기로(해는 입춘, 2월 4일 무렵에 바뀌어요), 별자리는 태어난 순간의 실제 해 자리로 이 브라우저에서 계산해요."},
+  h2s:{en:"Only the calculated chart, your nickname and your question are sent to the AI, which writes the reading. Your full birthday is not sent.",
+       ko:"AI 에게는 계산한 사주·별자리와 별명·질문만 보내 풀이를 쓰게 해요. 생년월일 자체는 보내지 않아요."},
+  h3s:{en:"Birth time is read as Korea time. Schools differ on small details (like local solar time); readings may differ slightly from other services.",
+       ko:"태어난 시간은 한국 시각으로 봐요. 지역 시차 보정처럼 학파마다 다른 부분이 있어 다른 곳 풀이와 조금 다를 수 있어요."},
+  h4s:{en:"Lunar birthdays are converted with your browser's calendar. It is for fun: no predictions of illness, accidents or disasters.",
+       ko:"음력 생일은 브라우저 달력으로 양력으로 바꿔요. 재미로 보는 풀이라 병·사고·재난 같은 예언은 하지 않아요."}
+});
+var SAMPLE={by:1990,bm:5,bd:15,bt:"14:30",nm:{ko:"민지",en:"Mina"},q:{ko:"내년에 이직을 고민하고 있어요.",en:"Thinking about changing jobs next year."}};
+function $(i){ return document.getElementById(i); }
+function cal(){ var r=document.querySelector('input[name="cal"]:checked'); return r?r.value:"solar"; }
+function focus(){ var r=document.querySelector('input[name="focus"]:checked'); return r?r.value:"general"; }
+function chart(){
+  var y=+$("by").value, m=+$("bm").value, d=+$("bd").value;
+  if(!(y>=1900&&y<=2100&&m>=1&&m<=12&&d>=1&&d<=31)) return {err:"bad_date"};
+  var sol={y:y,m:m,d:d};
+  if(cal()==="lunar"){ sol=SAJU.lunarToSolar(y,m,d,$("leap").checked); if(!sol) return {err:"bad_lunar"}; }
+  else { var t=new Date(Date.UTC(y,m-1,d)); if(t.getUTCMonth()!==m-1) return {err:"bad_date"}; }
+  var hh=null, mm=null;
+  if(!$("noTime").checked && $("bt").value){ var p=$("bt").value.split(":"); hh=+p[0]; mm=+p[1]; }
+  var c=SAJU.saju(sol.y,sol.m,sol.d,hh,mm); c.sol=sol; return c;
+}
+function elName(e){ return VT.lang==="ko"?SAJU.EL_KO[e]:SAJU.EL_EN[e]; }
+function chartHtml(c){
+  if(!c||c.err) return "";
+  var ko=VT.lang==="ko";
+  function cell(p,k){ return '<div><small>'+VT.t(k)+'</small>'+(p?'<b>'+p.han+'</b><small>'+p.ko+'</small>':'<b>?</b><small>'+VT.t("p_unk")+'</small>')+'</div>'; }
+  var max=Math.max.apply(null,Object.keys(c.elements).map(function(k){return c.elements[k];}))||1;
+  var els=["wood","fire","earth","metal","water"].map(function(e){ return '<div><span class="lab">'+elName(e)+'</span><span class="bar" style="width:'+(c.elements[e]/max*60+2)+'%"></span><span>'+c.elements[e]+'</span></div>'; }).join("");
+  return '<div class="box" style="margin-top:14px;background:var(--paper-2,#faf6ee)"><b>'+VT.t("c_t")+'</b>'+
+    (cal()==="lunar"?'<p class="note" style="margin:6px 0 0">'+VT.t("solar_is")+': '+c.sol.y+'-'+String(c.sol.m).padStart(2,"0")+'-'+String(c.sol.d).padStart(2,"0")+'</p>':'')+
+    '<div class="pillars">'+cell(c.hour,"p_h")+cell(c.day,"p_d")+cell(c.month,"p_m")+cell(c.year,"p_y")+'</div>'+
+    '<p style="margin:10px 0 0">'+VT.t("dm")+': <b>'+c.dayMaster.han+' ('+c.dayMaster.ko+')</b> · '+elName(c.dayMaster.el)+' · '+VT.t(c.dayMaster.yang?"yang":"yin")+'<br>'+
+    VT.t("animal")+': '+(ko?c.animal.ko+"띠":c.animal.en)+' · '+VT.t("sign")+': '+c.sign.sym+' '+(ko?c.sign.ko:c.sign.en)+' ('+(ko?SAJU.SIGN_EL_KO[c.sign.el]:SAJU.SIGN_EL_EN[c.sign.el])+')</p>'+
+    '<div class="els">'+els+'</div></div>';
+}
+function showChart(){ var c=chart(); $("chart").innerHTML=chartHtml(c); }
+function facts(c){
+  var now=new Date(), ny=SAJU.saju(now.getFullYear(),now.getMonth()+1,now.getDate(),12,0).year;
+  var P=function(p){ return p?p.han+" ("+p.ko+")":"unknown"; };
+  var e=c.elements;
+  var t="Birth time: "+(c.timeKnown?"known":"UNKNOWN (only three pillars)")+"\nFour pillars — year: "+P(c.year)+", month: "+P(c.month)+", day: "+P(c.day)+", hour: "+P(c.hour)+
+    "\nDay Master: "+c.dayMaster.han+" ("+c.dayMaster.ko+"), "+SAJU.EL_EN[c.dayMaster.el]+", "+(c.dayMaster.yang?"yang":"yin")+
+    "\nFive elements count: Wood "+e.wood+", Fire "+e.fire+", Earth "+e.earth+", Metal "+e.metal+", Water "+e.water+
+    "\nZodiac animal: "+c.animal.en+" ("+c.animal.ko+")"+
+    "\nWestern sun sign: "+c.sign.en+" ("+c.sign.ko+"), element "+SAJU.SIGN_EL_EN[c.sign.el]+
+    "\nCurrent year: "+now.getFullYear()+", pillar "+ny.han+" ("+ny.ko+")";
+  var nm=$("nm").value.trim(), q=$("msg").value.trim();
+  if(nm) t+="\nName or nickname: "+nm;
+  if(q) t+="\nQuestion: "+q;
+  return t;
+}
+function E(s){ return VT.esc(s==null?"":s).replace(/\n/g,"<br>"); }
+function txt(k,v){ return '<div class="box" style="margin-top:12px"><b>'+VT.t(k)+'</b><p style="margin:8px 0 0">'+E(v)+'</p></div>'; }
+function lst(k,v){ return (v&&v.length)?'<h2 style="margin-top:18px">'+VT.t(k)+'</h2><ul class="steps">'+v.map(function(x){return "<li>"+E(x)+"</li>";}).join("")+"</ul>":""; }
+VTB.mount({
+  room:"saju",
+  payload:function(){ var c=chart(); if(c.err) return c.err; return {text:facts(c),opt:{focus:focus()}}; },
+  render:function(a){
+    return '<div class="verdict low" style="margin-top:12px">'+E(a.headline)+'</div>'+chartHtml(chart())+
+      txt("r_saju",a.saju)+txt("r_stars",a.stars)+txt("r_blend",a.blend)+lst("r_str",a.strengths)+lst("r_care",a.careful)+
+      txt("r_year",a.year)+lst("r_adv",a.advice)+'<p class="note" style="margin-top:12px"><b>'+VT.t("r_lucky")+':</b> '+E(a.lucky)+'</p>'+
+      '<p class="note">'+VT.t("fun")+'</p>';
+  },
+  copy:function(a){ return [a.headline,"",VT.t("r_saju")+"\n"+a.saju,"",VT.t("r_stars")+"\n"+a.stars,"",VT.t("r_blend")+"\n"+a.blend,"",
+    VT.t("r_str")+"\n"+a.strengths.map(function(x){return "- "+x;}).join("\n"),"",VT.t("r_care")+"\n"+a.careful.map(function(x){return "- "+x;}).join("\n"),"",
+    VT.t("r_year")+"\n"+a.year,"",VT.t("r_adv")+"\n"+a.advice.map(function(x){return "- "+x;}).join("\n"),"",VT.t("r_lucky")+": "+a.lucky,"","valuestools.kr/ai/saju.html"].join("\n"); },
+  onLang:showChart
+});
+["by","bm","bd","bt","noTime","leap"].forEach(function(i){ $(i).addEventListener("input",showChart); $(i).addEventListener("change",showChart); });
+document.querySelectorAll('input[name="cal"]').forEach(function(r){ r.onchange=function(){ $("leapBox").classList.toggle("hidden",cal()!=="lunar"); showChart(); }; });
+$("noTime").addEventListener("change",function(){ $("bt").disabled=$("noTime").checked; });
+$("go").onclick=function(){ VTB.ask(); };
+$("clear").onclick=function(){ ["nm","by","bm","bd","bt","msg"].forEach(function(i){ $(i).value=""; }); $("noTime").checked=false; $("bt").disabled=false; $("chart").innerHTML=""; $("out").classList.add("hidden"); };
+$("sample").onclick=function(){ $("by").value=SAMPLE.by; $("bm").value=SAMPLE.bm; $("bd").value=SAMPLE.bd; $("bt").value=SAMPLE.bt; $("noTime").checked=false; $("bt").disabled=false;
+  document.querySelector('input[name="cal"][value="solar"]').checked=true; $("leapBox").classList.add("hidden");
+  $("nm").value=SAMPLE.nm[VT.lang]; $("msg").value=SAMPLE.q[VT.lang]; showChart(); };
+</script>
+</body>
+</html>
