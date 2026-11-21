@@ -32,7 +32,26 @@
     try { localStorage.setItem(KEY, l); } catch (e) {}
     VT.apply();
     if (typeof VT.onLang === "function") VT.onLang();
+    VT.syncUrl();
   };
+
+  /* ── 영어로 볼 때 주소를 영어 짝 쪽(○○-en.html)으로 바꿔 둔다 (2026-11-21)
+     그래야 손님이 주소를 복사해 나눠도 영어 공유 그림(og/en)이 뜬다. 짝 쪽은 이 쪽으로 되돌려 보내기만 한다. */
+  VT.EN_TWIN = ["askfam", "cancel", "care", "careshare", "complaint", "couple", "daily", "fridge", "gongmun", "grammar", "index", "korean", "lease", "meeting", "nightsky", "notice", "paper", "plans", "reply", "review", "reviewmonth", "saju", "scam", "school", "season", "shopmini", "skyletter", "speak", "subs", "swap", "table", "tripcost", "week"];
+  VT.baseFile = function () {
+    var f = location.pathname.split("/").pop() || "index.html";
+    if (f === "en.html") return "index.html";
+    return f.replace(/-en\.html$/, ".html");
+  };
+  VT.syncUrl = function () {
+    if (!/\/ai\//.test(location.pathname) || !window.history || !history.replaceState) return;
+    var base = VT.baseFile(), id = base.replace(/\.html$/, "");
+    if (VT.EN_TWIN.indexOf(id) < 0) return;
+    var sp = new URLSearchParams(location.search); sp.delete("lang"); var qs = sp.toString();
+    var target = (VT.lang === "en" ? (id === "index" ? "en.html" : id + "-en.html") : (id === "index" ? "./" : base)) + (qs ? "?" + qs : "") + location.hash;
+    try { history.replaceState(history.state, "", target); } catch (e) {}
+  };
+  VT.syncUrl();
   VT.esc = function (s) {
     return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
   };
@@ -167,7 +186,7 @@
     skyletter: ["season", "nightsky"], season: ["daily", "couple"]
   };
   VT.mountNext = function () {
-    var file = (location.pathname.split("/").pop() || "index.html").replace(/\?.*$/, "");
+    var file = VT.baseFile();
     var me = VT.ROOMS.filter(function (r) { return r.href === file; })[0];
     if (!me || !VT.NEXT[me.id]) return;
     var sec = document.createElement("section"); sec.className = "no-print"; sec.id = "vtNext";
