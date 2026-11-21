@@ -40,7 +40,7 @@
     S("family", ["Someone says they are family on a new number","Call the old number or ask a question only your family would know."],
       ["가족이라며 새 번호로 연락해요","예전 번호로 전화해 보거나 가족만 아는 것을 물어보세요."],
       [/(엄마|아빠|어머니|아버지|아들|딸|할머니|할아버지|이모|삼촌)[^\n]{0,30}(폰|휴대폰|핸드폰|번호)[^\n]{0,20}(고장|깨|바꿨|바뀌|새로|수리|잃어)|(액정|폰)\s*(이|가)?\s*(깨져|고장|수리\s*중)|(이\s*번호로|새\s*번호)\s*(저장|연락)/,
-       /\b(hi|hey|hello)\s+(mum|mom|dad|mother|father)\b|\b(new\s+(phone\s+)?number|my\s+phone\s+(is\s+)?(broke|broken|damaged|lost|in\s+repair)|this\s+is\s+my\s+new\s+number|save\s+this\s+number)\b/i]),
+       /\b(hi|hey|hello)\s+(mum|mom|dad|mother|father)\b[^]{0,160}\b(new\s+(phone|number|mobile)|(phone|mobile)\b[^.!?\n]{0,30}\b(broke|broken|died|lost|smashed|cracked|dropped|water)|(dropped|lost|broke|smashed)\s+my\s+(phone|mobile)|number\s+changed|friend'?s\s+phone)|\b(new\s+(phone\s+)?number|my\s+phone\s+(is\s+)?(broke|broken|damaged|lost|in\s+repair)|this\s+is\s+my\s+new\s+number|save\s+this\s+number)\b/i]),
     S("delivery", ["A parcel problem with a link","Real couriers rarely ask you to pay or fix an address through a text link."],
       ["택배 문제라며 링크를 보내요","진짜 택배사는 문자 링크로 돈이나 주소 고치기를 거의 요구하지 않습니다."],
       [/(택배|배송|소포|우체국|물품|상품)[^\n]{0,40}(주소\s*(불일치|불명|오류|확인|수정)|보관\s*(중|료)|반송|미배송|배송\s*불가|도로명\s*주소|재배송|통관|관세)/,

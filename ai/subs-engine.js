@@ -68,17 +68,20 @@
   }
   var H_DATE = /이용\s*일|거래\s*일|승인\s*일|결제\s*일|사용\s*일|일자|날짜|일시|^date$|transaction\s*date|posted|posting\s*date|trans\.?\s*date/i;
   var H_NAME = /가맹점|이용\s*처|사용\s*처|이용\s*내역|내용|적요|거래\s*처|상호|기재\s*내용|^description$|merchant|payee|^name$|details|narrative|memo/i;
+  /* 「details·memo·narrative」는 은행에 따라 DEBIT/CREDIT 같은 갈래 글만 담기도 한다(Chase 통장). 더 확실한 이름 칸이 있으면 그쪽을 쓴다 */
+  var H_NAME_WEAK = /details|narrative|memo/i;
   var H_AMT = /이용\s*금액|결제\s*금액|승인\s*금액|청구\s*금액|출금|지급|찾으신|^금액$|amount|debit|charge|withdrawal|paid\s*out/i;
   var H_BAD = /잔액|balance|입금|맡기신|credit|deposit|환율|수수료|포인트|할부\s*개월|원금|이자/i;
 
   function pickCols(rows) {
     for (var r = 0; r < Math.min(rows.length, 20); r++) {
-      var h = rows[r], di = -1, ni = -1, ai = -1;
+      var h = rows[r], di = -1, ni = -1, ai = -1, weak = -1;
       h.forEach(function (x, i) {
         if (di < 0 && H_DATE.test(x)) di = i;
-        else if (ni < 0 && H_NAME.test(x) && !H_BAD.test(x)) ni = i;
+        else if (ni < 0 && H_NAME.test(x) && !H_BAD.test(x)) { if (H_NAME_WEAK.test(x) && !/^description$|merchant|payee|가맹점|이용\s*처|사용\s*처|적요|상호/i.test(x)) { if (weak < 0) weak = i; } else ni = i; }
         else if (ai < 0 && H_AMT.test(x) && !H_BAD.test(x)) ai = i;
       });
+      if (ni < 0) ni = weak;
       if (di >= 0 && ai >= 0 && ni >= 0) return { head: r, d: di, n: ni, a: ai };
     }
     /* 머리글이 없으면 칸 내용으로 짐작 */
@@ -140,7 +143,9 @@
       var gaps = []; for (var i = 1; i < u.length; i++) gaps.push(Math.round((u[i].date - u[i - 1].date) / 864e5));
       var gm = median(gaps), every = "";
       var near = function (lo, hi) { return gaps.filter(function (x) { return x >= lo && x <= hi; }).length >= Math.max(1, Math.ceil(gaps.length * 0.7)); };
-      if (gm >= 25 && gm <= 35 && near(24, 38)) every = "month";
+      /* 4주마다(1년에 13번) — 신문·구독 상자에 흔하다. 달마다로 세면 1년 값이 한 번 모자라게 나온다 */
+      if (gm >= 27 && gm <= 29 && gaps.every(function (x) { return x >= 26 && x <= 30; }) && u.length >= 3) every = "4weeks";
+      else if (gm >= 25 && gm <= 35 && near(24, 38)) every = "month";
       else if (gm >= 330 && gm <= 400 && near(320, 410)) every = "year";
       else if (gm >= 6 && gm <= 8 && near(5, 9)) every = "week";
       else if (gm >= 85 && gm <= 95 && near(80, 100)) every = "quarter";
@@ -148,9 +153,9 @@
       if (!every) { if (isKnown) once.push({ name: shown, service: g[0].known, amount: u[u.length - 1].amount, date: ymd(u[u.length - 1].date), count: u.length }); return; }
       if (spread > 1.3 && !isKnown) return;
       var lastD = u[u.length - 1].date;
-      var next = every === "month" ? new Date(lastD.getFullYear(), lastD.getMonth() + 1, lastD.getDate()) : new Date(+lastD + gm * 864e5);
+      var next = every === "month" ? new Date(lastD.getFullYear(), lastD.getMonth() + 1, lastD.getDate()) : new Date(+lastD + (every === "4weeks" ? 28 : gm) * 864e5);
       var last = u[u.length - 1].amount;
-      var perYear = last * (every === "month" ? 12 : every === "week" ? 52 : every === "quarter" ? 4 : 1);
+      var perYear = last * (every === "month" ? 12 : every === "4weeks" ? 13 : every === "week" ? 52 : every === "quarter" ? 4 : 1);
       var rise = u.length >= 2 && last > u[0].amount * 1.02 ? { from: u[0].amount, to: last } : null;
       subs.push({ name: shown, service: g[0].known, every: every, count: u.length, amount: last, typical: mid, first: ymd(u[0].date), last: ymd(lastD),
                   next: ymd(next), perYear: perYear, rise: rise, store: STORE[g[0].known] || "" });
