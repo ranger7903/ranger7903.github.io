@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find Unclaimed Money (US) — VALUES AI Store</title>
+<meta name="description" content="Pick every US state you have lived in. Go straight to that state's official free unclaimed property search, with a one-page list of what to have ready. No finder fees.">
+<link rel="canonical" href="https://valuestools.kr/ai/unclaimedus.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="미국 주인 없는 돈 찾기 · Find Unclaimed Money (US) — 밸류스 AI 백화점">
+<meta property="og:description" content="살았던 주를 고르면 그 주의 공식 무료 조회 사이트와 준비할 것을 한 장으로. Pick the states you lived in: official free search links and what to have ready.">
+<meta property="og:url" content="https://valuestools.kr/ai/unclaimedus.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/unclaimedus.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<style>
+.states{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:10px}
+.states label{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 10px;background:var(--cream);cursor:pointer;min-height:44px;font-size:15px}
+.states input{width:20px;height:20px;flex:none}
+.legal{font-size:13.5px;color:var(--ink-2);border-left:3px solid var(--mustard);padding:6px 10px;margin-top:12px}
+.go{display:block;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;background:var(--cream);text-decoration:none}
+.go b{display:block}
+</style>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <b data-i="pick"></b>
+      <input id="filter" type="search" style="width:100%;margin-top:10px;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--cream);color:var(--ink)" data-i-ph="filter" data-i-aria="filter">
+      <div class="states" id="states"></div>
+      <div class="row">
+        <button class="btn" id="go" type="button" data-i="go"></button>
+        <button class="btn ghost" id="clear" type="button" data-i="clear"></button>
+      </div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol>
+      <p class="legal" data-i="legal"></p>
+      <p class="note" data-i="src"></p></div>
+  </section>
+</main>
+<script>
+/* 주별 공식 주소는 NAUPA(unclaimed.org) 의 주별 링크에서 그대로 가져왔다(2026-11-22 확인):
+ *   https://unclaimed.org/  ·  https://unclaimed.org/search-for-your-unclaimed-property-its-free/
+ * 푸에르토리코는 NAUPA 쪽 짧은 목록의 ocif.pr.gov 를 썼다(긴 목록의 주소는 연방 파산법원이라 뺐다).
+ * 수수료 상한은 법조문으로 확인한 네 곳만: CA 10%(sco.ca.gov), WA 5%(RCW 63.30.790), NY 15%(APL §1416), FL 30%(Fla. Stat. 717.135). */
+var ST=[
+["AL","Alabama","https://alabama.findyourunclaimedproperty.com/"],["AK","Alaska","http://treasury.dor.alaska.gov/Unclaimed-Property.aspx"],
+["AZ","Arizona","https://azdor.gov/unclaimed-property/"],["AR","Arkansas","https://auditor.ar.gov/"],["CA","California","https://sco.ca.gov/upd_msg.html"],
+["CO","Colorado","https://colorado.findyourunclaimedproperty.com/"],["CT","Connecticut","https://ctbiglist.gov/"],["DE","Delaware","https://unclaimedproperty.delaware.gov/"],
+["DC","District of Columbia","https://dc.findyourunclaimedproperty.com/"],["FL","Florida","https://fltreasurehunt.gov/index.jsp"],["GA","Georgia","https://dor.georgia.gov/unclaimed-property-program"],
+["HI","Hawaii","https://budget.hawaii.gov/finance/unclaimedproperty/"],["ID","Idaho","https://yourmoney.idaho.gov/"],["IL","Illinois","https://icash.illinoistreasurer.gov/"],
+["IN","Indiana","https://indianaunclaimed.gov/"],["IA","Iowa","https://www.iowatreasurer.gov/for-citizens/great-iowa-treasure-hunt/"],["KS","Kansas","https://kansascash.ks.gov/"],
+["KY","Kentucky","https://treasury.ky.gov/Pages/index.aspx"],["LA","Louisiana","http://LaCashClaim.org"],["ME","Maine","https://maineunclaimedproperty.gov/"],
+["MD","Maryland","https://www.marylandtaxes.gov/unclaimed-property/index.php"],["MA","Massachusetts","https://www.findmassmoney.com/"],["MI","Michigan","https://unclaimedproperty.michigan.gov/"],
+["MN","Minnesota","https://mn.gov/commerce/consumers/your-money/find-missing-money/"],["MS","Mississippi","https://treasury.ms.gov/for-citizens/unclaimed-property/"],["MO","Missouri","https://treasurer.mo.gov/UnclaimedProperty/"],
+["MT","Montana","https://mtrevenue.gov/"],["NE","Nebraska","https://treasurer.nebraska.gov/up/"],["NV","Nevada","http://www.nevadatreasurer.gov/Unclaimed_Property/UP_Home/"],
+["NH","New Hampshire","https://newhampshire.findyourunclaimedproperty.com/"],["NJ","New Jersey","https://www.unclaimedproperty.nj.gov/"],["NM","New Mexico","http://www.tax.newmexico.gov/Individuals/search-unclaimed-property.aspx"],
+["NY","New York","https://www.osc.state.ny.us/ouf/index.htm"],["NC","North Carolina","https://www.nccash.com/"],["ND","North Dakota","https://www.land.nd.gov/UnclaimedProperty/"],
+["OH","Ohio","https://www.com.ohio.gov/unfd/"],["OK","Oklahoma","https://www.oktreasure.com/"],["OR","Oregon","https://oregon.findyourunclaimedproperty.com/"],
+["PA","Pennsylvania","https://www.patreasury.gov/"],["RI","Rhode Island","https://findrimoney.com/"],["SC","South Carolina","https://www.treasurer.sc.gov/what-we-do/for-citizens/unclaimed-property-program/"],
+["SD","South Dakota","https://southdakota.findyourunclaimedproperty.com/"],["TN","Tennessee","https://treasury.tn.gov/Unclaimed-Property/Claim-Unclaimed-Property/Find-Your-Missing-Money"],["TX","Texas","https://claimittexas.org/"],
+["UT","Utah","https://mycash.utah.gov/"],["VT","Vermont","https://www.vermonttreasurer.gov/content/unclaimed-property"],["VA","Virginia","https://vamoneysearch.org/"],
+["WA","Washington","https://ucp.dor.wa.gov/"],["WV","West Virginia","https://www.wvtreasury.com/"],["WI","Wisconsin","https://www.revenue.wi.gov/Pages/UnclaimedProperty/Home.aspx"],
+["WY","Wyoming","https://statetreasurer.wyo.gov/UnclaimedProperty.aspx"],["PR","Puerto Rico","https://www.ocif.pr.gov/consumidores"],["VI","US Virgin Islands","https://ltg.gov.vi/departments/unclaimed-property/"],
+["GU","Guam","http://doa.guam.gov/treasurer-of-guam/"]];
+var CAP={CA:{p:10,u:"https://sco.ca.gov/upd_investigator_about.html"},WA:{p:5,u:"https://app.leg.wa.gov/rcw/default.aspx?cite=63.30.790"},NY:{p:15,u:"https://www.nysenate.gov/legislation/laws/ABP/1416"},FL:{p:30,u:"https://www.flsenate.gov/Laws/Statutes/2025/717.135"}};
+var HOME={AR:1,KY:1,MT:1,PA:1,WV:1,GU:1}; // NAUPA 링크가 기관 첫 쪽으로 감 → «Unclaimed Property» 메뉴를 찾으라고 안내
+VT.add({
+  title:{en:"Find Unclaimed Money (US) — VALUES AI Store",ko:"미국 주인 없는 돈 찾기 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"🔎 Find Unclaimed Money (US)",ko:"🔎 미국 주인 없는 돈 찾기"},
+  lead:{en:"Old paychecks, deposits, refunds and insurance money that nobody collected go to the state. Every state lets you search for free. Tick each state you have lived or worked in.",
+        ko:"찾아가지 않은 월급·보증금·환불금·보험금은 주 정부로 넘어갑니다. 어느 주든 조회는 공짜예요. 살았거나 일했던 주를 모두 고르세요."},
+  pick:{en:"States where you lived, worked or had an account",ko:"살았거나 일했거나 계좌가 있던 주"},
+  filter:{en:"Type to filter, e.g. Texas or TX",ko:"주 이름으로 찾기 (영어), 예: Texas"},
+  go:{en:"Show my search list",ko:"내 조회 목록 보기"},
+  clear:{en:"Clear",ko:"지우기"},
+  privacy:{en:"🔒 Your choices stay in this browser. We send nothing anywhere. The searches happen on the official state sites.",ko:"🔒 고른 것은 이 브라우저 안에만 있어요. 저희는 아무것도 보내지 않아요. 조회는 각 주의 공식 사이트에서 하세요."},
+  none:{en:"Pick at least one state first.",ko:"먼저 주를 하나 이상 고르세요."},
+  r_t:{en:"Search these {n} official sites (free)",ko:"공식 사이트 {n}곳에서 조회하세요 (공짜)"},
+  r_s:{en:"Search under every name you have used (maiden name, nicknames, initials) and your business names. Search again once a year — new money arrives all the time.",
+       ko:"써 온 이름 모두(결혼 전 성, 줄인 이름, 머리글자)와 가게 이름으로 찾아보세요. 새 돈이 늘 들어오니 해마다 한 번 다시 보세요."},
+  home:{en:"This link opens the agency's home page. Look for «Unclaimed Property».",ko:"이 링크는 기관 첫 쪽으로 가요. «Unclaimed Property» 메뉴를 찾으세요."},
+  cap:{en:"State law caps finder fees here at {p}% (",ko:"이 주는 법으로 찾아 주는 업체 수수료 상한이 {p}%예요 ("},
+  cap_l:{en:"law",ko:"법조문"},
+  mm_t:{en:"Also search several states at once",ko:"여러 주를 한 번에"},
+  mm:{en:"<a href=\"https://www.missingmoney.com/\" target=\"_blank\" rel=\"noopener\">MissingMoney.com</a> is the free multi-state search run by NAUPA, the states' own association. Most states take part, so also use each state site above.",
+      ko:"<a href=\"https://www.missingmoney.com/\" target=\"_blank\" rel=\"noopener\">MissingMoney.com</a> 은 주 정부들의 모임(NAUPA)이 운영하는 무료 여러 주 조회예요. 대부분의 주가 들어 있지만 모두는 아니니, 위의 주별 사이트도 함께 보세요."},
+  need_t:{en:"Have these ready before you claim",ko:"청구 전에 준비할 것"},
+  n1:{en:"Proof of identity: a copy of your driver's license, passport or Social Security card.",ko:"신분 증명: 운전면허증·여권·사회보장카드 사본."},
+  n2:{en:"Proof of ownership: something tying you to the address or account on the record, e.g. an old pay stub or utility bill.",ko:"내 것이라는 증명: 기록의 옛 주소나 계좌와 나를 잇는 것(예: 옛 급여 명세서, 공과금 고지서)."},
+  n3:{en:"Every address you lived at in that state, with rough years.",ko:"그 주에서 살았던 주소 전부와 대강의 연도."},
+  n4:{en:"If your name changed: a marriage certificate or court document.",ko:"이름이 바뀌었다면: 혼인 증명서나 법원 서류."},
+  n5:{en:"Claiming for someone who died: the death certificate and proof you are the heir or executor.",ko:"돌아가신 분 것을 찾을 때: 사망 증명서와 상속인·유언 집행인 증명."},
+  fee_t:{en:"You don't need to pay anyone",ko:"누구에게도 돈을 낼 필요가 없어요"},
+  fee:{en:"Some companies offer to find your money for a cut, often 5% to 30%. Doing it yourself on the official site is free. Never pay up front, and never give your SSN to someone who contacted you first.",
+       ko:"찾아 준다며 보통 5~30%를 수수료로 달라는 업체가 있어요. 공식 사이트에서 직접 하면 공짜예요. 먼저 돈을 내지 말고, 먼저 연락해 온 사람에게 사회보장번호를 알려 주지 마세요."},
+  print:{en:"Print or save this page",ko:"이 쪽 인쇄·저장"},
+  copy:{en:"Copy the list",ko:"목록 복사"},
+  copied:{en:"Copied.",ko:"복사했어요."},
+  how_t:{en:"How this works",ko:"이렇게 써요"},
+  h1s:{en:"Every link comes from the states' own association, NAUPA (unclaimed.org). We don't run any search ourselves.",ko:"모든 링크는 주 정부들의 모임 NAUPA(unclaimed.org)가 적어 둔 것이에요. 저희가 조회를 대신하지 않아요."},
+  h2s:{en:"Claims are free on every official site. Some take a few weeks and ask for documents.",ko:"공식 사이트의 청구는 모두 공짜예요. 몇 주 걸리고 서류를 달라고 하기도 해요."},
+  h3s:{en:"Federal money (old tax refunds, savings bonds, pensions) is not held by states. Check IRS, TreasuryDirect and the PBGC separately.",ko:"나라(연방) 돈 — 옛 세금 환급·저축 채권·연금 — 은 주가 맡지 않아요. 국세청(IRS)·TreasuryDirect·PBGC 에서 따로 보세요."},
+  legal:{en:"This is general information, not legal advice. We don't file claims for you or take any share of your money. Checked 22 November 2026; rules and sites can change.",
+         ko:"법률 상담이 아닙니다. 일반 안내예요. 저희는 대신 청구하지 않고 돈의 일부도 받지 않아요. 기준일 2026-11-22, 규칙과 사이트는 바뀔 수 있어요."},
+  src:{en:"Sources: unclaimed.org state list and claim guide; California SCO; RCW 63.30.790; NY Abandoned Property Law §1416; Fla. Stat. 717.135.",ko:"출처: unclaimed.org 주별 목록·청구 안내, 캘리포니아 감사관실, 워싱턴 RCW 63.30.790, 뉴욕 APL §1416, 플로리다 717.135."}
+});
+var sel={};
+function drawStates(){
+  var f=(document.getElementById("filter").value||"").trim().toLowerCase();
+  document.getElementById("states").innerHTML=ST.filter(function(s){return !f||s[1].toLowerCase().indexOf(f)>=0||s[0].toLowerCase()===f;}).map(function(s){
+    return '<label><input type="checkbox" data-s="'+s[0]+'"'+(sel[s[0]]?" checked":"")+'><span>'+VT.esc(s[1])+' <span class="note">'+s[0]+'</span></span></label>';
+  }).join("");
+  document.querySelectorAll("#states input").forEach(function(c){ c.onchange=function(){ if(c.checked) sel[c.dataset.s]=1; else delete sel[c.dataset.s]; }; });
+}
+var shown=false;
+function show(){
+  var out=document.getElementById("out"), E=VT.esc;
+  if(!shown){ out.classList.add("hidden"); return; }
+  var list=ST.filter(function(s){return sel[s[0]];});
+  if(!list.length){ out.innerHTML='<div class="verdict mid">'+VT.t("none")+'</div>'; out.classList.remove("hidden"); return; }
+  var h='<div class="verdict low">'+VT.t("r_t").replace("{n}",list.length)+'<small>'+VT.t("r_s")+'</small></div>';
+  h+=list.map(function(s){
+    var extra=[]; if(HOME[s[0]]) extra.push(VT.t("home"));
+    if(CAP[s[0]]) extra.push(VT.t("cap").replace("{p}",CAP[s[0]].p)+'<a href="'+CAP[s[0]].u+'" target="_blank" rel="noopener">'+VT.t("cap_l")+'</a>)');
+    return '<a class="go" href="'+E(s[2])+'" target="_blank" rel="noopener"><b>'+E(s[1])+' →</b><span class="note">'+E(s[2].replace(/^https?:\/\//,""))+'</span></a>'+(extra.length?'<p class="note" style="margin:-4px 0 10px 6px">'+extra.join(" · ")+'</p>':'');
+  }).join("");
+  h+='<h2 style="margin-top:18px">'+VT.t("mm_t")+'</h2><p>'+VT.t("mm")+'</p>';
+  h+='<h2>'+VT.t("need_t")+'</h2><ul class="signals">'+["n1","n2","n3","n4","n5"].map(function(k){return '<li>'+VT.t(k)+'</li>';}).join("")+'</ul>';
+  h+='<div class="verdict mid">'+VT.t("fee_t")+'<small>'+VT.t("fee")+'</small></div>';
+  h+='<p class="legal">'+VT.t("legal")+'</p>';
+  h+='<div class="row no-print"><button class="btn ghost" id="cp" type="button">'+VT.t("copy")+'</button><button class="btn ghost" id="pr" type="button">'+VT.t("print")+'</button><span class="note" id="cpok"></span></div>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  document.getElementById("pr").onclick=function(){ window.print(); };
+  document.getElementById("cp").onclick=function(){
+    var t=list.map(function(s){return s[1]+": "+s[2];}).join("\n")+"\nMissingMoney.com: https://www.missingmoney.com/\n\n"+["n1","n2","n3","n4","n5"].map(function(k){return "- "+VT.t(k).replace(/<[^>]+>/g,"");}).join("\n");
+    var ok=function(){document.getElementById("cpok").textContent=VT.t("copied");};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,function(){prompt("",t);}); else prompt("",t);
+  };
+}
+document.getElementById("filter").oninput=drawStates;
+document.getElementById("go").onclick=function(){ shown=true; show(); document.getElementById("out").scrollIntoView({behavior:"smooth",block:"start"}); };
+document.getElementById("clear").onclick=function(){ sel={}; shown=false; document.getElementById("filter").value=""; drawStates(); show(); };
+VT.onLang=function(){ drawStates(); show(); }; VT.mountChrome(); VT.apply(); drawStates();
+</script>
+</body>
+</html>

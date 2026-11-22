@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사고 차값 떨어진 돈 계산기 — 밸류스 AI 백화점</title>
+<meta name="description" content="남이 내 차를 박아 고쳤다면, 차값이 떨어진 돈(시세하락손해)을 자동차보험 표준약관대로 계산하고 상대 보험사에 보낼 요청서를 직접 만드세요. 수수료 없음.">
+<link rel="canonical" href="https://valuestools.kr/ai/carvalue.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="사고 차값 떨어진 돈 계산기 · Car Value-Loss Calculator (Korea) — 밸류스 AI 백화점">
+<meta property="og:description" content="출고일·차값·수리비를 넣으면 시세하락손해를 약관대로 계산하고 요청서를 만들어요. Korean auto-insurance diminished-value calculator.">
+<meta property="og:url" content="https://valuestools.kr/ai/carvalue.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/carvalue.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="carvalue-engine.js"></script>
+<style>
+.f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f label{display:block;font-size:14px;color:var(--ink-2);font-weight:600}
+.f input,.lt input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:46px;margin-top:4px}
+.legal{font-size:13.5px;color:var(--ink-2);border-left:3px solid var(--mustard);padding:6px 10px;margin-top:12px}
+.lt .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lt label{font-size:14px;color:var(--ink-2);font-weight:600}
+pre.letter{white-space:pre-wrap;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:14px;font:inherit;font-size:15px}
+@media (max-width:640px){.f,.lt .grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <div class="f">
+        <div><label for="made" data-i="l_made"></label><input id="made" type="date"></div>
+        <div><label for="crash" data-i="l_crash"></label><input id="crash" type="date"></div>
+        <div><label for="value" data-i="l_value"></label><input id="value" inputmode="numeric" data-i-ph="ph_won"></div>
+        <div><label for="repair" data-i="l_repair"></label><input id="repair" inputmode="numeric" data-i-ph="ph_won"></div>
+        <div><label for="fault" data-i="l_fault"></label><input id="fault" type="number" min="0" max="100" inputmode="numeric" data-i-ph="ph_fault"></div>
+      </div>
+      <div class="row"><button class="btn" id="go" type="button" data-i="go"></button><button class="btn ghost" id="sample" type="button" data-i="sample"></button></div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol>
+      <p class="legal" data-i="legal"></p><p class="note" data-i="src"></p></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Car Value-Loss Calculator (Korea) — VALUES AI Store",ko:"사고 차값 떨어진 돈 계산기 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"🚗 Car Value-Loss Calculator (Korea)",ko:"🚗 사고 차값 떨어진 돈 계산기"},
+  lead:{en:"If someone else hit your car in Korea and it was repaired, the other driver's insurer may owe you for the drop in resale value («sise harak sonhae»). Work out the standard amount and write your own request.",
+        ko:"남이 내 차를 박아 고쳤다면, 중고차 값이 떨어진 돈(시세하락손해)을 상대 보험사에 따로 달라고 할 수 있어요. 보험사가 먼저 말해 주지 않는 경우가 많아요. 약관대로 계산하고 요청서를 직접 만드세요."},
+  l_made:{en:"Date the car was first delivered",ko:"출고일 (처음 차를 받은 날)"}, l_crash:{en:"Accident date",ko:"사고일"},
+  l_value:{en:"Car's market value just before the accident (KRW)",ko:"사고 직전 차값 (중고 시세, 원)"}, l_repair:{en:"Repair cost (KRW)",ko:"수리비 (원)"},
+  l_fault:{en:"Your share of fault (%)",ko:"내 잘못 비율 (%)"}, ph_won:{en:"e.g. 25000000",ko:"예) 25,000,000"}, ph_fault:{en:"0 if none",ko:"없으면 0"},
+  go:{en:"Calculate",ko:"계산하기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  privacy:{en:"🔒 Worked out inside this browser only. Nothing is sent anywhere.",ko:"🔒 이 브라우저 안에서만 계산해요. 어디에도 보내지 않아요."},
+  e_input:{en:"Fill in both dates, the car value and the repair cost.",ko:"두 날짜와 차값, 수리비를 넣어 주세요."},
+  e_dates:{en:"The accident date is before the delivery date.",ko:"사고일이 출고일보다 앞이에요."},
+  e_fault:{en:"Fault share must be 0 to 100.",ko:"잘못 비율은 0~100 사이로 넣어 주세요."},
+  r_ok:{en:"Likely covered: about ₩{a} by the standard terms",ko:"받을 가능성이 높아요: 약관 기준 약 {a}원"},
+  r_ok_s:{en:"Repair ₩{r} × {p}% (car {y} old){f}.",ko:"수리비 {r}원 × {p}% (출고 후 {y}){f}."},
+  r_fault:{en:", minus your {n}% fault (₩{b} → ₩{a})",ko:", 내 잘못 {n}%를 빼서 {b}원 → {a}원"},
+  y1:{en:"1 year or less",ko:"1년 이하"}, y2:{en:"1 to 2 years",ko:"1년 넘고 2년 이하"}, y3:{en:"2 to 5 years",ko:"2년 넘고 5년 이하"},
+  r_old:{en:"Probably not covered: the car was more than 5 years old at the accident",ko:"해당 없을 가능성이 커요: 사고 때 출고 후 5년이 넘었어요"},
+  r_small:{en:"Probably not covered: the repair was not more than 20% of the car's value",ko:"해당 없을 가능성이 커요: 수리비가 차값의 20%를 넘지 않아요"},
+  r_small_s:{en:"Repair is {p}% of the value. The standard terms need more than 20%.",ko:"수리비가 차값의 {p}%예요. 약관은 20%를 «넘어야» 줘요."},
+  r_my:{en:"Not covered: at 100% fault the other side pays nothing for your car",ko:"해당 없어요: 내 잘못이 100%면 상대가 내 차 값을 물어 주지 않아요"},
+  more_t:{en:"It can be worth more",ko:"더 받을 수도 있어요"},
+  more:{en:"The standard terms often pay less than the real loss. In a Financial Supervisory Service case (Nov 2025) the car lost ₩5m in value, but the terms paid ₩1.2m (20% of a ₩6m repair). Courts can award a different amount from the terms, so a larger real loss is sometimes won in court.",
+        ko:"약관 금액은 실제 떨어진 값보다 적을 때가 많아요. 금융감독원 사례(2025년 11월)에서 실제로는 500만 원이 떨어졌지만 약관대로는 수리비 600만 원의 20%인 120만 원이었어요. 법원 판결은 약관과 다를 수 있어서, 실제 하락이 더 크면 소송으로 더 받는 경우도 있어요."},
+  how_ask_t:{en:"How to ask",ko:"이렇게 요청하세요"},
+  s1:{en:"Call or write to the other driver's insurer (property-damage claims handler) and ask for the diminished-value payment («sise harak sonhae») separately from the repair cost.",ko:"상대 보험사 대물 담당자에게 수리비와 따로 «시세하락손해»를 달라고 전화하거나 글로 보내세요."},
+  s2:{en:"Send the request below with the repair estimate or invoice.",ko:"아래 요청서와 수리 견적서·수리비 영수증을 함께 보내세요."},
+  s3:{en:"If they refuse without a reason, you can file a complaint with the Financial Supervisory Service (call 1332, fss.or.kr).",ko:"까닭 없이 거절하면 금융감독원에 민원을 낼 수 있어요(국번 없이 1332, fss.or.kr)."},
+  lt_t:{en:"Request letter",ko:"요청서 만들기"},
+  lt_ko:{en:"The request letter is written in Korean for a Korean insurer. Switch the page to Korean (top right) to make it.",ko:""},
+  l_me:{en:"Your name",ko:"내 이름"}, l_car:{en:"Car number",ko:"차량 번호"}, l_ins:{en:"Other insurer",ko:"상대 보험사"}, l_no:{en:"Claim number",ko:"사고 접수 번호"}, l_tel:{en:"Phone",ko:"연락처"},
+  b_make:{en:"Make the request",ko:"요청서 만들기"}, b_copy:{en:"Copy",ko:"복사"}, b_txt:{en:"Download .txt",ko:".txt 내려받기"}, copied:{en:"Copied.",ko:"복사했어요."},
+  how_t:{en:"How it is calculated",ko:"이렇게 계산해요"},
+  h1s:{en:"Covered: cars up to 5 years from delivery, when the repair costs more than 20% of the value just before the accident.",ko:"대상: 출고 후 5년 이하인 차이고, 수리비가 사고 직전 차값의 20%를 넘을 때."},
+  h2s:{en:"Amount: 20% of the repair (up to 1 year), 15% (1–2 years), 10% (2–5 years). Age is counted on the accident date.",ko:"금액: 수리비의 20%(출고 후 1년 이하) · 15%(1년 넘고 2년 이하) · 10%(2년 넘고 5년 이하). 나이는 사고 날 기준."},
+  h3s:{en:"Your own share of fault is taken off, as for other property damage.",ko:"다른 대물 배상처럼 내 잘못 비율만큼 줄어요."},
+  legal:{en:"This is general information, not legal advice. It does not promise payment. We don't contact insurers for you or take any share. Standard terms checked 22 November 2026.",
+         ko:"법률 상담이 아닙니다. 지급을 약속하지 않아요. 저희는 보험사에 대신 연락하거나 대신 받아 주지 않고, 받은 돈의 일부도 받지 않아요. 기준일 2026-11-22 (자동차보험 표준약관)."},
+  src:{en:"Source: Standard auto-insurance terms, property damage payment standard 6 (Supervisory Regulation on Insurance Business, Annex 15), as quoted in the FSS press release of 24 Nov 2025.",
+       ko:"출처: 자동차보험 표준약관 <별표 2> 대물배상 지급 기준 6(보험업감독업무시행세칙 별표15), 금융감독원 보도자료 2025-11-24 「자동차 시세하락 손해 관련」."}
+});
+var last=null, lastIn=null;
+function num(id){ return +String(document.getElementById(id).value).replace(/[^0-9.]/g,""); }
+function won(v){ return Math.round(v).toLocaleString("ko-KR"); }
+function show(){
+  var out=document.getElementById("out"), r=last, x=lastIn, h="";
+  if(!r){ out.classList.add("hidden"); return; }
+  if(r.reason==="input"||r.reason==="dates"||r.reason==="fault") h='<div class="verdict mid">'+VT.t("e_"+r.reason)+'</div>';
+  else if(r.ok){
+    var f=+x.fault>0?VT.t("r_fault").replace("{n}",+x.fault).replace("{b}",won(r.base)).replace("{a}",won(r.amount)):"";
+    h='<div class="verdict high">'+VT.t("r_ok").replace("{a}",won(r.amount))+'<small>'+VT.t("r_ok_s").replace("{r}",won(x.repair)).replace("{p}",Math.round(r.rate*100)).replace("{y}",VT.t("y"+r.ageBand)).replace("{f}",f)+'</small></div>';
+  } else if(r.reason==="old") h='<div class="verdict low">'+VT.t("r_old")+'</div>';
+  else if(r.reason==="small") h='<div class="verdict low">'+VT.t("r_small")+'<small>'+VT.t("r_small_s").replace("{p}",(r.ratio*100).toFixed(1))+'</small></div>';
+  else if(r.reason==="myfault") h='<div class="verdict low">'+VT.t("r_my")+'</div>';
+  if(r.reason!=="input"&&r.reason!=="dates"&&r.reason!=="fault"){
+    h+='<h2 style="margin-top:16px">'+VT.t("more_t")+'</h2><p class="sub">'+VT.t("more")+'</p>';
+    if(r.ok){
+      h+='<h2>'+VT.t("how_ask_t")+'</h2><ol class="steps"><li>'+VT.t("s1")+'</li><li>'+VT.t("s2")+'</li><li>'+VT.t("s3")+'</li></ol>';
+      h+='<div class="lt"><h2>'+VT.t("lt_t")+'</h2>';
+      if(VT.lang!=="ko") h+='<p class="sub">'+VT.t("lt_ko")+'</p>';
+      else h+='<div class="grid2">'+['me','car','ins','no','tel'].map(function(k){return '<div><label for="lt_'+k+'">'+VT.t("l_"+k)+'</label><input id="lt_'+k+'" autocomplete="off"></div>';}).join("")+'</div><div class="row"><button class="btn" id="mk" type="button">'+VT.t("b_make")+'</button></div><div id="ltout"></div>';
+      h+='</div>';
+    }
+  }
+  h+='<p class="legal">'+VT.t("legal")+'</p>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  var mk=document.getElementById("mk"); if(mk) mk.onclick=makeLetter;
+}
+function v(id,ph){ var e=document.getElementById(id), s=e&&e.value.trim(); return s||"["+ph+"]"; }
+function letterText(){
+  var r=last, x=lastIn, f=+x.fault>0;
+  return "[자동차 시세하락손해 지급 요청서]\n\n"+
+  "받는 곳: "+v("lt_ins","상대 보험사")+" 대물보상 담당자님\n사고 접수 번호: "+v("lt_no","사고 접수 번호")+"\n차량 번호: "+v("lt_car","차량 번호")+"\n\n"+
+  "안녕하세요. "+x.crash+" 사고로 수리한 제 차량의 시세하락손해(자동차시세 하락손해) 지급을 요청드립니다.\n\n"+
+  "1. 출고일: "+x.made+" (사고 당시 출고 후 "+VT.t("y"+r.ageBand)+")\n"+
+  "2. 사고 직전 차량가액: "+won(x.value)+"원\n"+
+  "3. 수리비: "+won(x.repair)+"원 (차량가액의 "+(r.ratio*100).toFixed(1)+"%로 20%를 넘음)\n"+
+  "4. 자동차보험 표준약관 <별표 2> 대물배상 지급 기준 6. 자동차시세 하락손해에 따른 인정기준액: 수리비의 "+Math.round(r.rate*100)+"% = "+won(r.base)+"원\n"+
+  (f?"5. 제 과실 "+(+x.fault)+"%를 뺀 금액: "+won(r.amount)+"원\n":"")+
+  "\n위 기준에 따라 시세하락손해 "+won(r.amount)+"원을 지급해 주시기 바랍니다. 수리 견적서(또는 수리비 영수증)를 함께 보냅니다.\n"+
+  "지급이 어렵다면 그 까닭과 근거를 글로 알려 주시기 바랍니다. 실제 시세 하락이 약관 기준액보다 크다면, 그 부분은 따로 말씀드릴 수 있음을 알려 드립니다.\n\n"+
+  "보내는 사람: "+v("lt_me","이름")+"\n연락처: "+v("lt_tel","연락처")+"\n날짜: "+new Date().toISOString().slice(0,10)+"\n";
+}
+function makeLetter(){
+  var t=letterText(), o=document.getElementById("ltout");
+  o.innerHTML='<pre class="letter" id="lttxt"></pre><div class="row no-print"><button class="btn ghost" id="cp" type="button">'+VT.t("b_copy")+'</button><button class="btn ghost" id="dl" type="button">'+VT.t("b_txt")+'</button><span class="note" id="cpok"></span></div>';
+  document.getElementById("lttxt").textContent=t;
+  document.getElementById("cp").onclick=function(){ var ok=function(){document.getElementById("cpok").textContent=VT.t("copied");};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,function(){prompt("",t);}); else prompt("",t); };
+  document.getElementById("dl").onclick=function(){ var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob(["﻿"+t],{type:"text/plain;charset=utf-8"})); a.download="시세하락손해_요청서.txt"; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500); };
+}
+function run(){
+  lastIn={ made:document.getElementById("made").value, crash:document.getElementById("crash").value, value:num("value"), repair:num("repair"), fault:document.getElementById("fault").value };
+  last=CarValue.calc(lastIn); show(); document.getElementById("out").scrollIntoView({behavior:"smooth",block:"start"});
+}
+["value","repair"].forEach(function(id){ var e=document.getElementById(id); e.addEventListener("blur",function(){ var n=num(id); if(n) e.value=won(n); }); });
+document.getElementById("go").onclick=run;
+document.getElementById("sample").onclick=function(){
+  var t=new Date(), c=new Date(t.getFullYear(),t.getMonth()-1,10), m=new Date(c.getFullYear()-1,c.getMonth()+3,1);
+  var f=function(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);};
+  document.getElementById("made").value=f(m); document.getElementById("crash").value=f(c);
+  document.getElementById("value").value=won(25000000); document.getElementById("repair").value=won(6000000); document.getElementById("fault").value="0"; run();
+};
+VT.onLang=show; VT.mountChrome(); VT.apply();
+</script>
+</body>
+</html>

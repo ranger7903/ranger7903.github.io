@@ -37,7 +37,7 @@
 
   /* ── 영어로 볼 때 주소를 영어 짝 쪽(○○-en.html)으로 바꿔 둔다 (2026-11-21)
      그래야 손님이 주소를 복사해 나눠도 영어 공유 그림(og/en)이 뜬다. 짝 쪽은 이 쪽으로 되돌려 보내기만 한다. */
-  VT.EN_TWIN = ["askfam", "cancel", "care", "careshare", "complaint", "couple", "daily", "fridge", "gongmun", "grammar", "index", "korean", "lease", "meeting", "nightsky", "notice", "paper", "plans", "reply", "review", "reviewmonth", "saju", "scam", "school", "season", "shopmini", "skyletter", "speak", "subs", "swap", "table", "tripcost", "week"];
+  VT.EN_TWIN = ["askfam", "cancel", "care", "careshare", "claimkr", "complaint", "flightcomp", "unclaimedus", "carvalue", "couple", "daily", "fridge", "gongmun", "grammar", "index", "korean", "lease", "meeting", "nightsky", "notice", "paper", "plans", "reply", "review", "reviewmonth", "saju", "scam", "school", "season", "shopmini", "skyletter", "speak", "subs", "swap", "table", "tripcost", "week"];
   VT.baseFile = function () {
     var f = location.pathname.split("/").pop() || "index.html";
     if (f === "en.html") return "index.html";
@@ -68,7 +68,8 @@
     foot_terms: { en: "Terms", ko: "이용약관" },
     foot_priv: { en: "Privacy", ko: "개인정보 처리방침" },
     foot_refund: { en: "Refunds", ko: "환불 안내" },
-    foot_mail: { en: "Questions: ranger7903@nate.com", ko: "문의: ranger7903@nate.com" }
+    foot_mail: { en: "Questions: ranger7903@nate.com", ko: "문의: ranger7903@nate.com" },
+    foot_copy: { en: "© 2026 VALUES", ko: "© 2026 VALUES (사재기)" }
   });
 
   VT.mountChrome = function () {
@@ -85,7 +86,7 @@
     f.innerHTML = '<div class="shell"><p data-i="foot_line"></p><p>' +
       '<a href="../사업자정보.html" data-i="foot_biz"></a><a href="../terms.html" data-i="foot_terms"></a>' +
       '<a href="../privacy.html" data-i="foot_priv"></a><a href="../refund.html" data-i="foot_refund"></a></p>' +
-      '<p data-i="foot_mail"></p><p>© 2026 VALUES (사재기)</p></div>';
+      '<p data-i="foot_mail"></p><p data-i="foot_copy"></p></div>';
     document.body.appendChild(f);
     document.getElementById("vtLang").addEventListener("click", function () { VT.setLang(VT.lang === "ko" ? "en" : "ko"); });
     var prog = document.getElementById("vtProg");
@@ -119,6 +120,9 @@
     R("complaint", "money", "📮", "Refund or Complaint Letter", "환불·항의 편지", "Turn what went wrong into a calm, firm letter with one clear request.", "있었던 일을 차분히 적고 원하는 것 하나를 분명히 말하는 편지.", "refund complaint letter return broken 환불 항의 교환 고장 불량", "open", "complaint.html"),
     R("cancel", "money", "✂️", "Cancel This Subscription", "해지 편지", "A clear message that stops future charges and asks for written confirmation.", "앞으로의 결제를 멈추고 해지를 글로 확인받는 짧은 글.", "cancel subscription membership 해지 탈퇴 구독 회원권 자동결제", "open", "cancel.html"),
     R("paper", "money", "📄", "What Does This Paper Mean?", "이 종이 무슨 뜻이에요", "A photo of a bill or statement, explained line by line in plain words.", "고지서·명세서 사진을 줄마다 쉬운 말로 풀어 드려요.", "bill statement explain 고지서 명세서 관리비 병원비", "open", "paper.html"),
+    R("claimkr", "money", "🧾", "Money I Can Claim (Korea)", "내가 받을 수 있는 돈 찾기", "Ten questions, then the free official Korean sites for hidden insurance money, dormant accounts, tax refunds and benefits.", "질문 10개로 숨은 보험금·잠든 통장·세금 환급·지원금을 공짜로 찾는 공식 사이트와 차례, 기한을 카드로.", "claim refund insurance dormant account tax benefit korea 숨은 보험금 휴면예금 환급 지원금 보조금 실손 원클릭 내보험찾아줌", "open", "claimkr.html", true),
+    R("unclaimedus", "money", "🔎", "Find Unclaimed Money (US)", "미국 주인 없는 돈 찾기", "Pick the states you lived in. Go straight to each official free search, with what to have ready. No finder fees.", "살았던 주를 고르면 그 주의 공식 무료 조회 사이트와 준비할 것을 한 장으로.", "unclaimed property money missing state treasury usa america 미국 미청구 재산 주인 없는 돈", "open", "unclaimedus.html", true),
+    R("carvalue", "money", "🚗", "Car Value-Loss Calculator (Korea)", "사고 차값 떨어진 돈 계산기", "Someone hit your car and it was repaired? Work out the standard diminished-value payment and write your own request.", "남이 박아 고친 내 차, 시세하락손해를 약관대로 계산하고 상대 보험사에 보낼 요청서를 만들어요.", "car accident diminished value insurance korea 자동차 사고 시세하락손해 격락손해 차값 보험사", "soon", "carvalue.html", true),
     R("lease", "money", "🏠", "Before You Sign a Lease", "집 계약 전 점검", "Marks the lines to check in a property register or lease, with a checklist.", "등기부등본·계약서에서 살펴볼 줄을 짚고 확인표를 만들어 드려요.", "lease rent deed 전세 등기부 계약", "open", "lease.html"),
     R("fridge", "home", "🥕", "Fridge-Photo Dinner", "냉장고 한 장 밥상", "One photo of your fridge, three dishes you can make right now.", "냉장고 사진 한 장으로 지금 만들 요리 세 가지.", "fridge cook recipe dinner 냉장고 요리 반찬 저녁", "open", "fridge.html"),
     R("week", "home", "🗓️", "Zero-Leftover Week", "남는 것 없는 일주일 밥", "A week of meals that uses up the half onion too, plus a shopping list.", "양파 반 개까지 다 쓰는 일주일 식단과 장볼 목록.", "meal plan grocery 식단 장보기", "open", "week.html"),
@@ -139,6 +143,7 @@
     R("reviewmonth", "shop", "📈", "This Month's Reviews", "이번 달 리뷰 한 장", "Three praises, three complaints and one thing to fix.", "칭찬 3 · 불만 3 · 고칠 것 1.", "review summary 리뷰 요약", "open", "reviewmonth.html"),
     R("shopmini", "shop", "🧑‍🍳", "Shop Assistant Taster", "가게 비서 맛보기", "Two short replies to a customer question, using only your shop facts.", "손님 문의에 보낼 짧은 답장 두 가지. 적어 주신 가게 정보만 써요.", "shop assistant 가게 비서", "open", "shopmini.html"),
     R("trip", "travel", "🗺️", "Trip on One Page", "여행 한 장", "A plan that fits your energy and walking distance, with official links.", "체력과 걷는 거리에 맞춘 일정표, 곳마다 공식 링크.", "trip itinerary 여행 일정", "soon"),
+    R("flightcomp", "travel", "✈️", "Flight Delay Compensation Checker", "비행기 지연 보상 확인기", "Late 3+ hours, cancelled or bumped in Europe or the UK? Check EU261 / UK261 and write your own claim letter. You keep 100%.", "유럽·영국 비행이 3시간 넘게 늦었거나 결항됐나요? 받을 수 있는지 확인하고 항공사에 보낼 편지를 직접 만들어요.", "flight delay cancelled compensation eu261 uk261 airline claim refund 비행기 지연 결항 보상 항공사 유럽", "open", "flightcomp.html", true),
     R("tripcost", "travel", "💵", "True Trip Cost", "진짜 총비용 계산기", "Flights, stay, fees and taxes added up, with what is missing.", "항공·숙소·수수료·세금을 다 합치고 빠진 항목까지.", "trip cost budget 여행 비용", "open", "tripcost.html"),
     R("around", "travel", "📍", "Around My Stay", "숙소 둘레 한 장", "Cash machines, shops, pharmacies and food within 10 minutes' walk.", "걸어서 10분 안의 현금인출기·편의점·약국·식당.", "hotel nearby 숙소 주변", "soon"),
     R("slowletter", "romance", "💌", "Slow Letter", "느린 편지", "A letter that arrives on the day you choose. Sealed until then.", "내가 고른 날에 도착하는 편지. 그날까지 봉인돼요.", "letter future 편지 미래 1년 뒤", "soon"),
@@ -182,8 +187,9 @@
     speak: ["grammar", "korean"], korean: ["speak", "notice"], grammar: ["speak", "reply"],
     reply: ["meeting", "gongmun"], meeting: ["reply", "table"], table: ["meeting", "gongmun"], gongmun: ["reply", "grammar"],
     review: ["reviewmonth", "shopmini"], reviewmonth: ["review", "shopmini"], shopmini: ["review", "reviewmonth"],
-    tripcost: ["speak", "nightsky"], daily: ["nightsky", "couple"], nightsky: ["saju", "couple"], couple: ["nightsky", "skyletter"],
-    skyletter: ["season", "nightsky"], season: ["daily", "couple"]
+    tripcost: ["flightcomp", "speak"], daily: ["nightsky", "couple"], nightsky: ["saju", "couple"], couple: ["nightsky", "skyletter"],
+    skyletter: ["season", "nightsky"], season: ["daily", "couple"],
+    flightcomp: ["tripcost", "complaint"], claimkr: ["carvalue", "subs"], unclaimedus: ["subs", "scam"], carvalue: ["claimkr", "complaint"]
   };
   VT.mountNext = function () {
     var file = VT.baseFile();
@@ -198,4 +204,15 @@
     var prev = VT.onLang; VT.onLang = function () { if (prev) prev(); drawNext(); };
     drawNext();
   };
+
+  /* ── 폰 홈 화면에 붙이기 (2026-11-22): 방마다 manifest 를 걸고, 아무것도 가로채지 않는 작은 서비스워커(sw.js)를 건다.
+     서비스워커는 저장(캐시)도 하지 않고 요청을 건드리지 않는다 — 다른 방이 예전과 똑같이 돈다. */
+  try {
+    if (/\/ai\//.test(location.pathname) && !document.querySelector('link[rel="manifest"]')) {
+      var mf = document.createElement("link"); mf.rel = "manifest"; mf.href = "manifest.json"; document.head.appendChild(mf);
+      var tc = document.createElement("meta"); tc.name = "theme-color"; tc.content = "#D97757"; document.head.appendChild(tc);
+    }
+    if ("serviceWorker" in navigator && location.protocol === "https:" && /\/ai\//.test(location.pathname))
+      window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(function () {}); });
+  } catch (e) {}
 })();

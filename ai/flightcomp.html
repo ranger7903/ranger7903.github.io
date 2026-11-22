@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flight Delay Compensation Checker — VALUES AI Store</title>
+<meta name="description" content="Was your flight 3+ hours late, cancelled or overbooked? Check EU261 and UK261 compensation (€250–€600 / £220–£520) and write your own claim letter for free. You keep 100%.">
+<link rel="canonical" href="https://valuestools.kr/ai/flightcomp.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="비행기 지연 보상 확인기 · Flight Delay Compensation Checker — 밸류스 AI 백화점">
+<meta property="og:description" content="3시간 넘게 늦었나요? 유럽·영국 규칙으로 받을 돈을 확인하고 항공사에 보낼 편지를 직접 만드세요. Check EU261/UK261 and write your own claim letter. You keep 100%.">
+<meta property="og:url" content="https://valuestools.kr/ai/flightcomp.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/flightcomp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="flightcomp-config.js"></script>
+<script src="flightcomp-engine.js"></script>
+<style>
+.f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f label{display:block;font-size:14px;color:var(--ink-2);font-weight:600}
+.f input,.f select,.lt input,.lt textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:46px;margin-top:4px}
+.f .wide{grid-column:1/-1}
+.ev{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.ev label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--cream);font-weight:600;color:var(--ink);cursor:pointer;min-height:46px}
+.ev input{width:20px;height:20px;min-height:0;margin:0}
+.sug{position:relative}
+.sug .list{position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--cream-2);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:300px;overflow:auto}
+.sug .list button{display:block;width:100%;text-align:left;font:inherit;font-size:15px;border:0;border-bottom:1px solid var(--line-soft);background:none;color:var(--ink);padding:10px 12px;min-height:44px;cursor:pointer}
+.sug .pickd{font-size:13px;color:var(--ink-2);margin-top:3px;min-height:18px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.two .btn{width:100%;min-height:52px}
+.legal{font-size:13.5px;color:var(--ink-2);border-left:3px solid var(--mustard);padding:6px 10px;margin-top:12px}
+.lt{margin-top:14px}
+.lt .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lt label{font-size:14px;color:var(--ink-2);font-weight:600}
+pre.letter{white-space:pre-wrap;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:14px;font:inherit;font-size:15px}
+@media (max-width:640px){.f,.two,.lt .grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=travel" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <div class="f">
+        <div><label for="fn" data-i="l_fn"></label><input id="fn" autocomplete="off" data-i-ph="ph_fn"></div>
+        <div><label for="date" data-i="l_date"></label><input id="date" type="date"></div>
+        <div class="sug"><label for="from" data-i="l_from"></label><input id="from" autocomplete="off" data-i-ph="ph_ap"><div class="list hidden" id="from_l"></div><div class="pickd" id="from_p"></div></div>
+        <div class="sug"><label for="to" data-i="l_to"></label><input id="to" autocomplete="off" data-i-ph="ph_ap"><div class="list hidden" id="to_l"></div><div class="pickd" id="to_p"></div></div>
+        <div class="wide"><label for="airline" data-i="l_air"></label>
+          <select id="airline"><option value="unknown" data-i="a_unknown"></option><option value="eu" data-i="a_eu"></option><option value="uk" data-i="a_uk"></option><option value="other" data-i="a_other"></option></select>
+          <div class="pickd" id="air_p"></div></div>
+        <div class="wide"><label data-i="l_ev"></label>
+          <div class="ev">
+            <label><input type="radio" name="ev" value="delay"><span data-i="e_delay"></span></label>
+            <label><input type="radio" name="ev" value="cancel"><span data-i="e_cancel"></span></label>
+            <label><input type="radio" name="ev" value="denied"><span data-i="e_denied"></span></label>
+          </div></div>
+        <div class="wide hidden" id="g_delay"><label for="dh" data-i="l_delay"></label>
+          <div class="two" style="margin-top:4px"><input id="dh" type="number" min="0" max="72" inputmode="numeric" data-i-ph="ph_h"><input id="dm" type="number" min="0" max="59" inputmode="numeric" data-i-ph="ph_m"></div>
+          <p class="note" data-i="delay_note"></p></div>
+        <div class="wide hidden" id="g_cancel"><label for="nd" data-i="l_notice"></label><input id="nd" type="number" min="0" max="365" inputmode="numeric" data-i-ph="ph_days"></div>
+        <div class="wide hidden" id="g_denied"><div class="ev"><label><input type="checkbox" id="vol"><span data-i="l_vol"></span></label></div></div>
+        <div class="wide hidden" id="g_re"><div class="ev"><label><input type="checkbox" id="re"><span data-i="l_re"></span></label></div>
+          <div class="two hidden" id="g_re2" style="margin-top:6px">
+            <div><label for="rde" data-i="l_rde"></label><input id="rde" type="number" min="0" max="48" step="0.5" inputmode="decimal" data-i-ph="ph_h"></div>
+            <div><label for="ral" data-i="l_ral"></label><input id="ral" type="number" min="0" max="72" step="0.5" inputmode="decimal" data-i-ph="ph_h"></div></div></div>
+        <div class="wide" id="g_reason"><label for="reason" data-i="l_reason"></label>
+          <select id="reason">
+            <option value="unknown" data-i="r_unknown"></option><option value="none" data-i="r_none"></option><option value="technical" data-i="r_technical"></option>
+            <option value="crew" data-i="r_crew"></option><option value="airline_strike" data-i="r_airline_strike"></option><option value="weather" data-i="r_weather"></option>
+            <option value="atc" data-i="r_atc"></option><option value="airport_strike" data-i="r_airport_strike"></option><option value="security" data-i="r_security"></option>
+            <option value="bird" data-i="r_bird"></option><option value="political" data-i="r_political"></option></select></div>
+      </div>
+      <div class="row"><button class="btn" id="go" type="button" data-i="go"></button><button class="btn ghost" id="sample" type="button" data-i="sample"></button></div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li><li data-i="h4s"></li></ol>
+      <p class="legal" data-i="legal"></p>
+      <p class="note" data-i="src"></p></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Flight Delay Compensation Checker — VALUES AI Store",ko:"비행기 지연 보상 확인기 — 밸류스 AI 백화점"},
+  back:{en:"← Travel",ko:"← 여행"},
+  h1:{en:"✈️ Flight Delay Compensation Checker",ko:"✈️ 비행기 지연 보상 확인기"},
+  lead:{en:"Late by 3 hours or more, cancelled, or bumped off a flight to, from or within Europe or the UK? Check what the rules say, then write your own claim letter. Free, and you keep 100%.",
+        ko:"유럽·영국을 오가는 비행기가 3시간 넘게 늦었거나 결항·탑승 거부를 당했나요? 규칙으로 받을 수 있는지 확인하고, 항공사에 보낼 편지를 직접 만드세요. 공짜이고 보상금은 100% 손님 것이에요."},
+  l_fn:{en:"Flight number (optional)",ko:"편명 (안 써도 돼요)"}, ph_fn:{en:"e.g. LH712",ko:"예) KE901"},
+  l_date:{en:"Flight date",ko:"비행 날짜"},
+  l_from:{en:"From (airport)",ko:"출발 공항"}, l_to:{en:"To (final destination)",ko:"도착 공항 (마지막 목적지)"},
+  ph_ap:{en:"City, airport or 3-letter code",ko:"도시·공항 이름(영어) 또는 세 글자 코드, 예: ICN"},
+  l_air:{en:"Airline that operated the flight",ko:"실제로 띄운 항공사"},
+  a_unknown:{en:"Not sure",ko:"잘 모름"}, a_eu:{en:"EU, Iceland, Norway or Swiss airline",ko:"유럽(EU·아이슬란드·노르웨이·스위스) 항공사"}, a_uk:{en:"UK airline",ko:"영국 항공사"}, a_other:{en:"Other airline (e.g. Korean Air, Emirates, Delta)",ko:"그 밖의 항공사 (예: 대한항공·에미레이트·델타)"},
+  air_from_fn:{en:"From the flight number: {n}",ko:"편명으로 본 항공사: {n}"},
+  l_ev:{en:"What happened?",ko:"무슨 일이 있었나요?"},
+  e_delay:{en:"Arrived late",ko:"늦게 도착"}, e_cancel:{en:"Flight cancelled",ko:"결항"}, e_denied:{en:"Denied boarding (overbooked)",ko:"탑승 거부 (초과 예약)"},
+  l_delay:{en:"How late did you reach your final destination?",ko:"마지막 목적지에 얼마나 늦게 도착했나요?"}, ph_h:{en:"hours",ko:"시간"}, ph_m:{en:"minutes",ko:"분"},
+  delay_note:{en:"Count until the plane's door opened at the destination, compared with the time on your ticket.",ko:"표에 적힌 도착 시각과, 도착해서 비행기 문이 열린 시각의 차이로 세요."},
+  l_notice:{en:"How many days before departure were you told?",ko:"출발 며칠 전에 결항을 알려 줬나요?"}, ph_days:{en:"days (0 = on the day)",ko:"일 (당일이면 0)"},
+  l_vol:{en:"I gave up my seat voluntarily in exchange for something",ko:"보상을 받고 스스로 자리를 양보했어요"},
+  l_re:{en:"I was put on another flight",ko:"다른 비행기로 바꿔 탔어요"},
+  l_rde:{en:"It left how many hours earlier than planned?",ko:"원래보다 몇 시간 일찍 떠났나요?"}, l_ral:{en:"It arrived how many hours later than planned?",ko:"원래보다 몇 시간 늦게 도착했나요?"},
+  l_reason:{en:"Reason the airline gave",ko:"항공사가 말한 까닭"},
+  r_unknown:{en:"Not told / not sure",ko:"안 알려 줌 / 모름"}, r_none:{en:"No reason given",ko:"까닭을 말하지 않음"}, r_technical:{en:"Technical problem with the plane",ko:"비행기 고장·정비"},
+  r_crew:{en:"Crew shortage or late crew",ko:"승무원 부족·늦음"}, r_airline_strike:{en:"Strike by the airline's own staff",ko:"그 항공사 직원 파업"}, r_weather:{en:"Bad weather",ko:"날씨"},
+  r_atc:{en:"Air traffic control",ko:"항공 관제"}, r_airport_strike:{en:"Strike by airport, ground or air traffic staff",ko:"공항·지상·관제 직원 파업"}, r_security:{en:"Security risk",ko:"보안 위험"},
+  r_bird:{en:"Bird strike",ko:"새와 부딪힘"}, r_political:{en:"Political unrest",ko:"정치 불안"},
+  go:{en:"Check my flight",ko:"확인하기"}, sample:{en:"Try an example",ko:"예시로 해 보기"},
+  privacy:{en:"🔒 Everything is worked out inside this browser. Nothing you type is sent anywhere, not even to us.",ko:"🔒 모든 계산은 이 브라우저 안에서만 해요. 넣은 것은 어디에도, 저희에게도 보내지 않아요."},
+  need_airports:{en:"Choose both airports from the list.",ko:"두 공항을 목록에서 골라 주세요."}, same_airport:{en:"The two airports are the same.",ko:"두 공항이 같아요."}, need_event:{en:"Choose what happened.",ko:"무슨 일이 있었는지 골라 주세요."},
+  eu_from:{en:"It left from an EU, Iceland, Norway or Swiss airport, so the EU rules (Regulation 261/2004) cover any airline.",ko:"유럽(EU·아이슬란드·노르웨이·스위스) 공항에서 출발했으니 항공사와 상관없이 유럽 규칙(261/2004)에 들어요."},
+  eu_to_own:{en:"It flew into the EU from outside on a European airline, so the EU rules cover it.",ko:"유럽 밖에서 유럽으로 들어온 유럽 항공사 비행이라 유럽 규칙에 들어요."},
+  eu_to_unknown:{en:"Flights into the EU from outside are covered only if a European airline operated them. Check which airline flew the plane.",ko:"유럽 밖에서 유럽으로 들어오는 비행은 유럽 항공사가 띄웠을 때만 들어요. 실제로 띄운 항공사를 확인해 보세요."},
+  eu_to_foreign:{en:"Flights into the EU from outside are covered only on European airlines, and this airline is not one.",ko:"유럽 밖에서 유럽으로 들어오는 비행은 유럽 항공사만 들어요. 이 항공사는 유럽 항공사가 아니에요."},
+  eu_outside:{en:"Neither airport is in the EU, Iceland, Norway or Switzerland.",ko:"두 공항 모두 유럽(EU·아이슬란드·노르웨이·스위스)이 아니에요."},
+  uk_from:{en:"It left from a UK airport, so the UK rules (UK261) cover any airline.",ko:"영국 공항에서 출발했으니 항공사와 상관없이 영국 규칙(UK261)에 들어요."},
+  uk_to_own:{en:"The UK rules cover this flight: into the UK on a UK or EU airline, or into the EU on a UK airline.",ko:"영국 규칙에 들어요: 영국·유럽 항공사로 영국에 도착했거나, 영국 항공사로 유럽에 도착했어요."},
+  uk_to_unknown:{en:"The UK rules may cover this flight depending on the airline. Check which airline flew the plane.",ko:"항공사에 따라 영국 규칙에 들 수 있어요. 실제로 띄운 항공사를 확인해 보세요."},
+  uk_to_foreign:{en:"The UK rules don't cover this airline on this route.",ko:"이 길의 이 항공사는 영국 규칙에 들지 않아요."},
+  uk_outside:{en:"Neither airport is in the UK.",ko:"두 공항 모두 영국이 아니에요."},
+  delay_3h:{en:"You arrived 3 hours or more late.",ko:"3시간 이상 늦게 도착했어요."}, delay_under3:{en:"You arrived less than 3 hours late. Compensation starts at 3 hours (meals and care may still be owed).",ko:"3시간보다 덜 늦었어요. 보상금은 3시간부터예요(식사 등 돌봄은 받을 수 있어요)."},
+  cancel_14:{en:"You were told 14 days or more before. No compensation, but you can still choose a refund or another flight.",ko:"14일 이상 전에 알려 줬어요. 보상금은 없지만 환불이나 다른 비행기는 고를 수 있어요."},
+  cancel_7_reroute:{en:"You were told 7–13 days before and the new flight was close enough to your plan (left ≤2 h earlier, arrived <4 h later).",ko:"7~13일 전에 알려 줬고, 바꾼 비행기가 원래 일정과 가까웠어요(2시간 안 일찍 출발, 4시간 안 늦게 도착)."},
+  cancel_lt7_reroute:{en:"You were told less than 7 days before but the new flight was very close to your plan (left ≤1 h earlier, arrived <2 h later).",ko:"7일 안에 알려 줬지만 바꾼 비행기가 원래 일정과 아주 가까웠어요(1시간 안 일찍 출발, 2시간 안 늦게 도착)."},
+  cancel_7_13:{en:"You were told 7–13 days before, and the replacement was not close enough to your plan.",ko:"7~13일 전에 알려 줬고, 바꾼 비행기가 원래 일정과 많이 달랐어요."},
+  cancel_lt7:{en:"You were told less than 7 days before.",ko:"출발 7일 안에 알려 줬어요."},
+  denied_vol:{en:"You gave up your seat voluntarily, so the deal you agreed replaces compensation.",ko:"스스로 양보했으니 그때 받기로 한 것이 보상을 대신해요."},
+  denied_invol:{en:"You were denied boarding against your will. (Not if it was for health, safety, security or missing travel documents.)",ko:"원하지 않았는데 탑승을 거부당했어요. (건강·안전·보안·여행 서류 문제 때문이면 해당 없어요.)"},
+  half_delay:{en:"On flights over 3,500 km, a delay of 3 to 4 hours can be paid at half.",ko:"3,500km 넘는 비행이 3~4시간 늦으면 절반만 줄 수 있어요."},
+  half_reroute:{en:"Your new flight arrived only a little late for this distance, so the airline may pay half.",ko:"이 거리에 견줘 바꾼 비행기가 조금만 늦게 도착해서 항공사가 절반만 줄 수 있어요."},
+  reason_extra:{en:"Weather, air traffic control, security and strikes by outside staff usually count as «extraordinary circumstances», which excuse the airline. Ask them for proof.",ko:"날씨·관제·보안·바깥 직원 파업은 대개 «특별한 사정»이라 항공사가 안 줘도 돼요. 증거를 보여 달라고 할 수 있어요."},
+  reason_none:{en:"The airline gave no reason. It must prove extraordinary circumstances if it wants to refuse.",ko:"까닭을 말하지 않았어요. 주지 않으려면 항공사가 특별한 사정을 증명해야 해요."},
+  reason_airline:{en:"Technical faults, crew problems and the airline's own staff strikes are usually NOT extraordinary (EU Court rulings).",ko:"기계 고장·승무원 문제·그 항공사 직원 파업은 대개 특별한 사정이 아니에요(EU 법원 판결)."},
+  reason_unknown:{en:"Ask the airline for the reason in writing. Weather or air traffic control could lower your chances.",ko:"까닭을 글로 알려 달라고 하세요. 날씨·관제 때문이면 가능성이 낮아질 수 있어요."},
+  v_high:{en:"Likely: you may be entitled to compensation",ko:"받을 가능성이 높아요"},
+  v_low:{en:"Possible, but less likely — check the points below",ko:"받을 수도 있지만 가능성은 낮아요 — 아래를 확인해 보세요"},
+  v_none:{en:"Probably not covered",ko:"해당 없을 가능성이 커요"},
+  v_input:{en:"A little more information needed",ko:"조금 더 넣어 주세요"},
+  amt:{en:"Amount: {a} per passenger",ko:"금액: 한 사람에 {a}"}, amt_half:{en:"{a} per passenger (may be {h} — see below)",ko:"한 사람에 {a} (절반인 {h}일 수 있어요 — 아래 참고)"},
+  dist:{en:"Distance {km} km (great-circle), checked {d}.",ko:"거리 {km}km(대권거리), 기준일 {d}."},
+  alt:{en:"This flight is also covered by the other rules ({a}). You can claim under one set only, not both.",ko:"다른 쪽 규칙({a})에도 들어요. 둘 중 한 가지로만 청구할 수 있어요."},
+  newr:{en:"Flights from 23 October 2027 fall under the revised EU rules (Regulation 2026/2202): you must claim within 9 months of departure.",ko:"2027년 10월 23일부터의 비행은 바뀐 유럽 규칙(2026/2202)을 따라요: 출발일부터 9개월 안에 청구해야 해요."},
+  limit_t:{en:"Time limit",ko:"기한"},
+  limit_eu:{en:"Today the time limit depends on the country whose law applies to your claim (often 1 to 6 years). From 23 October 2027 the revised EU rules set 9 months for new flights. Claim soon either way.",
+           ko:"지금은 청구하는 나라의 법에 따라 기한이 달라요(대개 1~6년). 2027년 10월 23일부터의 비행은 바뀐 유럽 규칙으로 9개월이에요. 어느 쪽이든 빨리 청구하세요."},
+  limit_uk:{en:"UK: up to 6 years in England and Wales, 5 years in Scotland (UK Civil Aviation Authority). Claim soon.",ko:"영국: 잉글랜드·웨일스 6년, 스코틀랜드 5년(영국 항공청). 빨리 청구하세요."},
+  b_letter:{en:"Write my claim letter (free — you keep 100%)",ko:"보상 청구 편지 쓰기 (공짜 — 100% 내 것)"},
+  b_aff:{en:"Let a company handle it",ko:"업체에 맡기기"},
+  aff_note:{en:"If you choose this, that company keeps part of your compensation and we receive a referral fee. If you claim yourself, there is no fee.",
+            ko:"이 길을 고르면 그 회사가 보상금의 일부를 가져가고, 우리는 소개 수수료를 받습니다. 직접 청구하면 수수료가 없습니다."},
+  lt_t:{en:"Your claim letter",ko:"청구 편지"},
+  lt_s:{en:"Fill in what you like; blanks stay as [brackets]. The letter is in English, which every European airline accepts. Send it yourself through the airline's claim form or email.",
+        ko:"넣고 싶은 것만 넣으세요. 빈 곳은 [괄호]로 남아요. 편지는 유럽 항공사 모두가 받는 영어로 만들어요. 항공사 청구 양식이나 메일로 직접 보내세요."},
+  l_name:{en:"Your full name (as on the ticket)",ko:"이름 (표에 적힌 영문 이름)"}, l_ref:{en:"Booking reference",ko:"예약 번호"},
+  l_addr:{en:"Your postal address",ko:"주소 (영문)"}, l_mail:{en:"Your email",ko:"메일 주소"}, l_pax:{en:"Other passengers on the booking (names)",ko:"함께 간 사람 (영문 이름)"},
+  b_make:{en:"Make the letter",ko:"편지 만들기"}, b_copy:{en:"Copy",ko:"복사"}, b_txt:{en:"Download .txt",ko:".txt 내려받기"}, b_ics:{en:"Add reminders to my calendar (.ics)",ko:"달력에 알림 넣기 (.ics)"},
+  copied:{en:"Copied.",ko:"복사했어요."},
+  after_t:{en:"After you send it",ko:"보낸 다음"},
+  a1:{en:"Keep your boarding pass, booking email and any messages from the airline.",ko:"탑승권·예약 메일·항공사가 보낸 문자를 모두 남겨 두세요."},
+  a2:{en:"If the airline refuses or doesn't reply in about 8 weeks, you can go to the national enforcement body or an approved dispute scheme for that country (free), or to a small-claims court.",
+      ko:"거절하거나 8주쯤 답이 없으면 그 나라의 항공 소비자 기관이나 분쟁 조정 기구(공짜), 또는 소액 재판으로 갈 수 있어요."},
+  a3:{en:"Don't accept vouchers instead of money unless you want them — compensation is paid in money.",ko:"원하지 않으면 돈 대신 쿠폰을 받지 마세요. 보상은 돈으로 받는 것이 원칙이에요."},
+  how_t:{en:"How this checker works",ko:"이렇게 확인해요"},
+  h1s:{en:"Coverage: every flight leaving the EU, Iceland, Norway, Switzerland or the UK, and flights arriving there on European (or, for the UK, UK and EU) airlines.",ko:"범위: 유럽(EU·아이슬란드·노르웨이·스위스)·영국에서 떠나는 모든 비행, 그리고 그곳에 도착하는 유럽(영국은 영국·유럽) 항공사 비행."},
+  h2s:{en:"Amounts by great-circle distance: up to 1,500 km €250 / £220 · 1,500–3,500 km €400 / £350 · over 3,500 km €600 / £520. Flights within the EU over 1,500 km are €400.",ko:"금액은 두 공항의 대권거리로: 1,500km 이하 250유로·220파운드 · 1,500~3,500km 400유로·350파운드 · 그 넘으면 600유로·520파운드. EU 안의 1,500km 넘는 비행은 400유로."},
+  h3s:{en:"Delays count at the final destination, from 3 hours. Cancellations count unless you were told 14+ days ahead. «Extraordinary circumstances» like storms usually excuse the airline.",ko:"늦음은 마지막 목적지 도착 기준 3시간부터. 결항은 14일 넘게 전에 알렸으면 해당 없음. 폭풍 같은 «특별한 사정»은 대개 항공사 책임이 아님."},
+  h4s:{en:"Airport list: OurAirports (public domain). We don't look up your flight online; you tell us what happened.",ko:"공항 목록: OurAirports(공개 자료). 비행 기록을 인터넷으로 찾지 않아요. 있었던 일을 손님이 알려 주세요."},
+  legal:{en:"This is general information, not legal advice. It shows what the rules say may apply; it does not promise payment. We don't send claims for you or take any share. Rules checked 22 November 2026.",
+         ko:"법률 상담이 아닙니다. 규칙상 받을 가능성을 알려 드릴 뿐 지급을 약속하지 않아요. 저희는 대신 청구하지 않고 보상금의 일부도 받지 않아요. 기준일 2026-11-22."},
+  src:{en:"Sources: Regulation (EC) 261/2004 (EUR-Lex); EU Court cases C-402/07, C-549/07, C-28/20, C-452/13; Your Europe; UK CAA and GOV.UK; Regulation (EU) 2026/2202.",ko:"출처: 규정 261/2004(EUR-Lex), EU 법원 C-402/07·C-549/07·C-28/20·C-452/13, Your Europe, 영국 항공청·GOV.UK, 규정 2026/2202."}
+});
+var AP=null, APM={}, pick={from:null,to:null}, last=null, lastIn=null, letterOn=false;
+function loadAP(){ if(AP) return Promise.resolve(AP);
+  return fetch("airports.min.json").then(function(r){return r.json();}).then(function(a){ AP=a; a.forEach(function(x){APM[x[0]]=x;}); return a; }); }
+function label(a){ return a[0]+" · "+a[1]+(a[5]?" ("+a[5]+")":"")+" · "+a[2]; }
+function search(q){
+  q=q.trim().toLowerCase(); if(!q||!AP) return [];
+  var up=q.toUpperCase(), r=[];
+  if(q.length===3&&APM[up]) r.push(APM[up]);
+  for(var i=0;i<AP.length&&r.length<8;i++){ var a=AP[i]; if(a[0]===up) continue;
+    if(a[1].toLowerCase().indexOf(q)>=0||(a[5]&&a[5].toLowerCase().indexOf(q)>=0)) r.push(a); }
+  return r;
+}
+function bindAP(id){
+  var inp=document.getElementById(id), list=document.getElementById(id+"_l"), p=document.getElementById(id+"_p");
+  inp.addEventListener("focus",loadAP);
+  inp.addEventListener("input",function(){ pick[id]=null; p.textContent="";
+    loadAP().then(function(){ var r=search(inp.value);
+      if(inp.value.trim().length===3&&APM[inp.value.trim().toUpperCase()]){ pick[id]=APM[inp.value.trim().toUpperCase()]; p.textContent=label(pick[id]); }
+      list.innerHTML=r.map(function(a){return '<button type="button" data-c="'+a[0]+'">'+VT.esc(label(a))+'</button>';}).join("");
+      list.classList.toggle("hidden",!r.length);
+      list.querySelectorAll("button").forEach(function(b){ b.onmousedown=function(e){e.preventDefault();}; b.onclick=function(){ pick[id]=APM[b.dataset.c]; inp.value=b.dataset.c; p.textContent=label(pick[id]); list.classList.add("hidden"); }; });
+    }); });
+  inp.addEventListener("blur",function(){ setTimeout(function(){list.classList.add("hidden");},150); });
+}
+bindAP("from"); bindAP("to");
+function ev(){ var c=document.querySelector('input[name=ev]:checked'); return c?c.value:""; }
+function toggle(){
+  var e=ev();
+  document.getElementById("g_delay").classList.toggle("hidden",e!=="delay");
+  document.getElementById("g_cancel").classList.toggle("hidden",e!=="cancel");
+  document.getElementById("g_denied").classList.toggle("hidden",e!=="denied");
+  document.getElementById("g_re").classList.toggle("hidden",e!=="cancel"&&e!=="denied");
+  document.getElementById("g_reason").classList.toggle("hidden",e==="denied");
+  document.getElementById("g_re2").classList.toggle("hidden",!document.getElementById("re").checked);
+}
+document.querySelectorAll('input[name=ev]').forEach(function(r){ r.onchange=toggle; });
+document.getElementById("re").onchange=toggle;
+var fnInp=document.getElementById("fn"), airSel=document.getElementById("airline"), airP=document.getElementById("air_p"), airAuto="";
+function fnAir(){ var a=FlightComp.airlineOf(fnInp.value); airAuto=a?a.name:"";
+  if(a){ airSel.value=a.kind; airP.textContent=VT.t("air_from_fn").replace("{n}",a.name); } else airP.textContent=""; }
+fnInp.oninput=fnAir;
+function money(cur,v){ return cur==="GBP"?"£"+v:"€"+v; }
+function readIn(){
+  var h=+document.getElementById("dh").value||0, m=+document.getElementById("dm").value||0;
+  return { from:pick.from, to:pick.to, airline:airSel.value, event:ev(), delayH:h+m/60,
+    noticeDays:document.getElementById("nd").value, rerouted:document.getElementById("re").checked,
+    reDepEarlyH:+document.getElementById("rde").value||0, reArrLateH:+document.getElementById("ral").value||0,
+    voluntary:document.getElementById("vol").checked, reason:document.getElementById("reason").value,
+    date:document.getElementById("date").value, fn:fnInp.value.trim().toUpperCase() };
+}
+var CHECKED="2026-11-22";
+function show(){
+  var out=document.getElementById("out"), E=VT.esc;
+  if(!last){ out.classList.add("hidden"); return; }
+  var r=last, h='<div class="verdict '+({high:"high",low:"mid",none:"low",input:"mid"}[r.verdict])+'">'+VT.t("v_"+r.verdict);
+  if(r.money&&r.verdict!=="none"&&r.verdict!=="input") h+='<small>'+(r.money.half?VT.t("amt_half").replace("{a}",money(r.money.cur,r.money.full)).replace("{h}",money(r.money.cur,r.money.half)):VT.t("amt").replace("{a}",money(r.money.cur,r.money.full)))+'</small>';
+  if(r.km) h+='<small>'+VT.t("dist").replace("{km}",r.km.toLocaleString(VT.lang==="ko"?"ko-KR":"en-US")).replace("{d}",CHECKED)+'</small>';
+  h+='</div><ul class="signals">'+r.lines.map(function(l){return '<li>'+(l.ok?"✅ ":"⚠️ ")+VT.t(l.k)+'</li>';}).join("")+'</ul>';
+  if(r.money&&r.money.alt) h+='<p class="note">'+VT.t("alt").replace("{a}",money(r.money.alt.cur,r.money.alt.full))+'</p>';
+  if(r.newRules) h+='<p class="note">'+VT.t("newr")+'</p>';
+  if(r.verdict==="high"||r.verdict==="low"){
+    h+='<h2 style="margin-top:16px">'+VT.t("limit_t")+'</h2><p class="sub">'+VT.t(r.laws[0].law==="uk"?"limit_uk":"limit_eu")+'</p>';
+    var aff=(window.FLIGHTCOMP_CONFIG&&window.FLIGHTCOMP_CONFIG.AFFILIATE_URL)||"";
+    h+='<div class="two no-print"><button class="btn" id="bl" type="button">'+VT.t("b_letter")+'</button>'+(aff?'<a class="btn ghost" id="ba" href="'+E(aff)+'" target="_blank" rel="noopener sponsored">'+VT.t("b_aff")+'</a>':'')+'</div>';
+    if(aff) h+='<p class="note">'+VT.t("aff_note")+'</p>';
+    h+='<div class="lt '+(letterOn?"":"hidden")+'" id="lt"><h2>'+VT.t("lt_t")+'</h2><p class="sub">'+VT.t("lt_s")+'</p><div class="grid2">'+
+      ['name','ref','addr','mail','pax'].map(function(k){return '<div><label for="lt_'+k+'">'+VT.t("l_"+k)+'</label><input id="lt_'+k+'" autocomplete="off"></div>';}).join("")+
+      '</div><div class="row"><button class="btn" id="mk" type="button">'+VT.t("b_make")+'</button></div><div id="ltout"></div></div>';
+    h+='<h2>'+VT.t("after_t")+'</h2><ol class="steps"><li>'+VT.t("a1")+'</li><li>'+VT.t("a2")+'</li><li>'+VT.t("a3")+'</li></ol>';
+  }
+  h+='<p class="legal">'+VT.t("legal")+'</p>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  var bl=document.getElementById("bl"); if(bl) bl.onclick=function(){ letterOn=true; document.getElementById("lt").classList.remove("hidden"); document.getElementById("lt_name").focus(); };
+  var mk=document.getElementById("mk"); if(mk) mk.onclick=makeLetter;
+}
+function v(id,ph){ var x=(document.getElementById(id)||{}).value; return x&&x.trim()?x.trim():"["+ph+"]"; }
+function letterText(){
+  var r=last, x=lastIn, uk=r.laws[0].law==="uk";
+  var law=uk?"Regulation (EC) No 261/2004 as it forms part of UK law (UK261)":"Regulation (EC) No 261/2004";
+  var fn=x.fn||"[flight number]", date=x.date||"[date]", air=airAuto||"[airline]";
+  var what = x.event==="delay" ? "The flight reached "+x.to[1]+" "+Math.floor(x.delayH)+" hours "+Math.round((x.delayH%1)*60)+" minutes later than scheduled. Under the judgment of the Court of Justice of the European Union in Sturgeon (C-402/07 and C-432/07), a delay of three hours or more at the final destination gives the same right to compensation as a cancellation."
+    : x.event==="cancel" ? "The flight was cancelled"+(x.noticeDays!==""?" and I was informed "+x.noticeDays+" day(s) before departure":"")+(x.rerouted?". I was rerouted and reached my destination about "+x.reArrLateH+" hours later than planned":"")+". Under Article 5(1)(c) of "+law+" I am entitled to compensation under Article 7."
+    : "I was denied boarding against my will, although I presented myself for check-in on time with valid travel documents. Under Article 4(3) of "+law+" I am entitled to compensation under Article 7.";
+  var amt=money(r.money.cur,r.money.full);
+  var pax=(document.getElementById("lt_pax")||{}).value; pax=pax&&pax.trim()?pax.trim():"";
+  return "To: "+air+" — Customer Relations / Compensation Claims\n"+
+    "Subject: Compensation claim under "+law+" — flight "+fn+", "+date+", booking "+v("lt_ref","booking reference")+"\n\n"+
+    "Dear Sir or Madam,\n\n"+
+    "I was booked on flight "+fn+" from "+x.from[1]+" ("+x.from[0]+") to "+x.to[1]+" ("+x.to[0]+") on "+date+", booking reference "+v("lt_ref","booking reference")+".\n\n"+
+    what+"\n\n"+
+    "The great-circle distance of this flight is about "+r.km+" km. Under Article 7(1) of "+law+", the compensation is "+amt+" per passenger"+(pax?" for each of the following passengers: "+v("lt_name","your full name")+", "+pax:"")+".\n\n"+
+    "If you believe extraordinary circumstances apply, please tell me exactly what they were and send the evidence, and explain which reasonable measures were taken to avoid the "+(x.event==="delay"?"delay":x.event==="cancel"?"cancellation":"denied boarding")+".\n\n"+
+    "Please pay the compensation in money, by bank transfer, within 14 days. I will send my bank details when you confirm. I do not accept vouchers in place of money.\n\n"+
+    "Yours faithfully,\n\n"+v("lt_name","your full name")+"\n"+v("lt_addr","your postal address")+"\n"+v("lt_mail","your email")+"\n\n"+
+    "Enclosed: boarding pass / booking confirmation.";
+}
+function makeLetter(){
+  var t=letterText(), o=document.getElementById("ltout");
+  o.innerHTML='<pre class="letter" id="lttxt"></pre><div class="row no-print"><button class="btn ghost" id="cp" type="button">'+VT.t("b_copy")+'</button><button class="btn ghost" id="dl" type="button">'+VT.t("b_txt")+'</button><button class="btn ghost" id="ics" type="button">'+VT.t("b_ics")+'</button><span class="note" id="cpok"></span></div>';
+  document.getElementById("lttxt").textContent=t;
+  document.getElementById("cp").onclick=function(){ var ok=function(){document.getElementById("cpok").textContent=VT.t("copied");};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,function(){prompt("",t);}); else prompt("",t); };
+  document.getElementById("dl").onclick=function(){ save("flight-compensation-claim.txt",t,"text/plain;charset=utf-8"); };
+  document.getElementById("ics").onclick=function(){ save("flight-claim-reminders.ics",ics(),"text/calendar;charset=utf-8"); };
+}
+function save(name,body,type){ var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([body],{type:type})); a.download=name; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500); }
+function ymd(d){ return d.getFullYear()+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2); }
+function addM(d,m){ return new Date(d.getFullYear(),d.getMonth()+m,d.getDate()); }
+function ics(){
+  var now=new Date(), x=lastIn, r=last, fl=x.date?new Date(x.date+"T12:00:00"):now, fn=x.fn||"flight";
+  var ev=[["Flight "+fn+": chase your compensation claim if no reply","If the airline hasn't paid or replied, contact the national enforcement body or an approved dispute scheme.",addM(now,2)]];
+  if(r.newRules) ev.push(["Flight "+fn+": LAST DAY to claim (9 months, EU Regulation 2026/2202)","Claims for flights from 23 Oct 2027 must be made within 9 months of departure.",new Date(addM(fl,9)-864e5)]);
+  else if(r.laws[0].law==="uk") ev.push(["Flight "+fn+": UK claim time limit (6 years England & Wales, 5 Scotland)","Check with the UK CAA. Claim long before this date.",new Date(addM(fl,60)-864e5)]);
+  else ev.push(["Flight "+fn+": check the time limit for your claim","Time limits depend on the country whose law applies. Claim well before it runs out.",addM(fl,12)]);
+  var s=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//VALUES AI Store//flightcomp//EN","CALSCALE:GREGORIAN"];
+  ev.forEach(function(e,i){ var d=e[2], n=new Date(+d+864e5);
+    s.push("BEGIN:VEVENT","UID:flightcomp-"+ymd(now)+"-"+i+"-"+Math.random().toString(36).slice(2)+"@valuestools.kr","DTSTAMP:"+now.toISOString().replace(/[-:]/g,"").replace(/\.\d+/,""),
+      "DTSTART;VALUE=DATE:"+ymd(d),"DTEND;VALUE=DATE:"+ymd(n),"SUMMARY:"+e[0].replace(/[,;]/g,"\\$&"),"DESCRIPTION:"+e[1].replace(/[,;]/g,"\\$&"),
+      "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+e[0].replace(/[,;]/g,"\\$&"),"TRIGGER:-P1D","END:VALARM","END:VEVENT"); });
+  s.push("END:VCALENDAR"); return s.join("\r\n")+"\r\n";
+}
+function run(){ var x=readIn(); lastIn=x; last=FlightComp.check(x); letterOn=false; show(); document.getElementById("out").scrollIntoView({behavior:"smooth",block:"start"}); }
+document.getElementById("go").onclick=function(){ loadAP().then(run); };
+document.getElementById("sample").onclick=function(){ loadAP().then(function(){
+  fnInp.value="LH712"; fnAir(); var d=new Date(Date.now()-30*864e5); document.getElementById("date").value=d.toISOString().slice(0,10);
+  document.getElementById("from").value="FRA"; pick.from=APM.FRA; document.getElementById("from_p").textContent=label(APM.FRA);
+  document.getElementById("to").value="ICN"; pick.to=APM.ICN; document.getElementById("to_p").textContent=label(APM.ICN);
+  document.querySelector('input[name=ev][value=delay]').checked=true; toggle(); document.getElementById("dh").value=4; document.getElementById("dm").value=20;
+  document.getElementById("reason").value="technical"; run(); }); };
+VT.onLang=function(){ fnAir(); if(pick.from) document.getElementById("from_p").textContent=label(pick.from); if(pick.to) document.getElementById("to_p").textContent=label(pick.to); show(); };
+VT.mountChrome(); VT.apply(); toggle();
+</script>
+</body>
+</html>

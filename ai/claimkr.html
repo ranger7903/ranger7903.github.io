@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내가 받을 수 있는 돈 찾기 — 밸류스 AI 백화점</title>
+<meta name="description" content="질문 10개에 답하면 숨은 보험금·잠자는 통장·덜 돌려받은 세금·실손보험금·정부 지원금을 공짜로 찾는 공식 사이트와 누를 차례, 기한을 카드로 알려 드려요. 수수료 0원.">
+<link rel="canonical" href="https://valuestools.kr/ai/claimkr.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VALUES AI Store · 밸류스 AI 백화점">
+<meta property="og:title" content="내가 받을 수 있는 돈 찾기 · Money I Can Claim (Korea) — 밸류스 AI 백화점">
+<meta property="og:description" content="질문 10개로 숨은 보험금·잠자는 통장·세금 환급·실손·지원금을 공짜로 찾는 길을 한 장에. Ten questions, then the free official sites in Korea.">
+<meta property="og:url" content="https://valuestools.kr/ai/claimkr.html">
+<meta property="og:image" content="https://valuestools.kr/ai/og/claimkr.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="ai.css">
+<script src="ai.js"></script>
+<script src="claimkr-engine.js"></script>
+<style>
+.q{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;background:var(--cream)}
+.q b{display:block;margin-bottom:8px}
+.yn{display:flex;gap:8px;flex-wrap:wrap}
+.yn button{font:inherit;font-size:15px;border:1px solid var(--line);background:var(--cream-2);color:var(--ink);border-radius:999px;padding:10px 18px;min-height:44px;min-width:76px;cursor:pointer}
+.yn button[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.cardx{border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:12px 0;background:var(--cream-2);box-shadow:var(--shadow)}
+.cardx h3{margin:0 0 6px;font-size:18px}
+.cardx .lv{font-size:12.5px;border-radius:999px;padding:2px 9px;margin-left:6px;background:var(--green-soft);vertical-align:middle;font-weight:600}
+.cardx .lv.q{background:var(--terra-soft);border:0;padding:2px 9px;margin:0 0 0 6px;display:inline}
+.cardx dl{margin:6px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:15px}
+.cardx dt{color:var(--ink-3);font-size:13.5px;padding-top:2px;white-space:nowrap}
+.cardx dd{margin:0}
+.legal{font-size:13.5px;color:var(--ink-2);border-left:3px solid var(--mustard);padding:6px 10px;margin-top:12px}
+</style>
+</head>
+<body>
+<span hidden data-i-title="title"></span>
+<main class="shell">
+  <div class="room-head"><a class="back" href="./?c=money" data-i="back"></a>
+    <h1 data-i="h1"></h1><p data-i="lead"></p></div>
+  <section>
+    <div class="box">
+      <div id="qs"></div>
+      <div class="row"><button class="btn" id="go" type="button" data-i="go"></button><button class="btn ghost" id="reset" type="button" data-i="reset"></button></div>
+      <p class="privacy" data-i="privacy"></p>
+    </div>
+    <div class="result hidden" id="out" aria-live="polite"></div>
+  </section>
+  <section>
+    <h2 data-i="how_t"></h2>
+    <div class="howto"><ol><li data-i="h1s"></li><li data-i="h2s"></li><li data-i="h3s"></li></ol>
+      <p class="legal" data-i="legal"></p><p class="note" data-i="src"></p></div>
+  </section>
+</main>
+<script>
+VT.add({
+  title:{en:"Money I Can Claim (Korea) — VALUES AI Store",ko:"내가 받을 수 있는 돈 찾기 — 밸류스 AI 백화점"},
+  back:{en:"← Money & Paperwork",ko:"← 돈·서류"},
+  h1:{en:"🧾 Money I Can Claim (Korea)",ko:"🧾 내가 받을 수 있는 돈 찾기"},
+  lead:{en:"Forgotten insurance payouts, dormant accounts, tax refunds, medical claims and benefits in Korea. Answer 10 questions and get the free official sites, what to press and the time limits. No fees, nothing to buy.",
+        ko:"숨은 보험금, 오래 잠든 통장, 덜 돌려받은 세금, 병원비 보험금, 정부 지원금. 질문 10개에 답하면 공짜로 찾는 공식 사이트와 누를 차례, 기한을 카드로 보여 드려요. 수수료도, 파는 것도 없어요."},
+  yes:{en:"Yes",ko:"예"}, no:{en:"No",ko:"아니오"}, dk:{en:"Not sure",ko:"모름"},
+  q_ins:{en:"Have you (or your family) ever had any insurance — life, health, savings or car?",ko:"나나 가족이 보험(생명·건강·저축·자동차)에 든 적이 있나요?"},
+  q_bank:{en:"Could you have a bank account you haven't used for over a year, or unused card points?",ko:"1년 넘게 안 쓴 통장이나, 쓰지 않은 카드 포인트가 있을 것 같나요?"},
+  q_stock:{en:"Did you ever open a brokerage account, shares or funds you no longer check?",ko:"예전에 만들어 두고 안 보는 증권 계좌·주식·펀드가 있나요?"},
+  q_free33:{en:"In the last 5 years, were you paid as a freelancer or part-timer with 3.3% tax taken off?",ko:"최근 5년 안에 프리랜서·알바로 3.3%를 떼고 돈을 받은 적이 있나요?"},
+  q_work:{en:"As an employee, could you have missed deductions at year-end tax settlement (dependants, medical costs…) in the last 5 years?",ko:"직장 연말정산 때 부양가족·의료비 같은 공제를 빠뜨렸을 수 있나요? (최근 5년)"},
+  q_hosp:{en:"Did you pay hospital, clinic or pharmacy bills in the last 3 years while you had indemnity medical («silson») insurance?",ko:"실손보험이 있는데 최근 3년 안에 병원·약국 비를 내고 청구하지 않은 것이 있나요?"},
+  q_car:{en:"Was your car repaired after an accident that was mainly the other driver's fault?",ko:"상대 잘못이 큰 자동차 사고로 내 차를 고친 적이 있나요?"},
+  q_contract:{en:"Are you ending (or arguing over) a water-purifier rental, internet or phone contract — penalty or promised cash gift?",ko:"정수기 렌탈·인터넷·휴대폰 약정을 끊을 예정이거나, 위약금·사은품 때문에 다툼이 있나요?"},
+  q_life:{en:"Did something change recently: a baby, moving, losing a job, turning 65, lower income?",ko:"최근에 아이를 낳거나, 이사·실직·65세가 되거나, 소득이 줄었나요?"},
+  q_family:{en:"Did a family member pass away within the last year?",ko:"최근 1년 안에 가족이 돌아가셨나요?"},
+  go:{en:"Show my cards",ko:"카드 보기"}, reset:{en:"Start again",ko:"처음부터"},
+  privacy:{en:"🔒 Your answers stay in this browser. Nothing is sent anywhere, not even to us.",ko:"🔒 답은 이 브라우저 안에만 있어요. 어디에도, 저희에게도 보내지 않아요."},
+  none:{en:"Answer at least one question first.",ko:"먼저 질문에 하나 이상 답해 주세요."},
+  r_t:{en:"{n} things to check — all free",ko:"찾아볼 곳 {n}가지 — 모두 공짜"},
+  r_s:{en:"Do them one at a time. Each takes 5 to 10 minutes with phone or certificate login.",ko:"하나씩 해 보세요. 휴대폰·인증서로 본인 인증하면 하나에 5~10분이에요."},
+  r_basic:{en:"Nothing obvious — but these three are worth a 5-minute check for everyone",ko:"뚜렷한 것은 없지만, 이 셋은 누구나 5분씩 한 번 볼 만해요"},
+  lv_y:{en:"Likely for you",ko:"해당될 가능성 높음"}, lv_q:{en:"Check to be sure",ko:"확인해 보세요"},
+  d_what:{en:"What",ko:"무엇을"}, d_where:{en:"Where",ko:"어디서"}, d_press:{en:"Press",ko:"누를 것"}, d_limit:{en:"Time limit",ko:"기한"},
+  c_ins_t:{en:"Hidden insurance money",ko:"숨은 보험금"},
+  c_ins_w:{en:"Maturity, mid-term and forgotten payouts from all your policies, in one search.",ko:"내가 든 모든 보험의 만기·중도 보험금과 잊은 보험금을 한 번에."},
+  c_ins_s:{en:"«Nae-boheom Chajajum» (life & non-life insurance associations)",ko:"「내보험찾아줌」 (생명·손해보험협회)"},
+  c_ins_p:{en:"Verify your identity → hidden insurance money lookup → claim.",ko:"본인 인증 → 숨은 보험금 조회 → 청구."},
+  c_ins_l:{en:"Claims expire 3 years after you could first claim (Commercial Act art. 662). In 2024, ₩4.5 trillion was paid back and about ₩11.2 trillion was still waiting.",ko:"보험금을 달라고 할 권리는 3년이 지나면 사라져요(상법 제662조). 2024년에 4조5천억 원을 돌려줬는데도 약 11조2천억 원이 남아 있어요."},
+  c_acct_t:{en:"Dormant bank accounts",ko:"잠든 통장"},
+  c_acct_w:{en:"Every account in your name at banks, savings banks and brokers.",ko:"은행·제2금융권·증권사의 내 이름 계좌 전부."},
+  c_acct_s:{en:"«Account Info» (Korea Financial Telecommunications & Clearings Institute)",ko:"「어카운트인포」 (금융결제원)"},
+  c_acct_p:{en:"«My accounts at a glance» → banks / other lenders / brokers. Accounts unused for 1 year with ₩500,000 or less can be closed or moved right there.",ko:"「내계좌 한눈에」 → 은행권 / 제2금융권 / 증권사. 1년 넘게 안 쓴 50만 원 이하 계좌는 그 자리에서 해지하거나 다른 통장으로 옮길 수 있어요."},
+  c_acct_l:{en:"Dormant financial assets totalled ₩15.7 trillion at the end of 2025. Help line 1577-5500.",ko:"잠든 금융 자산은 2025년 말 15조7천억 원이에요. 고객센터 1577-5500."},
+  c_sleep_t:{en:"Dormant money already moved to the government fund",ko:"서민금융진흥원으로 넘어간 잠든 돈"},
+  c_sleep_w:{en:"Very old deposits and insurance money handed over to the Korea Inclusive Finance Agency.",ko:"아주 오래돼 서민금융진흥원으로 넘어간 예금·보험금."},
+  c_sleep_s:{en:"Korea Inclusive Finance Agency — «Dormant deposits»",ko:"서민금융진흥원 「휴면예금 안내」"},
+  c_sleep_p:{en:"Dormant deposits → look up → claim.",ko:"휴면예금 → 조회 → 지급 신청."},
+  c_sleep_l:{en:"The owner can still claim after the hand-over (rules as of Nov 2026). Never tap links in texts offering to «find your dormant money».",ko:"넘어간 뒤에도 원래 주인이 찾을 수 있어요(2026-11 기준). 「휴면예금 찾아 드려요」 문자 속 링크는 누르지 마세요."},
+  c_points_t:{en:"Unused card points",ko:"남은 카드 포인트"},
+  c_points_w:{en:"Points left on every credit and debit card, and turning them into cash.",ko:"모든 카드에 남은 포인트를 한 번에 보고 현금으로 바꾸기."},
+  c_points_s:{en:"«Account Info» — «My cards at a glance»",ko:"「어카운트인포」 → 「내카드 한눈에」"},
+  c_points_p:{en:"Points lookup → points to cash.",ko:"포인트조회 → 포인트현금화."},
+  c_points_l:{en:"Card points expire (often after 5 years). Check once a year.",ko:"카드 포인트는 기한이 있어요(대개 5년). 해마다 한 번 보세요."},
+  c_fine_t:{en:"Forgotten brokerage accounts",ko:"잊은 증권 계좌"},
+  c_fine_w:{en:"Accounts and money at all financial companies, including brokers.",ko:"증권사를 비롯한 모든 금융회사의 내 계좌와 돈."},
+  c_fine_s:{en:"«FINE» (Financial Supervisory Service)",ko:"「파인」 (금융감독원)"},
+  c_fine_p:{en:"«Manage my money» → combined account lookup / accounts by sector.",ko:"「내 돈 관리」 → 내계좌 통합조회 / 업권별 계좌 조회."},
+  c_fine_l:{en:"No fee. Watch out for paid «stock recovery» services.",ko:"수수료 없어요. 돈 받고 찾아 준다는 곳은 조심하세요."},
+  c_onetax_t:{en:"Income tax refund in one click",ko:"덜 돌려받은 세금 (원클릭 환급)"},
+  c_onetax_w:{en:"For freelancers taxed 3.3% (delivery riders, tutors, drivers…), pension/other income earners, and employees who missed deductions. Up to 5 years at once.",ko:"3.3% 떼인 프리랜서(배달·학원강사·대리운전 등), 연금·기타소득자, 공제를 놓친 직장인. 최대 5년 치를 한 번에."},
+  c_onetax_s:{en:"National Tax Service «Hometax»",ko:"국세청 「홈택스」"},
+  c_onetax_p:{en:"Front page → «One-click refund filing». Free — private apps charge 10–20% of the refund.",ko:"첫 화면 「원클릭 환급 신고」. 공짜예요 — 민간 앱은 환급액의 10~20%를 수수료로 받아요."},
+  c_onetax_l:{en:"Within 5 years of the filing deadline (Framework Act on National Taxes art. 45-2). In 2025 the service found ₩290 billion for 3.11 million people.",ko:"신고 기한부터 5년 안(국세기본법 제45조의2). 2025년에 311만 명, 약 2,900억 원을 찾았어요."},
+  c_silson_t:{en:"Medical («silson») insurance claims without paperwork",ko:"실손보험금 (서류 없이)"},
+  c_silson_w:{en:"Small hospital and pharmacy bills people never claim.",ko:"귀찮아서 안 한 작은 병원·약국 비."},
+  c_silson_s:{en:"«Silson 24» app or website (Korea Insurance Development Institute)",ko:"「실손24」 앱·홈페이지 (보험개발원)"},
+  c_silson_p:{en:"Pick the hospital → pick the visit → send. Help line 1811-3000.",ko:"병원 고르기 → 진료 고르기 → 보내기. 콜센터 1811-3000."},
+  c_silson_l:{en:"3 years. Hospitals joined in 2024; clinics and pharmacies from 25 Oct 2025, but few take part yet — check yours first.",ko:"3년. 병원급은 2024년, 동네 의원·약국은 2025년 10월 25일부터예요. 참여한 곳이 아직 적으니 먼저 확인하세요."},
+  c_carv_t:{en:"Your car's lost resale value",ko:"사고 차값 떨어진 돈 (시세하락손해)"},
+  c_carv_w:{en:"If your car (up to 5 years old) needed repairs over 20% of its value, the other insurer pays 10–20% of the repair.",ko:"출고 5년 안 차이고 수리비가 차값의 20%를 넘으면, 상대 보험사가 수리비의 10~20%를 따로 줘요."},
+  c_carv_s:{en:"Ask the other driver's insurer directly. If refused: Financial Supervisory Service complaints (call 1332).",ko:"상대 보험사에 직접 요구 → 안 되면 금융감독원 민원(국번 없이 1332)."},
+  c_carv_p:{en:"Say: «I am asking for the diminished-value payment separately from the repair.» Send the repair invoice.",ko:"「수리비와 따로 시세하락손해를 요청합니다」라고 말하고 수리비 영수증을 보내세요."},
+  c_carv_l:{en:"Insurers rarely mention it first. Ask soon after the repair.",ko:"보험사가 먼저 말해 주지 않는 경우가 많아요. 수리 뒤 빨리 요청하세요."},
+  carlink:{en:"Calculate it in the car value room →",ko:"차값 떨어진 돈 계산기에서 계산하기 →"},
+  carsoon:{en:"(The calculator room opens soon.)",ko:"(계산기 방은 곧 열어요.)"},
+  c_c1372_t:{en:"Rental, internet and phone contract disputes",ko:"렌탈·통신 계약 다툼"},
+  c_c1372_w:{en:"Cancellation penalties and cash gifts promised by sellers.",ko:"중간 해지 위약금, 판매자가 약속한 사은품."},
+  c_c1372_s:{en:"Korea Consumer Agency, consumer counselling 1372",ko:"한국소비자원 「1372 소비자상담센터」"},
+  c_c1372_p:{en:"Call 1372 or use the consumer counselling network website. Counselling is free.",ko:"전화 1372 또는 소비자상담 홈페이지. 상담은 공짜예요."},
+  c_c1372_l:{en:"For rentals over 1 year, the standard penalty is 10% of the remaining rent (Fair Trade Commission dispute standard). Get any cash gift written into the contract.",ko:"의무 기간이 1년 넘는 렌탈은 남은 렌탈료의 10%가 기준이에요(공정위 소비자분쟁해결기준). 사은품은 계약서에 적어 두세요."},
+  c_gov24_t:{en:"Government benefits you can get",ko:"내가 받을 수 있는 정부 지원금"},
+  c_gov24_w:{en:"More than 10,000 central and local government services, matched to you.",ko:"중앙부처·지자체·공공기관 서비스 1만여 개 가운데 나에게 맞는 것."},
+  c_gov24_s:{en:"«Government 24» — «Subsidy 24»",ko:"「정부24」 → 「보조금24」"},
+  c_gov24_p:{en:"Log in → «Benefit alerts» at the top (or Subsidy 24) → agree to the lookup.",ko:"로그인 → 위쪽 「혜택알리미」(또는 보조금24) → 이용 동의."},
+  c_gov24_l:{en:"Most benefits are paid only if you apply. Ads for «government support loans» are often fake — check only on government sites.",ko:"대부분 «신청해야» 줘요. 「정부지원금 대출」 광고는 정부를 사칭한 것이 많아요. 정부 사이트에서만 확인하세요."},
+  c_bokji_t:{en:"Get told about new welfare benefits",ko:"앞으로 생기는 복지 알림 받기"},
+  c_bokji_w:{en:"Sign up once and you are told when you qualify for something new.",ko:"한 번 가입하면 받을 수 있는 복지가 생길 때 알려 줘요."},
+  c_bokji_s:{en:"«Bokjiro» — «Tailored benefits guide (Welfare membership)»",ko:"「복지로」 → 「맞춤형급여안내(복지멤버십)」"},
+  c_bokji_p:{en:"Frequently used services → Welfare membership → sign up. Results appear under «Services you may receive».",ko:"자주찾는 서비스 → 복지멤버십 가입 → 「받을 가능성이 있는 서비스」에서 보기."},
+  c_bokji_l:{en:"No deadline to join.",ko:"가입 기한은 없어요."},
+  c_inherit_t:{en:"A late family member's money and debts",ko:"돌아가신 가족의 재산·빚 한 번에 조회"},
+  c_inherit_w:{en:"Bank accounts, insurance, pensions, taxes, land and cars in one request.",ko:"예금·보험·연금·세금·땅·자동차를 한 번에."},
+  c_inherit_s:{en:"«Government 24» — «Safe inheritance one-stop service»",ko:"「정부24」 → 「안심상속 원스톱 서비스」"},
+  c_inherit_p:{en:"Apply when reporting the death, or online at Government 24.",ko:"사망 신고할 때 함께, 또는 정부24 에서 신청."},
+  c_inherit_l:{en:"Within 1 year from the end of the month of death.",ko:"돌아가신 날이 속한 달의 말일부터 1년 안."},
+  scam:{en:"⚠️ Real government and finance sites never ask you to tap a link in a text to «find your money». If a message does, check it in the <a href=\"scam.html\">Is This a Scam?</a> room first.",
+        ko:"⚠️ 진짜 정부·금융 사이트는 문자 속 링크를 눌러 «돈을 찾으라»고 하지 않아요. 그런 문자를 받았다면 <a href=\"scam.html\">「이거 사기예요?」</a> 방에서 먼저 살펴보세요."},
+  copy:{en:"Copy my list",ko:"내 목록 복사"}, print:{en:"Print or save",ko:"인쇄·저장"}, copied:{en:"Copied.",ko:"복사했어요."},
+  how_t:{en:"How this works",ko:"이렇게 써요"},
+  h1s:{en:"Every card points to a free official site run by the government or a public body. No adverts, no paid finders.",ko:"모든 카드는 나라나 공공기관이 만든 공짜 공식 사이트로 안내해요. 광고도, 돈 받고 찾아 주는 업체도 없어요."},
+  h2s:{en:"«Not sure» also shows the card, so you can check.",ko:"«모름»이라고 해도 카드를 보여 드려요. 확인해 보세요."},
+  h3s:{en:"Figures and time limits as of November 2026. Laws and site menus change — follow what the official site says.",ko:"숫자와 기한은 2026년 11월 기준이에요. 법과 사이트 메뉴는 바뀔 수 있으니 공식 사이트 안내를 따르세요."},
+  legal:{en:"This is general information, not legal or tax advice. It does not promise that you will receive money. We don't apply for you or take any share. Checked 22 November 2026.",
+         ko:"법률 상담이 아닙니다(세무 상담도 아니에요). 돈을 받는다고 약속하지 않아요. 저희는 대신 신청하지 않고 받은 돈의 일부도 받지 않아요. 기준일 2026-11-22."},
+  src:{en:"Sources: each official site (opened 22 Nov 2026); NTS press release 11 Mar 2026; FSS and policy briefing figures as quoted in our research note.",ko:"출처: 각 공식 사이트(2026-11-22 열어 봄), 국세청 보도자료(2026-03-11), 금융감독원·정책브리핑 숫자(조사 문서)."}
+});
+var URLS={ins:"https://cont.insure.or.kr",acct:"https://www.payinfo.or.kr",sleep:"https://www.kinfa.or.kr/financialLife/sleepmoney.do",points:"https://www.payinfo.or.kr",
+  fine:"https://fine.fss.or.kr",onetax:"https://www.hometax.go.kr",silson:"https://www.silson24.or.kr",carv:"https://www.fss.or.kr",c1372:"https://www.ccn.go.kr",
+  gov24:"https://www.gov.kr",bokji:"https://www.bokjiro.go.kr",inherit:"https://www.gov.kr"};
+var A={}, shown=false;
+function drawQ(){
+  document.getElementById("qs").innerHTML=ClaimKR.Q.map(function(q,i){
+    return '<div class="q"><b>'+(i+1)+'. '+VT.t("q_"+q)+'</b><div class="yn" role="group">'+[["y","yes"],["n","no"],["?","dk"]].map(function(o){
+      return '<button type="button" data-q="'+q+'" data-v="'+o[0]+'" aria-pressed="'+(A[q]===o[0])+'">'+VT.t(o[1])+'</button>';}).join("")+'</div></div>';
+  }).join("");
+  document.querySelectorAll("#qs button").forEach(function(b){ b.onclick=function(){ A[b.dataset.q]=A[b.dataset.q]===b.dataset.v?undefined:b.dataset.v; drawQ(); if(shown) show(); }; });
+}
+function carOpen(){ return VT.ROOMS.some(function(r){return r.id==="carvalue"&&r.status==="open";}); }
+function show(){
+  var out=document.getElementById("out"), E=VT.esc;
+  if(!shown){ out.classList.add("hidden"); return; }
+  var r=ClaimKR.cards(A), h="";
+  if(!r.answered){ out.innerHTML='<div class="verdict mid">'+VT.t("none")+'</div>'; out.classList.remove("hidden"); return; }
+  h+='<div class="verdict low">'+(r.basic?VT.t("r_basic"):VT.t("r_t").replace("{n}",r.cards.length))+'<small>'+VT.t("r_s")+'</small></div>';
+  h+=r.cards.map(function(c){
+    var lv=c.level==="y"?'<span class="lv">'+VT.t("lv_y")+'</span>':c.level==="?"?'<span class="lv q">'+VT.t("lv_q")+'</span>':"";
+    var extra="";
+    if(c.id==="carv") extra=carOpen()?'<p style="margin:8px 0 0"><a href="carvalue.html"><b>'+VT.t("carlink")+'</b></a></p>':'<p class="note" style="margin:8px 0 0">'+VT.t("carsoon")+'</p>';
+    return '<div class="cardx"><h3>'+VT.t("c_"+c.id+"_t")+lv+'</h3><dl>'+
+      '<dt>'+VT.t("d_what")+'</dt><dd>'+VT.t("c_"+c.id+"_w")+'</dd>'+
+      '<dt>'+VT.t("d_where")+'</dt><dd>'+VT.t("c_"+c.id+"_s")+'<br><a href="'+URLS[c.id]+'" target="_blank" rel="noopener">'+E(URLS[c.id].replace(/^https:\/\//,""))+'</a></dd>'+
+      '<dt>'+VT.t("d_press")+'</dt><dd>'+VT.t("c_"+c.id+"_p")+'</dd>'+
+      '<dt>'+VT.t("d_limit")+'</dt><dd>'+VT.t("c_"+c.id+"_l")+'</dd></dl>'+extra+'</div>';
+  }).join("");
+  h+='<p class="verdict mid" style="font-size:15px;font-weight:500">'+VT.t("scam")+'</p>';
+  h+='<p class="legal">'+VT.t("legal")+'</p>';
+  h+='<div class="row no-print"><button class="btn ghost" id="cp" type="button">'+VT.t("copy")+'</button><button class="btn ghost" id="pr" type="button">'+VT.t("print")+'</button><span class="note" id="cpok"></span></div>';
+  out.innerHTML=h; out.classList.remove("hidden");
+  document.getElementById("pr").onclick=function(){ window.print(); };
+  document.getElementById("cp").onclick=function(){
+    var strip=function(s){return s.replace(/<[^>]+>/g,"");};
+    var t=r.cards.map(function(c,i){return (i+1)+". "+strip(VT.t("c_"+c.id+"_t"))+"\n   "+strip(VT.t("c_"+c.id+"_s"))+" "+URLS[c.id]+"\n   "+strip(VT.t("c_"+c.id+"_p"))+"\n   "+strip(VT.t("c_"+c.id+"_l"));}).join("\n\n");
+    var ok=function(){document.getElementById("cpok").textContent=VT.t("copied");};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,function(){prompt("",t);}); else prompt("",t);
+  };
+}
+document.getElementById("go").onclick=function(){ shown=true; show(); document.getElementById("out").scrollIntoView({behavior:"smooth",block:"start"}); };
+document.getElementById("reset").onclick=function(){ A={}; shown=false; drawQ(); show(); window.scrollTo(0,0); };
+VT.onLang=function(){ drawQ(); show(); }; VT.mountChrome(); VT.apply(); drawQ();
+</script>
+</body>
+</html>
