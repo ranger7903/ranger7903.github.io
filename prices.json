@@ -7,55 +7,75 @@
     "4) 다음 날 아침 자동 점검이 세 곳이 서로 같은지 대조해서, 다르면 깃허브에 알림 글을 올립니다."
   ],
   "_주의": "숫자에 쉼표(,)를 넣지 마세요. 29900 처럼 씁니다.",
-  "갱신일": "2026-11-19",
+  "갱신일": "2026-11-25",
   "상품": {
     "merger": {
       "이름": "스마트 자료취합기",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "merge",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "formfiller": {
       "이름": "스마트 서식채우기",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "formfill",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "listcompare": {
       "이름": "스마트 명단대조기",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "compare",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "quick": {
       "이름": "빠른입력기",
-      "원": 1900,
-      "달러": 1.49,
-      "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0",
+      "원": 19000,
+      "달러": 14.9,
+      "paddle": "pri_01m7rtd2ghjhas1egcr0pej0qg",
       "설치파일": "quick",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "작은 도구",
       "1년원": 19000,
       "1년달러": 14.9,
-      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg"
+      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg",
+      "숨긴_달값": {
+        "원": 1900,
+        "달러": 1.49,
+        "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0"
+      }
     },
     "keeper": {
       "이름": "폴더지킴이",
@@ -67,27 +87,37 @@
     },
     "garden": {
       "이름": "책상 위 정원",
-      "원": 1900,
-      "달러": 1.49,
-      "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0",
+      "원": 19000,
+      "달러": 14.9,
+      "paddle": "pri_01m7rtd2ghjhas1egcr0pej0qg",
       "설치파일": "garden",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "작은 도구",
       "1년원": 19000,
       "1년달러": 14.9,
-      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg"
+      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg",
+      "숨긴_달값": {
+        "원": 1900,
+        "달러": 1.49,
+        "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0"
+      }
     },
     "handwrite": {
       "이름": "마음 서랍",
-      "원": 1900,
-      "달러": 1.49,
-      "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0",
+      "원": 19000,
+      "달러": 14.9,
+      "paddle": "pri_01m7rtd2ghjhas1egcr0pej0qg",
       "설치파일": "handwrite",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "작은 도구",
       "1년원": 19000,
       "1년달러": 14.9,
-      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg"
+      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg",
+      "숨긴_달값": {
+        "원": 1900,
+        "달러": 1.49,
+        "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0"
+      }
     },
     "pdfkit": {
       "이름": "PDF 반짇고리",
@@ -107,27 +137,37 @@
     },
     "counter": {
       "이름": "밸류스 계산대",
-      "원": 1900,
-      "달러": 1.49,
-      "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0",
+      "원": 19000,
+      "달러": 14.9,
+      "paddle": "pri_01m7rtd2ghjhas1egcr0pej0qg",
       "설치파일": "register",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "작은 도구",
       "1년원": 19000,
       "1년달러": 14.9,
-      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg"
+      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg",
+      "숨긴_달값": {
+        "원": 1900,
+        "달러": 1.49,
+        "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0"
+      }
     },
     "booking": {
       "이름": "밸류스 예약수첩",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "reservation",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "bundle": {
       "이름": "밸류스 전부 (윈도우 프로그램 스무 가지 + AI 백화점)",
@@ -143,75 +183,105 @@
     },
     "translator_basic": {
       "이름": "밸류스 통역책상 (열다섯 말 전부)",
-      "원": 4900,
-      "달러": 3.49,
-      "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+      "원": 49000,
+      "달러": 34.9,
+      "paddle": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
       "설치파일": "translator",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "큰 도구",
       "1년원": 49000,
       "1년달러": 34.9,
-      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6"
+      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
+      "숨긴_달값": {
+        "원": 4900,
+        "달러": 3.49,
+        "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj"
+      }
     },
     "translator_all": {
       "이름": "밸류스 통역책상 (열다섯 말 전부) — 옛 열쇠",
-      "원": 4900,
-      "달러": 3.49,
-      "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+      "원": 49000,
+      "달러": 34.9,
+      "paddle": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
       "설치파일": "translator",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "큰 도구",
       "1년원": 49000,
       "1년달러": 34.9,
-      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6"
+      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
+      "숨긴_달값": {
+        "원": 4900,
+        "달러": 3.49,
+        "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj"
+      }
     },
     "pdfgrab": {
       "이름": "밸류스 표 뽑개",
-      "원": 4900,
-      "달러": 3.49,
-      "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+      "원": 49000,
+      "달러": 34.9,
+      "paddle": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
       "설치파일": "pdfgrab",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "큰 도구",
       "1년원": 49000,
       "1년달러": 34.9,
-      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6"
+      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
+      "숨긴_달값": {
+        "원": 4900,
+        "달러": 3.49,
+        "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj"
+      }
     },
     "moahwp": {
       "이름": "밸류스 한글 모아담기",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "moahwp",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "gongmun": {
       "이름": "밸류스 공문 검사개",
-      "원": 1900,
-      "달러": 1.49,
-      "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0",
+      "원": 19000,
+      "달러": 14.9,
+      "paddle": "pri_01m7rtd2ghjhas1egcr0pej0qg",
       "설치파일": "gongmun",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "작은 도구",
       "1년원": 19000,
       "1년달러": 14.9,
-      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg"
+      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg",
+      "숨긴_달값": {
+        "원": 1900,
+        "달러": 1.49,
+        "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0"
+      }
     },
     "garifile": {
       "이름": "밸류스 가려서 보내기 — 파일판",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "garifile",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "bisu": {
       "이름": "자동화 비서",
@@ -222,87 +292,122 @@
     },
     "settle": {
       "이름": "밸류스 정산 대조기",
-      "원": 4900,
-      "달러": 3.49,
-      "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+      "원": 49000,
+      "달러": 34.9,
+      "paddle": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
       "설치파일": "settle",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "큰 도구",
       "1년원": 49000,
       "1년달러": 34.9,
-      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6"
+      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
+      "숨긴_달값": {
+        "원": 4900,
+        "달러": 3.49,
+        "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj"
+      }
     },
     "money": {
       "이름": "밸류스 돈 맞추개",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "money",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "hoeuirok": {
       "이름": "밸류스 회의록 만들개",
-      "원": 4900,
-      "달러": 3.49,
-      "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj",
+      "원": 49000,
+      "달러": 34.9,
+      "paddle": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
       "설치파일": "hoeuirok",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "큰 도구",
       "1년원": 49000,
       "1년달러": 34.9,
-      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6"
+      "paddle_1년": "pri_01m7rtd3sy4ayk26fxgrw2ash6",
+      "숨긴_달값": {
+        "원": 4900,
+        "달러": 3.49,
+        "paddle": "pri_01m7rtd3fhy6e8ngwknxjkx2dj"
+      }
     },
     "stampcut": {
       "이름": "밸류스 도장 오리개",
-      "원": 1900,
-      "달러": 1.49,
-      "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0",
+      "원": 19000,
+      "달러": 14.9,
+      "paddle": "pri_01m7rtd2ghjhas1egcr0pej0qg",
       "설치파일": "stampcut",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "작은 도구",
       "1년원": 19000,
       "1년달러": 14.9,
-      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg"
+      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg",
+      "숨긴_달값": {
+        "원": 1900,
+        "달러": 1.49,
+        "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0"
+      }
     },
     "scanlike": {
       "이름": "밸류스 스캔한 것처럼",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "scanlike",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "proofbox": {
       "이름": "밸류스 작업 증거 상자",
-      "원": 1900,
-      "달러": 1.49,
-      "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0",
+      "원": 19000,
+      "달러": 14.9,
+      "paddle": "pri_01m7rtd2ghjhas1egcr0pej0qg",
       "설치파일": "proofbox",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "작은 도구",
       "1년원": 19000,
       "1년달러": 14.9,
-      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg"
+      "paddle_1년": "pri_01m7rtd2ghjhas1egcr0pej0qg",
+      "숨긴_달값": {
+        "원": 1900,
+        "달러": 1.49,
+        "paddle": "pri_01m7rtcq03pqeem2qggdtr0zg0"
+      }
     },
     "songfactory": {
       "이름": "밸류스 노래 공장",
-      "원": 2900,
-      "달러": 1.99,
-      "paddle": "pri_01m7rtd2tv6grqdew30084cbn3",
+      "원": 29000,
+      "달러": 19.9,
+      "paddle": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
       "설치파일": "songfactory",
-      "구독": "달마다",
+      "구독": "1년마다",
       "칸": "보통 도구",
       "1년원": 29000,
       "1년달러": 19.9,
-      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj"
+      "paddle_1년": "pri_01m7rtd35cc7xam5tzcbhbcnhj",
+      "숨긴_달값": {
+        "원": 2900,
+        "달러": 1.99,
+        "paddle": "pri_01m7rtd2tv6grqdew30084cbn3"
+      }
     },
     "office": {
       "이름": "AI 사무직원",
@@ -321,7 +426,7 @@
     "발급기": "https://sparkling-bird-2599.ranger7903.workers.dev/",
     "공개키_b64": "z7ZM1qUvab0B9bVoMhT75prsEn3g2rq1EhrE6ZFnogk="
   },
-  "_구독": "2026-11-19 부터 파는 도구는 모두 달마다 구독. 칸 네 개(작은 1,900 · 보통 2,900 · 큰 4,900 · 전부 14,900원), 1년은 열 달 값. paddle 은 달마다 값, paddle_1년 은 1년 값. 어느 도구인지는 결제창 customData.tool 로 열쇠 발급소에 간다.",
+  "_구독": "2026-11-25 부터 낱개 도구(작은·보통·큰)는 1년 결제만 판다(작은 19,000 · 보통 29,000 · 큰 49,000원). 결제 한 번에 Paddle 이 5%+50센트를 떼어 달 1,900원이면 40% 넘게 나가기 때문. 「밸류스 전부」만 달 14,900원·1년 149,000원 둘 다. '원'·'달러'·'paddle' 은 지금 파는 값(낱개는 1년 값). 예전 달 값은 '숨긴_달값' 에 남겨 두었고 Paddle 의 달 값도 지우지 않았다. 어느 도구인지는 결제창 customData.tool 로 열쇠 발급소에 간다. 산 뒤 14일 안에는 묻지 않고 환불.",
   "AI백화점": {
     "_설명": "2026-11-21 AI 백화점 구독. 결제는 ai/plans.html, 이름표는 열쇠 발급소 SUB_PRICE_TO_PRODUCT 가 p:[\"ai\"] 로 만든다. 아침 점검 대상(상품)에는 넣지 않는다(본 가게 index.html 에서 팔지 않으므로).",
     "이름": "밸류스 AI 백화점 구독 · VALUES AI Store Plan",
